@@ -3,3 +3,4 @@ __pycache__/
 .DS_Store
 node_modules/
 whilton-coach/data/model_quick.json
+whilton-coach/data/model_partial.json

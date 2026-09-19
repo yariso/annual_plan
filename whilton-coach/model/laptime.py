@@ -385,7 +385,7 @@ def main():
     log(f'{len(jobs)} optimisations on {os.cpu_count()} cpus')
     with Pool(max(1, (os.cpu_count() or 2) - 0)) as pool:
         for label, r in pool.imap_unordered(_job, jobs):
-            group, name = label.split('|')
+            parts = label.split('|'); group, name = parts[0], '|'.join(parts[1:])
             if group in ('sweep', 'calib'):
                 out['sweeps'][name] = dict(lap=r['lap'], v_mean=r['v_mean'], v_max=r['v_max'], flat_share=r['flat_share'], christmas=r['corners'].get('christmas'), ashby=r['corners'].get('ashby'))
                 log(f'{label:34s} {r["lap"]:.3f} s   {time.time() - t0:.0f} s')
@@ -397,6 +397,7 @@ def main():
                     lay['seeds']['hire'] = dict(laps=laps, first_run=laps.get('seed0', r['lap']), spread=round(max(laps.values()) - min(laps.values()), 3) if len(laps) > 1 else 0.0)
                 else: lay['karts'][kk] = r
                 log(f'{label:34s} {r["lap"]:.3f} s after {r["rounds"]} rounds (centreline {r["centreline_lap"]:.3f} s), mean {r["v_mean"]} mph, top {r["v_max"]} mph, flat {r["flat_share"] * 100:.0f}%   {time.time() - t0:.0f} s')
+            json.dump(out, open(os.path.join(ROOT, 'data', 'model_partial.json'), 'w'), separators=(',', ':'))   # keep what is done so far, in case the run is cut short
     out['run_seconds'] = round(time.time() - t0, 1); out['sweeps_note'] = 'sweeps run to three idle rounds of 80 iterations on the International with the chicane; the main results to eight idle rounds of 120'
     path = os.path.join(ROOT, 'data', 'model.json')
     json.dump(out, open(path, 'w'), separators=(',', ':'))
