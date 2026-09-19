@@ -763,13 +763,15 @@ function renderPlan() {
   const kb = (s, t) => '<li><span class="kb" style="background:var(--' + s + ')">' + ({ ok: '&#10003;', care: '!', no: '&#10005;' }[s]) + '</span><span>' + t + '</span></li>';
   $('#plan').innerHTML =
     '<div class="panel"><h3>Before you get there</h3><ul>' +
-    '<li>Arrive early enough to sign on and sit through the safety briefing before your slot. Hire circuits do not let you drive if you miss the briefing, and Whilton needs you to follow it in English. Ask how early when you book; half an hour is a safe guess.</li>' +
+    '<li>Arrive early enough to sign on and sit through the safety briefing before your slot. Hire circuits generally will not let you drive if you miss it, and the venue says you must be able to follow it in English. Ask how early when you book; half an hour is a safe guess.</li>' +
     '<li>Wear close-fitting clothes and closed shoes; trainers are fine. The venue provides helmets and race suits. Gloves and balaclavas are provided at some sessions and sold at others, so bring your own if you have them. Your own helmet, suit, gloves and boots are allowed.</li>' +
     '<li>Empty your pockets and leave anything loose, including phones, scarves, hoods and jewellery, in the car or a locker, unless the desk has said the phone can go out with you.</li>' +
     '<li>The circuit is outdoors and runs in the rain. Bring a waterproof, a towel and a change of clothes. Wet mode in this app covers the driving side.</li>' +
     '<li>There is a restaurant on site. Eat something light an hour or two before you drive and drink water between sessions.</li>' +
-    '<li>At the briefing, ask how the start works (a rolling start behind a lead kart, or a standing grid), where the pit entry is and how slowly to drive in the pit lane, and what to do after a spin or a stall. The usual hire-circuit rule is to stay in the kart with your hands on the wheel and wait for a marshal. Confirm it, do not assume it.</li>' +
-    '</ul><p class="small muted" style="margin-top:8px">Kit, briefing and food details are from the venue\'s pages as read in search results; arrival time and the spin rule are general hire-circuit practice.</p></div>' +
+    '<li>This guide does not cover how a Whilton hire race starts or what the marshals want after a spin. At the briefing, ask how the start works (a rolling start behind a lead kart, or a standing grid), where the pit entry is and how slowly to drive in the pit lane, and what to do after a spin or a stall. At most hire circuits that is stay in the kart with your hands on the wheel and wait for a marshal. Confirm it, do not assume it.</li>' +
+    '<li>Open races for individuals, from the venue\'s pages: Sprint (10 minutes of practice, then a 20 minute race), Grand Prix (a 5 minute warm-up, three 10 minute heats and a 10 minute final) and Endurance (300 laps of the National in teams of three, light and heavy classes). Practice before a race is short, so learn the track in an arrive-and-drive session first.</li>' +
+    '<li>Age and height limits differ between the venue\'s own pages: 14 or 16 and over, minimum height 1.4 m or 1.55 m, maximum 1.9 m or 1.92 m. Formats and limits change, so the booking page wins over this guide.</li>' +
+    '</ul><p class="small muted" style="margin-top:8px">Kit, briefing, formats and food details are from the venue\'s pages as read in search results; arrival time and the spin rule are general hire-circuit practice.</p></div>' +
     '<div class="two"><div class="panel"><h3>What matters most here</h3><ul>' +
     '<li>' + (NUM[bigStops().length] || '').replace(/^./, m => m.toUpperCase()) + ' real braking zones: ' + joinNames(bigStops()) + '. The rest of the lap is flat out, a lift or a dab.</li>' +
     '<li>Brake in a straight line, finish braking, then turn.</li>' +
@@ -821,7 +823,8 @@ function renderPlan() {
     '<li>Staff had warned that report\'s drivers of sensitive brakes. The drivers found the brakes themselves fine and the throttle cut was the real catch. Even so, squeeze the pedal on your first laps and build up.</li>' +
     '<li>That is one report, so ask at the briefing whether it still applies.</li></ul></div>' +
     '<div class="panel"><h3>Flags</h3><ul>' +
-    '<li>Yellow: slow down, hold your place, no overtaking until you are past the incident. The coach in your ear cannot see flags: if it says Flat under a yellow, ignore it.</li>' +
+    '<li>The coach in your ear cannot see flags. Its tones, the word Flat and the throttle notes carry on regardless, so a flag always overrides anything it says.</li>' +
+    '<li>Yellow: slow down, hold your place, no overtaking until you are past the incident.</li>' +
     '<li>Blue: a faster kart is about to lap you. Hold your line and let it through.</li>' +
     '<li>Red: the session is stopped. Slow to walking pace and drive back to the pits.</li>' +
     '<li>Black, pointed at you: come into the pits now, for your driving or a fault with the kart.</li>' +
@@ -867,8 +870,6 @@ function renderPlan() {
     '<div class="panel"><h3>About this guide</h3><ul>' +
     '<li>Both coach guides were written for Club100 style two-stroke karts. A 390cc hire kart is slower down the straights, so its braking zones are likely to be a little shorter. The same corners are still the big stops.</li>' +
     '<li>The venue sells arrive-and-drive sessions on both the National (960 m) and the International (1200 m), in 20, 30 and 40 minute slots for age 14 and over, in BirelART N35 390cc karts. Its 20-minute voucher session is on the National, and the National section is floodlit while the International is not, so evening sessions are likely to be on the National. There is also a separate 450 m Mill circuit for junior sessions, which this guide does not cover. Club championship and British championship rounds run the International; Club100 and BUKC race both. Check which layout you are booked on, and whether the chicane is in use that day: a 2024 report describes a hire event run without it.</li>' +
-    '<li>Open races for individuals, from the venue\'s pages: Sprint (10 minutes of practice, then a 20 minute race), Grand Prix (a 5 minute warm-up, three 10 minute heats and a 10 minute final) and Endurance (300 laps of the National in teams of three, light and heavy classes). Practice before a race is short, so learn the track in an arrive-and-drive session first.</li>' +
-    '<li>Age and height limits differ between the venue\'s own pages: 14 or 16 and over, minimum height 1.4 m or 1.55 m, maximum 1.9 m or 1.92 m. Check the page for the session you book.</li>' +
     '<li>The track shape is traced from the Kart Directory circuit map and scaled so the International lap with the chicane measures 1200 m, the figure the venue quotes. Published lengths disagree: the venue says 1200 m and 960 m, the 2025 club and British championship regulations say 1054 m, and the BKC event page says 1190 m, and none gives a separate figure for the chicane. On the 1200 m scale the National comes out at 969 m, or 978 m with the chicane. Treat map distances as approximate, and possibly a tenth long, until a GPS lap has been fitted: after a lock the Coach tab shows the lap length measured from your own trace. Track width is drawn wider than life.</li>' +
     '</ul></div>';
 }
@@ -1213,7 +1214,8 @@ function liveStart() {
   liveStatus('Waiting for a GPS fix. Stand in the open.');
   live.watch = navigator.geolocation.watchPosition(pos => {
     const c = pos.coords, now = performance.now(); live.fixes++;
-    const lag = pos.timestamp ? Math.max(0, Math.min(2, (Date.now() - pos.timestamp) / 1000)) : 0; live.lag = live.lag ? live.lag * .8 + lag * .2 : lag;   // how old the fix already is when the browser hands it over
+    const rawLag = pos.timestamp ? (Date.now() - pos.timestamp) / 1000 : NaN, lag = rawLag >= 0 && rawLag <= 1.5 ? rawLag : 0;   // how old the fix already is when the browser hands it over; a clock that disagrees with the fix time gives nonsense, which is ignored
+    live.lag = live.lag ? live.lag * .8 + lag * .2 : lag;
     if (live.fixes === 1) speak(lapE.T ? 'GPS ready. Coaching on.' : 'GPS ready. Drive a full lap to lock the map.');
     if (live.lost) { live.lost = false; speak('GPS back'); }
     live.rec.push([Date.now(), +c.latitude.toFixed(7), +c.longitude.toFixed(7), c.speed == null || isNaN(c.speed) ? null : +c.speed.toFixed(2), c.heading == null || isNaN(c.heading) ? null : Math.round(c.heading), Math.round(c.accuracy || 0)]);
@@ -1258,10 +1260,10 @@ function parseCsv(text) {
   const hi = lines.findIndex(l => /lat/i.test(l) && /(lon|lng)/i.test(l)); if (hi < 0) return null;
   const cnt = ch => (lines[hi].split(ch).length - 1), delim = cnt(';') > cnt(',') ? ';' : cnt('\t') > cnt(',') ? '\t' : ',';
   const head = lines[hi].split(delim).map(low), col = re => head.findIndex(h => re.test(h));
-  const cLat = col(/\blat(itude)?\b/), cLon = col(/\b(lon|lng|long|longitude)\b/), cSpd = col(/speed|velocity/), cT = col(/^(gps ?)?(time|timestamp|utc|date ?time)/); if (cLat < 0 || cLon < 0) return null;
+  const cLat = col(/(^|[^a-z])lat(itude)?([^a-z]|$)/), cLon = col(/(^|[^a-z])(lon|lng|long(itude)?)([^a-z]|$)/), cSpd = col(/speed|velocity/), cT = col(/^(gps[ _])?(time|timestamp|utc|date ?time)/); if (cLat < 0 || cLon < 0) return null;
   const next = lines[hi + 1] ? lines[hi + 1].split(delim).map(low) : [], unitsRow = next.length === head.length && next.some(u => u) && next.every(u => !/^[-+]?\d/.test(u));
   const sh = cSpd < 0 ? '' : head[cSpd] + ' ' + (unitsRow ? next[cSpd] : ''), th = cT < 0 ? '' : head[cT] + ' ' + (unitsRow ? next[cT] : '');
-  const k = /km|kph/.test(sh) ? 1 / 3.6 : /mph/.test(sh) ? 1 / MPH : /knot|\bkts?\b|\bkn\b/.test(sh) ? .514444 : 1, tMs = /(^|[^a-z])ms\b|milli/.test(th), tS = !tMs && /\bs\b|\bsec/.test(th);
+  const k = /km|kph/.test(sh) ? 1 / 3.6 : /mph/.test(sh) ? 1 / MPH : /knot|(^|[^a-z])kts?([^a-z]|$)|(^|[^a-z])kn([^a-z]|$)/.test(sh) ? .514444 : 1, tMs = /(^|[^a-z])ms([^a-z]|$)|milli/.test(th), tS = !tMs && /(^|[^a-z])s([^a-z]|$)|sec/.test(th);
   const clock = s => { const m = /^(?:(\d{4})-(\d\d)-(\d\d)[t ])?(\d{1,2}):(\d\d):(\d\d(?:[.,]\d+)?)/i.exec(s); return m ? (m[1] ? Date.UTC(+m[1], +m[2] - 1, +m[3]) : 0) + (+m[4] * 3600 + +m[5] * 60 + parseFloat(m[6].replace(',', '.'))) * 1000 : NaN; };
   const out = []; let auto = 0, unknownUnit = false;
   for (let i = hi + (unitsRow ? 2 : 1); i < lines.length; i++) {
