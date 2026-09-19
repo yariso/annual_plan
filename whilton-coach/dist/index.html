@@ -864,7 +864,7 @@ function factRows(c) {
     const lead = (arr, text) => { if (!text) return null; const t = esc(pick(text)), w = [...new Set(arr.map(k => KERBWORD[k.status]))].join(', '); return !w || t.toLowerCase().startsWith(w.toLowerCase()) ? t : '<b>' + w + '.</b> ' + t; };
     rows.push(['Apex kerb', null, lead(ks.filter(k => k.where === 'apex'), c.kerbA)], ['Exit kerb', null, lead(ks.filter(k => k.where === 'exit'), c.kerbX)], ['Kerbs', null, lead(ks, c.kerbs)]);
   }
-  rows.push(['Common mistake', c.mistake]); if (!st.wet) rows.push(['In the wet', c.wet]); rows.push(['Passing', c.pass], ['What the model does', null, modelNote(c)], ['Worth knowing', c.note]);
+  rows.push(['Common mistake', c.mistake]); if (!st.wet) rows.push(['In the wet', c.wet]); const ag = modelAgreement(c); rows.push(['Passing', c.pass], ['What the model does', null, modelNote(c)], ['Model against the guide', null, ag ? esc(ag.text) + (ag.allOk ? '' : ' <span class="muted">The model drives a point-mass kart at its grip limit on an estimated hill; the guides are written for a person. Where they differ, the guide is the day-one plan and the model shows where time is.</span>') : null], ['Worth knowing', c.note]);
   return '<dl class="facts">' + rows.filter(r => r[1] || r[2]).map(r => '<div><dt>' + r[0] + '</dt><dd>' + (r[2] || esc(pick(r[1]))) + '</dd></div>').join('') + '</dl>';
 }
 function modelNote(c) {        // the physics model's hire-kart lap through this corner: entry speed, where the brake or lift starts, slowest speed
@@ -872,6 +872,26 @@ function modelNote(c) {        // the physics model's hire-kart lap through this
   let vmin = 1e9; c.prims.forEach(k => { const r = mk.corners[k]; if (r) vmin = Math.min(vmin, r.v_min); });
   const on = first.brake_before_turnin_m != null ? 'brakes ' + Math.round(first.brake_before_turnin_m) + ' m before turn-in' : first.lift_before_turnin_m != null ? 'lifts ' + Math.round(first.lift_before_turnin_m) + ' m before turn-in' : 'stays flat';
   return esc('Hire kart at the limit, ' + (st.wet ? 'wet' : 'dry') + ': arrives at ' + Math.round(first.v_in) + ' mph, ' + on + ', slowest ' + Math.round(vmin) + ' mph.') + ' <span class="muted">A point-mass model on an estimated hill and grip calibrated to one measured lap: where the time is, not a first-day target.</span>';
+}
+function guideOffset(L, k) {   // the guide line's sideways position at centreline point k, in metres of real track, left positive, the same convention as the model's offsets
+  const n = L.centre.length, p = L.centre[mod(k - 1, n)], q = L.centre[(k + 1) % n], c = L.centre[mod(k, n)], g = L.line[mod(k, n)], dx = q[0] - p[0], dy = q[1] - p[1], dl = Math.hypot(dx, dy) || 1, ex = D.half / (M.params.track_width / 2);
+  return ((g[0] - c[0]) * dy / dl - (g[1] - c[1]) * dx / dl) / ex;
+}
+function modelAgreement(c) {   // does the physics model agree with the guide here: the pedal, the brake point and the line at turn-in, apex and exit
+  const mk = MK(), L = LY(); if (!mk || !mk.corners || !mk.o4 || st.wet || st.profile === 'model') return null;
+  const key = Object.keys(CARDS).find(k => CARDS[k] === c), first = mk.corners[c.prims[0]]; if (!first) return null;
+  const n = L.centre.length, mo = i => mk.o4[Math.floor(mod(i, n) / 2) % mk.o4.length], cls = l => l >= 3 ? 'brake' : l === 2 ? 'lift' : 'flat';
+  const gl = lvOf(c), ml = Math.max.apply(null, c.prims.map(k => mk.corners[k] ? mk.corners[k].level : 1));
+  const pedalOk = cls(gl) === cls(ml), pedal = pedalOk ? 'agrees, both ' + cls(gl) : 'differs, the guide says ' + cls(gl) + ' and the model at the limit ' + (cls(ml) === 'brake' ? 'brakes' : cls(ml) === 'lift' ? 'only lifts' : 'stays flat');
+  let brake = null, brakeOk = true;
+  if (gl >= 3 && first.brake_before_turnin_m != null) { const zs = zoneStartIdx(key), A = L.corners[c.prims[0]]; if (zs != null) { const g = mod(A.a - zs, n) * L.step, d = Math.round((first.brake_before_turnin_m - g) / 5) * 5; brakeOk = d >= -15 && d <= 10; brake = Math.abs(d) < 5 ? 'the model brakes where the guide\'s zone starts' : 'the model brakes ' + Math.abs(d) + ' m ' + (d > 0 ? 'earlier' : 'later') + ' than the guide\'s zone start' + (d < 0 && d >= -15 ? ', inside the zone\'s margin' : ''); } }   // the painted zones carry margin, so a model braking up to 15 m later agrees
+  const A = L.corners[c.prims[0]], B = L.corners[c.prims[c.prims.length - 1]], side = o => o > 1 ? 'left' : o < -1 ? 'right' : 'middle';
+  const zs0 = gl >= 3 ? zoneStartIdx(key) : null, marks = [['approach', zs0 != null ? zs0 : A.a - 10], ['apex', A.i]]; if (c.prims.length > 1) marks.push(['last apex', B.i]); marks.push(['exit', B.b + 5]);   // approach: where the braking starts, or 20 m before turn-in; exit: 10 m past the end of the curve, where the kart has run out
+  const pts = marks.map(([nm, k]) => { const g = guideOffset(L, k), m_ = mo(k); return { nm, g, m: m_, ok: side(g) === side(m_) || Math.abs(g - m_) < (nm === 'exit' ? 2.5 : 1.5) }; });   // at the exit the guide's drawn line fades back to the middle sooner than a kart running out, so the tolerance is wider
+  const agree = pts.filter(p => p.ok).map(p => p.nm + ' ' + side(p.g)), differ = pts.filter(p => !p.ok).map(p => p.nm + ' (guide ' + side(p.g) + ', model ' + side(p.m) + ')');
+  const line = (agree.length ? 'agrees at ' + agree.join(', ') : '') + (differ.length ? (agree.length ? '; ' : '') + 'differs at ' + differ.join(', ') : '');
+  const allOk = pedalOk && brakeOk && pts.every(p => p.ok);
+  return { pedal, brake, line, allOk, pts: pts.map(p => ({ nm: p.nm, g: +p.g.toFixed(1), m: +p.m.toFixed(1), ok: p.ok })), gl, ml, text: (allOk ? 'Agrees. ' : '') + 'Pedal: ' + pedal + '.' + (brake ? ' Brake point: ' + brake + '.' : '') + ' Line: ' + line + '.' };
 }
 function badge(l) { return '<span class="badge" style="--lv:' + lvColor(l) + '"><b>' + l + '</b>' + LV[l].name + '</span>'; }
 function renderCard() {
@@ -1253,7 +1273,7 @@ function advance(c0, v0, acc, secs) {
     return { c: c0 + Math.max(0, v0 * tStop + .5 * acc * tStop * tStop) / E.L.step, v };
   }
   const r = r0;
-  for (let t = 0; t < secs; t += .1) { const dt = Math.min(.1, secs - t); v = Math.max(2, P[mod(Math.floor(c), E.n)] * r); c += v * dt / E.L.step; }
+  for (let t = 0; t < secs; t += .1) { const dt = Math.min(.1, secs - t); v = Math.max(2, .4 * v0, P[mod(Math.floor(c), E.n)] * r); c += v * dt / E.L.step; }
   return { c, v };
 }
 function lapProfile(c0) {      // the lap just driven as a speed for every centreline point, for next lap's look-ahead
@@ -1263,13 +1283,14 @@ function lapProfile(c0) {      // the lap just driven as a speed for every centr
   return P;
 }
 function calibrateLead(m) {    // if the driver's brake point keeps landing later than the plan at a corner, the call there moves earlier by the difference, up to 20 m
-  const E = lapE, L = E.L;
+  const E = lapE, L = E.L; if ((E.rate || 1) < 4) return;   // at a phone's one fix a second the brake point is known to a fix spacing at best: nothing to learn from
   cardList().forEach(([key]) => {
     const c = CARDS[key], x = m[key]; if (!x || lvOf(c) < 3 || x.brakeOn == null) return; const zs = zoneStartIdx(key); if (zs == null) return;
     const d = (x.brakeOn - zs) * L.step + (E.leadAdj[key] || 0), h = E.cal[key] = (E.cal[key] || []).concat([d]).slice(-3);   // where the brake landed against the plan, given the lead already added
     if (h.length < 3) return; const s = h.slice().sort((a, b) => a - b), slack = Math.max(8, 1.0 * x.vIn / Math.max(1, E.rate || 1));      // a full fix spacing: at one fix a second (about 20 m) nothing is learned, at 10 Hz and up it is
     let room = 0; const lv = LVL(L); for (let q = zs - 1; q > zs - 60 && lv[mod(q, E.n)] === '1'; q--) room++;   // the flat run before this zone, in points
-    E.leadAdj[key] = s[1] > slack && s[0] > 0 ? Math.min(20, Math.floor(room * L.step * .4 / 5) * 5, Math.round(s[1] / 5) * 5) : 0;   // at most 20 m, and never more than 40% of the flat run, so the call stays out of the previous corner
+    const was = E.leadAdj[key] || 0, next = s[1] > slack && s[0] > 0 ? Math.min(20, Math.floor(room * L.step * .4 / 5) * 5, Math.round(s[1] / 5) * 5) : 0;   // at most 20 m, and never more than 40% of the flat run, so the call stays out of the previous corner
+    E.leadAdj[key] = next; if (next !== was) E.cal[key] = [];   // the readings behind a move are stale once the call has moved
   });
 }
 function cornerWindow(key) {   // the stretch a corner is judged over: from before its braking zone to a little past its exit, in centreline points from the lap start
@@ -1296,7 +1317,8 @@ function lapMetrics(startCum) {
     const w = cornerWindow(key); if (!w) return; const c0 = startCum + w.c0, c1 = startCum + w.c1;
     const t0 = tAt(c0), t1 = tAt(c1); if (t0 == null || t1 == null) return;
     const W = S.filter(p => p.c >= c0 - 1 && p.c <= c1 + 1); if (W.length < 2) return;
-    let vMin = 1e9, cMin = c0, brakeOn = null, decel = 0; W.forEach((p, j) => { if (p.v < vMin) { vMin = p.v; cMin = p.c; } if (j) { const q = W[j - 1], d = (q.v - p.v) / Math.max(.05, (p.t - q.t) / 1000); decel = Math.max(decel, d); if (brakeOn == null && d > 1.6) brakeOn = (q.c + p.c) / 2; } });
+    let vMin = 1e9, cMin = c0, brakeOn = null, decel = 0, first = null; W.forEach((p, j) => { if (p.v < vMin) { vMin = p.v; cMin = p.c; } if (j) { const q = W[j - 1], d = (q.v - p.v) / Math.max(.05, (p.t - q.t) / 1000); decel = Math.max(decel, d); if (first == null && d > 1.6) first = [q, p]; } });
+    if (first) { const [q, p] = first, dur = (q.v - p.v) / Math.max(decel, 1.6); brakeOn = p.c - ((q.v + p.v) / 2 * dur) / L.step; }   // the braking began somewhere inside the first pair that shows a drop: place it by how much speed went and how hard the kart brakes at its hardest, rather than at the pair's midpoint, which reads late at one fix a second
     let thr = null; for (const p of W) if (p.c > cMin && p.v > vMin + 1) { thr = p.c; break; }
     out[key] = { tSeg: (t1 - t0) / 1000, vIn: vAt(c0), vMin, cMin: cMin - startCum, brakeOn: brakeOn == null ? null : brakeOn - startCum, decel, thrLag: thr == null ? null : thr - cMin };
   });
@@ -1751,7 +1773,7 @@ bindNum('#setWordLead', 'wordLead'); bindNum('#setToneLead', 'toneLead'); bindNu
 $('#setMode').value = set.mode; $('#setMode').addEventListener('change', e => { set.mode = e.target.value; saveSettings(); });
 
 renderLegend(); refreshAll(); lockInfo(); renderDebrief(); setTab(st.tab);
-window.__wm = { pocketShow, walk, walkStart, walkStop, renderStart, D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, MK, modelLine, M, refTimes, mindTap, mind, quizAsk, quizAnswer, quiz, virtualStart, team, teamLog, teamTable, live, speechLag, speechLags, SHORT, setRec: r => { rec = r; }, getRec: () => rec };
+window.__wm = { modelAgreement, guideOffset, pocketShow, walk, walkStart, walkStop, renderStart, D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, MK, modelLine, M, refTimes, mindTap, mind, quizAsk, quizAnswer, quiz, virtualStart, team, teamLog, teamTable, live, speechLag, speechLags, SHORT, setRec: r => { rec = r; }, getRec: () => rec };
 })();
 </script>
 </body>

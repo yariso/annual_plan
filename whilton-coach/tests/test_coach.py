@@ -77,6 +77,8 @@ with sync_playwright() as p:
     r = pg.evaluate(RUNX, dict(layout='intl', rate=10, seconds=300, late=True)); print('LATE BRAKER 10Hz: adj per lap', [(l['n'], l['s'], {k: v for k, v in l['adj'].items() if v}) for l in r['laps']], 'moved note', r['moved'])
     assert len(r['laps']) >= 4 and any(v > 0 for v in r['leadAdj'].values()), 'a late braker should get earlier calls after three laps'
     r0 = pg.evaluate(RUNX, dict(layout='intl', rate=10, seconds=300, late=True, autoLead=False)); assert not any(r0['leadAdj'].values()), 'auto lead off must not adjust'
+    r1 = pg.evaluate(RUNX, dict(layout='intl', rate=1, seconds=300, late=True)); assert not any(r1['leadAdj'].values()) and not r1['moved'], 'at one fix a second nothing must be learned, even from a late braker'
+    r2 = pg.evaluate(RUNX, dict(layout='intl', rate=10, seconds=300)); assert not any(r2['leadAdj'].values()) and not r2['moved'], 'a driver on the plan must not get a learned lead: ' + str(r2['leadAdj'])
     r = pg.evaluate(RUNX, dict(layout='nat', rate=10, seconds=330, bad=True, badUntil=125)); print('FOCUS nat 10Hz:'); [print('   ', l['n'], l['s'], 'focus', l['focus'], '|', l['tip']) for l in r['laps']]
     assert any(l['focus'] for l in r['laps']), 'no focus corner chosen'
     assert any(l['said'] and 'found' in l['said'] for l in r['laps']), 'no confirmation after the driver improved'
