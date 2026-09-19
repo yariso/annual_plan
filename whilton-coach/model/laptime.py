@@ -162,7 +162,7 @@ def lap(tr, n_ctrl, args):
 
 
 # ---------------------------------------------------------------- optimiser: over and over until it stops improving
-def optimise(tr, args, rounds_max=80, stale_max=6, seed=0, log=None, quick=False, maxiter=150):
+def optimise(tr, args, rounds_max=80, stale_max=8, seed=0, log=None, quick=False, maxiter=150):
     K = int(round(tr['L'] / PARAMS['ctrl_spacing']))
     nmax = PARAMS['track_width'] / 2 - PARAMS['kart_width'] / 2 - PARAMS['edge_margin']
     bounds = [(-nmax, nmax)] * K
@@ -182,7 +182,7 @@ def optimise(tr, args, rounds_max=80, stale_max=6, seed=0, log=None, quick=False
         r += 1
         if r == 1: x0 = best_x.copy(); how = 'from the centreline'
         else:
-            sigma = max(0.25, 1.2 * 0.85 ** (r - 2))
+            sigma = 1.2 if r % 3 == 0 else max(0.25, 1.0 * 0.8 ** (r - 2))          # every third round a big shake to escape the current basin
             x0 = np.clip(best_x + rng.normal(0, sigma, K), -nmax, nmax); how = f'best line shaken by {sigma:.2f} m'
         res = minimize(f, x0, method='L-BFGS-B', bounds=bounds, options=dict(maxiter=40 if quick else maxiter, eps=2e-3, ftol=1e-10, gtol=1e-7))
         t = lap(tr, res.x, args)[0]
@@ -206,7 +206,7 @@ def classify(v, dl, vlim, args):
         dec = -ax[i] / G
         if dec > 0.55: lv[i] = 5
         elif dec > 0.30: lv[i] = 4
-        elif dec > 0.12: lv[i] = 3
+        elif dec > 0.15: lv[i] = 3
         elif dec > 0.03 or (v[i] < vtop - 0.5 and abs(ax[i]) < 0.3 * G * 0.1 and v[i] >= vlim[i] - 0.15): lv[i] = 2   # at the cornering limit with the foot off: the coast to the apex
     # tidy: a lift or a brake shorter than 3 m is curvature noise, not a pedal
     for _ in range(2):
@@ -223,22 +223,38 @@ def classify(v, dl, vlim, args):
     return lv, ax
 
 
-def corner_report(tr, v, lv, ax, key):
+def corner_report(tr, v, lv, ax, key, ds=None):
+    """Per corner: the slowest speed, where the throttle came off and where the brakes went on (metres before turn-in),
+    the peak braking and the level. Works on any grid: v, lv and ax per point, ds metres per point. Each corner owns the
+    stretch from the previous corner's apex to its own apex plus a few metres, so a brake zone is never credited to the
+    corner before it."""
     out = {}
-    n = tr['n']; ds = tr['ds']
-    idx = lambda s: int(round((s % tr['L']) / ds)) % n
-    for c, cc in tr['corners'].items():
-        a, i, b = idx(cc['a']), idx(cc['i']), idx(cc['b'])
-        win = [(a - 45 + q) % n for q in range(45 + (b - a) % n + 12)]
-        vmin_i = min(win, key=lambda q: v[q]); vmin = v[vmin_i]
-        # braking onset: walk back from the minimum while the kart is still slowing
-        q = vmin_i; steps = 0
-        while ax[(q - 1) % n] < -0.03 * G and steps < 120: q = (q - 1) % n; steps += 1
-        onset = q if steps else None
-        peak = max(-ax[(a - 45 + k) % n] / G for k in range(45 + (b - a) % n + 12))
-        out[c] = dict(v_in=round(v[(a - 30) % n] * 2.23694, 1), v_min=round(vmin * 2.23694, 1), v_min_ms=round(vmin, 2),
-                      brake_before_turnin_m=None if onset is None else round(((a - onset) % n) * ds if (a - onset) % n < n / 2 else -(((onset - a) % n) * ds), 1),
-                      peak_decel_g=round(peak, 2), level=int(max(lv[(a - 45 + k) % n] for k in range(45 + (b - a) % n + 12))))
+    n = len(v); ds = tr['ds'] if ds is None else ds; L = n * ds
+    idx = lambda s: int(round((s % L) / ds)) % n
+    names = tr['order']; K = len(names)
+    for q0, c in enumerate(names):
+        cc = tr['corners'][c]; prev = tr['corners'][names[(q0 - 1) % K]]
+        a, i = idx(cc['a']), idx(cc['i']); start = (idx(prev['i']) + 1) % n
+        span = (i - start) % n + int(round(6 / ds))
+        own = [(a - int(round(10 / ds)) + q) % n for q in range((i - a) % n + int(round(16 / ds)))]   # the corner itself: 10 m before turn-in to 6 m past the apex
+        vmin_i = min(own, key=lambda q: v[q]); vmin = v[vmin_i]
+        # off throttle: walk back from the slowest point while the kart is not accelerating, no further than the previous apex; brakes on: the first real braking in that stretch
+        q = vmin_i; steps = 0; limit = (vmin_i - start) % n
+        while steps < limit and ax[(q - 1) % n] < 0.02 * G: q = (q - 1) % n; steps += 1
+        lift = q if steps else None
+        brake = None
+        if lift is not None:
+            k = lift
+            for _ in range(steps):
+                if -ax[k] / G > 0.15: brake = k; break
+                k = (k + 1) % n
+        before = lambda p: None if p is None else round(((a - p) % n) * ds if (a - p) % n < n / 2 else -(((p - a) % n) * ds), 1)
+        stretch = [(lift if lift is not None else vmin_i) + k for k in range(steps + 1)]
+        peak = max(-ax[k % n] / G for k in stretch)
+        level = 5 if peak > 0.55 else 4 if peak > 0.30 else 3 if peak > 0.15 else 2 if lift is not None else 1   # the same thresholds as classify()
+        out[c] = dict(v_in=round(v[lift if lift is not None else a] * 2.23694, 1), v_min=round(vmin * 2.23694, 1), v_min_ms=round(vmin, 2),
+                      lift_before_turnin_m=before(lift), brake_before_turnin_m=before(brake),
+                      peak_decel_g=round(float(peak), 2), level=level)
     return out
 
 
@@ -266,7 +282,7 @@ def resample_to_step(arr, tr, m, nearest=False):
     return np.interp(s_app, tr['s'], arr, period=tr['L'])
 
 
-def run_layout(key, kart, wet, hill, log, quick=False, seed=0, scale=1.0, stale_max=6, maxiter=150):
+def run_layout(key, kart, wet, hill, log, quick=False, seed=0, scale=1.0, stale_max=8, maxiter=150):
     tr = load_track(key, hill=hill, scale=scale)
     args = kart_args(kart, wet)
     x, t, hist = optimise(tr, args, log=log, quick=quick, seed=seed, stale_max=stale_max, maxiter=maxiter)
@@ -291,7 +307,7 @@ def _job(job):
         KARTS['hire']['mu_y'] = saved['mu_y'] * f; KARTS['hire']['mu_x'] = saved['mu_x'] * f; KARTS['hire']['mu_b'] = saved['mu_b'] * f
     if kind == 'width': saved_w = PARAMS['track_width']; PARAMS['track_width'] = job['w']
     r, _ = run_layout(job['key'], job['kart'], job['wet'], job.get('hill', PARAMS['hill']), None, quick=job.get('quick', False),
-                      scale=job.get('scale', 1.0), stale_max=job.get('stale', 5), maxiter=job.get('maxiter', 120))
+                      scale=job.get('scale', 1.0), stale_max=job.get('stale', 8), maxiter=job.get('maxiter', 120), seed=job.get('seed', 0))
     if kind == 'grip': KARTS['hire'].update(saved)
     if kind == 'width': PARAMS['track_width'] = saved_w
     return job['label'], r
@@ -299,11 +315,48 @@ def _job(job):
 
 def main():
     quick = '--quick' in sys.argv
-    if '--retidy' in sys.argv:      # re-apply the level tidying and rewrite the report without re-running the optimiser
+    if '--retidy' in sys.argv:      # re-apply the level tidying and recompute the corner tables from the stored 2 m results, then rewrite the report
         path = os.path.join(ROOT, 'data', 'model.json'); out = json.load(open(path))
-        for lay in out['layouts'].values():
-            for r in lay['karts'].values(): r['levels'] = tidy_levels(r['levels'])
+        for key, lay in out['layouts'].items():
+            tr = load_track(key)
+            for r in lay['karts'].values():
+                r['levels'] = tidy_levels(r['levels']); v = np.array(r['v']); m = len(v); ds2 = tr['L'] / m
+                ax = np.array([(v[(j + 1) % m] ** 2 - v[j] ** 2) / (2 * ds2) for j in range(m)]); lv = np.array([int(ch) for ch in r['levels']])
+                r['corners'] = corner_report(tr, v, lv, ax, key, ds=ds2)
         json.dump(out, open(path, 'w'), separators=(',', ':')); write_report(out); print('retidied', path); return
+    if '--refine' in sys.argv:      # the hire kart, dry, every layout, three seeds each with the stronger shake schedule: keep the best line found
+        from multiprocessing import Pool
+        jobs = [dict(kind='main', label=f'{key}|hire|seed{seed}', key=key, kart='hire', wet=False, seed=seed, stale=8, maxiter=120) for key in ['intl_c', 'intl_n', 'nat_c', 'nat_n'] for seed in (1, 2, 3)]
+        t0 = time.time(); found = {}
+        with Pool(max(1, (os.cpu_count() or 2))) as pool:
+            for label, r in pool.imap_unordered(_job, jobs):
+                key, _, sd = label.split('|'); found.setdefault(key, []).append((r['lap'], sd, r))
+                print(f'{label:28s} {r["lap"]:.3f} s after {r["rounds"]} rounds   {time.time() - t0:.0f} s', flush=True)
+        path = os.path.join(ROOT, 'data', 'model.json'); out = json.load(open(path))
+        for key, lst in found.items():
+            lst.sort(key=lambda x: x[0]); have = out['layouts'][key]['karts']['hire']; best_lap, sd, r = lst[0]
+            spread = round(max(x[0] for x in lst) - min(x[0] for x in lst), 3)
+            out['layouts'][key].setdefault('seeds', {})['hire'] = dict(laps={x[1]: x[0] for x in lst}, first_run=have['lap'], spread=spread)
+            if best_lap < have['lap'] - 1e-3:
+                r['seed'] = sd; out['layouts'][key]['karts']['hire'] = r; print(f'{key}: {sd} improves the hire lap {have["lap"]:.3f} -> {best_lap:.3f} s (spread across seeds {spread} s)')
+            else: print(f'{key}: the first run stands at {have["lap"]:.3f} s (seeds {[x[0] for x in lst]}, spread {spread} s)')
+        json.dump(out, open(path, 'w'), separators=(',', ':')); write_report(out); print('refined', path); return
+    if '--sweeps' in sys.argv:      # rerun only the sensitivity and calibration cases, deeper than the quick runs, and merge them in
+        from multiprocessing import Pool
+        path = os.path.join(ROOT, 'data', 'model.json'); out = json.load(open(path)); jobs = []
+        for hill in (0.0, 4.0, 8.0, 12.0): jobs.append(dict(kind='hill', label=f'sweep|hill_{hill:.0f}m', key='intl_n', kart='hire', wet=False, hill=hill, stale=3, maxiter=80))
+        for f in (0.85, 1.0, 1.15, 1.3): jobs.append(dict(kind='grip', label=f'sweep|grip_x{f:.2f}', key='intl_n', kart='hire', wet=False, f=f, stale=3, maxiter=80))
+        for w in (7.0, 8.0, 9.0): jobs.append(dict(kind='width', label=f'sweep|width_{w:.0f}m', key='intl_n', kart='hire', wet=False, w=w, stale=3, maxiter=80))
+        jobs.append(dict(kind='scale', label='sweep|length_1054m', key='intl_n', kart='hire', wet=False, scale=1054.0 / 1200.0, stale=3, maxiter=80))
+        for sc, f in ((1.0, 1.3), (1054.0 / 1200.0, 1.15), (1054.0 / 1200.0, 1.3), (1054.0 / 1200.0, 1.45)):
+            jobs.append(dict(kind='grip', label=f'calib|len_{1200 * sc:.0f}m_grip_x{f:.2f}', key='intl_n', kart='hire', wet=False, f=f, scale=sc, stale=3, maxiter=80))
+        t0 = time.time()
+        with Pool(max(1, (os.cpu_count() or 2))) as pool:
+            for label, r in pool.imap_unordered(_job, jobs):
+                name = label.split('|')[1]; out['sweeps'][name] = dict(lap=r['lap'], v_mean=r['v_mean'], v_max=r['v_max'], flat_share=r['flat_share'], rounds=r['rounds'], christmas=r['corners'].get('christmas'), ashby=r['corners'].get('ashby'))
+                print(f'{label:34s} {r["lap"]:.3f} s after {r["rounds"]} rounds   {time.time() - t0:.0f} s', flush=True)
+        out['sweeps_note'] = 'sweeps run to three idle rounds of 80 iterations; the main results to five idle rounds of 120'
+        json.dump(out, open(path, 'w'), separators=(',', ':')); write_report(out); print('sweeps merged into', path); return
     log = lambda s: print(s, flush=True)
     out = dict(params=PARAMS, height_keys=HEIGHT_KEYS, karts=KARTS, wet=WET, layouts={}, sweeps={}, benchmark=dict(
         hire_record_s=56.992, hire_record_note='Sodi RT8 hire kart, International before the chicane, 2016 video title; laptrophy lists a 57.8 s rental record',

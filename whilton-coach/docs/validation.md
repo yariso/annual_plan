@@ -3,6 +3,7 @@
 | Claim | Status | Sources |
 |---|---|---|
 | Corner order, both layouts | Agreed | BUKC National guide, NRDD International lap, KCL Motorsport 2013 guide, Club100 venue page and race report, circuit map |
+| Track shape | Checked against the owner's copy of the circuit map (19 September 2026) | tools/check_map.py: the drawn loop and the app's centreline agree to 0.5 m RMS and 1.6 m at worst after alignment; every corner apex within 1.3 m. The two are the same drawing, so this confirms the shape, not the scale or the length |
 | Direction of travel: clockwise | Derived | Every centreline in data.json closes clockwise and each corner's hand matches the guides; no page states the word |
 | Turn numbers | Convention | International numbers follow BUKC and NRDD (Fine Lady unnumbered, Christmas T3, Pit Bend T11); the BUKC National guide numbers only Turns 1 and 2, so the National count here follows the same pattern. Other listings count 12, 13 or 14 turns |
 | Alternative names: Chapmans for the left into The Boot (KCL 2013), Wilkins and Osiers for Parker and Chapmans (Club100 race report), Osiers before the short straight to The Boot (Club100 venue page), Championship Bend for the last corner (Kart Directory) | Single sources each | Search excerpts only |

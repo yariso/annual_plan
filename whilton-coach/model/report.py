@@ -37,12 +37,20 @@ def write(out, path):
         r = lay['karts'].get('hire')
         if not r: continue
         o.append(f'### {lay["name"]}\n')
-        o.append('| Corner | Speed 30 m before turn-in | Slowest | Brakes on, metres before turn-in | Peak braking | What the feet do |\n|---|---|---|---|---|---|')
+        o.append('| Corner | Speed when the throttle comes off | Slowest | Off throttle, before turn-in | Brakes on, before turn-in | Peak braking | What the feet do |\n|---|---|---|---|---|---|---|')
+        fmt = lambda bb: 'none' if bb is None else (str(bb) + ' m' if bb >= 0 else str(-bb) + ' m after turn-in')
         for c in D_ORDER(key):
             x = r['corners'].get(c)
             if not x: continue
-            bb = x['brake_before_turnin_m']
-            o.append(f'| {NAMES.get(c, c)} | {x["v_in"]} mph | {x["v_min"]} mph | {"none" if bb is None else (str(bb) + " m" if bb >= 0 else str(-bb) + " m after turn-in")} | {x["peak_decel_g"]} g | {LV[x["level"]]} |')
+            o.append(f'| {NAMES.get(c, c)} | {x["v_in"]} mph | {x["v_min"]} mph | {fmt(x.get("lift_before_turnin_m"))} | {fmt(x["brake_before_turnin_m"])} | {x["peak_decel_g"]} g | {LV[x["level"]]} |')
+        o.append('')
+    seeds = {k: v.get('seeds', {}).get('hire') for k, v in L.items() if v.get('seeds', {}).get('hire')}
+    if seeds:
+        o.append('## Is it the best, or just a good one?\n')
+        o.append('Every hire-kart layout was searched again from three more random seeds with a stronger shake schedule (every third round a 1.2 m shake, eight idle rounds to stop). The spread between seeds is how much a single search can be off its best.\n')
+        o.append('| Layout | First run | Seeds | Spread | Kept |\n|---|---|---|---|---|')
+        for k, sd in seeds.items():
+            o.append(f'| {L[k]["name"]} | {sd["first_run"]:.3f} s | ' + ', '.join(f'{v:.3f}' for v in sd['laps'].values()) + f' s | {sd["spread"]:.3f} s | {L[k]["karts"]["hire"]["lap"]:.3f} s |')
         o.append('')
     r0 = L.get('intl_c', {}).get('karts', {}).get('hire')
     if r0:
@@ -55,7 +63,7 @@ def write(out, path):
     S = out.get('sweeps', {})
     if S:
         o.append('## What nobody has measured, and how much it matters\n')
-        o.append('All on the International without the chicane, hire kart, dry, shorter optimisation runs.\n')
+        o.append('All on the International without the chicane, hire kart, dry. ' + out.get('sweeps_note', 'Shorter optimisation runs than the main results, so differences under about half a second are search noise, not physics.') + '\n')
         o.append('| Case | Lap | Average speed | Christmas slowest | Ashby slowest |\n|---|---|---|---|---|')
         for name, v in S.items():
             o.append(f'| {name.replace("_", " ")} | {v["lap"]:.2f} s | {v["v_mean"]} mph | {v["christmas"]["v_min"] if v.get("christmas") else ""} mph | {v["ashby"]["v_min"] if v.get("ashby") else ""} mph |')
