@@ -3,12 +3,13 @@ from scipy.ndimage import gaussian_filter1d
 
 import os
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
-scale = json.load(open(os.path.join(ROOT, 'data', 'scale.json')))['scale']
+_sc = json.load(open(os.path.join(ROOT, 'data', 'scale.json'))); scale = _sc['scale']; DETECT_SCALE = _sc.get('detect_scale', scale)
 STEP = 2.0; HALF = 8.0; OFFMAX = 5.6
 PATHS = {k: os.path.join(ROOT, 'data', v) for k, v in dict(intl_c='intl_px.npy', intl_n='intl_n_px.npy', nat_c='nat_px.npy', nat_n='nat_n_px.npy').items()}
 
-def prep(px):
-    p = np.column_stack([px[:, 0] * scale, -px[:, 1] * scale])
+def prep(px, sc=None):
+    sc = scale if sc is None else sc
+    p = np.column_stack([px[:, 0] * sc, -px[:, 1] * sc])
     q = np.vstack([p, p[:1]]); d = np.hypot(*np.diff(q, axis=0).T); s = np.concatenate([[0], np.cumsum(d)]); L = s[-1]
     n = int(round(L / STEP)); t = np.arange(n) * (L / n)
     P = np.column_stack([np.interp(t, s, q[:, 0]), np.interp(t, s, q[:, 1])])
@@ -124,7 +125,9 @@ def zones_wet(key, prof):
     return z
 
 def build(key):
-    g = prep(np.load(PATHS[key])); cs = detect(g); names = SEQ[key]
+    px = np.load(PATHS[key]); g = prep(px); names = SEQ[key]
+    gd = prep(px, DETECT_SCALE); cs = detect(gd)                      # detect on the scale the thresholds were tuned for, then map the segments onto this geometry
+    f = g['n'] / gd['n']; cs = [[int(round(c[0] * f)), min(g['n'] - 1, int(round(c[1] * f))), c[2], c[3]] for c in cs]
     assert len(cs) == len(names), (key, len(cs), len(names))
     P, h, k, L, ds, n = g['P'], g['h'], g['k'], g['L'], g['ds'], g['n']
     rng = {}; prev_end = 0.0; prev_name = 'start'
@@ -199,7 +202,7 @@ minx, maxy = allx.min(), ally.max(); W = allx.max() - minx + PADX + PADR; H = ma
 T = lambda x, y: (round(float(x - minx + PADX), 1), round(float(maxy - y + PADY), 1))
 out = dict(w=round(float(W), 1), h=round(float(H), 1), half=HALF, layouts={})
 for k, d in data.items():
-    o = dict(total=round(float(d['total']), 1), official={'intl_c': 1200, 'intl_n': 1200, 'nat_c': 960, 'nat_n': 960}[k], step=round(float(d['step']), 4), order=d['order'])   # official: the venue's published figures, not measured; total: the traced length on the 1200 m scale
+    o = dict(total=round(float(d['total']), 1), official={'intl_c': 1054, 'intl_n': 1045, 'nat_c': 859, 'nat_n': 851}[k], venue={'intl_c': 1200, 'intl_n': 1200, 'nat_c': 960, 'nat_n': 960}[k], step=round(float(d['step']), 4), order=d['order'])   # the map is scaled so the International with the chicane measures the 1054 m in the 2025 regulations; venue: the figures the venue advertises
     o['centre'] = [T(x, y) for x, y in d['centre']]; o['line'] = [T(x, y) for x, y in d['line']]; o['line_w'] = [T(x, y) for x, y in d['line_w']]
     o['curv'] = [round(float(c), 4) for c in d['curv']]
     o['levels'] = {p: ''.join(map(str, lv)) for p, lv in d['levels'].items() if not p.endswith('_w')}

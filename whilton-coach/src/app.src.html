@@ -174,8 +174,8 @@ svg text{font-family:var(--display);fill:var(--ink)}
 
 <div class="controls" id="controls">
   <div class="seg" role="group" aria-label="Circuit layout">
-    <button type="button" data-layout="intl" aria-pressed="true">International<small>1200 m</small></button>
-    <button type="button" data-layout="nat" aria-pressed="false">National<small>960 m</small></button>
+    <button type="button" data-layout="intl" aria-pressed="true">International<small>1054 m</small></button>
+    <button type="button" data-layout="nat" aria-pressed="false">National<small>about 860 m</small></button>
   </div>
   <div class="seg" role="group" aria-label="Driver level">
     <button type="button" data-profile="novice" aria-pressed="true">Novice</button>
@@ -695,7 +695,7 @@ function renderMap(svg, o) {
   if (o.dot) { const g = el('g', { id: o.dot }, [el('circle', { r: 5.5, fill: 'var(--ink)', stroke: '#fff', 'stroke-width': 2.2 })]); g.setAttribute('transform', 'translate(' + LN[0][0] + ' ' + LN[0][1] + ')'); svg.appendChild(g); }
 }
 function drawMain() {
-  $('#mapcap').textContent = 'The lap runs clockwise and Oblivion, the first corner, is a left. ' + (st.layout === 'intl' ? 'International circuit, the blue line on the Kart Directory map.' : 'National circuit. It turns off at Inkermans and rejoins on the short straight before The Boot.') + ' Grey is tarmac this layout does not use. Track width is exaggerated so the line shows up. The lengths on the buttons are the venue\'s figures.' + (st.profile === 'model' ? ' Model: the line and colours are the physics model\'s fastest lap for the hire kart, the limit for a perfect driver, not a guide. See the Plan tab.' : '') + (st.wet ? ' Wet line: off the rubbered dry line, earlier and gentler braking, no kerbs. This is general wet technique, not a Whilton-specific source.' : '');
+  $('#mapcap').textContent = 'The lap runs clockwise and Oblivion, the first corner, is a left. ' + (st.layout === 'intl' ? 'International circuit, the blue line on the Kart Directory map.' : 'National circuit. It turns off at Inkermans and rejoins on the short straight before The Boot.') + ' Grey is tarmac this layout does not use. Track width is exaggerated so the line shows up. The lengths on the buttons follow the 1054 m in the 2025 racing regulations; the venue advertises 1200 m and 960 m.' + (st.profile === 'model' ? ' Model: the line and colours are the physics model\'s fastest lap for the hire kart, the limit for a perfect driver, not a guide. See the Plan tab.' : '') + (st.wet ? ' Wet line: off the rubbered dry line, earlier and gentler braking, no kerbs. This is general wet technique, not a Whilton-specific source.' : '');
   renderMap($('#map'), { names: st.show.names, markers: st.show.markers, kerbs: st.show.kerbs, targets: true, select: true });
 }
 
@@ -889,7 +889,7 @@ function renderPlan() {
     '<div class="panel"><h3>About this guide</h3><ul>' +
     '<li>Both coach guides were written for Club100 style two-stroke karts. A 390cc hire kart is slower down the straights, so its braking zones are likely to be a little shorter. The same corners are still the big stops.</li>' +
     '<li>The venue sells arrive-and-drive sessions on both the National (960 m) and the International (1200 m), in 20, 30 and 40 minute slots for age 14 and over, in BirelART N35 390cc karts. Its 20-minute voucher session is on the National, and the National section is floodlit while the International is not, so evening sessions are likely to be on the National. There is also a separate 450 m Mill circuit for junior sessions, which this guide does not cover. Club championship and British championship rounds run the International; Club100 and BUKC race both. Check which layout you are booked on, and whether the chicane is in use that day: a 2024 report describes a hire event run without it.</li>' +
-    '<li>The track shape is traced from the Kart Directory circuit map and scaled so the International lap with the chicane measures 1200 m, the figure the venue quotes. Published lengths disagree: the venue says 1200 m and 960 m, the 2025 club and British championship regulations say 1054 m, and the BKC event page says 1190 m, and none gives a separate figure for the chicane. On the 1200 m scale the National comes out at 969 m, or 978 m with the chicane. Treat map distances as approximate, and possibly a tenth long, until a GPS lap has been fitted: after a lock the Coach tab shows the lap length measured from your own trace. Track width is drawn wider than life.</li>' +
+    '<li>The track shape is traced from the circuit map and checked against the owner\'s copy of it (they agree to half a metre). It is scaled so the International lap with the chicane measures 1054 m, the length in the 2025 club and British championship regulations. The venue advertises 1200 m and 960 m and the BKC event page says 1190 m, but the lap times settle it: race karts lap the current layout in about 45 seconds and quick hire drivers in about 64, averages that are only possible on a lap near 1054 m. On that scale the International without the chicane is 1045 m and the National about 860 m (851 m without the chicane). After a GPS lock the Coach tab shows the lap length measured from your own trace. Track width is drawn wider than life.</li>' +
     '</ul></div>';
 }
 

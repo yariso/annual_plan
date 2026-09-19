@@ -64,8 +64,8 @@ KARTS = dict(
               mu_x=0.75,            # traction from the driven rear axle only: estimate
               mu_b=0.70,            # braking with rear brakes only, load moving forward: estimate
               ),
-    race=dict(name='two-stroke race kart (Club100 or Rotax style)',
-              mass=90 + 75, power_kw=20.0, drive_eff=0.9, v_top=30.5, cda=0.55, crr=0.012, mu_y=1.55, mu_x=1.0, mu_b=1.05),
+    race=dict(name='senior two-stroke race kart (X30 or Rotax Max class)',
+              mass=85 + 75, power_kw=22.0, drive_eff=0.9, v_top=33.0, cda=0.55, crr=0.012, mu_y=1.75, mu_x=1.15, mu_b=1.2),   # about 30 bhp, 74 mph, race slicks: estimates
 )
 WET = dict(mu_y=0.62, mu_x=0.5, mu_b=0.5)   # fractions of the dry figures are not used; these are the wet values for the hire kart, scaled for the race kart below
 LAYOUT_NAMES = dict(intl_c='International with the chicane', intl_n='International without the chicane', nat_c='National with the chicane', nat_n='National without the chicane')
@@ -359,8 +359,11 @@ def main():
         json.dump(out, open(path, 'w'), separators=(',', ':')); write_report(out); print('sweeps merged into', path); return
     log = lambda s: print(s, flush=True)
     out = dict(params=PARAMS, height_keys=HEIGHT_KEYS, karts=KARTS, wet=WET, layouts={}, sweeps={}, benchmark=dict(
-        hire_record_s=56.992, hire_record_note='Sodi RT8 hire kart, International before the chicane, 2016 video title; laptrophy lists a 57.8 s rental record',
-        hire_record_url='https://www.youtube.com/watch?v=UuduhSd-Qx0'))
+        hire_record_s=56.992, hire_record_note='Sodi RT8 hire kart, International before the chicane, video titles by the same driver: 56.99 s and 56.19 s',
+        hire_record_url='https://www.youtube.com/watch?v=UuduhSd-Qx0',
+        hire_typical_s=64.537, hire_typical_note='fastest lap in a 20-minute International arrive-and-drive practice session, 18 February 2025, with the chicane (Alpha Timing)',
+        race_s=45.28, race_note='Senior X30 test session, WMKC Round 3, May 2025, with the chicane; Senior Rotax 45.54, Junior X30 45.59 (Alpha Timing)',
+        race_2021_s=44.8, race_2021_note='Brad Philpot, Rotax Max, June 2021, International before the chicane (Karting Track Guides)'))
     t0 = time.time()
     if quick:
         r, _ = run_layout('intl_n', 'hire', False, PARAMS['hill'], log, quick=True)
@@ -371,14 +374,14 @@ def main():
     for key in ['intl_c', 'intl_n', 'nat_c', 'nat_n']:
         for kart in ['hire', 'race']:
             for wet in [False, True]:
-                jobs.append(dict(kind='main', label=f'{key}|{kart}{"_w" if wet else ""}', key=key, kart=kart, wet=wet, stale=5, maxiter=120))
+                jobs.append(dict(kind='main', label=f'{key}|{kart}{"_w" if wet else ""}', key=key, kart=kart, wet=wet, stale=8, maxiter=120))
+        jobs.append(dict(kind='main', label=f'{key}|hire|seed1', key=key, kart='hire', wet=False, seed=1, stale=8, maxiter=120))   # a second seed for the lap the app follows
     # sensitivity on the pre-chicane International for the hire kart: the hill, the grip, the width and the lap length, none of them measured
-    for hill in (0.0, 4.0, 8.0, 12.0): jobs.append(dict(kind='hill', label=f'sweep|hill_{hill:.0f}m', key='intl_n', kart='hire', wet=False, hill=hill, quick=True))
-    for f in (0.85, 1.0, 1.15, 1.3): jobs.append(dict(kind='grip', label=f'sweep|grip_x{f:.2f}', key='intl_n', kart='hire', wet=False, f=f, quick=True))
-    for w in (7.0, 8.0, 9.0): jobs.append(dict(kind='width', label=f'sweep|width_{w:.0f}m', key='intl_n', kart='hire', wet=False, w=w, quick=True))
-    for sc in (1054.0 / 1200.0,): jobs.append(dict(kind='scale', label='sweep|length_1054m', key='intl_n', kart='hire', wet=False, scale=sc, quick=True))
-    for sc, f in ((1.0, 1.3), (1054.0 / 1200.0, 1.15), (1054.0 / 1200.0, 1.3), (1054.0 / 1200.0, 1.45)):
-        jobs.append(dict(kind='grip', label=f'calib|len_{1200 * sc:.0f}m_grip_x{f:.2f}', key='intl_n', kart='hire', wet=False, f=f, scale=sc, quick=True))
+    SW = dict(stale=3, maxiter=80)
+    for hill in (0.0, 4.0, 8.0, 12.0): jobs.append(dict(kind='hill', label=f'sweep|hill_{hill:.0f}m', key='intl_c', kart='hire', wet=False, hill=hill, **SW))
+    for f in (0.85, 1.0, 1.15, 1.3): jobs.append(dict(kind='grip', label=f'sweep|grip_x{f:.2f}', key='intl_c', kart='hire', wet=False, f=f, **SW))
+    for w in (7.0, 8.0, 9.0): jobs.append(dict(kind='width', label=f'sweep|width_{w:.0f}m', key='intl_c', kart='hire', wet=False, w=w, **SW))
+    jobs.append(dict(kind='scale', label='sweep|length_1200m', key='intl_c', kart='hire', wet=False, scale=1200.0 / 1054.0, **SW))   # the venue's figure, for comparison
     log(f'{len(jobs)} optimisations on {os.cpu_count()} cpus')
     with Pool(max(1, (os.cpu_count() or 2) - 0)) as pool:
         for label, r in pool.imap_unordered(_job, jobs):
@@ -387,10 +390,14 @@ def main():
                 out['sweeps'][name] = dict(lap=r['lap'], v_mean=r['v_mean'], v_max=r['v_max'], flat_share=r['flat_share'], christmas=r['corners'].get('christmas'), ashby=r['corners'].get('ashby'))
                 log(f'{label:34s} {r["lap"]:.3f} s   {time.time() - t0:.0f} s')
             else:
-                key = group; kk = name
-                out['layouts'].setdefault(key, dict(name=LAYOUT_NAMES[key], total=D['layouts'][key]['total'], karts={}))['karts'][kk] = r
+                key = group; kk = name; lay = out['layouts'].setdefault(key, dict(name=LAYOUT_NAMES[key], total=D['layouts'][key]['total'], karts={}, seeds={}))
+                if kk.startswith('hire|seed') or (kk == 'hire' and 'hire' in lay['karts']):      # two seeds for the hire kart dry: keep the better, record both
+                    other = lay['karts'].get('hire'); laps = dict(lay['seeds'].get('hire', {}).get('laps', {})); laps['seed1' if kk.startswith('hire|seed') else 'seed0'] = r['lap']
+                    if other is None or r['lap'] < other['lap']: lay['karts']['hire'] = r
+                    lay['seeds']['hire'] = dict(laps=laps, first_run=laps.get('seed0', r['lap']), spread=round(max(laps.values()) - min(laps.values()), 3) if len(laps) > 1 else 0.0)
+                else: lay['karts'][kk] = r
                 log(f'{label:34s} {r["lap"]:.3f} s after {r["rounds"]} rounds (centreline {r["centreline_lap"]:.3f} s), mean {r["v_mean"]} mph, top {r["v_max"]} mph, flat {r["flat_share"] * 100:.0f}%   {time.time() - t0:.0f} s')
-    out['run_seconds'] = round(time.time() - t0, 1)
+    out['run_seconds'] = round(time.time() - t0, 1); out['sweeps_note'] = 'sweeps run to three idle rounds of 80 iterations on the International with the chicane; the main results to eight idle rounds of 120'
     path = os.path.join(ROOT, 'data', 'model.json')
     json.dump(out, open(path, 'w'), separators=(',', ':'))
     log(f'wrote {path} ({os.path.getsize(path)} bytes) in {out["run_seconds"]} s')

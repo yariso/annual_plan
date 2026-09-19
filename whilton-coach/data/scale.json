@@ -1,1 +1,5 @@
-{"scale": 0.39130735104844055}
+{
+ "scale": 0.3436982900042136,
+ "detect_scale": 0.39130735104844055,
+ "note": "scale: metres per traced pixel so the International with the chicane measures 1054 m (2025 regulations). detect_scale: the earlier 1200 m scale, on which corner detection was tuned; detection runs there and the segments are mapped onto the 1054 m geometry."
+}
