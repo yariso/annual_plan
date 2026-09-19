@@ -718,7 +718,11 @@ function pedalPlan(c) {
 function factRows(c) {
   const rows = [['How hard, and from where to where', null, pedalPlan(c)], ['Brake marker', c.marker], ['Line', c.line]];
   if (st.wet) rows.push(['In the wet', c.wet], ['Kerbs in the wet', 'Stay off all of them, and off painted lines and the concrete run-off. They are far slipperier than the tarmac.']);
-  else rows.push(['Apex kerb', c.kerbA], ['Exit kerb', c.kerbX], ['Kerbs', c.kerbs]);
+  else {
+    // lead each kerb row with the verdict word so the answer to "can I ride it" is the first thing read
+    const ks = kerbsOf(c.prims ? Object.keys(CARDS).find(k => CARDS[k] === c) : null), word = arr => arr.length ? '<b>' + [...new Set(arr.map(k => KERBWORD[k.status]))].join(', ') + '.</b> ' : '';
+    rows.push(['Apex kerb', null, c.kerbA ? word(ks.filter(k => k.where === 'apex')) + esc(pick(c.kerbA)) : null], ['Exit kerb', null, c.kerbX ? word(ks.filter(k => k.where === 'exit')) + esc(pick(c.kerbX)) : null], ['Kerbs', null, c.kerbs ? word(ks) + esc(pick(c.kerbs)) : null]);
+  }
   rows.push(['Common mistake', c.mistake]); if (!st.wet) rows.push(['In the wet', c.wet]); rows.push(['Passing', c.pass], ['Worth knowing', c.note]);
   return '<dl class="facts">' + rows.filter(r => r[1] || r[2]).map(r => '<div><dt>' + r[0] + '</dt><dd>' + (r[2] || esc(pick(r[1]))) + '</dd></div>').join('') + '</dl>';
 }
@@ -976,7 +980,7 @@ function lapTick(now) {       // runs ten times a second: carries the last fix f
       const text = set.mode === 'talk' ? callFor({ key: ev.key, level: ev.level }) : WORD[ev.level]; if (!text) continue;
       speak(text); if (E.onWord) E.onWord(text, ev.level);
     }
-    E.wordCum = wc;
+    E.wordCum = E.wordCum == null || wc < E.wordCum - 45 ? wc : Math.max(E.wordCum, wc);      // a noisy fix can pull the look-ahead back a few metres: never re-cross an event already spoken
   }
   if (E.pendingTip && E.tipAt != null && cumNow >= E.tipAt) { if (set.coachSay) speak(E.pendingTip); if (E.onWord) E.onWord(E.pendingTip, 0); E.pendingTip = null; }
   return { cum: cumNow, v: vNow, level: at(cumNow) };
