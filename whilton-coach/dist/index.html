@@ -812,7 +812,25 @@ function renderAcc() {
 function renderPlan() {
   const nat = st.layout === 'nat';
   const kb = (s, t) => '<li><span class="kb" style="background:var(--' + s + ')">' + ({ ok: '&#10003;', care: '!', no: '&#10005;' }[s]) + '</span><span>' + t + '</span></li>';
+  const byLv = { flat: [], lift: [], brake: [] }; cardList().forEach(([k]) => { const c = CARDS[k], l = lvOf(c); (l === 1 ? byLv.flat : l === 2 ? byLv.lift : byLv.brake).push(c.name + (l >= 3 ? ' (' + { 3: 'dab', 4: 'firm', 5: 'hard' }[l] + ')' : '')); });
+  const join = a => a.length ? a.join(', ') : 'none';
   $('#plan').innerHTML =
+    '<div class="panel"><h3>Move up the table: the one-page plan</h3>' +
+    '<p style="max-width:64ch">A novice team moves up a hire-kart enduro by three things, in this order: no spins, every driver at the same pace, and the flat corners taken flat. Speed comes last. This is standard coaching, and every line below is what the app measures or reads out.</p>' +
+    '<p style="margin:8px 0 4px"><b>Before the day, ten minutes each, daily</b></p><ul>' +
+    '<li>Coach tab: the virtual lap once, the lap in your head once, the corner quiz until you get ten right. Then Read me the lap with your eyes shut.</li>' +
+    '<li>Learn these by name. Flat: ' + esc(join(byLv.flat)) + '. Lift only: ' + esc(join(byLv.lift)) + '. Brake: ' + esc(join(byLv.brake)) + '.</li>' +
+    '<li>Draw the track from memory with the brake corners marked. When all of you draw the same map, you know it.</li></ul>' +
+    '<p style="margin:8px 0 4px"><b>On the day</b></p><ul>' +
+    '<li>At the briefing ask three things: is the chicane in use, are earpieces allowed, and does the concrete beyond the white line count. Then set the Map tab to match.</li>' +
+    '<li>Practice, about seven minutes each: two laps at eight tenths with tones only, then three laps working on one thing, then the in-lap. Quickest driver goes last and does the qualifying laps. Type each driver\'s name above Start GPS.</li>' +
+    '<li>Rehearse the driver change on the ground: belt, seat, go. Under a minute. A slow change costs more than any corner.</li>' +
+    '<li>In the kart: one steering movement per corner, eyes on the exit, brake in a straight line, throttle progressively because the hire karts oversteer on power. Flat where the list says flat. Let faster karts through and hold your line: a pass costs a second, a spin costs twenty, contact costs the race.</li>' +
+    '<li>With the earpiece: chirp, then the word, then the tone. Brake at the word, come off the brake as the tone ends. If it says GPS lost, drive on your own until GPS back.</li></ul>' +
+    '<p style="margin:8px 0 4px"><b>After each stint</b></p><ul>' +
+    '<li>Read the debrief on the Coach tab: the focus corner and one change for the next driver. One change per stint, never three.</li>' +
+    '<li>The team table shows who is quickest through each corner. That person tells the others how they take it, in one sentence, before the next change.</li>' +
+    '<li>Save the recording. Next time the coach starts from your own laps instead of estimates.</li></ul></div>' +
     '<div class="panel"><h3>Before you get there</h3><ul>' +
     '<li>Arrive early enough to sign on and sit through the safety briefing before your slot. Hire circuits generally will not let you drive if you miss it, and the venue says you must be able to follow it in English. Ask how early when you book; half an hour is a safe guess.</li>' +
     '<li>Wear close-fitting clothes and closed shoes; trainers are fine. The venue provides helmets and race suits. Gloves and balaclavas are provided at some sessions and sold at others, so bring your own if you have them. Your own helmet, suit, gloves and boots are allowed.</li>' +
