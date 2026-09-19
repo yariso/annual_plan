@@ -130,6 +130,10 @@ label.f select,label.f input[type=number]{font:500 16px/1.2 var(--body);color:va
 .status{font-size:14.5px;border-left:4px solid var(--accent);padding:6px 10px;background:var(--ground);border-radius:0 8px 8px 0;margin:8px 0}
 .pedalnow{font:700 30px/1 var(--display);text-align:center;padding:12px;border-radius:10px;background:var(--l1);color:var(--on-level);margin-top:8px}
 .word{font:600 19px/1.2 var(--display);text-align:center;min-height:26px;margin:6px 0 0;color:var(--ink)}
+.kverdict{display:flex;align-items:center;gap:4px;margin-bottom:3px;font:600 14px/1.1 var(--display)}
+.kerbtab{table-layout:fixed;font-size:13.5px}
+.kerbtab th:first-child,.kerbtab td:first-child{width:24%}
+.kerbtab td{vertical-align:top;padding:8px 6px 8px 0;overflow-wrap:anywhere}
 table.deb{width:100%;border-collapse:collapse;font-size:14.5px;font-variant-numeric:tabular-nums}
 table.deb th{text-align:left;font:600 13px/1.2 var(--display);color:var(--muted);padding:4px 6px 4px 0;border-bottom:1.5px solid var(--rule)}
 table.deb td{padding:5px 6px 5px 0;border-bottom:1px solid var(--rule)}
@@ -681,6 +685,21 @@ function renderStrip() {
   $('#strip').innerHTML = html;
 }
 
+// every kerb on a corner, from the map data: [{ where: apex|exit, side, status, text }]
+const KERBWORD = { use: 'Use it', care: 'With care', avoid: 'Stay off', unknown: 'Look first' };
+function kerbsOf(key) {
+  const L = LY(), c = CARDS[key], out = [];
+  L.kerbs.forEach(k => { if (c.prims.indexOf(k.corner) >= 0) out.push({ where: k.where, side: k.side, status: st.wet ? 'avoid' : k.status, corner: k.corner }); });
+  return out;
+}
+function kerbSay(key) {
+  // one short spoken sentence per corner: "Apex kerb, use it. Exit kerb, stay off."
+  const ks = kerbsOf(key); if (!ks.length) return '';
+  const a = ks.filter(k => k.where === 'apex'), x = ks.filter(k => k.where === 'exit');
+  const worst = arr => arr.reduce((w, k) => ({ use: 0, care: 1, unknown: 2, avoid: 3 }[k.status] > { use: 0, care: 1, unknown: 2, avoid: 3 }[w] ? k.status : w), 'use');
+  const part = (label, arr) => arr.length ? label + ', ' + KERBWORD[worst(arr)].toLowerCase() + '.' : '';
+  return ' ' + [part('Apex kerb', a), part('Exit kerb', x)].filter(Boolean).join(' ');
+}
 function pedalPlan(c) {
   // what the feet do through this corner, read off the painted levels: phase, where it starts relative to turn-in, and for how long
   const L = LY(), lv = LVL(L), n = lv.length, step = L.step, first = L.corners[c.prims[0]], last = L.corners[c.prims[c.prims.length - 1]];
@@ -737,6 +756,21 @@ function renderPlan() {
     '<li>Work on position: left after Oblivion, far left before the ' + (nat ? 'Inkermans' : 'Ashby') + ' hairpin, no wider than mid-track out of the left in The Boot.</li>' +
     '<li>Last, the exits: early, full throttle out of ' + (st.chic ? 'the final corner' : 'the right-hander in The Boot') + ' and from the ' + (nat ? 'last left in Zulu' : 'late apex at Chapmans') + '.</li>' +
     '</ol></div></div>' +
+    '<div class="panel"><h3>Can I ride the kerb? Every corner</h3>' +
+    '<p style="max-width:64ch">' + (st.wet ? 'It is wet, so the answer everywhere is no: painted kerbs, painted lines and the concrete are far slipperier than the tarmac.' : 'Rule of thumb in a hire kart: a flat, painted kerb on the inside of a corner is fine with the two inside wheels. Anything raised, and any exit kerb guarded by tyres, is not. Where no guide covers a kerb it says Look first: check it on the sighting lap, flat and painted is usable, anything raised is not.') + '</p>' +
+    '<div style="overflow-x:auto"><table class="deb kerbtab"><thead><tr><th>Corner</th><th>Apex kerb</th><th>Exit kerb</th></tr></thead><tbody>' +
+    cardList().map(([key, tn]) => {
+      const c = CARDS[key], ks = kerbsOf(key), cell = (arr, text) => {
+        if (!arr.length && !text) return '<td class="muted">No kerb to use</td>';
+        const badge = arr.map(k => '<span class="kb" style="background:var(--' + ({ use: 'ok', care: 'care', avoid: 'no', unknown: 'muted' }[k.status]) + ')" title="' + KERBWORD[k.status] + '">' + ({ use: '&#10003;', care: '!', avoid: '&#10005;', unknown: '?' }[k.status]) + '</span>').join('');
+        const words = arr.length ? [...new Set(arr.map(k => KERBWORD[k.status]))].join(', ') : '';
+        return '<td>' + (badge ? '<div class="kverdict">' + badge + '<b>' + words + '</b></div>' : '') + (text ? '<div class="small">' + esc(pick(text)) + '</div>' : '') + '</td>';
+      };
+      const a = ks.filter(k => k.where === 'apex'), x = ks.filter(k => k.where === 'exit'), name = '<td><b>' + esc(c.name) + '</b>' + (tn === 'new' || tn === 'kink' ? '' : '<div class="small muted">' + esc(tn) + '</div>') + '</td>';
+      if (c.kerbs && !c.kerbA) return '<tr>' + name + cell(ks, st.wet ? '' : c.kerbs).replace('<td>', '<td colspan="2">') + '</tr>';   // corners with several parts keep one combined kerb note
+      return '<tr>' + name + cell(a, st.wet ? '' : c.kerbA) + cell(x, st.wet ? '' : c.kerbX) + '</tr>';
+    }).join('') + '</tbody></table></div>' +
+    '<p class="small muted" style="margin-top:8px">Verdicts come from the written guides where one covers the kerb, and are marked Look first where none does. The corner cards give the detail.</p></div>' +
     '<div class="two"><div class="panel"><h3>Kerbs at a glance</h3><ul class="kl">' +
     kb('ok', 'Oblivion inside kerb, and the concrete run-off on the exit of Crook.') +
     (nat ? kb('ok', 'All of the painted inside kerb at the last left in Zulu.') : kb('ok', 'Flat inside kerbs at Inkermans, Ashby and Parker, and the concrete run-off leaving Ashby.')) +
@@ -804,7 +838,7 @@ function setTab(t) {
   st.tab = t;
   $$('nav.tabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === t)));
   $$('section.tab').forEach(s => { s.hidden = s.id !== 'tab-' + t; });
-  $('#controls').hidden = !(t === 'map' || t === 'corners');
+  $('#controls').hidden = !(t === 'map' || t === 'corners' || t === 'plan');
   window.scrollTo(0, 0);
   if (t === 'coach') { drawSim(); renderDebrief(); lockInfo(); }
 }
@@ -1065,7 +1099,7 @@ function lapScript() {
   return cardList().map(([key, tn]) => {
     const c = CARDS[key], num = tn === 'new' || tn === 'kink' ? '' : (/,| to /.test(tn) ? 'turns ' + tn.replace(/T/g, '').replace(', ', ' and ') : 'turn ' + tn.replace('T', '')) + ', ';
     const doIt = st.wet ? c.wet : pick(st.profile === 'novice' ? c.doN : c.doE), mk = pick(c.marker);
-    return num + c.name + '. ' + doIt + (mk && !/^None/.test(mk) ? ' Marker: ' + mk : '');
+    return num + c.name + '. ' + doIt + (mk && !/^None/.test(mk) ? ' Marker: ' + mk : '') + kerbSay(key);
   });
 }
 function readNext() {
