@@ -30,6 +30,8 @@ def detect(g, thr=1 / 70.0, min_ang=8, merge_gap=5.0):
     for c in out:
         if merged and merged[-1][2] == c[2] and (c[0] - merged[-1][1]) * ds <= merge_gap: merged[-1][1] = c[1]; merged[-1][3] += c[3]
         else: merged.append(c)
+    if len(merged) > 1 and merged[0][0] == 0 and merged[-1][1] == n - 1 and merged[0][2] == merged[-1][2]:
+        raise SystemExit('a corner straddles index 0: roll the centreline so the start line sits on a straight')
     return merged
 
 SEQ = dict(
@@ -69,10 +71,10 @@ def zones(key, prof):
     if nov: z += [('lift', 'oblivion', 30, 0.5), ('lift', 'crook', 12, 0.5)]
     z += [('brake', 'christmas', 38 if nov else 22, 5, 0.62)]
     if nat:
-        z += [('brake', 'inkhair', 24 if nov else 14, 4, 0.55)]
+        z += [('brake', 'inkhair', 24 if nov else 18, 4, 0.55)]
         z += [('lift', 'zulu2', 8, 0.65), ('lift', 'zulu3', 10, 0.4)] if nov else [('lift', 'zulu3', 6, 0.25)]
     else:
-        z += [('brake', 'ashby', 36 if nov else 20, 5, 0.55), ('brake', 'parker', 12 if nov else 8, 3, 0.5 if nov else 0.35), ('brake', 'chapmans', 16 if nov else 12, 4, 0.7)]
+        z += [('brake', 'ashby', 36 if nov else 26, 5, 0.55), ('brake', 'parker', 12 if nov else 8, 3, 0.5 if nov else 0.35), ('brake', 'chapmans', 16 if nov else 12, 4, 0.7)]
     z += [('brake', 'boot1', 40 if nov else 24, 5, 0.55)]
     if nov: z += [('coast', 'boot1', 0.55, 'boot2', 0.6)]
     if chic:
@@ -114,8 +116,8 @@ def line_cps_wet(key):
 def zones_wet(key, prof):
     nat = key.startswith('nat'); chic = key.endswith('_c'); nov = prof == 'novice'; m = 1.35
     z = [('brake', 'oblivion', 22 if nov else 14, 3, 0.5), ('brake', 'crook', 12 if nov else 8, 3, 0.5), ('brake', 'christmas', (38 if nov else 22) * m, 4, 0.62), ('lift', 'kink', 10, 0.5)]
-    if nat: z += [('brake', 'inkhair', (24 if nov else 14) * m, 4, 0.55), ('lift', 'zulu1', 8, 0.45), ('lift', 'zulu2', 10, 0.65), ('brake', 'zulu3', 10, 3, 0.4)]
-    else: z += [('lift', 'inkermans', 14, 0.5), ('brake', 'ashby', (36 if nov else 20) * m, 4, 0.55), ('brake', 'parker', 16 if nov else 12, 3, 0.5), ('brake', 'chapmans', (16 if nov else 12) * m, 4, 0.7)]
+    if nat: z += [('brake', 'inkhair', (24 if nov else 18) * m, 4, 0.55), ('lift', 'zulu1', 8, 0.45), ('lift', 'zulu2', 10, 0.65), ('brake', 'zulu3', 10, 3, 0.4)]
+    else: z += [('lift', 'inkermans', 14, 0.5), ('brake', 'ashby', (36 if nov else 26) * m, 4, 0.55), ('brake', 'parker', 16 if nov else 12, 3, 0.5), ('brake', 'chapmans', (16 if nov else 12) * m, 4, 0.7)]
     z += [('brake', 'boot1', (40 if nov else 24) * m, 4, 0.55), ('coast', 'boot1', 0.55, 'boot2', 0.6)]
     if chic: z += [('brake', 'chic1', (16 if nov else 10) * m, 4, 0.6), ('coast', 'chic1', 0.6, 'pitbend', 0.5)]
     else: z += [('brake', 'pitbend', 18 if nov else 10, 3, 0.5)]
@@ -161,7 +163,7 @@ def build(key):
         for z in zfun(key, prof.split('_')[0]):
             if z[0] == 'brake':
                 _, c, before, level, af = z; s0, s1 = rng[c]
-                e = idx(s0 + 3); paint_i(lv, idx(s0 - before), e, level); paint_i(lv, e + 1, max(e + 1, idx(s0 + af * (s1 - s0))) if idx(s0 + af * (s1 - s0)) > e else e + 1, 2)
+                e = idx(s0) + 2; paint_i(lv, idx(s0 - before), e, level); paint_i(lv, e + 1, max(e + 1, idx(s0 + af * (s1 - s0))) if idx(s0 + af * (s1 - s0)) > e else e + 1, 2)
             elif z[0] == 'lift':
                 _, c, before, af = z; s0, s1 = rng[c]; paint(lv, s0 - before, s0 + af * (s1 - s0), 2)
             else:
@@ -180,7 +182,10 @@ def build(key):
         while s <= sb + 0.01: x, y, _ = pt(s, so); path.append((x, y)); s += ds
         bx, by, _ = pt((sa + sb) / 2, (HALF + 7.5) * (1 if side == 'L' else -1))
         kb.append(dict(key=kk, side=side, status=status, where=where, corner=prim.rstrip('>'), path=path, bx=bx, by=by))
-    apexf = {c: f for (c, f, o) in line_cps(key) if abs(o) >= 0.7 and c in names}
+    apexf = {}
+    for c, f, o in line_cps(key):
+        if c in names and abs(o) >= 0.7 and 0.15 <= f <= 0.85 and (c not in apexf or abs(o) > apexf[c][1]): apexf[c] = (f, abs(o))
+    apexf = {c: v[0] for c, v in apexf.items()}
     cn = {}
     for c, nm in zip(cs, names):
         s0, s1 = rng[nm]; sa = s0 + apexf.get(nm, 0.5) * (s1 - s0); i = idx(sa); sign = c[2]
@@ -194,7 +199,7 @@ minx, maxy = allx.min(), ally.max(); W = allx.max() - minx + PADX + PADR; H = ma
 T = lambda x, y: (round(float(x - minx + PADX), 1), round(float(maxy - y + PADY), 1))
 out = dict(w=round(float(W), 1), h=round(float(H), 1), half=HALF, layouts={})
 for k, d in data.items():
-    o = dict(total=round(float(d['total']), 1), official=round(float(d['total']), 1), step=round(float(d['step']), 4), order=d['order'])
+    o = dict(total=round(float(d['total']), 1), official={'intl_c': 1200, 'intl_n': 1200, 'nat_c': 960, 'nat_n': 960}[k], step=round(float(d['step']), 4), order=d['order'])   # official: the venue's published figures, not measured; total: the traced length on the 1200 m scale
     o['centre'] = [T(x, y) for x, y in d['centre']]; o['line'] = [T(x, y) for x, y in d['line']]; o['line_w'] = [T(x, y) for x, y in d['line_w']]
     o['curv'] = [round(float(c), 4) for c in d['curv']]
     o['levels'] = {p: ''.join(map(str, lv)) for p, lv in d['levels'].items() if not p.endswith('_w')}

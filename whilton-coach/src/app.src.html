@@ -267,6 +267,7 @@ svg text{font-family:var(--display);fill:var(--ink)}
         <div><b id="liveSpd">0</b><span>mph</span></div>
         <div><b id="liveRate">0.0</b><span>fixes per second</span></div>
         <div><b id="liveAcc">none</b><span>accuracy, m</span></div>
+        <div><b id="liveLag">0.00</b><span>GPS delay, s</span></div>
         <div><b id="liveLap">0:00.0</b><span>this lap</span></div>
         <div><b id="liveLast">none</b><span>last lap</span></div>
         <div><b id="liveBest">none</b><span>best lap</span></div>
@@ -302,7 +303,7 @@ svg text{font-family:var(--display);fill:var(--ink)}
       <label class="f">Tones this many seconds ahead
         <input type="number" id="setToneLead" min="0" max="1.5" step="0.05">
       </label>
-      <label class="f">GPS delay allowance, seconds
+      <label class="f">Extra GPS delay allowance, seconds
         <input type="number" id="setDelay" min="0" max="1.5" step="0.05">
       </label>
     </div>
@@ -538,8 +539,12 @@ const CALLS = {
 };
 function callFor(c) {
   const key = c.key || Object.keys(CARDS).find(k => CARDS[k].name === c.label), v = key && CALLS[key];
+  if (st.wet && key) {   // no Whilton-specific wet guide exists, so the wet calls are general: off the dry line, no kerbs, gentle
+    if (key === 'crook' || (key === 'pitbend' && st.chic)) return '';
+    return (key === 'oblivion' ? 'Oblivion and Crook' : CARDS[key].name) + '. ' + (c.level === 1 ? 'Flat, off the dry line.' : c.level === 2 ? 'Lift, no kerbs.' : 'Brake early and gently, no kerbs.');
+  }
   if (v === '') return '';
-  if (!v) return c.say || sayOf(c.level);
+  if (!v) return WORD[c.level] || '';
   if (typeof v === 'string') return v;
   if ('chic' in v) return st.chic ? v.chic : v.nochic;
   if (v.nat) return v[st.layout];
@@ -703,13 +708,17 @@ function kerbSay(key) {
 function pedalPlan(c) {
   // what the feet do through this corner, read off the painted levels: phase, where it starts relative to turn-in, and for how long
   const L = LY(), lv = LVL(L), n = lv.length, step = L.step, first = L.corners[c.prims[0]], last = L.corners[c.prims[c.prims.length - 1]];
-  let i = first.a - 32; while (i < first.a && lv[mod(i, n)] === '1') i++;          // start where the first lift or brake begins, up to 64 m before turn-in
+  const key = Object.keys(CARDS).find(k => CARDS[k] === c), list = cardList(), q0 = list.findIndex(x => x[0] === key), prevB = L.corners[CARDS[list[mod(q0 - 1, list.length)][0]].prims.slice(-1)[0]].b;
+  // walk back from turn-in through this corner's own lift or brake zone, up to 64 m: a brake zone always belongs to the corner ahead, but a coast that runs on from the previous corner stops at its exit
+  let i = first.a; while (mod(first.a - i, n) < 32 && lv[mod(i - 1, n)] !== '1' && !(mod(i - prevB, n) === 0 && lv[mod(i - 1, n)] === '2')) i--;
+  let j0 = i, g0 = 0; while (lv[mod(j0 - 1, n)] === '2' && g0++ < 60) j0--; const afterBrake = +lv[mod(j0 - 1, n)] >= 3;   // a leading coast that follows a brake zone is "off the brake", not a lift
   const end = last.i + 1, rows = []; let k = i;
   while (k <= end) { const l = lv[mod(k, n)]; let j = k; while (j + 1 <= end && lv[mod(j + 1, n)] === l) j++; rows.push({ l: +l, from: (k - first.a) * step, len: (j - k + 1) * step }); k = j + 1; }
   while (rows.length && rows[rows.length - 1].l === 1) rows.pop();          // the closing line below already says full throttle
+  while (rows.length && rows[0].l === 1) rows.shift();
   const where = m => Math.abs(m) < 3 ? 'at turn-in' : Math.round(Math.abs(m)) + ' m ' + (m < 0 ? 'before turn-in' : 'after turn-in');
   const items = rows.filter(r => r.l > 1 || r.len > 6).map((r, q, arr) => {
-    const name = r.l === 1 ? 'Full throttle' : r.l === 2 ? (q > 0 && arr[q - 1].l >= 3 ? 'Off the brake, coast' : 'Lift') : LV[r.l].name;
+    const name = r.l === 1 ? 'Full throttle' : r.l === 2 ? ((q > 0 && arr[q - 1].l >= 3) || (q === 0 && afterBrake) ? 'Off the brake, coast' : 'Lift') : LV[r.l].name;
     return '<li><span class="lvdot" style="background:' + lvColor(r.l) + '">' + r.l + '</span><span><b>' + name + '</b> for about ' + Math.round(r.len) + ' m, starting ' + where(r.from) + '.</span></li>';
   });
   if (!items.length) return '<p style="margin:0">Full throttle all the way through.</p>';
@@ -887,11 +896,15 @@ function setTone(level) {
   } catch (e) { }
 }
 function blip(freqs) { if (!actx) return; try { freqs.forEach((f, i) => { const o = actx.createOscillator(), g = actx.createGain(), t = actx.currentTime + .02 + i * .075; o.type = 'sine'; o.frequency.value = f; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.4, t + .006); g.gain.linearRampToValueAtTime(0, t + .06); o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + .08); }); } catch (e) { } }
-function speak(text) { try { if (!text || !('speechSynthesis' in window)) return; if (speechSynthesis.speaking || speechSynthesis.pending) speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.rate = 1.15; u.volume = 1; u.lang = 'en-GB'; speechSynthesis.speak(u); } catch (e) { } }
+let voice = null, voiceTried = false;
+function pickVoice() { try { const vs = speechSynthesis.getVoices(); if (!vs.length) return; voiceTried = true; voice = vs.find(x => x.localService && /^en[-_]GB/i.test(x.lang)) || vs.find(x => x.localService && /^en/i.test(x.lang)) || vs.find(x => /^en[-_]GB/i.test(x.lang)) || null; } catch (e) { } }
+try { speechSynthesis.onvoiceschanged = () => { voiceTried = false; pickVoice(); }; } catch (e) { }
+function speak(text) { try { if (!text || !('speechSynthesis' in window)) return; if (!voiceTried) pickVoice(); if (speechSynthesis.speaking || speechSynthesis.pending) speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.rate = 1.15; u.volume = 1; u.lang = 'en-GB'; if (voice) u.voice = voice; speechSynthesis.speak(u); } catch (e) { } }
+function audioResume() { try { if (actx && actx.state !== 'running') actx.resume(); if ('speechSynthesis' in window && speechSynthesis.paused) speechSynthesis.resume(); } catch (e) { } }
 const WORD = { 5: 'Hard brake', 4: 'Firm brake', 3: 'Dab', 2: 'Lift', 1: 'Flat' };
-let wl = null;
-async function keepAwake(on) { try { if (on && 'wakeLock' in navigator) wl = await navigator.wakeLock.request('screen'); else if (!on && wl) { await wl.release(); wl = null; } } catch (e) { } }
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && (sim.on || live.on)) keepAwake(true); });
+let wl = null, wlWant = false;
+async function keepAwake(on) { wlWant = on; try { if (on && !wl && 'wakeLock' in navigator) { const l = await navigator.wakeLock.request('screen'); if (wlWant && !wl) wl = l; else l.release(); } else if (!on && wl) { const l = wl; wl = null; await l.release(); } } catch (e) { } }
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { if (sim.on || live.on) keepAwake(true); audioResume(); } });
 
 /* ---------------- map lock: fit the track map to a GPS recording ---------------- */
 // A lock is a rotation, scale and shift that carries map coordinates (metres, y up) onto east/north metres from an origin.
@@ -908,6 +921,7 @@ function fitOne(L, P) {
       rms = Math.sqrt(err / Q.length) * s; if (it === its) return { rms, th, s, tx, ty, pr };
       const pq = cen(pr.map(p => p[0])), pm = cen(pr.map(p => p[1])); let a = 0, b = 0, mm = 0;
       for (const [q, m] of pr) { const qx = q[0] - pq[0], qy = q[1] - pq[1], ux = m[0] - pm[0], uy = m[1] - pm[1]; a += ux * qx + uy * qy; b += ux * qy - uy * qx; mm += ux * ux + uy * uy; }
+      // scale bounds .9 to 1.12: wider bounds let the fit run away, and a lap that measures a tenth short still locks within these, with a larger fit error
       th = Math.atan2(b, a); s = Math.min(1.12, Math.max(.9, Math.hypot(a, b) / mm)); const c2 = Math.cos(th), s2 = Math.sin(th); tx = pq[0] - s * (c2 * pm[0] - s2 * pm[1]); ty = pq[1] - s * (s2 * pm[0] + c2 * pm[1]);
     }
   };
@@ -927,11 +941,11 @@ function fitRecording(R) {
   const origin = { lat: mov[0][1], lon: mov[0][2] }, P = mov.map(r => toENU(r[1], r[2], origin)); let best = null;
   ['intl', 'nat'].forEach(lay => { const key = lay + (st.chic ? '_c' : '_n'), f = fitOne(D.layouts[key], P); if (f && (!best || f.rms < best.rms)) best = Object.assign(f, { key, lay }); });
   if (!best) return null;
-  return { th: best.th, s: best.s, tx: best.tx, ty: best.ty, origin, key: best.key, lay: best.lay, chic: st.chic, rms: best.rms, cover: best.cover };
+  return { th: best.th, s: best.s, tx: best.tx, ty: best.ty, origin, key: best.key, lay: best.lay, rms: best.rms, cover: best.cover, at: Date.now() };   // the lock fixes the layout; the chicane switch stays with the Map tab, because the fit cannot tell the two variants apart
 }
 
 /* ---------------- lap engine: where the kart is on the map, lap times, and what the audio should be doing ---------------- */
-const lapE = { T: null, L: null, n: 0, s: null, cum: 0, v: 0, acc: 0, tFix: 0, rate: 0, times: [], samples: [], lapStartT: null, lapStartCum: null, laps: [], best: null, bestSeg: {}, events: [], wordCum: null, pendingTip: null, tipAt: null, quiet: false, onWord: null, onLap: null };
+const lapE = { T: null, L: null, n: 0, s: null, cum: 0, v: 0, acc: 0, tFix: 0, tAny: 0, far: 0, rate: 0, times: [], samples: [], lapStartT: null, lapStartCum: null, laps: [], best: null, bestSeg: {}, events: [], wordCum: null, queue: [], quiet: false, onWord: null, onLap: null, said: {} };
 function nearestIdx(L, x, y, hint) {
   const C = L.centre, n = C.length; let bi = -1, bd = 1e18;
   const test = i => { const p = C[i], d = (p[0] - x) * (p[0] - x) + (p[1] - y) * (p[1] - y); if (d < bd) { bd = d; bi = i; } };
@@ -947,28 +961,33 @@ function buildEvents() {
   return ev.sort((a, b) => a.i - b.i);
 }
 function lapReset(T, quiet) {
-  const L = LY(); Object.assign(lapE, { T, L, n: L.centre.length, s: null, cum: 0, v: 0, acc: 0, tFix: 0, rate: 0, times: [], samples: [], lapStartT: null, lapStartCum: null, laps: [], best: null, bestSeg: {}, events: buildEvents(), wordCum: null, pendingTip: null, tipAt: null, quiet: !!quiet, said: {} });
+  const L = LY(); Object.assign(lapE, { T, L, n: L.centre.length, s: null, cum: 0, v: 0, acc: 0, tFix: 0, tAny: 0, far: 0, off: false, rate: 0, times: [], samples: [], lapStartT: null, lapStartCum: null, laps: [], best: null, bestSeg: {}, events: buildEvents(), wordCum: null, queue: [], quiet: !!quiet, said: {} });
   setTone(1);
 }
 function lapFix(f) {          // f: { t (ms), lat, lon, spd (m/s or null), acc }
-  const E = lapE; if (!E.T) return;
+  const E = lapE; if (!E.T) return; E.tAny = f.t;
   const w = toENU(f.lat, f.lon, E.T.origin), m = w2m(E.T, w[0], w[1]), hit = nearestIdx(E.L, m[0], m[1], E.s);
-  if (hit.d > 30) { E.off = true; return; } E.off = false;                 // in the pits or the paddock
+  if (hit.d > 18) { if (++E.far >= 3) E.off = true; return hit.d; }        // 18 m is the track half width plus phone error; three fixes in a row before we call it the pits or the paddock
+  const rejoin = E.off; E.far = 0; E.off = false;
   let v = f.spd; const prev = E.samples[E.samples.length - 1];
-  if (E.s != null) {
+  if (E.s != null && rejoin) {                                              // back on the map after the pits: same lap count, new place on it, and no lap time until the line has been driven again
+    let c = Math.floor(E.cum / E.n) * E.n + hit.i; if (c < E.cum - E.n / 2) c += E.n;
+    E.cum = c; E.acc = 0; E.lapStartT = null; E.lapStartCum = null; E.wordCum = null; E.queue = []; if (v == null || isNaN(v)) v = 0;
+  } else if (E.s != null) {
     const ds = mod(hit.i - E.s + E.n / 2, E.n) - E.n / 2, dt = (f.t - E.tFix) / 1000;
     if (dt > 0 && (v == null || isNaN(v))) v = Math.max(0, ds * E.L.step / dt);
     if (dt > .05 && dt < 1.6) E.acc = Math.max(-8, Math.min(5, ((v || 0) - E.v) / dt)) * .7; else E.acc = 0;
     const before = E.cum; E.cum += ds;
-    const k = Math.floor(E.cum / E.n); if (k > Math.floor(before / E.n) && ds > 0 && prev) {        // crossed the start line
-      const tc = prev.t + (k * E.n - before) / ds * (f.t - prev.t);
-      if (E.lapStartT != null && tc - E.lapStartT > 20000) finishLap(tc, k * E.n);
-      E.lapStartT = tc; E.lapStartCum = k * E.n;
+    const k = Math.floor(E.cum / E.n); if (k > Math.floor(before / E.n) && ds > 0 && prev && (v || 0) > 8) {        // crossed the start line at speed (a pit-lane pass does not count)
+      const tc = prev.t + (k * E.n - before) / ds * (f.t - prev.t), gapped = dt > 5;                             // a crossing inside a GPS gap cannot be timed
+      if (E.lapStartT != null && tc - E.lapStartT > 20000 && !gapped) finishLap(tc, k * E.n);
+      E.lapStartT = gapped ? null : tc; E.lapStartCum = k * E.n;
     }
   }
   if (E.s == null) E.cum = hit.i;
   E.s = hit.i; E.v = v || 0; E.tFix = f.t; E.samples.push({ t: f.t, c: E.cum, v: E.v }); if (E.samples.length > 4000) E.samples.splice(0, 1000);
   E.times.push(f.t); while (E.times.length > 2 && f.t - E.times[0] > 6000) E.times.shift(); E.rate = E.times.length > 1 ? (E.times.length - 1) / ((f.t - E.times[0]) / 1000) : 0;
+  return hit.d;
 }
 function lapTick(now) {       // runs ten times a second: carries the last fix forward along the track and drives the sound
   const E = lapE; if (!E.T || E.s == null || E.off) { setTone(1); return null; }
@@ -977,17 +996,25 @@ function lapTick(now) {       // runs ten times a second: carries the last fix f
   const cumNow = E.cum + moved / E.L.step, lv = LVL(E.L), at = c => +lv[mod(Math.floor(c), E.n)];
   if (E.quiet || vNow < 3) { setTone(1); return { cum: cumNow, v: vNow, level: at(cumNow) }; }
   setTone(at(cumNow + vNow * set.toneLead / E.L.step));
-  if (set.mode !== 'tones') {
-    const lead = set.wordLead + (set.mode === 'talk' ? 1.6 : 0), wc = cumNow + vNow * lead / E.L.step;
+  const evOn = ev => ev.level >= 3 ? set.sayBrake : ev.level === 2 ? set.sayLift : set.sayFlat, busy = () => { try { return speechSynthesis.speaking || speechSynthesis.pending; } catch (e) { return false; } };
+  const lead = set.wordLead + (set.mode === 'talk' ? 1.6 : 0);
+  if (set.mode !== 'tones' && vNow > 6) {                                                         // no words below about 13 mph: a crawl in the pit lane is not a lap
+    const wc = cumNow + vNow * lead / E.L.step;
     if (E.wordCum != null && wc > E.wordCum && wc - E.wordCum < 45) for (const ev of E.events) {
       const k = Math.ceil((E.wordCum - ev.i) / E.n), pos = ev.i + k * E.n; if (pos <= E.wordCum || pos > wc) continue;
-      const on = ev.level >= 3 ? set.sayBrake : ev.level === 2 ? set.sayLift : set.sayFlat; if (!on) continue;
+      if (!evOn(ev)) continue;
       const text = set.mode === 'talk' ? callFor({ key: ev.key, level: ev.level }) : WORD[ev.level]; if (!text) continue;
+      if (set.mode === 'talk') { const tag = ev.key + ':' + Math.floor(pos / E.n); if (E.said[tag]) continue; E.said[tag] = 1; }   // one sentence per corner per lap, however many parts it has
+      if (ev.level === 1 && busy()) continue;                                                     // a Flat reminder never cuts off a lap time or a coaching point
       speak(text); if (E.onWord) E.onWord(text, ev.level);
     }
     E.wordCum = E.wordCum == null || wc < E.wordCum - 45 ? wc : Math.max(E.wordCum, wc);      // a noisy fix can pull the look-ahead back a few metres: never re-cross an event already spoken
   }
-  if (E.pendingTip && E.tipAt != null && cumNow >= E.tipAt) { if (set.coachSay) speak(E.pendingTip); if (E.onWord) E.onWord(E.pendingTip, 0); E.pendingTip = null; }
+  // the lap time and the coaching point wait for a quiet moment: nothing to say for the next few seconds, and nothing still being said
+  if (E.queue.length && vNow > 6) {
+    const horizon = cumNow + vNow * (lead + 3) / E.L.step, soon = set.mode !== 'tones' && E.events.some(ev => ev.level >= 2 && evOn(ev) && ev.i + Math.ceil((cumNow - ev.i) / E.n) * E.n <= horizon);
+    if (!soon && !busy()) { const q = E.queue.shift(); if (q.say) speak(q.text); if (E.onWord) E.onWord(q.text, 0); }
+  }
   return { cum: cumNow, v: vNow, level: at(cumNow) };
 }
 
@@ -999,7 +1026,7 @@ function lapMetrics(startCum) {
   const list = cardList();
   list.forEach(([key], q) => {
     const c = CARDS[key], A = L.corners[c.prims[0]], B = L.corners[c.prims[c.prims.length - 1]], prevB = L.corners[CARDS[list[mod(q - 1, list.length)][0]].prims.slice(-1)[0]].b, nextA = L.corners[CARDS[list[(q + 1) % list.length][0]].prims[0]].a;
-    const pre = Math.min(lvOf(c) >= 3 ? 30 : 10, Math.max(2, mod(A.a - prevB, E.n) - 2)), post = Math.min(7, Math.max(1, mod(nextA - B.b, E.n) - 2));
+    const zs = lvOf(c) >= 3 ? zoneStartIdx(key) : null, pre = Math.max(zs != null ? mod(A.a - zs, E.n) + 3 : 0, Math.min(lvOf(c) >= 3 ? 30 : 10, Math.max(2, mod(A.a - prevB, E.n) - 2))), post = Math.min(7, Math.max(1, mod(nextA - B.b, E.n) - 2));
     let c0 = startCum + A.a - pre, c1 = startCum + B.b + post; if (B.b < A.a) c1 += E.n;
     const t0 = tAt(c0), t1 = tAt(c1); if (t0 == null || t1 == null) return;
     const W = S.filter(p => p.c >= c0 - 1 && p.c <= c1 + 1); if (W.length < 2) return;
@@ -1032,11 +1059,11 @@ function finishLap(tc, endCum) {
   const E = lapE, ms = tc - E.lapStartT, m = lapMetrics(E.lapStartCum), tips = coachTips(m, E.bestSeg), lap = { n: E.laps.length + 1, ms, m, tips };
   const prevBest = E.best; E.laps.push(lap); if (!prevBest || ms < prevBest.ms) E.best = lap;
   Object.keys(m).forEach(k => { if (!E.bestSeg[k] || m[k].tSeg < E.bestSeg[k].tSeg) E.bestSeg[k] = m[k]; });
-  const fl = E.L.corners.finelady; E.tipAt = endCum + (fl ? fl.b + 4 : 100);          // say it on the climb after Fine Lady, the longest quiet stretch
-  E.pendingTip = tips.length ? tips[0].name + ': ' + tips[0].tip + '.' : (E.laps.length > 1 && lap === E.best ? 'Best lap. Same again.' : null);
-  // the lap time, then how it compares: "71.5, best" or "71.9, 0.4 off"
+  const tip = tips.length ? tips[0].name + ': ' + tips[0].tip + '.' : (E.laps.length > 1 && lap === E.best ? 'Best lap. Same again.' : null);
+  // the lap time, then how it compares: "71.5, best" or "71.9, 0.4 off"; both are said at the next quiet moment so no brake word cuts them off
   const g = prevBest ? (ms - E.best.ms) / 1000 : 0, gap = !prevBest ? '' : E.best === lap ? ', best' : g < .05 ? ', equal best' : ', ' + g.toFixed(1) + ' off';
-  if (!E.quiet) { if (set.lapSay) speak((ms / 1000).toFixed(1) + gap); if (E.onLap) E.onLap(lap); }
+  E.queue = []; E.said = {};
+  if (!E.quiet) { if (set.lapSay) E.queue.push({ text: (ms / 1000).toFixed(1) + gap, say: true }); if (tip) E.queue.push({ text: tip, say: set.coachSay }); if (E.onLap) E.onLap(lap); }
 }
 function renderDebrief() {
   const E = lapE, box = $('#debriefBody'); if (!box) return;
@@ -1080,7 +1107,7 @@ function simStep(dt, now, quiet) {
   const at = pos => { const pp = mod(pos, n), j = Math.floor(pp), fr = pp - j, p = LN[j % n], q = LN[(j + 1) % n]; return { x: p[0] + (q[0] - p[0]) * fr, y: p[1] + (q[1] - p[1]) * fr }; };
   const here = at(sim.pos); sim.fixAcc += dt;
   if (sim.fixAcc >= 1 / sim.rate) {
-    sim.fixAcc = 0; const old = at(sim.pos - sim.v * set.gpsDelay / ds), noise = sim.rate === 1 ? 1.6 : .4, T = simT(), w = m2w(T, old.x, old.y);       // the receiver reports where you were a moment ago
+    sim.fixAcc = 0; const old = at(sim.pos - sim.v * set.gpsDelay / ds), noise = sim.rate === 1 ? 3 : .6, T = simT(), w = m2w(T, old.x, old.y);       // the receiver reports where you were a moment ago
     const ll = toLL(w[0] + (Math.random() - .5) * 2 * noise, w[1] + (Math.random() - .5) * 2 * noise, SIM_ORIGIN); lapFix({ t: now, lat: ll[0], lon: ll[1], spd: sim.v, acc: noise * 2 });
   }
   sim.tickAcc += dt;
@@ -1090,7 +1117,7 @@ function simStep(dt, now, quiet) {
 function pedalShow(id, level) { const b = $(id); if (b._l === level) return; b._l = level; b.textContent = level === 1 ? 'Flat out' : level === 2 ? 'Lift' : LV[level].name; b.style.background = lvColor(level); }
 function wordShow(id, text) { const b = $(id); b.textContent = text; clearTimeout(b._t); b._t = setTimeout(() => { b.textContent = ''; }, 2600); }
 function simStart() {
-  if (reader.on) readStop(); audioInit(); keepAwake(true); drawSim(); sim.rate = +$('#simRate').value; sim.bad = $('#simBad').checked; lapReset(simT());
+  if (reader.on) readStop(); audioInit(); if (set.mode !== 'tones') speak('Coach on'); keepAwake(true); drawSim(); sim.rate = +$('#simRate').value; sim.bad = $('#simBad').checked; lapReset(simT());
   lapE.onWord = t => wordShow('#simWord', t); lapE.onLap = lap => { $('#simLast').textContent = fmtLap(lap.ms); renderDebrief(); };
   const n = LY().centre.length; sim.on = true; sim.pos = n - 18; sim.v = 17; sim.lastT = 0; sim.fixAcc = 1e9; sim.tickAcc = 0;
   $('#simBtn').textContent = 'Stop demo'; requestAnimationFrame(simFrame);
@@ -1116,7 +1143,7 @@ function readNext() {
   if (reader.i >= reader.items.length) { readStop(); return; }
   const text = reader.items[reader.i++]; wordShow('#readWord', text.split('. ')[0]);
   try {
-    const u = new SpeechSynthesisUtterance(text); u.rate = 1.0; u.lang = 'en-GB';
+    const u = new SpeechSynthesisUtterance(text); u.rate = 1.0; u.lang = 'en-GB'; if (!voiceTried) pickVoice(); if (voice) u.voice = voice;
     u.onend = () => setTimeout(readNext, 700); u.onerror = () => setTimeout(readNext, 300);
     speechSynthesis.speak(u);
   } catch (e) { readStop(); }
@@ -1129,29 +1156,42 @@ function readStart() {
 function readStop() { reader.on = false; $('#readBtn').textContent = 'Read me the lap'; try { speechSynthesis.cancel(); } catch (e) { } }
 
 /* ---------------- live GPS ---------------- */
-const live = { on: false, watch: null, timer: null, fixes: 0, rec: [], lastFit: 0, lost: false };
+const live = { on: false, watch: null, timer: null, fixes: 0, rec: [], lastFit: 0, lost: false, stored: false, chk: 0, bad: 0, lag: 0 };
 function liveStatus(msg) { $('#liveStatus').textContent = msg; }
-function lockInfo() { const k = store.get('wm.lock', null); $('#lockInfo').textContent = k ? 'Map locked to GPS (' + (k.lay === 'nat' ? 'National' : 'International') + ', average error ' + k.rms.toFixed(1) + ' m).' : 'Map not locked to GPS yet. Drive one full lap with GPS on and it locks itself.'; $('#forgetLock').hidden = !k; }
-function useLock(k) { if (st.layout !== k.lay || st.chic !== k.chic) { st.layout = k.lay; st.chic = k.chic; refreshAll(); } lapReset(k); lapE.onWord = t => wordShow('#liveWord', t); lapE.onLap = () => renderDebrief(); }
+function lockInfo() {
+  const k = store.get('wm.lock', null);
+  if (k) { const L = D.layouts[k.lay + (st.chic ? '_c' : '_n')], len = Math.round(L.total * k.s), days = k.at ? Math.floor((Date.now() - k.at) / 864e5) : null;
+    $('#lockInfo').textContent = 'Map locked to GPS: ' + (k.lay === 'nat' ? 'National' : 'International') + ', typical fit error ' + k.rms.toFixed(1) + ' m. On your trace the lap measures about ' + len + ' m' + (days == null ? '' : days < 1 ? ', locked today' : ', locked ' + days + (days === 1 ? ' day ago' : ' days ago')) + '.'; }
+  else $('#lockInfo').textContent = 'Map not locked to GPS yet. Drive one full lap with GPS on and it locks itself.';
+  $('#forgetLock').hidden = !k;
+}
+function useLock(k) { if (st.layout !== k.lay) { st.layout = k.lay; refreshAll(); } lapReset(k); lapE.onWord = t => wordShow('#liveWord', t); lapE.onLap = () => renderDebrief(); }
 function tryLock(R, announce) {
   const k = fitRecording(R); if (!k) return false;
   if (k.rms > 8 || k.cover < .8) { if (announce) toast('Could not lock the map: the recording does not cover a full lap cleanly yet.'); return false; }
-  store.set('wm.lock', k); lockInfo(); if (announce) toast('Map locked. Average error ' + k.rms.toFixed(1) + ' m.'); return k;
+  store.set('wm.lock', k); lockInfo(); if (announce) toast('Map locked to the ' + (k.lay === 'nat' ? 'National' : 'International') + '. Typical fit error ' + k.rms.toFixed(1) + ' m. Lap count starts again.'); return k;
 }
 function liveStart() {
   if (sim.on) simStop(); if (!('geolocation' in navigator)) { liveStatus('This browser has no location support.'); return; }
-  if (reader.on) readStop(); audioInit(); keepAwake(true); live.rec = []; live.fixes = 0; live.on = true; live.lastFit = 0; live.lost = false; $('#liveBtn').textContent = 'Stop GPS';
-  const k = store.get('wm.lock', null); if (k) useLock(k); else lapE.T = null;
+  if (reader.on) readStop(); audioInit(); keepAwake(true); live.rec = []; live.fixes = 0; live.on = true; live.lastFit = 0; live.lost = false; live.chk = 0; live.bad = 0; live.lag = 0; $('#liveBtn').textContent = 'Stop GPS';
+  if (set.mode !== 'tones') speak('Coach on. Waiting for GPS.');           // spoken inside the button press, which is what lets the phone speak later from a timer
+  const k = store.get('wm.lock', null); live.stored = !!k;
+  if (k) { if (st.layout !== k.lay) toast('Using the stored ' + (k.lay === 'nat' ? 'National' : 'International') + ' lock. Press Forget map lock if the circuit is running the other layout today.'); useLock(k); } else lapE.T = null;
   liveStatus('Waiting for a GPS fix. Stand in the open.');
   live.watch = navigator.geolocation.watchPosition(pos => {
     const c = pos.coords, now = performance.now(); live.fixes++;
+    const lag = pos.timestamp ? Math.max(0, Math.min(2, (Date.now() - pos.timestamp) / 1000)) : 0; live.lag = live.lag ? live.lag * .8 + lag * .2 : lag;   // how old the fix already is when the browser hands it over
     if (live.fixes === 1) speak(lapE.T ? 'GPS ready. Coaching on.' : 'GPS ready. Drive a full lap to lock the map.');
     if (live.lost) { live.lost = false; speak('GPS back'); }
     live.rec.push([Date.now(), +c.latitude.toFixed(7), +c.longitude.toFixed(7), c.speed == null || isNaN(c.speed) ? null : +c.speed.toFixed(2), c.heading == null || isNaN(c.heading) ? null : Math.round(c.heading), Math.round(c.accuracy || 0)]);
-    if (lapE.T) lapFix({ t: now, lat: c.latitude, lon: c.longitude, spd: c.speed, acc: c.accuracy });
+    if (lapE.T) {
+      const d = lapFix({ t: now - lag * 1000, lat: c.latitude, lon: c.longitude, spd: c.speed, acc: c.accuracy });
+      // a lock kept from another day can be for the other layout: if a quarter of the moving fixes fall off the map, fit today's trace instead
+      if (live.stored && (c.speed == null || c.speed > 4) && d != null) { live.chk++; if (d > 18) live.bad++; if (live.chk >= 60) { if (live.bad / live.chk > .25 && live.rec.length > 60 && now - live.lastFit > 15000) { live.lastFit = now; const got = tryLock(live.rec, false); if (got) { useLock(got); live.stored = false; speak('Map re-locked'); toast('Map re-locked to the ' + (got.lay === 'nat' ? 'National' : 'International') + ' from today\'s trace.'); } } live.chk = 0; live.bad = 0; } }
+    }
     else if (live.rec.length > 60 && now - live.lastFit > 15000) { live.lastFit = now; const got = tryLock(live.rec, false); if (got) { useLock(got); speak('Map locked'); } }
     liveStatus(lapE.T ? (lapE.off ? 'Locked, but you are off the track map (pits or paddock).' : 'Recording and coaching.') : 'Recording. Drive a full lap and the map locks itself.');
-    $('#liveAcc').textContent = c.accuracy != null ? Math.round(c.accuracy) : 'none';
+    $('#liveAcc').textContent = c.accuracy != null ? Math.round(c.accuracy) : 'none'; $('#liveLag').textContent = live.lag.toFixed(2);
   }, err => {
     const blocked = err && err.code === 1;
     liveStatus(blocked ? 'Location is blocked for this page. Allow it in the browser prompt. If you opened this inside the Claude app, open the link in Safari or Chrome instead, or host the downloaded copy on any HTTPS site.' : 'No GPS fix yet (' + (err && err.message ? err.message : 'unknown error') + '). Move into the open and wait a moment.');
@@ -1159,7 +1199,8 @@ function liveStart() {
   }, { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 });
   live.timer = setInterval(() => {
     const s = lapTick(performance.now()), E = lapE;
-    if (live.fixes && !live.lost && performance.now() - E.tFix > 4000 && E.tFix) { live.lost = true; setTone(1); speak('GPS lost'); liveStatus('No GPS fix for a few seconds. Coaching paused until it returns.'); }
+    if (live.fixes && !live.lost && E.tAny && performance.now() - E.tAny > 4000) { live.lost = true; setTone(1); speak('GPS lost'); liveStatus('No GPS fix for a few seconds. Coaching paused until it returns.'); }
+    if (!(live.tick = (live.tick || 0) + 1) % 10) audioResume();                        // once a second: a call or another app can leave the audio suspended
     $('#liveSpd').textContent = s ? Math.round(s.v * MPH) : 0; $('#liveRate').textContent = E.rate ? E.rate.toFixed(1) : '0.0';
     $('#liveLap').textContent = E.lapStartT != null ? fmtLap(performance.now() - E.lapStartT) : '0:00.0'; $('#liveLast').textContent = fmtLap(E.laps.length ? E.laps[E.laps.length - 1].ms : null); $('#liveBest').textContent = fmtLap(E.best && E.best.ms);
     pedalShow('#livePedal', s ? +LVL(E.L)[mod(Math.floor(s.cum + s.v * set.toneLead / E.L.step), E.n)] : 1);
@@ -1173,17 +1214,33 @@ function liveStop(keepMsg) {
 }
 // run a saved recording (or a lap timer's CSV) through the same engine, silently, to get lap times and coaching
 function replay(R) {
+  if (sim.on) simStop(); if (live.on) liveStop();
   let k = store.get('wm.lock', null); const fresh = tryLock(R, false); if (fresh) k = fresh; if (!k) { toast('Could not fit this recording to the track map.'); return false; }
   useLock(k); lapE.quiet = true; const t0 = R[0][0]; R.forEach(r => lapFix({ t: r[0] - t0, lat: r[1], lon: r[2], spd: r[3], acc: r[5] })); lapE.quiet = false; renderDebrief(); lockInfo();
   toast(lapE.laps.length + ' laps found in the recording.'); return true;
 }
 function parseCsv(text) {
-  const lines = text.split(/\r?\n/); let hi = lines.findIndex(l => /lat/i.test(l) && /lon/i.test(l)); if (hi < 0) return null;
-  const delim = (lines[hi].match(/;/g) || []).length > (lines[hi].match(/,/g) || []).length ? ';' : ',', head = lines[hi].split(delim).map(s => s.trim().toLowerCase().replace(/"/g, ''));
-  const col = re => head.findIndex(h => re.test(h)), cLat = col(/^lat/), cLon = col(/^(lon|lng)/), cSpd = col(/speed/), cT = col(/^(time|timestamp|utc)/); if (cLat < 0 || cLon < 0) return null;
-  const sh = cSpd >= 0 ? head[cSpd] : '', k = /km|kph/.test(sh) ? 1 / 3.6 : /mph/.test(sh) ? 1 / MPH : 1, out = [];
-  for (let i = hi + 1; i < lines.length; i++) { const c = lines[i].split(delim), lat = parseFloat(c[cLat]), lon = parseFloat(c[cLon]); if (!isFinite(lat) || !isFinite(lon)) continue; let t = cT >= 0 ? parseFloat(c[cT]) : out.length; if (!isFinite(t)) t = out.length; if (t < 1e11) t *= 1000; const v = cSpd >= 0 ? parseFloat(c[cSpd]) * k : NaN; out.push([t, lat, lon, isFinite(v) ? +v.toFixed(2) : null, null, 0]); }
-  return out.length > 5 ? out : null;
+  // reads the app's own export and common lap timer exports: quoted cells, a units row under the header, time as seconds, milliseconds, a clock or an ISO stamp, speed in m/s, km/h, mph or knots
+  const lines = text.split(/\r?\n/), clean = s => String(s == null ? '' : s).trim().replace(/^"|"$/g, '').trim(), low = s => clean(s).toLowerCase();
+  const hi = lines.findIndex(l => /lat/i.test(l) && /(lon|lng)/i.test(l)); if (hi < 0) return null;
+  const cnt = ch => (lines[hi].split(ch).length - 1), delim = cnt(';') > cnt(',') ? ';' : cnt('\t') > cnt(',') ? '\t' : ',';
+  const head = lines[hi].split(delim).map(low), col = re => head.findIndex(h => re.test(h));
+  const cLat = col(/\blat(itude)?\b/), cLon = col(/\b(lon|lng|long|longitude)\b/), cSpd = col(/speed|velocity/), cT = col(/^(gps ?)?(time|timestamp|utc|date ?time)/); if (cLat < 0 || cLon < 0) return null;
+  const next = lines[hi + 1] ? lines[hi + 1].split(delim).map(low) : [], unitsRow = next.length === head.length && next.some(u => u) && next.every(u => !/^[-+]?\d/.test(u));
+  const sh = cSpd < 0 ? '' : head[cSpd] + ' ' + (unitsRow ? next[cSpd] : ''), th = cT < 0 ? '' : head[cT] + ' ' + (unitsRow ? next[cT] : '');
+  const k = /km|kph/.test(sh) ? 1 / 3.6 : /mph/.test(sh) ? 1 / MPH : /knot|\bkts?\b|\bkn\b/.test(sh) ? .514444 : 1, tMs = /(^|[^a-z])ms\b|milli/.test(th), tS = !tMs && /\bs\b|\bsec/.test(th);
+  const clock = s => { const m = /^(?:(\d{4})-(\d\d)-(\d\d)[t ])?(\d{1,2}):(\d\d):(\d\d(?:[.,]\d+)?)/i.exec(s); return m ? (m[1] ? Date.UTC(+m[1], +m[2] - 1, +m[3]) : 0) + (+m[4] * 3600 + +m[5] * 60 + parseFloat(m[6].replace(',', '.'))) * 1000 : NaN; };
+  const out = []; let auto = 0, unknownUnit = false;
+  for (let i = hi + (unitsRow ? 2 : 1); i < lines.length; i++) {
+    const c = lines[i].split(delim), lat = parseFloat(clean(c[cLat])), lon = parseFloat(clean(c[cLon])); if (!isFinite(lat) || !isFinite(lon)) continue;
+    const raw = cT < 0 ? '' : clean(c[cT]), isClock = /\d:\d\d:\d\d/.test(raw); let t = isClock ? clock(raw) : parseFloat(raw);
+    if (!isFinite(t)) t = auto * 1000; else if (!isClock) { if (tS) t *= 1000; else if (!tMs) unknownUnit = true; }
+    auto++; const v = cSpd >= 0 ? parseFloat(clean(c[cSpd])) * k : NaN; out.push([t, lat, lon, isFinite(v) ? +v.toFixed(2) : null, null, 0]);
+  }
+  if (out.length <= 5) return null;
+  if (unknownUnit) { const steps = out.slice(1).map((r, i) => r[0] - out[i][0]).filter(d => d > 0).sort((a, b) => a - b), med = steps[steps.length >> 1] || 1; if (med < 5) out.forEach(r => { r[0] *= 1000; }); }   // steps under 5 mean seconds: no lap timer logs slower than one row every five seconds
+  if (out.every(r => r[0] === out[0][0])) return null;
+  return out;
 }
 let dlCap = null;
 if (window.claude && typeof window.claude.use === 'function') { try { window.claude.use('downloads').then(d => { dlCap = d; }).catch(() => { }); } catch (e) { } }
@@ -1195,6 +1252,7 @@ async function saveFile(name, text) {
 /* ---------------- wiring ---------------- */
 document.addEventListener('click', e => {
   const t = e.target.closest('[data-card],[data-layout],[data-profile],[data-chic],[data-wet],[data-tab],[data-show]'); if (!t) return;
+  if (live.on && (t.dataset.layout || t.dataset.profile || t.dataset.chic || t.dataset.wet)) { toast('Stop GPS before changing this. Set the chicane, driver level and conditions before you start; the map lock picks the layout.'); return; }
   if (t.dataset.card) { if (st.tab !== 'map') setTab('map'); select(t.dataset.card, true); }
   else if (t.dataset.layout) { if (sim.on) simStop(); st.layout = t.dataset.layout; refreshAll(); }
   else if (t.dataset.profile) { if (sim.on) simStop(); st.profile = t.dataset.profile; refreshAll(); }
@@ -1209,12 +1267,12 @@ $('#liveBtn').addEventListener('click', () => live.on ? liveStop() : liveStart()
 $('#readBtn').addEventListener('click', () => reader.on ? readStop() : readStart());
 $('#testSound').addEventListener('click', () => { audioInit(); if (set.mode !== 'tones') speak(set.mode === 'talk' ? callFor({ key: 'christmas', level: 5 }) : WORD[5]); setTimeout(() => setTone(5), 900); setTimeout(() => setTone(2), 2100); setTimeout(() => setTone(1), 2700); });
 $('#forgetLock').addEventListener('click', () => { store.del('wm.lock'); lapE.T = null; lockInfo(); toast('Map lock forgotten.'); });
-$('#lockNow').addEventListener('click', () => { const R = live.on ? live.rec : rec; if (!R || R.length < 40) { toast('Record at least one full lap first.'); return; } const k = tryLock(R, true); if (k && live.on) useLock(k); });
-$('#replayBtn').addEventListener('click', () => { if (!rec || rec.length < 40) { toast('No recording to analyse yet.'); return; } replay(rec); });
+$('#lockNow').addEventListener('click', () => { const R = live.on ? live.rec : rec; if (!R || R.length < 40) { toast('Record at least one full lap first.'); return; } const k = tryLock(R, true); if (k && live.on) { useLock(k); live.stored = false; } });
+$('#replayBtn').addEventListener('click', () => { if (live.on) liveStop(); if (!rec || rec.length < 40) { toast('No recording to analyse yet.'); return; } replay(rec); });
 $('#saveCsv').addEventListener('click', () => { if (!rec.length) { toast('Nothing recorded yet.'); return; } saveFile('whilton-session.csv', 'time_ms,latitude,longitude,speed_mps,heading_deg,accuracy_m\n' + rec.map(r => r.map(v => v == null ? '' : v).join(',')).join('\n')); });
 $('#loadFile').addEventListener('change', e => {
   const f = e.target.files && e.target.files[0]; if (!f) return; const rd = new FileReader();
-  rd.onload = () => { const r = parseCsv(String(rd.result || '')); if (r) { rec = r; store.set('wm.rec', rec); replay(rec); } else toast('That file has no latitude and longitude columns.'); };
+  rd.onload = () => { const r = parseCsv(String(rd.result || '')); if (r) { rec = r; store.set('wm.rec', rec); replay(rec); } else toast('Could not read that file. It needs latitude, longitude and time columns, and the times must change from row to row.'); };
   rd.readAsText(f); e.target.value = '';
 });
 const bindNum = (id, key) => { const i = $(id); i.value = set[key]; i.addEventListener('change', () => { const v = parseFloat(i.value); if (isFinite(v)) { set[key] = v; saveSettings(); } }); };
@@ -1224,7 +1282,7 @@ bindNum('#setWordLead', 'wordLead'); bindNum('#setToneLead', 'toneLead'); bindNu
 $('#setMode').value = set.mode; $('#setMode').addEventListener('change', e => { set.mode = e.target.value; saveSettings(); });
 
 renderLegend(); refreshAll(); lockInfo(); renderDebrief();
-window.__wm = { D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, setRec: r => { rec = r; }, getRec: () => rec };
+window.__wm = { D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, setRec: r => { rec = r; }, getRec: () => rec };
 })();
 </script>
 </body>
