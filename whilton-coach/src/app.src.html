@@ -210,6 +210,7 @@ svg text{font-family:var(--display);fill:var(--ink)}
   <div class="seg" role="group" aria-label="Track conditions">
     <button type="button" data-wet="0" aria-pressed="true">Dry</button>
     <button type="button" data-wet="1" aria-pressed="false">Wet</button>
+    <p id="wetNote" class="small" style="margin:6px 0 0;display:none;padding:6px 10px;border-radius:8px;background:var(--care);color:#1a1a1a"><b>Wet mode is on.</b> Every call is the corner's wet plan: earlier, gentler braking, off the dry line, no kerbs. Tap Dry if the track is dry.</p>
   </div>
 </div>
 
@@ -462,7 +463,7 @@ svg text{font-family:var(--display);fill:var(--ink)}
       <li>Learn my brake timing: the word lead grows by how long this phone takes to start speaking, measured; and if your braking keeps landing later than the plan at a corner over three laps, the word and chirp there move earlier by the difference, up to 20 metres. With a phone's one fix a second the brake point is too coarse to learn from, so that part only acts with a 10 Hz or faster receiver. The debrief lists any corner that has been moved. The tones are not moved.</li>
       <li>At one fix a second the coach stays quiet unless it has a reason: a rule (you lifted where it is flat, braked early), or an apex slower than your best on two laps running. Corner times alone are noise at that rate and are never spoken.</li>
       <li>With the driver level set to Model, the tones and words follow the physics model's fastest lap for the hire kart on its own line. That is the limit for a perfect driver, so its brake points will feel late and its lifts short. Use it to hear where time is, not as a first-day target.</li>
-      <li>In the wet, Talk me round uses general wet sentences (off the dry line, no kerbs, gentle) rather than the corner guides. The one written Whilton-specific wet instruction, UK Karting\'s late turn-in and snap to full lock at The Boot, is on that corner\'s card.</li>
+      <li>In the wet, Talk me round speaks the first sentence or two of each corner\'s own wet note, so every corner gets a different call. Those notes are general wet-driving practice applied to each corner\'s shape (earlier and gentler braking, off the dry line, no kerbs). The one written Whilton-specific wet instruction, UK Karting\'s late turn-in and snap to full lock at The Boot, is in that corner\'s call and on its card.</li>
     </ul>
   </details>
 
@@ -687,6 +688,16 @@ const LAYOUTS = {
   intl: { name: 'International', cards: [['oblivion', 'T1'], ['crook', 'T2'], ['finelady', 'kink'], ['christmas', 'T3'], ['kink', 'T4'], ['inkermans', 'T5'], ['ashby', 'T6'], ['parker', 'T7'], ['chapmans', 'T8'], ['boot', 'T9, T10'], ['pitbend', 'T11']] }
 };
 // what the in-ear guide says on the approach to each corner in "talk me round" mode
+const WETCALL = {   // where a card's wet note opens with background rather than an instruction, the spoken wet call is written out
+  oblivion: 'A light brake, not just a lift. Apex a kart width off the kerb.',
+  christmas: 'Brake earlier and more gently, a kart width right of the usual line. A wider, rounder arc.',
+  inkhair: 'Brake earlier and gently. Wait for the kart to turn before you touch the throttle.',
+  chicane: 'Brake earlier and softer, off the kerbs. Gentle throttle into the last right, the run-off is a bog.',
+  boot: 'Brake earlier and gently, off the inside kerb. Turn in very late and snap the wheel to full lock.',
+  ashby: 'Brake early, straight, and gently, a kart width off the inside kerb. Stay off the run-off.',
+  zulu: 'Lift where you would be flat, brake lightly for the last left, off the painted kerb.',
+  pitbend: { c: '', n: 'Lift more and keep it smooth. Off the kerb and the concrete.' },
+};
 const CALLS = {
   oblivion: { c: 'Oblivion and Crook. Lift, stay left, then use all the road.', e: 'Oblivion and Crook. Flat. Stay left after the first apex.' },
   crook: '',
@@ -705,9 +716,11 @@ const CALLS = {
 };
 function callFor(c) {
   const key = c.key || Object.keys(CARDS).find(k => CARDS[k].name === c.label), v = key && CALLS[key];
-  if (st.wet && key) {   // no Whilton-specific wet guide exists, so the wet calls are general: off the dry line, no kerbs, gentle
+  if (st.wet && key) {   // the wet call is the corner's own wet note, its first sentence or two, so every corner says something different
     if (key === 'crook' || (key === 'pitbend' && st.chic)) return '';
-    return (key === 'oblivion' ? 'Oblivion and Crook' : CARDS[key].name) + '. ' + (c.level === 1 ? 'Flat, off the dry line.' : c.level === 2 ? 'Lift, no kerbs.' : 'Brake early and gently, no kerbs.');
+    const card = CARDS[key], override = WETCALL[key] ? pick(WETCALL[key]) : null, w = override || pick(card.wet) || '';
+    const sents = w.split(/(?<=\.)\s+/).filter(Boolean); let text = sents[0] || ''; if (sents[1] && (text + ' ' + sents[1]).length <= 110) text += ' ' + sents[1];
+    return (key === 'oblivion' ? 'Oblivion and Crook' : card.name) + '. ' + text;
   }
   if (v === '') return '';
   if (!v) return WORD[c.level] || '';
@@ -1139,6 +1152,7 @@ function refreshAll() {
   if (st.sel && !cardList().some(x => x[0] === st.sel)) st.sel = null;
   const tb = $('[data-profile="team"]'); if (tb) { const ok = !!teamLevels(LY()); tb.hidden = !ok; if (!ok && st.profile === 'team') { st.profile = 'expert'; tb.setAttribute('aria-pressed', 'false'); $('[data-profile="expert"]').setAttribute('aria-pressed', 'true'); } }
   const mb = $('[data-profile="model"]'); if (mb) { mb.disabled = !MK(); if (!MK() && st.profile === 'model') { st.profile = 'expert'; mb.setAttribute('aria-pressed', 'false'); $('[data-profile="expert"]').setAttribute('aria-pressed', 'true'); } }
+  const wn = $('#wetNote'); if (wn) wn.style.display = st.wet ? 'block' : 'none';
   drawMain(); renderStrip(); renderCard(); renderAcc(); renderPlan(); renderStart(); drawStart(); drawSim();
 }
 function setTab(t) {
@@ -1237,7 +1251,7 @@ function fitRecording(R) {
 }
 
 /* ---------------- lap engine: where the kart is on the map, lap times, and what the audio should be doing ---------------- */
-const lapE = { T: null, L: null, n: 0, s: null, cum: 0, v: 0, acc: 0, tFix: 0, tAny: 0, far: 0, rate: 0, times: [], samples: [], lapStartT: null, lapStartCum: null, laps: [], best: null, bestSeg: {}, events: [], wordCum: null, prepCum: null, queue: [], quiet: false, onWord: null, onLap: null, onCue: null, said: {}, prof: null, profs: [], leadAdj: {}, cal: {}, focus: null, dropped: null, flatTicks: 0 };
+const lapE = { T: null, L: null, n: 0, s: null, cum: 0, v: 0, acc: 0, tFix: 0, tAny: 0, far: 0, rate: 0, times: [], samples: [], lapStartT: null, lapStartCum: null, laps: [], best: null, bestSeg: {}, events: [], wordCum: null, prepCum: null, queue: [], quiet: false, onWord: null, onLap: null, onCue: null, said: {}, prof: null, profs: [], leadAdj: {}, cal: {}, focus: null, dropped: null, flatTicks: 0, goCum: null };
 function nearestIdx(L, x, y, hint) {
   const C = L.centre, n = C.length; let bi = -1, bd = 1e18;
   const test = i => { const p = C[i], d = (p[0] - x) * (p[0] - x) + (p[1] - y) * (p[1] - y); if (d < bd) { bd = d; bi = i; } };
@@ -1254,7 +1268,7 @@ function buildEvents() {
 }
 function lapReset(T, quiet) {
   lapE.gate = 1; lapE.offScale = 1; lapE.lastM = null;
-  const L = LY(); Object.assign(lapE, { T, L, layKey: st.layout + (st.chic ? '_c' : '_n'), n: L.centre.length, s: null, cum: 0, v: 0, acc: 0, tFix: 0, tAny: 0, far: 0, off: false, rate: 0, times: [], samples: [], lapStartT: null, lapStartCum: null, laps: [], best: null, bestSeg: {}, events: buildEvents(), wordCum: null, prepCum: null, queue: [], quiet: !!quiet, said: {}, prof: null, profs: [], leadAdj: {}, cal: {}, focus: null, dropped: null, flatTicks: 0 });
+  const L = LY(); Object.assign(lapE, { T, L, layKey: st.layout + (st.chic ? '_c' : '_n'), n: L.centre.length, s: null, cum: 0, v: 0, acc: 0, tFix: 0, tAny: 0, far: 0, off: false, rate: 0, times: [], samples: [], lapStartT: null, lapStartCum: null, laps: [], best: null, bestSeg: {}, events: buildEvents(), wordCum: null, prepCum: null, queue: [], quiet: !!quiet, said: {}, prof: null, profs: [], leadAdj: {}, cal: {}, focus: null, dropped: null, flatTicks: 0, goCum: null });
   setTone(1);
 }
 function lapFix(f) {          // f: { t (ms), lat, lon, spd (m/s or null), acc }
@@ -1290,8 +1304,10 @@ function lapTick(now) {       // runs ten times a second: carries the last fix f
   const evPos = ev => ev.i - (E.leadAdj[ev.key] || 0) / E.L.step;                                   // a corner whose call the driver keeps braking late for gets its word (and chirp) earlier
   const G = E.gate || 1;   // 1 on the track; smaller on the practice loop, where a jog counts as flat out
   if (E.quiet || vNow < 3 * G) { setTone(1); return { cum: cumNow, v: vNow, level: at(cumNow) }; }
-  const want = at(cumNow + vNow * set.toneLead / E.L.step); E.flatTicks = want === 1 ? E.flatTicks + 1 : 0;
-  if (want !== 1 || E.flatTicks >= 2 || toneNow === 1) setTone(want);                                     // back to flat only once it has held for two ticks: a backward GPS snap must not play the go blip inside a brake zone
+  const la = cumNow + vNow * set.toneLead / E.L.step; let want = at(la);
+  if (want !== 1 && toneNow === 1 && E.goCum != null && la < E.goCum) want = 1;                          // a backward GPS snap must not re-enter the zone the tone has already left: that go blip has played
+  E.flatTicks = want === 1 ? E.flatTicks + 1 : 0;
+  if (want !== 1 || E.flatTicks >= 2 || toneNow === 1) { if (want === 1 && toneNow !== 1) E.goCum = la; setTone(want); }   // back to flat only once it has held for two ticks
   const evOn = ev => ev.level >= 3 ? set.sayBrake : ev.level === 2 ? set.sayLift : set.sayFlat, busy = () => { try { return speechSynthesis.speaking || speechSynthesis.pending; } catch (e) { return false; } };
   const lead = set.wordLead + (set.mode === 'talk' ? 1.6 : 0) + (set.autoLead ? speechLag() : 0);      // plus how long this phone takes to start speaking, measured
   if (set.mode !== 'tones' && vNow > 6 * G) {                                                         // no words below about 13 mph: a crawl in the pit lane is not a lap
@@ -1607,7 +1623,7 @@ function simStep(dt, now, quiet) {
 function pedalShow(id, level) { const b = $(id); if (b._l === level) return; b._l = level; b.textContent = level === 1 ? 'Flat out' : level === 2 ? 'Lift' : LV[level].name; b.style.background = lvColor(level); }
 function wordShow(id, text) { const b = $(id); b.textContent = text; clearTimeout(b._t); b._t = setTimeout(() => { b.textContent = ''; }, 2600); }
 function simStart() {
-  if (reader.on) readStop(); audioInit(); if (set.mode !== 'tones') speak('Coach on'); keepAwake(true); drawSim(); sim.rate = +$('#simRate').value; sim.bad = $('#simBad').checked; lapReset(simT());
+  if (reader.on) readStop(); audioInit(); if (set.mode !== 'tones') speak(st.wet ? 'Coach on. Wet lap.' : 'Coach on'); keepAwake(true); drawSim(); sim.rate = +$('#simRate').value; sim.bad = $('#simBad').checked; lapReset(simT());
   lapE.onWord = t => wordShow('#simWord', t); lapE.onLap = lap => { $('#simLast').textContent = fmtLap(lap.ms); renderDebrief(); };
   const n = LY().centre.length; sim.on = true; sim.pos = n - 18; sim.v = 17; sim.lastT = 0; sim.fixAcc = 1e9; sim.tickAcc = 0;
   $('#simBtn').textContent = 'Stop demo'; requestAnimationFrame(simFrame);
@@ -1731,7 +1747,7 @@ function tryLock(R, announce) {
 function liveStart() {
   if (sim.on) simStop(); if (loop.on) loopStop(true); if (!('geolocation' in navigator)) { liveStatus('This browser has no location support.'); return; }
   if (reader.on) readStop(); audioInit(); keepAwake(true); live.rec = []; live.fixes = 0; live.on = true; live.lastFit = 0; live.lost = false; live.chk = 0; live.bad = 0; live.lag = 0; $('#liveBtn').textContent = 'Stop GPS';
-  const q = gpsQuality(); if (set.mode !== 'tones') speak('Coach on. Waiting for GPS.' + (q && (q.acc > 15 || q.rate < .7) ? ' Your walk test was poor, ' + Math.round(q.acc) + ' metres. Expect the calls to wander.' : ''));           // spoken inside the button press, which is what lets the phone speak later from a timer
+  const q = gpsQuality(); if (set.mode !== 'tones') speak('Coach on.' + (st.wet ? ' Wet mode.' : '') + ' Waiting for GPS.' + (q && (q.acc > 15 || q.rate < .7) ? ' Your walk test was poor, ' + Math.round(q.acc) + ' metres. Expect the calls to wander.' : ''));           // spoken inside the button press, which is what lets the phone speak later from a timer
   const k = store.get('wm.lock', null); live.stored = !!k;
   if (k) { if (st.layout !== k.lay) toast('Using the stored ' + (k.lay === 'nat' ? 'National' : 'International') + ' lock. Press Forget map lock if the circuit is running the other layout today.'); useLock(k); } else lapE.T = null;
   liveStatus('Waiting for a GPS fix. Stand in the open.'); pocketShow(true);
@@ -1983,7 +1999,7 @@ bindNum('#setWordLead', 'wordLead'); bindNum('#setToneLead', 'toneLead'); bindNu
 $('#setMode').value = set.mode; $('#setMode').addEventListener('change', e => { set.mode = e.target.value; saveSettings(); });
 
 renderLegend(); refreshAll(); lockInfo(); renderDebrief(); walkDraw(); setTab(st.tab);
-window.__wm = { cloud, cloudPull, cloudPush, cloudRender, cloudTakeHash, teamLevels, teamBest, parseOfficial, official, gpsQuality, loop, loopFit, loopStart, loopStop, modelAgreement, guideOffset, pocketShow, walk, walkStart, walkStop, renderStart, D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, MK, modelLine, M, refTimes, mindTap, mind, quizAsk, quizAnswer, quiz, virtualStart, team, teamLog, teamTable, live, speechLag, speechLags, SHORT, setRec: r => { rec = r; }, getRec: () => rec };
+window.__wm = { cardList, refreshAll, cloud, cloudPull, cloudPush, cloudRender, cloudTakeHash, teamLevels, teamBest, parseOfficial, official, gpsQuality, loop, loopFit, loopStart, loopStop, modelAgreement, guideOffset, pocketShow, walk, walkStart, walkStop, renderStart, D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, MK, modelLine, M, refTimes, mindTap, mind, quizAsk, quizAnswer, quiz, virtualStart, team, teamLog, teamTable, live, speechLag, speechLags, SHORT, setRec: r => { rec = r; }, getRec: () => rec };
 })();
 </script>
 </body>

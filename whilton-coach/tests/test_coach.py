@@ -63,6 +63,18 @@ with sync_playwright() as p:
     r = pg.evaluate(RUN, dict(layout='intl', rate=1, seconds=150, mode='words')); print('WORDS intl 1Hz:'); [print('   ', w) for w in r['words']]; print('  laps', r['laps'])
     r = pg.evaluate(RUN, dict(layout='nat', rate=10, seconds=260, bad=True)); print('BAD DRIVER nat 10Hz: laps'); [print('   ', l) for l in r['laps']]
     r = pg.evaluate(RUN, dict(layout='intl', rate=1, seconds=190, wet=True)); print('WET intl: laps', [l['s'] for l in r['laps']], 'first words', r['words'][:6])
+    # wet calls: every corner speaks its own wet plan, not one generic sentence, and the wet banner follows the switch
+    w = pg.evaluate("""() => { const W = window.__wm, out = {}; for (const lay of ['intl', 'nat']) { Object.assign(W.st, { layout: lay, chic: true, wet: true, profile: 'novice' }); W.refreshAll();
+      out[lay] = { calls: W.cardList().map(([key]) => W.callFor({ key, level: 5 })).filter(Boolean), banner: getComputedStyle(document.querySelector('#wetNote')).display }; }
+      Object.assign(W.st, { layout: 'intl', chic: true, wet: false, profile: 'novice' }); W.refreshAll(); out.dryBanner = getComputedStyle(document.querySelector('#wetNote')).display; return out; }""")
+    for lay in ('intl', 'nat'):
+        calls = w[lay]['calls']; bodies = [c.split('. ', 1)[1] for c in calls]
+        assert len(set(bodies)) >= len(bodies) - 1, ('wet calls repeat', lay, calls)
+        assert all(len(c) <= 150 and c.endswith('.') for c in calls), ('wet call shape', lay, calls)
+        assert not any('no kerbs.' == b.lower()[-9:] and b.lower().startswith('brake early and gently') for b in bodies), ('generic wet call', calls)
+        assert w[lay]['banner'] == 'block', ('wet banner missing', lay)
+    assert w['dryBanner'] == 'none', 'wet banner shown when dry'
+    print('WET CALLS ok:', len(w['intl']['calls']), 'intl,', len(w['nat']['calls']), 'nat; e.g.', w['intl']['calls'][:2])
     for cfg in (dict(truth='nat', startSel='intl', rot=37), dict(truth='intl', startSel='nat', rot=212)):
         print('FIT', cfg, '->', pg.evaluate(FIT, cfg))
     # the Model driver level: a level string and a line for every layout, no one-point blips, and a lap of words and tones through the engine
