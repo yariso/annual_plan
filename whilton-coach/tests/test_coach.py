@@ -46,6 +46,16 @@ RUNX = """
 }
 """
 
+import json as _json
+CLOUD_POSTED = []
+def cloud_mock(route, request):
+    u, m = request.url, request.method
+    if '/auth/v1/user' in u: route.fulfill(status=200, content_type='application/json', body=_json.dumps({'email': 'sam@example.com'})); return
+    if '/rest/v1/laps' in u and m == 'GET':
+        laps = [{'driver': 'Sam', 'layout': 'intl_c', 'ms': 65000 + i * 300, 'at': 1700000000000 + i * 90000, 'rate': 1.0, 'm': {'christmas': {'tSeg': 6, 'vMin': 12, 'brakeOn': 118 + (i % 3), 'thrLag': 3}}} for i in range(6)]
+        route.fulfill(status=200, content_type='application/json', body=_json.dumps(laps)); return
+    if m == 'POST': CLOUD_POSTED.append(request.post_data or ''); route.fulfill(status=201, content_type='application/json', body='{}'); return
+    route.fulfill(status=200, content_type='application/json', body='[]')
 with sync_playwright() as p:
     b = p.chromium.launch(); pg = b.new_page(viewport={'width': 390, 'height': 844}); errs = []
     pg.on('pageerror', lambda e: errs.append(str(e)))
@@ -165,4 +175,15 @@ with sync_playwright() as p:
     r = pg.evaluate(LOOP, 1 / 3); print('PRACTICE LOOP 1:3:', r)
     assert abs(r['startAt'][0]) < 0.01 and abs(r['startAt'][1]) < 0.01, 'the start line must sit on the origin'
     assert len(r['laps']) == 2 and 150 < r['laps'][0]['s'] < 220 and r['brakes'] >= 8 and r['nWords'] >= 20, 'the practice loop did not coach a full walked lap'
+
+    # the team's shared brain against a mocked project: signed in, laps merged, a live lap posted, the Team level learned in the right direction
+    pg.route('https://team.supabase.co/**', cloud_mock)
+    pg.evaluate("() => { localStorage.setItem('wm.cloud', JSON.stringify({ url: 'https://team.supabase.co', anon: 'anonkey-anonkey-anonkey-anonkey' })); localStorage.setItem('wm.cloudsess', JSON.stringify({ access_token: 'tok', refresh_token: 'ref', expires_at: Math.floor(Date.now() / 1000) + 3600, email: null })); localStorage.removeItem('wm.team'); }")
+    pg.goto(URL); pg.wait_for_timeout(1500)
+    r = pg.evaluate("""() => { const W = window.__wm, L = W.LY(), tl = W.teamLevels(L), exp = L.levels.expert; const firstBrake = s => { for (let i = 100; i < 140; i++) if (+s[i] >= 3) return i; };
+      document.querySelector('#driverName').value = 'Jo'; W.lapE.layKey = 'intl_c'; W.lapE.rate = 1; W.teamLog({ ms: 70000, m: { christmas: { tSeg: 6.5, vMin: 11, brakeOn: 110, thrLag: 2 } } });
+      return { status: document.querySelector('#cloudStatus').textContent.slice(0, 40), laps: W.team.laps.length, teamBtn: !document.querySelector('[data-profile="team"]').hidden, teamStart: tl && firstBrake(tl), expertStart: firstBrake(exp), noviceStart: firstBrake(L.levels.novice) }; }""")
+    pg.wait_for_timeout(500); print('TEAM CLOUD:', r, 'posted', len(CLOUD_POSTED))
+    assert r['status'].startswith('Signed in as sam') and r['laps'] == 7 and r['teamBtn'] and r['noviceStart'] <= r['teamStart'] < r['expertStart'] and len(CLOUD_POSTED) == 1 and '"driver":"Jo"' in CLOUD_POSTED[0], 'shared store or learned level wrong'
+    pg.evaluate("() => { localStorage.removeItem('wm.cloud'); localStorage.removeItem('wm.cloudsess'); localStorage.removeItem('wm.team'); }")
     print('errors', errs); b.close()
