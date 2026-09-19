@@ -60,9 +60,9 @@ KARTS = dict(
               v_top=24.6,           # 55 mph (Birel ART); the venue quotes up to 50 mph on its circuit
               cda=0.75,             # m2, driver upright in a rental kart: estimate
               crr=0.015,            # rolling resistance: estimate
-              mu_y=1.05,            # lateral grip of hire slicks on a low-grip surface: estimate
-              mu_x=0.75,            # traction from the driven rear axle only: estimate
-              mu_b=0.70,            # braking with rear brakes only, load moving forward: estimate
+              mu_y=1.21,            # lateral grip of hire slicks: the first estimate of 1.05 gave a 67.2 s lap, slower than a real quick hire
+              mu_x=0.86,            # driver's 64.54 s (Alpha Timing, 18 February 2025), and the grip sweep put that lap at 1.15 times the
+              mu_b=0.81,            # estimate, so all three grip figures are scaled by 1.15: a calibration to one measured lap, not a measurement
               ),
     race=dict(name='senior two-stroke race kart (X30 or Rotax Max class)',
               mass=85 + 75, power_kw=22.0, drive_eff=0.9, v_top=33.0, cda=0.55, crr=0.012, mu_y=1.75, mu_x=1.15, mu_b=1.2),   # about 30 bhp, 74 mph, race slicks: estimates
