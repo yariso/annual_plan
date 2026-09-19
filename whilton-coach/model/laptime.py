@@ -275,7 +275,7 @@ def corner_report(tr, v, lv, ax, key, ds=None):
         vmin_i = min(own, key=lambda q: v[q]); vmin = v[vmin_i]
         # off throttle: walk back from the slowest point while the kart is not accelerating, no further than the previous apex; brakes on: the first real braking in that stretch
         q = vmin_i; steps = 0; limit = (vmin_i - start) % n
-        while steps < limit and ax[(q - 1) % n] < 0.02 * G: q = (q - 1) % n; steps += 1
+        while steps < limit and ax[(q - 1) % n] < 0.06 * G: q = (q - 1) % n; steps += 1      # a small bump of throttle inside a braking zone does not end the zone
         lift = q if steps else None
         brake = None
         if lift is not None:
@@ -287,7 +287,8 @@ def corner_report(tr, v, lv, ax, key, ds=None):
         stretch = [(lift if lift is not None else vmin_i) + k for k in range(steps + 1)]
         peak = max(-ax[k % n] / G for k in stretch)
         level = 5 if peak > 0.55 else 4 if peak > 0.30 else 3 if peak > 0.15 else 2 if lift is not None else 1   # the same thresholds as classify()
-        out[c] = dict(v_in=round(v[lift if lift is not None else a] * 2.23694, 1), v_min=round(vmin * 2.23694, 1), v_min_ms=round(vmin, 2),
+        arrive = max(v[(start + k) % n] for k in range(((lift if lift is not None else a) - start) % n + 1))   # the fastest the kart went between the previous apex and coming off the throttle: the arrival speed
+        out[c] = dict(v_in=round(arrive * 2.23694, 1), v_min=round(vmin * 2.23694, 1), v_min_ms=round(vmin, 2),
                       lift_before_turnin_m=before(lift), brake_before_turnin_m=before(brake),
                       peak_decel_g=round(float(peak), 2), level=level)
     return out
