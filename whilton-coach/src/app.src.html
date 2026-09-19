@@ -1318,8 +1318,8 @@ function lapMetrics(startCum) {
     const w = cornerWindow(key); if (!w) return; const c0 = startCum + w.c0, c1 = startCum + w.c1;
     const t0 = tAt(c0), t1 = tAt(c1); if (t0 == null || t1 == null) return;
     const W = S.filter(p => p.c >= c0 - 1 && p.c <= c1 + 1); if (W.length < 2) return;
-    let vMin = 1e9, cMin = c0, brakeOn = null, decel = 0, first = null; W.forEach((p, j) => { if (p.v < vMin) { vMin = p.v; cMin = p.c; } if (j) { const q = W[j - 1], d = (q.v - p.v) / Math.max(.05, (p.t - q.t) / 1000); decel = Math.max(decel, d); if (first == null && d > 1.6) first = [q, p]; } });
-    if (first) { const [q, p] = first, dur = (q.v - p.v) / Math.max(decel, 1.6); brakeOn = p.c - ((q.v + p.v) / 2 * dur) / L.step; }   // the braking began somewhere inside the first pair that shows a drop: place it by how much speed went and how hard the kart brakes at its hardest, rather than at the pair's midpoint, which reads late at one fix a second
+    let vMin = 1e9, cMin = c0, brakeOn = null, decel = 0, first = null, plateau = 0, pj = 0; W.forEach((p, j) => { if (p.v < vMin) { vMin = p.v; cMin = p.c; } if (j) { const q = W[j - 1], d = (q.v - p.v) / Math.max(.05, (p.t - q.t) / 1000); decel = Math.max(decel, d); if (first == null) { if (q.v >= plateau) { plateau = q.v; pj = j - 1; } if (d > 1.6) first = j; } } });
+    if (first != null) { for (let j = pj + 1; j <= first; j++) { const p = W[j]; if (p.v < plateau - .5) { brakeOn = Math.max(c0, p.c - (plateau * plateau - p.v * p.v) / (2 * Math.max(decel, 1.6) * L.step)); break; } } if (brakeOn == null) brakeOn = (W[first - 1].c + W[first].c) / 2; }   // the onset is where the speed left its plateau: back-projected from the first fix below it along the hardest braking seen, so it does not read late at one fix a second whichever fix phase the lap had
     let thr = null; for (const p of W) if (p.c > cMin && p.v > vMin + 1) { thr = p.c; break; }
     out[key] = { tSeg: (t1 - t0) / 1000, vIn: vAt(c0), vMin, cMin: cMin - startCum, brakeOn: brakeOn == null ? null : brakeOn - startCum, decel, thrLag: thr == null ? null : thr - cMin };
   });
@@ -1452,10 +1452,10 @@ function simStep(dt, now, quiet) {
   else { const d = Math.max(2, (rEnd - i + 1) * ds), v2 = Math.min(sim.v, vt); a = Math.max(-6, Math.min(sim.bad ? -.1 : -.5, (v2 * v2 - sim.v * sim.v) / (2 * d))); }
   sim.v = Math.max(5, sim.v + a * dt); if (sim.crawl) sim.v = Math.min(sim.v, 7); sim.pos = (sim.pos + sim.v * dt / ds) % n;   // crawl: stuck behind a slower kart
   const at = pos => { const pp = mod(pos, n), j = Math.floor(pp), fr = pp - j, p = LN[j % n], q = LN[(j + 1) % n]; return { x: p[0] + (q[0] - p[0]) * fr, y: p[1] + (q[1] - p[1]) * fr }; };
-  const here = at(sim.pos); sim.fixAcc += dt;
+  const here = at(sim.pos); sim.fixAcc += dt; (sim.ring = sim.ring || []).push({ t: now, pos: sim.pos, v: sim.v }); while (sim.ring.length && now - sim.ring[0].t > 2000) sim.ring.shift();
   if (sim.fixAcc >= 1 / sim.rate) {
-    sim.fixAcc = 0; const old = at(sim.pos - sim.v * set.gpsDelay / ds), noise = sim.rate === 1 ? 3 : .6, T = simT(), w = m2w(T, old.x, old.y);       // the receiver reports where you were a moment ago
-    const ll = toLL(w[0] + (Math.random() - .5) * 2 * noise, w[1] + (Math.random() - .5) * 2 * noise, SIM_ORIGIN); lapFix({ t: now, lat: ll[0], lon: ll[1], spd: sim.v, acc: noise * 2 });
+    sim.fixAcc = 0; const ring = sim.ring || [], past = ring.length ? ring.reduce((b, r) => (now - r.t >= set.gpsDelay * 1000 ? r : b), ring[0]) : { pos: sim.pos, v: sim.v }, old = at(past.pos), noise = sim.rate === 1 ? 3 : .6, T = simT(), w = m2w(T, old.x, old.y);       // the receiver reports where you were a moment ago, and the speed from that same moment
+    const ll = toLL(w[0] + (Math.random() - .5) * 2 * noise, w[1] + (Math.random() - .5) * 2 * noise, SIM_ORIGIN); lapFix({ t: now, lat: ll[0], lon: ll[1], spd: past.v, acc: noise * 2 });
   }
   sim.tickAcc += dt;
   if (sim.tickAcc >= .1) { sim.tickAcc = 0; const s = lapTick(now); if (!quiet) { $('#simSpd').textContent = Math.round(sim.v * MPH); $('#simLap').textContent = lapE.lapStartT != null ? fmtLap(now - lapE.lapStartT) : '0:00.0'; pedalShow('#simPedal', s ? +lvS[mod(Math.floor(s.cum + s.v * set.toneLead / ds), n)] : 1); } }

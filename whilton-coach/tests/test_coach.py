@@ -36,9 +36,9 @@ RUNX = """
   window.speechSynthesis && (window.speechSynthesis.speak = () => {});
   W.sim.rate = cfg.rate; W.sim.bad = !!cfg.bad; W.sim.late = !!cfg.late; W.sim.rot = 0; W.lapReset(W.simT());
   const n = W.LY().centre.length, perLap = [], cur = { words: 0, brakes: 0, cues: 0 }, brakeAt = {}; let now = 1000, tot = { brakes: 0, cues: 0 };
-  W.lapE.onWord = (t, l) => { if (l > 0) { cur.words++; if (l >= 3) { cur.brakes++; tot.brakes++; } } };
+  W.lapE.onWord = (t, l) => { if (l > 0) { cur.words++; if (l >= 3) { cur.brakes++; tot.brakes++; const ev = W.lapE.events.filter(e => e.level >= 3).map(e => ((e.i - W.sim.pos) % n + n) % n).sort((a, b) => a - b)[0]; (cur.ahead = cur.ahead || []).push(+(ev * 2).toFixed(1)); } } };
   W.lapE.onCue = k => { cur.cues++; tot.cues++; };
-  W.lapE.onLap = lap => { perLap.push(Object.assign({ n: lap.n, s: +(lap.ms / 1000).toFixed(2), focus: lap.focus, said: lap.said, tip: lap.tip, prof: !!W.lapE.prof, adj: Object.assign({}, W.lapE.leadAdj) }, cur)); cur.words = 0; cur.brakes = 0; cur.cues = 0; };
+  W.lapE.onLap = lap => { const ah = cur.ahead || []; perLap.push(Object.assign({ n: lap.n, s: +(lap.ms / 1000).toFixed(2), focus: lap.focus, said: lap.said, tip: lap.tip, prof: !!W.lapE.prof, adj: Object.assign({}, W.lapE.leadAdj), aheadMean: ah.length ? +(ah.reduce((x, y) => x + y, 0) / ah.length).toFixed(1) : null }, cur)); cur.words = 0; cur.brakes = 0; cur.cues = 0; cur.ahead = []; };
   W.sim.pos = n - 18; W.sim.v = 17; W.sim.fixAcc = 1e9; W.sim.tickAcc = 0;
   const dt = 0.02; for (let s = 0; s < cfg.seconds / dt; s++) { now += dt * 1000; if (cfg.badUntil && W.sim.bad && (now - 1000) / 1000 > cfg.badUntil) W.sim.bad = false; W.simStep(dt, now, true); }
   W.renderDebrief(); const html = document.querySelector('#debriefBody').innerHTML; W.sim.late = false; W.sim.bad = false;
@@ -74,16 +74,20 @@ with sync_playwright() as p:
     r = pg.evaluate(RUNX, dict(layout='intl', rate=1, seconds=230)); print('PROFILE 1Hz:', [(l['n'], l['s'], l['prof'], l['brakes'], l['cues']) for l in r['laps']], 'totals', r['tot'])
     assert len(r['laps']) >= 2 and all(l['prof'] for l in r['laps'][1:]), 'speed profile missing after lap one'
     assert abs(r['tot']['brakes'] - r['tot']['cues']) <= 1, 'chirps should match brake words'
-    r = pg.evaluate(RUNX, dict(layout='intl', rate=10, seconds=300, late=True)); print('LATE BRAKER 10Hz: adj per lap', [(l['n'], l['s'], {k: v for k, v in l['adj'].items() if v}) for l in r['laps']], 'moved note', r['moved'])
-    assert len(r['laps']) >= 4 and any(v > 0 for v in r['leadAdj'].values()), 'a late braker should get earlier calls after three laps'
-    r0 = pg.evaluate(RUNX, dict(layout='intl', rate=10, seconds=300, late=True, autoLead=False)); assert not any(r0['leadAdj'].values()), 'auto lead off must not adjust'
+    r = pg.evaluate(RUNX, dict(layout='intl', rate=10, seconds=300, late=True)); print('LATE BRAKER 10Hz: adj per lap', [(l['n'], l['s'], {k: v for k, v in l['adj'].items() if v}, l['aheadMean']) for l in r['laps']], 'moved note', r['moved'])
+    assert len(r['laps']) >= 4 and any(v > 0 for v in r['leadAdj'].values()) and r['moved'], 'a late braker should get earlier calls after three laps'
+    assert r['laps'][3]['aheadMean'] - r['laps'][0]['aheadMean'] >= 4, 'the brake words did not move earlier once the lead was learned: ' + str([l['aheadMean'] for l in r['laps']])
+    r0 = pg.evaluate(RUNX, dict(layout='intl', rate=10, seconds=300, late=True, autoLead=False)); assert len(r0['laps']) >= 4 and r0['tot']['brakes'] > 10 and not any(r0['leadAdj'].values()), 'auto lead off must not adjust'
     r1 = pg.evaluate(RUNX, dict(layout='intl', rate=1, seconds=300, late=True)); assert not any(r1['leadAdj'].values()) and not r1['moved'], 'at one fix a second nothing must be learned, even from a late braker'
     r2 = pg.evaluate(RUNX, dict(layout='intl', rate=10, seconds=300)); assert not any(r2['leadAdj'].values()) and not r2['moved'], 'a driver on the plan must not get a learned lead: ' + str(r2['leadAdj'])
     r = pg.evaluate(RUNX, dict(layout='nat', rate=10, seconds=330, bad=True, badUntil=125)); print('FOCUS nat 10Hz:'); [print('   ', l['n'], l['s'], 'focus', l['focus'], '|', l['tip']) for l in r['laps']]
     assert any(l['focus'] for l in r['laps']), 'no focus corner chosen'
     assert any(l['said'] and 'found' in l['said'] for l in r['laps']), 'no confirmation after the driver improved'
+    fk = next(l['focus'] for l in r['laps'] if l['focus']); fs = next(l['said'] for l in r['laps'] if l['said'] and 'found' in l['said']); assert fs.split(' better')[0].lower() in {'christmas': 'christmas', 'crook': 'crook'}.get(fk, fk).lower() or fk in fs.lower() or fs.lower().startswith(fk[:4]), 'the confirmation names a different corner from the focus: ' + fk + ' / ' + fs
     print('SESSION TABLE rows', r['rows'], 'model row', r['modelRow'], 'spread', r['spread'])
     assert r['rows'] >= len(r['laps']) + 2 and r['spread'], 'session table incomplete'
+    tb = pg.evaluate("() => { const h = document.querySelector('#debriefBody').innerHTML; return { bestRows: (h.match(/ best<\\/td>/g) || []).length, greens: (h.match(/class=\"pos\"/g) || []).length, spreadNums: ((h.match(/<td>Spread<\\/td>(.*?)<\\/tr>/) || ['', ''])[1].match(/\\d+\\.\\d/g) || []).length }; }")
+    print('SESSION TABLE detail', tb); assert tb['bestRows'] == 1 and tb['greens'] >= 3 and tb['spreadNums'] >= 3, 'session table rows or marks wrong'
     if m != 'no model': assert r['modelRow'], 'model row missing'
 
     # practice at home: the silent reference lap, the lap in your head, the corner quiz and the talked virtual lap
