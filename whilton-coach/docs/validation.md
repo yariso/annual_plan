@@ -6,14 +6,14 @@
 | Track shape | Checked against the owner's copy of the circuit map (19 September 2026) | tools/check_map.py: the drawn loop and the app's centreline agree to 0.5 m RMS and 1.6 m at worst after alignment; every corner apex within 1.3 m. The two are the same drawing, so this confirms the shape, not the scale or the length |
 | Direction of travel: clockwise | Derived | Every centreline in data.json closes clockwise and each corner's hand matches the guides; no page states the word |
 | Turn numbers | Convention | International numbers follow BUKC and NRDD (Fine Lady unnumbered, Christmas T3, Pit Bend T11); the BUKC National guide numbers only Turns 1 and 2, so the National count here follows the same pattern. Other listings count 12, 13 or 14 turns |
-| Alternative names: Chapmans for the left into The Boot (KCL 2013), Wilkins and Osiers for Parker and Chapmans (Club100 race report), Osiers before the short straight to The Boot (Club100 venue page), Championship Bend for the last corner (Kart Directory) | Single sources each | Search excerpts only |
+| Alternative names: Chapmans for the left into The Boot (KCL 2013), Osiers before the short straight to The Boot (Club100 venue page), Championship Bend for the last corner (Kart Directory) | Single sources each | Search excerpts only. The earlier claim that a Club100 race report calls Parker Wilkins was not reproduced in the September 2026 card check: the only Wilkins excerpt found is in a Club100 report from Shenington, so it is withdrawn |
 | Lap length: 1054 m with the chicane | Settled by the regulations and the lap times | WMKC 2025 and BKC 2025 supplementary regulations both state 1054 m. Real laps agree: Senior X30 45.28 s and Senior Rotax 45.54 s at WMKC Round 3, May 2025 (Alpha Timing); a quick hire driver 1:04.537 in a 20-minute International arrive-and-drive practice, 18 February 2025 (Alpha Timing); Sodi RT8 hire records 56.99 and 56.19 s before the chicane (video titles); Rotax Max 44.8 s, June 2021 (Karting Track Guides). On a 1200 m lap those would be averages of 52 to 59 mph, impossible here. The venue's 1200 m and 960 m and the BKC page's 1190 m are treated as advertising figures. The map is now scaled to 1054 m; the National comes out at about 860 m (851 m without the chicane) |
 | Marker positions on the map (22 m, 24 m and 14 m before turn-in) | Assumed | Set in build_data.py, not traced; the experienced braking points are drawn at them by definition |
 | Chicane approach: 6 to 8 m of straight after The Boot on the trace | Unverified | Read from a small map; the designer says drivers follow the penultimate apex for longer and stay right |
 | Start line position | Unchecked | Where the trace begins, 26 m before Oblivion; not checked against the venue's timing line |
 | Hire fleet: BirelART N35 390cc, arrived autumn 2024, up to 50 mph; sessions on both layouts, 20-minute voucher on the National; 450 m Mill circuit for juniors; Sprint, Grand Prix and Endurance formats; age and height limits differ between pages | Venue pages, search excerpts | whiltonmill.co.uk arrive-and-drive, voucher, open races and Open Sprint pages; Facebook fleet post; Alpha Timing session titles |
 | Chicane not always used at hire events; run-off a bog in the rain | Single report | CUAC October 2024: the old layout was kept that day because a cycle event had used it and the new tarmac was the only wet surface |
-| Wet: turn in very late and turn quickly to full lock off the rubber | Single source | Kart Directory notes on the Rich Tea Racing wet lap |
+| Wet: turn in very late and turn quickly to full lock off the rubber | Two sources | Kart Directory notes on the Rich Tea Racing wet lap; UK Karting's wet-driving article, which uses The Boot at Whilton as its worked example (turn in very, very late, snap the wheel to full lock, the quick turn jacks the inside rear) http://www.karting.co.uk/KandK/Tech/WetDriving.html |
 | Flags | General | UK karting guides (Team Karting, Jack Stedman Racing, Flow Racers); not Whilton's briefing |
 | Radio or audio to the driver at race meetings | Club100 only | Club100 2021 rules say pit-to-kart radio is not permitted; Motorsport UK wording not checked; Whilton's hire rule on phones and earpieces not found |
 | Phone behaviour (GPS stops when locked, wake lock support, silent switch, Bluetooth latency) | From memory, unverified | Could not be checked in this session |
@@ -37,6 +37,24 @@
 | Braking levels 1 to 5, zone lengths, lateral line | Estimates | Reading of the guides, not measured |
 | Hire karts cut throttle when the brake is touched | Single report | CUAC race report, 2024 |
 | Wet line | General technique | Only the Oblivion and Crook point is Whilton-specific (BUKC) |
+
+## Card check, September 2026
+
+Every substantive sentence of every corner card (the pedal plan, marker, line, kerbs, mistake, passing and wet fields) was checked against the written guides by four independent readers, each running 45 to 60 searches for the guide text and classifying each sentence as supported by a quote, reasoned (no guide says it), or contradicted.
+
+| | Count |
+|---|---|
+| Sentences supported by a quoted guide | 193 |
+| Sentences that are reasoned, general technique or inference, and say so or are marked here | 141 |
+| Sentences contradicted by a guide | 9 |
+
+The nine contradictions, all applied: Chapmans' exit kerb is the sign of a good lap on the coach's line, not a hazard (NRDD), and the turn-in is from the far right; the hairpin's clip-on-exit advice is the 2013 KCL guide's, not BUKC's; on the N35 hire karts a foot on the brake cuts the throttle, not the engine (CUAC); the tall Pit Bend kerb was warned about by a drivers' petition, not by the older guides, which told you to skim its predecessor; a written Whilton-specific wet instruction for The Boot exists after all (UK Karting); and two "contradictions" from the Tarporley Karting Team page (Chapman running into Zulu One, The Boot entered as a right-hander) are that page's errors against BUKC, NRDD, KCL and the circuit map, so Tarporley is used only for corner descriptions, never for order. Guide points the cards left out were added where they change what a driver does: the two places the guides put the cautious driver's lift at Oblivion and Crook, brake later and harder each lap at Christmas and The Boot, the National kink trade-off, Ashby as a wet passing place, why the tyres sit on Parker's exit kerb, the short straight after the hairpin, the drift right after Pit Bend, and the Boot's late-apex left. The earlier claim that a Club100 report calls Parker Wilkins was withdrawn (see above).
+
+What this check cannot do: it reads the guides through search excerpts, so a sentence marked reasoned may be supported by text that did not surface, and no human coach has signed the cards. The reasoned sentences are the novice progressions (a wheel's width off the kerb first, then the inside front), the kerb verdicts where no guide covers the kerb, the wet lines other than The Boot's, and the chicane.
+
+## The model against the guide
+
+docs/model-vs-guide.md compares the physics model with the guide at every corner: the pedal class, the brake point against the painted zone, and the side of the track at the approach, the apex and past the exit. On the calibrated model 32 of 96 readings agree on all three counts. The recurring differences: the model brakes at Crook where every guide says flat or a lift (the traced Crook is probably tighter than the real one, which a GPS survey will settle), it lifts at Inkermans where the guide says flat, and the guide's drawn line returns to the middle after an exit sooner than a kart running out to the edge. Every corner card carries its own line of this comparison.
 
 ## Links
 - https://bukc.co.uk/circuits/whilton-mill-national/

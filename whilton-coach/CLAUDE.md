@@ -42,9 +42,10 @@ A single-file web app (dist/index.html) for a novice kart driver at Whilton Mill
 - Phone behaviour (GPS stopping when the phone locks, wake lock support, the silent switch, Bluetooth latency, speech needing a first utterance inside a tap) is from memory and needs a hand test on an iPhone and an Android phone.
 - Braking levels 1 to 5, zone lengths and lateral line positions are a reading of the written guides, not measured data.
 - The 2024 chicane has no written driving guide (researched September 2026, about 270 searches: docs/validation.md). Its card rests on the designer's line (stay right after The Boot, the chicane blends into Pit Bend), the shape (a tight left on new tarmac), the model's numbers, and hire-race facts (a bog beyond the braking zone, the N35's brake cutting the throttle, kerbs that launched karts on day one). No braking reference or apex has been published; the technique is in videos that could not be read. Its kerbs and the new Pit Bend kerb are undescribed, so the app says stay off or look first.
+- Every corner-card sentence was checked against the written guides in September 2026 (docs/validation.md, Card check): 193 supported by quotes, 141 reasoned, 9 contradicted and fixed. Tarporley Karting Team's page is unreliable for corner order.
 - Kerb verdicts come from the written guides where one covers the kerb (see docs/validation.md and the Plan tab table); the rest are marked Look first. Christmas, the Chapmans apex, the left of The Boot, the chicane, the Pit Bend apex and Zulu 1 and 2 have no source.
 - Race-day content (flags, kit, briefing, formats, age and height limits) is from the venue's pages as seen in search excerpts and from general UK karting guides, not from the venue's briefing.
-- Wet line is general technique. Whilton-specific wet guides exist only as videos that could not be read.
+- Wet line is general technique except at The Boot, where UK Karting's wet-driving article gives a Whilton-specific instruction (on the card). Other Whilton-specific wet guides exist only as videos that could not be read.
 - YouTube transcripts could not be fetched. docs/validation.md lists the videos to review by hand.
 
 ## Backlog, in priority order
