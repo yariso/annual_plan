@@ -198,7 +198,8 @@ svg text{font-family:var(--display);fill:var(--ink)}
   </div>
   <div class="seg" role="group" aria-label="Driver level">
     <button type="button" data-profile="novice" aria-pressed="true">Novice</button>
-    <button type="button" data-profile="expert" aria-pressed="false">Experienced</button>
+    <button type="button" data-profile="inter" aria-pressed="false" title="Halfway between: the advanced driver's plan with brake zones between the two and the novice's lifts shortened">Intermediate</button>
+    <button type="button" data-profile="expert" aria-pressed="false">Advanced</button>
     <button type="button" data-profile="model" aria-pressed="false" title="The physics model's fastest lap for the hire kart: the limit for a perfect driver, not a target">Model</button>
   </div>
   <div class="seg" role="group" aria-label="2024 chicane before the last corner">
@@ -503,6 +504,7 @@ const LV = {
 const CARDS = {
   oblivion: { name: 'Oblivion', kind: 'Fast left, slightly downhill', prims: ['oblivion'], lv: { novice: 2, expert: 1 },
     doN: 'Come off the throttle early and let the kart coast to the apex. No brakes in the dry. The guides put the cautious driver\'s lift in two places: the Club100 guide has a slight lift before this left to settle the kart, the BUKC guide has it at the turn-in for Crook and says it costs little. Either works; pick one and do the same every lap. The BUKC guide also says a beginner should not try the pair flat at all.',
+    doI: 'Lift, but later than the novice: the BUKC guide puts the cautious lift at the turn-in for Crook, so try a short lift there and keep Oblivion itself flat once the pair feels settled. Clip the inside kerb with the inside wheels.',
     doE: 'Flat in the dry, but only if you start from the right and hold the left after the apex.',
     marker: 'None. This is a lift, not a braking zone.',
     line: 'Start from the right-hand side of the pit straight. Clip the inside kerb, then stay over on the left after the apex. That feels wrong for a left-hander, but it opens up Crook. The two corners only work as a pair.',
@@ -512,6 +514,7 @@ const CARDS = {
     wet: 'A light brake, not just a lift: the BUKC guide says so. Apex a kart width off the kerb.' },
   crook: { name: 'Crook', kind: 'Right, straight after Oblivion', prims: ['crook'], lv: { novice: 2, expert: 1 },
     doN: 'A short squeeze of throttle after Oblivion, then lift again and coast to the apex. Full power once you clip it. The BUKC guide: if you are not confident, a little lift off the gas as you turn in here keeps the kart stable without losing much time.',
+    doI: 'A short lift as you turn in, then full power from the apex and all of the road on the exit. When the pair is consistent, try Oblivion flat and keep this lift.',
     doE: 'Flat if Oblivion went well. Turn in early.',
     marker: 'None.',
     line: 'Turn in from the left, clip the apex, then use every bit of track on the way out. The guides disagree on the apex: the current BUKC notes say turn in early to stay off a bumpy patch, while a 2013 Club100 guide says apex late, near the end of the kerb. Start with the newer advice and see what the kart does.',
@@ -528,6 +531,7 @@ const CARDS = {
     wet: 'Still flat unless there is standing water.' },
   christmas: { name: 'Christmas', kind: 'Right at the top of the hill', prims: ['christmas'], lv: { novice: 5, expert: 5 },
     doN: 'Your first big stop. Brake hard in a straight line, well before the marshal post to begin with. Come off the brake, turn in, and go back to full throttle once you pass the apex. Each lap brake a little later and a little harder, says the BUKC guide. From here it is flat all the way down to Ashby: carry the momentum and be smooth.',
+    doI: 'Brake hard in a straight line, starting between the novice\'s early point and the marshal post, and move it later by a kart length a lap while it stays tidy. Late apex, then full throttle down the hill.',
     doE: 'The hill helps you stop, so braking at the marshal post is possible on a grippy day.',
     marker: 'Marshal post on the left. Fast drivers brake at it. Start well before it and move your braking point a little later each lap.',
     line: { intl: 'Approach on the left, turn in late and take a late apex. Do not let the kart run fully wide on the way out: the left kink and Inkermans follow at once, and the coach lap says slower in, faster out. A 2013 guide puts the ideal exit about a third of the track width in from the left.',
@@ -547,6 +551,7 @@ const CARDS = {
     note: { nat: 'The BUKC guide says it is fine to compromise this kink on the National to brake later into Christmas, and that taking a little less speed into Christmas lets you carry more through the kink and all the way down to the hairpin. The clip-the-kerb advice is written for the National, where you want to be left for the hairpin.', intl: 'On the International the BUKC and NRDD line exits this kink in the middle of the track and drifts left before the right-hander; the kerb clip is a National habit and is not needed here.' } },
   inkhair: { name: 'Inkermans hairpin', kind: 'Tight right, downhill', prims: ['inkhair'], lv: { novice: 4, expert: 4 },
     doN: 'Firm, short braking in a straight line. Start before the change of tarmac. It is downhill, so the kart feels loose as you turn in. Come off the brake, coast to a late apex, and be patient with the throttle. Brake in a straight line, says the 2013 guide, to avoid lock-ups and oversteer, and turn in smoothly. Any mistake here is paid for through the next three corners.',
+    doI: 'Brake firmly from just before the change of tarmac, straight, then a late apex and the power on once the kart is pointing down the short straight.',
     doE: 'Brake on or near the change of surface and turn in from the far left.',
     marker: 'A visible change in the colour of the tarmac across the track. Two independent guides use it.',
     line: 'Turn in from the far left and apex late. After the apex bring the kart back to at least the middle of the track, ready for the first part of Zulu.',
@@ -566,6 +571,7 @@ const CARDS = {
     note: 'On the National the hairpin turns sharp right at this same spot. On the International it is part of the flat run from Christmas down to Ashby, and the Tarporley guide does not even count it as a corner.' },
   ashby: { name: 'Ashby hairpin', kind: 'Tight right at the bottom of the hill, off camber', prims: ['ashby'], lv: { novice: 5, expert: 5 },
     doN: 'You arrive fast and downhill. Brake hard in a straight line, early to begin with, then turn in. The corner is off camber, so the kart wants to run wide, over the concrete on the exit and towards the grass beyond it.',
+    doI: 'A hard, short brake from a little before the novice\'s point, aim the inside front at the flat kerb, and let the kart run out to the white line. Brake a little later each lap while the apex still comes.',
     doE: 'A short, sharp stab of brake, then turn.',
     marker: 'The guides give no fixed marker. Pick your own on the sighting laps, such as the start of a kerb or a mark at the trackside, and brake before it at first.',
     line: 'Approach on the left, aim for the flat inside kerb, and let the kart drift wide onto the concrete run-off on the way out. Then cross back to the right for Parker.',
@@ -576,6 +582,7 @@ const CARDS = {
     wet: 'Off camber and downhill: brake early and in a straight line. Stay a kart width or two off the inside kerb, where there is less rubber, and stay off the run-off. In the wet Ashby is still a passing place, say the Kart Directory notes on the wet lap, if you are brave on the brakes and have a good run in.' },
   parker: { name: 'Parker', kind: 'Fast left', prims: ['parker'], lv: { novice: 3, expert: 3 },
     doN: 'A light dab of brake, then one smooth turn. Do not try it flat.',
+    doI: 'A dab of brake, one smooth turn, and use the road on the exit up to the tyres, not onto them. Nearly flat is for later.',
     doE: 'Nearly flat, but a dab and a tidy line is quicker.',
     marker: 'None. This one is by feel.',
     line: 'Start from the right, run the flat inside kerb, and drift out close to the outside kerb.',
@@ -585,6 +592,7 @@ const CARDS = {
     wet: 'A light brake in place of the dab. Keep off the inside kerb.' },
   chapmans: { name: 'Chapmans', kind: 'Off camber left with a late apex', prims: ['chapmans', 'chap2'], lv: { novice: 4, expert: 4 },
     doN: 'A quick, firm stab of brake in a straight line. Turn in later than feels natural and aim for a late apex.',
+    doI: 'Turn in from the far right, brake firmly and briefly, late apex, and drive the exit out towards the big kerb without thumping it. The exit sets up the short straight to The Boot.',
     doE: 'Quick sharp stab, late turn-in, hook the late apex.',
     marker: 'None given. It arrives quickly after Parker.',
     line: 'Turn in from as far right as the track allows, says the coach\'s guide. Late turn-in, late apex, then a clean run onto the short straight down to The Boot. The exit matters more than the entry.',
@@ -604,6 +612,7 @@ const CARDS = {
     wet: 'Club100 describes this section as off camber, so water runs across it. Lift where you would be flat in the dry, brake lightly for the last left, and keep off the painted kerb.' },
   boot: { name: 'The Boot', kind: 'Left, then a long right', prims: ['boot1', 'boot2', 'boot3'], lv: { novice: 5, expert: 5 },
     doN: 'Your other big stop. Brake hard in a straight line, well before the marshal post at first, then a little later and a little harder each lap, says the BUKC guide. Take the left-hander slower than you think you need to: a sharp turn-in to a late apex, then the power back on gently, says the 2013 guide. Coast to the apex of the right-hander, then squeeze the throttle back on. The right is only near flat if the left went well and left you well over to the left.',
+    doI: 'Brake hard from between the novice\'s point and the marshal post, a sharp turn-in to a late apex on the left, the power on gently, then the right-hander with a coast to its apex. Brake a little later each lap.',
     doE: { c: 'Brake at the marshal post. Keep the left-hander tight and carry speed through the right-hander, ready to brake again for the chicane.', n: 'Brake at the marshal post. Keep the left-hander tight and take the right-hander flat.' },
     marker: 'Marshal post on the right of the short straight before The Boot. Three guides agree on it. One also uses the pit entry markings: be just to the right of them before you turn into the right-hander.',
     line: { c: 'Approach on the right. Coming out of the left, do not let the kart drift past the middle of the track. Pull it back to the left, then apex the right-hander. With the chicane in use, hold the kart over to the right through the second half of the corner so you arrive on the right-hand side for the chicane.',
@@ -615,6 +624,7 @@ const CARDS = {
     wet: 'Earlier, gentler braking. Stay off the harsh inside kerb entirely. A written wet instruction exists for this corner: UK Karting\'s wet-driving article uses The Boot as its example. Off the rubber, turn in very, very late, then snap the wheel to full lock hard and fast, because the quick turn jacks the inside rear and the kart turns sharply when it finds grip.' },
   chicane: { name: 'Chicane', kind: 'Tight left on new tarmac, built March 2024, then straight into the final right', prims: ['chic1'], lv: { novice: 4, expert: 4 },
     doN: 'Come out of The Boot and keep the kart on the right-hand side of the track rather than drifting to the middle: that is the designer\'s own description of the line. Brake in a straight line before the chicane, firmly but briefly, and brake early for your first few laps, because past the end of the braking zone the run-off is soft mud, not tarmac. Come off the brake completely before you turn in, because on these 390cc karts even resting a foot on the brake cuts the throttle, one October 2024 report says. Turn in for the tight left with all four wheels off the new kerbs. Squeeze the throttle on gently as the left opens into the final right, because the back end steps out if you stamp on it. The exit of the left is what matters: it is the entry to Pit Bend and the whole pit straight follows.',
+    doI: 'Stay right after The Boot, a short firm brake in a straight line with a margin for the bog beyond the zone, all wheels off the kerbs, then a gentle squeeze of throttle as the left opens into Pit Bend.',
     doE: 'Hold The Boot\'s apex longer and stay on the right on the new tarmac. A short hard brake in a straight line, with a margin for the bog beyond the zone, then rotate the kart through the tight left without touching the new kerbs, which were launching karts on the first test day. Drive the exit of the left straight into Pit Bend rather than chasing a late apex for its own sake. Nobody has published a braking reference for this chicane, so bank a lap of margin and read the quick drivers before you commit.',
     marker: 'None published anywhere, in writing or in a video description. Pick your own on the sighting laps: a kerb end or the marshal post, which was moved for the 2024 works, and brake before it at first.',
     line: 'Right-hand side after The Boot (designer). Turn in from there to the left apex, then the kart crosses straight to the right for the Pit Bend apex: the model puts the two apexes about 24 m apart, so there is no straight between them. Whether the chicane has a second distinct right before Pit Bend or the left simply feeds it is not settled by any source; the trace shows one left then Pit Bend.',
@@ -626,6 +636,7 @@ const CARDS = {
     wet: 'The chicane tarmac is newer and stays wet when the rest of the lap is dry, especially if the chicane has not been run earlier that day, and past the braking zone is a bog that punishes a lock-up. Brake earlier and softer here than the rest of the lap suggests, off the kerbs, gentle on the throttle.' },
   pitbend: { name: 'Pit Bend', kind: { c: 'Final right onto the pit straight', n: 'Very fast right onto the pit straight' }, prims: ['pitbend'], lv: { c: { novice: 2, expert: 2 }, n: { novice: 2, expert: 1 } },
     doN: { c: 'Out of the chicane, let the kart settle, apex on the right without touching the kerb, then go to full throttle and hold it, all four wheels inside the white line. Your speed here carries along the pit straight, through Oblivion and Crook and up the hill.', n: 'Lift as you arrive and let the kart coast to the apex. Once past it, full throttle and use all of the track.' },
+    doI: { c: 'Out of the chicane, a lift to settle the kart, apex on the right off the kerb, then full throttle with all four wheels inside the white line.', n: 'A short lift as you arrive, one smooth turn, and let the kart run out to the white line. Only the advanced driver takes it flat.' },
     doE: { c: 'Throttle as early as the kart will take it and use every bit of the exit.', n: 'Just about flat on a dry day with warm tyres, but only with the turn-in timed right. A small lift to settle the kart is normal.' },
     marker: 'None.',
     line: { c: 'Arrive from the late apex of the chicane, apex on the right, and let the kart run out to the white line on the left. Then drift back to the right for Oblivion as you cross the line, as the coach\'s lap does.', n: 'Approach on the left, make one smooth steering input, and let the kart run out to the white line. Then drift back to the right for Oblivion as you cross the line, as the coach\'s lap does.' },
@@ -668,6 +679,7 @@ function callFor(c) {
   if (typeof v === 'string') return v;
   if ('chic' in v) return st.chic ? v.chic : v.nochic;
   if (v.nat) return v[st.layout];
+  if (st.profile === 'inter') { const l = key && pick(CARDS[key].lv); return l && l.novice !== l.expert ? v.c : v.e; }
   return st.profile === 'novice' ? v.c : v.e;
 }
 // where each name sits on the map, as an offset from the corner's apex: [dx, dy, anchor, anchor corner, short name, leader line]
@@ -680,7 +692,9 @@ const LABELS = {
 /* ---------------- state ---------------- */
 const st = { layout: 'intl', chic: true, wet: false, profile: 'novice', tab: 'start', sel: null, show: { names: true, markers: true, kerbs: true } };
 const pick = v => { if (v && typeof v === 'object') { if ('c' in v || 'n' in v) return pick(v[st.chic ? 'c' : 'n']); if ('nat' in v || 'intl' in v) return v[st.layout]; } return v; };
-const lvOf = c => { if (!st.wet && st.profile !== 'model') return pick(c.lv)[st.profile]; const L = LY(), lv = LVL(L), n = lv.length, a = L.corners[c.prims[0]], b = L.corners[c.prims[c.prims.length - 1]]; let m = 1; rangeIdx(a.a - 30, b.i, n).forEach(i => { m = Math.max(m, +lv[i]); }); return m; };
+const INTER_NOTE = 'As an intermediate, start a few metres earlier than that and work up to it over the session, and take the kerbs only once the corner is consistent.';
+const doFor = c => st.wet ? pick(c.wet) : st.profile === 'novice' ? pick(c.doN) : st.profile === 'inter' ? (c.doI ? pick(c.doI) : pick(c.doE) + (lvOf(c) >= 3 ? ' ' + INTER_NOTE : lvOf(c) === 2 ? ' As an intermediate, lift a touch earlier at first.' : '')) : pick(c.doE);   // model level reads the advanced plan; flat corners need no note
+const lvOf = c => { if (!st.wet && st.profile !== 'model') { const l = pick(c.lv); return l[st.profile] != null ? l[st.profile] : l.novice; } const L = LY(), lv = LVL(L), n = lv.length, a = L.corners[c.prims[0]], b = L.corners[c.prims[c.prims.length - 1]]; let m = 1; rangeIdx(a.a - 30, b.i, n).forEach(i => { m = Math.max(m, +lv[i]); }); return m; };
 const LY = () => D.layouts[st.layout + (st.chic ? '_c' : '_n')];
 // the model result the app follows when the driver level is Model: the hire kart, dry or wet
 const MK = () => { const lay = M && M.layouts[st.layout + (st.chic ? '_c' : '_n')]; return (lay && lay.karts['hire' + (st.wet ? '_w' : '')]) || null; };
@@ -909,11 +923,11 @@ function renderCard() {
   }
   const pos = list.findIndex(x => x[0] === st.sel), key = st.sel, tn = list[pos][1], c = CARDS[key], l = lvOf(c);
   const prev = list[mod(pos - 1, list.length)][0], next = list[mod(pos + 1, list.length)][0];
-  box.innerHTML = '<div class="card" style="--lv:' + lvColor(l) + '"><div class="head">' + (tn === 'new' ? '' : '<span class="tn">' + tn + '</span>') + '<h2>' + c.name + '</h2>' + badge(l) + '<span class="kind">' + esc(pick(c.kind)) + '</span></div><div class="zoom"><svg id="zoom" role="img" aria-label="Close-up of ' + esc(c.name) + '"></svg></div><p class="do">' + esc(st.wet ? c.wet : pick(st.profile === 'novice' ? c.doN : c.doE)) + '</p>' + factRows(c) + '<div class="nav2"><button type="button" class="btn" data-card="' + prev + '">Previous corner</button><button type="button" class="btn primary" data-card="' + next + '">Next corner</button></div></div>';
+  box.innerHTML = '<div class="card" style="--lv:' + lvColor(l) + '"><div class="head">' + (tn === 'new' ? '' : '<span class="tn">' + tn + '</span>') + '<h2>' + c.name + '</h2>' + badge(l) + '<span class="kind">' + esc(pick(c.kind)) + '</span></div><div class="zoom"><svg id="zoom" role="img" aria-label="Close-up of ' + esc(c.name) + '"></svg></div><p class="do">' + esc(st.wet ? c.wet : doFor(c)) + '</p>' + factRows(c) + '<div class="nav2"><button type="button" class="btn" data-card="' + prev + '">Previous corner</button><button type="button" class="btn primary" data-card="' + next + '">Next corner</button></div></div>';
   renderMap($('#zoom'), { names: false, markers: true, kerbs: true, targets: false, select: false, zoom: key });
 }
 function renderAcc() {
-  $('#acc').innerHTML = cardList().map(([key, tn]) => { const c = CARDS[key], l = lvOf(c); return '<details class="acc" style="--lv:' + lvColor(l) + '"><summary><span class="tn">' + tn.replace(' to ', '-').replace(', ', '-').replace('new', '') + '</span><span class="nm">' + c.name + '</span>' + badge(l) + '</summary><div class="inner"><p class="muted small" style="margin:0 0 6px">' + esc(pick(c.kind)) + '</p><p class="do" style="font-size:17px;margin:0 0 8px">' + esc(pick(st.profile === 'novice' ? c.doN : c.doE)) + '</p>' + factRows(c) + '</div></details>'; }).join('');
+  $('#acc').innerHTML = cardList().map(([key, tn]) => { const c = CARDS[key], l = lvOf(c); return '<details class="acc" style="--lv:' + lvColor(l) + '"><summary><span class="tn">' + tn.replace(' to ', '-').replace(', ', '-').replace('new', '') + '</span><span class="nm">' + c.name + '</span>' + badge(l) + '</summary><div class="inner"><p class="muted small" style="margin:0 0 6px">' + esc(pick(c.kind)) + '</p><p class="do" style="font-size:17px;margin:0 0 8px">' + esc(doFor(c)) + '</p>' + factRows(c) + '</div></details>'; }).join('');
 }
 function pedalLists() { const byLv = { flat: [], lift: [], brake: [] }; cardList().forEach(([k]) => { const c = CARDS[k], l = lvOf(c); (l === 1 ? byLv.flat : l === 2 ? byLv.lift : byLv.brake).push(c.name + (l >= 3 ? ' (' + { 3: 'dab', 4: 'firm', 5: 'hard' }[l] + ')' : '')); }); return byLv; }
 function renderStart() {
@@ -1095,7 +1109,7 @@ function setTab(t) {
   st.tab = t;
   $$('nav.tabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === t)));
   $$('section.tab').forEach(s => { s.hidden = s.id !== 'tab-' + t; });
-  $('#controls').hidden = !(t === 'map' || t === 'corners' || t === 'plan');
+  $('#controls').hidden = false;   // the layout, driver level and conditions apply to every tab, the virtual lap and the coach included
   window.scrollTo(0, 0);
   if (t === 'coach') { drawSim(); renderDebrief(); lockInfo(); }
   if (t === 'start') drawStart();
@@ -1434,7 +1448,7 @@ const simT = () => ({ th: sim.rot * RAD, s: 1, tx: 0, ty: 0, origin: SIM_ORIGIN 
 const simProfCache = {};
 function simProf() {
   const id = st.layout + st.chic + st.wet + st.profile; if (simProfCache[id]) return simProfCache[id];
-  const L = LY(), lv = LVL(L), n = lv.length, nov = st.profile === 'novice', wet = st.wet ? .62 : 1, grip = (nov ? 9.5 : 13) * wet, tight = nov ? .6 : .52, floor = { 5: nov ? 9 : 10.5, 4: nov ? 10 : 11.5, 3: nov ? 16 : 18 };
+  const L = LY(), lv = LVL(L), n = lv.length, nov = st.profile === 'novice', inter = st.profile === 'inter', wet = st.wet ? .62 : 1, grip = (nov ? 9.5 : inter ? 11 : 13) * wet, tight = nov ? .6 : inter ? .56 : .52, floor = { 5: nov ? 9 : inter ? 9.8 : 10.5, 4: nov ? 10 : inter ? 10.8 : 11.5, 3: nov ? 16 : inter ? 17 : 18 };
   const cap = L.curv.map(c => { const kk = Math.abs(c) * tight; return kk > 0 ? Math.sqrt(grip / kk) : 99; }), runEnd = new Array(n), brakeEnd = new Array(n), vT = new Array(n);
   for (let i = 0; i < n; i++) {
     if (lv[i] === '1') { runEnd[i] = brakeEnd[i] = i; vT[i] = 99; continue; }
@@ -1447,13 +1461,13 @@ function simProf() {
 function drawStart() { if (st.tab !== 'start') return; renderMap($('#startmap'), { names: true, markers: true, kerbs: false, targets: false, select: false }); }
 function drawSim() { if (st.tab !== 'coach') return; renderMap($('#simmap'), { names: false, markers: true, kerbs: false, targets: false, select: false, dot: 'simdot' }); }
 function simStep(dt, now, quiet) {
-  const L = LY(), n = L.centre.length, lvS = LVL(L), P = simProf(), ds = L.step, LN = LINE(L), i = Math.floor(sim.pos) % n, vmax = (st.profile === 'novice' ? 22.4 : 24.6) * (st.wet ? .93 : 1);
+  const L = LY(), n = L.centre.length, lvS = LVL(L), P = simProf(), ds = L.step, LN = LINE(L), i = Math.floor(sim.pos) % n, vmax = (st.profile === 'novice' ? 22.4 : st.profile === 'inter' ? 23.5 : 24.6) * (st.wet ? .93 : 1);
   // a driver who makes the usual novice mistakes: brakes about 16 m early, coasts too long, and lifts where the guide says flat
   let lv = +lvS[i], vt = P.vT[i], bEnd = P.brakeEnd[i], rEnd = P.runEnd[i];
   if (sim.bad) { const ah = +lvS[(i + 9) % n], bk = +lvS[mod(i - 4, n)]; if (lv === 1 && ah >= 3) { lv = ah; vt = P.vT[(i + 9) % n] - 1.2; bEnd = P.brakeEnd[(i + 9) % n] - 4; } else if (lv >= 3) { vt = vt - 1.2; } else if (lv === 1 && bk >= 2) { lv = 2; vt = 99; } else if (lv === 1) { const k = cardAhead(i), c = k && CARDS[k], A = c && L.corners[c.prims[0]]; if (A && lvOf(c) === 1 && mod(A.a - i, n) < 9) { lv = 2; vt = 99; } } }
   if (sim.late && lv >= 3) { let z = i, g = 0; while (+lvS[mod(z - 1, n)] >= 3 && g++ < n) z--; if (mod(i - z, n) < 8) { lv = 1; vt = 99; } }   // a driver who brakes about 16 m later than the plan everywhere
   let a;
-  if (lv === 1) a = (st.profile === 'novice' ? 3.4 : 4.2) * (st.wet ? .8 : 1) * (1 - sim.v / vmax) + .3;
+  if (lv === 1) a = (st.profile === 'novice' ? 3.4 : st.profile === 'inter' ? 3.8 : 4.2) * (st.wet ? .8 : 1) * (1 - sim.v / vmax) + .3;
   else if (vt > 90) a = -1.3;
   else if (lv >= 3) { const d = Math.max(2, (bEnd - i + 1) * ds), v2 = Math.min(sim.v, vt + 1.2); a = Math.max(-9.5, Math.min(sim.bad ? -.2 : -1.5, (v2 * v2 - sim.v * sim.v) / (2 * d))); }
   else { const d = Math.max(2, (rEnd - i + 1) * ds), v2 = Math.min(sim.v, vt); a = Math.max(-6, Math.min(sim.bad ? -.1 : -.5, (v2 * v2 - sim.v * sim.v) / (2 * d))); }
@@ -1538,7 +1552,7 @@ const FEET = ['Flat', 'Lift', 'Dab of brake', 'Firm brake', 'Hard brake'];
 function quizAsk() {
   clearTimeout(quiz.t); const list = cardList(), q = Math.floor(Math.random() * list.length), key = list[q][0], c = CARDS[key], kind = Math.random() < .5 ? 'next' : 'feet'; let text, answer, opts, why;
   if (kind === 'next') { answer = CARDS[list[(q + 1) % list.length][0]].name; text = 'After ' + c.name + ', which corner comes next?'; opts = [answer].concat(shuffle(list.map(([k]) => CARDS[k].name).filter(nm => nm !== answer && nm !== c.name)).slice(0, 2)); why = ''; }
-  else { const lv = lvOf(c); answer = FEET[Math.min(5, Math.max(1, lv)) - 1]; text = 'What do your feet do at ' + c.name + '?'; opts = [answer].concat(shuffle(FEET.filter(o => o !== answer)).slice(0, 2)); why = (st.wet ? c.wet : pick(st.profile === 'novice' ? c.doN : c.doE)).split('. ')[0].replace(/\.$/, '') + '.'; }
+  else { const lv = lvOf(c); answer = FEET[Math.min(5, Math.max(1, lv)) - 1]; text = 'What do your feet do at ' + c.name + '?'; opts = [answer].concat(shuffle(FEET.filter(o => o !== answer)).slice(0, 2)); why = doFor(c).split('. ')[0].replace(/\.$/, '') + '.'; }
   quiz.cur = { answer, why }; $('#quizQ').textContent = text; $('#quizScore').textContent = quiz.n ? quiz.right + ' of ' + quiz.n + ' right' : '';
   $('#quizA').innerHTML = shuffle(opts).map(o => '<button type="button" class="btn small" data-quiz="' + esc(o) + '">' + esc(o) + '</button>').join('');
 }
@@ -1553,7 +1567,7 @@ const reader = { on: false, i: 0, items: [] };
 function lapScript() {
   return cardList().map(([key, tn]) => {
     const c = CARDS[key], num = tn === 'new' || tn === 'kink' ? '' : (/,| to /.test(tn) ? 'turns ' + tn.replace(/T/g, '').replace(', ', ' and ') : 'turn ' + tn.replace('T', '')) + ', ';
-    const doIt = st.wet ? c.wet : pick(st.profile === 'novice' ? c.doN : c.doE), mk = pick(c.marker);
+    const doIt = doFor(c), mk = pick(c.marker);
     return num + c.name + '. ' + doIt + (mk && !/^None/.test(mk) ? ' Marker: ' + mk : '') + kerbSay(key);
   });
 }

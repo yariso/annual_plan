@@ -143,4 +143,13 @@ with sync_playwright() as p:
     r = pg.evaluate("""() => { const W = window.__wm; W.speechLags.length = 0; const a = W.speechLag(); W.speechLags.push(.2, .5, .3); const b = W.speechLag(); W.speechLags.push(9, 9, 9, 9); const c = W.speechLag(); W.speechLags.length = 0; return { a, b, c, short: [W.SHORT('brake later, by about 20 metres'), W.SHORT('you over-slowed. 3 miles an hour down'), W.SHORT('keep it flat. You dropped 5 miles an hour')] }; }""")
     print('SPEECH LAG:', r)
     assert r['a'] == 0 and abs(r['b'] - .3) < 1e-9 and r['c'] == 1 and r['short'] == ['brake later', 'carry speed', 'stay flat'], 'speech lag or short forms wrong'
+
+    # the intermediate level: levels for every layout and condition, its own card text, a lap of words through the engine
+    r = pg.evaluate("""() => { const W = window.__wm, out = {}; for (const lay of ['intl','nat']) for (const chic of [true,false]) for (const wet of [false,true]) { Object.assign(W.st, { layout: lay, chic, wet, profile: 'inter' }); const L = W.LY(); out[lay+(chic?'_c':'_n')+(wet?'_w':'')] = W.LVL(L).length === L.centre.length; }
+      Object.assign(W.st, { layout: 'intl', chic: true, wet: false, profile: 'inter' }); W.setTab('corners'); const flat = [...document.querySelectorAll('#acc details')].find(d => /Fine Lady/.test(d.querySelector('.nm').textContent)).querySelector('.do').textContent, brake = [...document.querySelectorAll('#acc details')].find(d => /Christmas/.test(d.querySelector('.nm').textContent)).querySelector('.do').textContent;
+      Object.assign(W.set, { mode: 'words', sayFlat: true, sayLift: true, sayBrake: true, lapSay: false, coachSay: true }); W.sim.rate = 10; W.sim.bad = false; W.lapReset(W.simT()); const n = W.LY().centre.length, words = []; let now = 1000; W.lapE.onWord = (t, l) => { if (l > 0) words.push(t); };
+      W.sim.pos = n - 18; W.sim.v = 17; W.sim.fixAcc = 1e9; W.sim.tickAcc = 0; const dt = 0.02; for (let s = 0; s < 150 / dt; s++) { now += dt * 1000; W.simStep(dt, now, true); }
+      const res = { levels: Object.values(out).every(Boolean), flatNote: /intermediate/.test(flat), brakeOwn: /novice's early point/.test(brake), words: words.length, laps: W.lapE.laps.length }; Object.assign(W.st, { profile: 'novice' }); return res; }""")
+    print('INTERMEDIATE:', r)
+    assert r['levels'] and not r['flatNote'] and r['brakeOwn'] and r['words'] > 20 and r['laps'] >= 1, 'intermediate level incomplete'
     print('errors', errs); b.close()

@@ -68,20 +68,24 @@ def line_cps(key):
     return A + M + B
 
 def zones(key, prof):
-    nat = key.startswith('nat'); chic = key.endswith('_c'); nov = prof == 'novice'; z = []
-    if nov: z += [('lift', 'oblivion', 30, 0.5), ('lift', 'crook', 12, 0.5)]
-    z += [('brake', 'christmas', 38 if nov else 22, 5, 0.62)]
+    """Braking and lift zones per driver level. The intermediate level sits halfway between the novice's margins and the
+    advanced driver's: brake zones of the mean length, the novice's lifts at 60% length, the novice's coasts kept."""
+    nat = key.startswith('nat'); chic = key.endswith('_c'); nov = prof == 'novice'; inter = prof == 'inter'; z = []
+    L = lambda nv, ex: nv if nov else int(round((nv + ex) / 2)) if inter else ex      # a zone length by level
+    lf = 1.0 if nov else 0.6                                                           # the novice's lifts, shortened for the intermediate
+    if nov or inter: z += [('lift', 'oblivion', int(round(30 * lf)), 0.5), ('lift', 'crook', int(round(12 * lf)), 0.5)]
+    z += [('brake', 'christmas', L(38, 22), 5, 0.62)]
     if nat:
-        z += [('brake', 'inkhair', 24 if nov else 18, 4, 0.55)]
-        z += [('lift', 'zulu2', 8, 0.65), ('lift', 'zulu3', 10, 0.4)] if nov else [('lift', 'zulu3', 6, 0.25)]
+        z += [('brake', 'inkhair', L(24, 18), 4, 0.55)]
+        z += [('lift', 'zulu2', 8, 0.65), ('lift', 'zulu3', 10, 0.4)] if nov else [('lift', 'zulu2', 5, 0.65), ('lift', 'zulu3', 8, 0.4)] if inter else [('lift', 'zulu3', 6, 0.25)]
     else:
-        z += [('brake', 'ashby', 36 if nov else 26, 5, 0.55), ('brake', 'parker', 12 if nov else 8, 3, 0.5 if nov else 0.35), ('brake', 'chapmans', 16 if nov else 12, 4, 0.7)]
-    z += [('brake', 'boot1', 40 if nov else 24, 5, 0.55)]
-    if nov: z += [('coast', 'boot1', 0.55, 'boot2', 0.6)]
+        z += [('brake', 'ashby', L(36, 26), 5, 0.55), ('brake', 'parker', L(12, 8), 3, 0.5 if nov else 0.42 if inter else 0.35), ('brake', 'chapmans', L(16, 12), 4, 0.7)]
+    z += [('brake', 'boot1', L(40, 24), 5, 0.55)]
+    if nov or inter: z += [('coast', 'boot1', 0.55, 'boot2', 0.6)]
     if chic:
-        z += [('brake', 'chic1', 16 if nov else 10, 4, 0.6), ('coast', 'chic1', 0.6, 'pitbend', 0.5 if nov else 0.3)]
-    elif nov:
-        z += [('lift', 'pitbend', 25, 0.5)]
+        z += [('brake', 'chic1', L(16, 10), 4, 0.6), ('coast', 'chic1', 0.6, 'pitbend', 0.5 if nov else 0.4 if inter else 0.3)]
+    elif nov or inter:
+        z += [('lift', 'pitbend', int(round(25 * lf)), 0.5)]
     return z
 
 def markers(key):
@@ -115,13 +119,14 @@ def line_cps_wet(key):
     return out
 
 def zones_wet(key, prof):
-    nat = key.startswith('nat'); chic = key.endswith('_c'); nov = prof == 'novice'; m = 1.35
-    z = [('brake', 'oblivion', 22 if nov else 14, 3, 0.5), ('brake', 'crook', 12 if nov else 8, 3, 0.5), ('brake', 'christmas', (38 if nov else 22) * m, 4, 0.62), ('lift', 'kink', 10, 0.5)]
-    if nat: z += [('brake', 'inkhair', (24 if nov else 18) * m, 4, 0.55), ('lift', 'zulu1', 8, 0.45), ('lift', 'zulu2', 10, 0.65), ('brake', 'zulu3', 10, 3, 0.4)]
-    else: z += [('lift', 'inkermans', 14, 0.5), ('brake', 'ashby', (36 if nov else 26) * m, 4, 0.55), ('brake', 'parker', 16 if nov else 12, 3, 0.5), ('brake', 'chapmans', (16 if nov else 12) * m, 4, 0.7)]
-    z += [('brake', 'boot1', (40 if nov else 24) * m, 4, 0.55), ('coast', 'boot1', 0.55, 'boot2', 0.6)]
-    if chic: z += [('brake', 'chic1', (16 if nov else 10) * m, 4, 0.6), ('coast', 'chic1', 0.6, 'pitbend', 0.5)]
-    else: z += [('brake', 'pitbend', 18 if nov else 10, 3, 0.5)]
+    nat = key.startswith('nat'); chic = key.endswith('_c'); nov = prof == 'novice'; inter = prof == 'inter'; m = 1.35
+    L = lambda nv, ex: nv if nov else int(round((nv + ex) / 2)) if inter else ex
+    z = [('brake', 'oblivion', L(22, 14), 3, 0.5), ('brake', 'crook', L(12, 8), 3, 0.5), ('brake', 'christmas', L(38, 22) * m, 4, 0.62), ('lift', 'kink', 10, 0.5)]
+    if nat: z += [('brake', 'inkhair', L(24, 18) * m, 4, 0.55), ('lift', 'zulu1', 8, 0.45), ('lift', 'zulu2', 10, 0.65), ('brake', 'zulu3', 10, 3, 0.4)]
+    else: z += [('lift', 'inkermans', 14, 0.5), ('brake', 'ashby', L(36, 26) * m, 4, 0.55), ('brake', 'parker', L(16, 12), 3, 0.5), ('brake', 'chapmans', L(16, 12) * m, 4, 0.7)]
+    z += [('brake', 'boot1', L(40, 24) * m, 4, 0.55), ('coast', 'boot1', 0.55, 'boot2', 0.6)]
+    if chic: z += [('brake', 'chic1', L(16, 10) * m, 4, 0.6), ('coast', 'chic1', 0.6, 'pitbend', 0.5)]
+    else: z += [('brake', 'pitbend', L(18, 10), 3, 0.5)]
     return z
 
 def build(key):
@@ -161,7 +166,7 @@ def build(key):
             q = (q + 1) % n
     def paint(lv, sa, sb, level): paint_i(lv, idx(sa), idx(sb), level)
     levels = {}
-    for prof, zfun in (('novice', zones), ('expert', zones), ('novice_w', zones_wet), ('expert_w', zones_wet)):
+    for prof, zfun in (('novice', zones), ('inter', zones), ('expert', zones), ('novice_w', zones_wet), ('inter_w', zones_wet), ('expert_w', zones_wet)):
         lv = [1] * n
         for z in zfun(key, prof.split('_')[0]):
             if z[0] == 'brake':
