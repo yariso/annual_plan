@@ -201,6 +201,7 @@ svg text{font-family:var(--display);fill:var(--ink)}
     <button type="button" data-profile="inter" aria-pressed="false" title="Halfway between: the advanced driver's plan with brake zones between the two and the novice's lifts shortened">Intermediate</button>
     <button type="button" data-profile="expert" aria-pressed="false">Advanced</button>
     <button type="button" data-profile="model" aria-pressed="false" title="The physics model's fastest lap for the hire kart: the limit for a perfect driver, not a target">Model</button>
+    <button type="button" data-profile="team" aria-pressed="false" hidden title="Learned from the team's own laps: the advanced plan with the brake points moved to where your quickest driver actually brakes">Team</button>
   </div>
   <div class="seg" role="group" aria-label="2024 chicane before the last corner">
     <button type="button" data-chic="1" aria-pressed="true">With chicane</button>
@@ -279,6 +280,20 @@ svg text{font-family:var(--display);fill:var(--ink)}
     <h3>4. After each stint: the debrief</h3>
     <p style="max-width:64ch">One thing to change for the next driver, and the team table: who is quickest through each corner, so they can tell the others how.</p>
     <button type="button" class="btn" data-go="debrief">Open the debrief</button>
+  </div>
+  <div class="panel" id="cloudPanel">
+    <h3>5. The team's shared brain</h3>
+    <p style="max-width:64ch">Every driver signs in with their email and every lap they drive goes to one shared store. Every phone then shows the whole team's laps, and the app learns from them: once your quickest driver has five clean laps, a Team driver level appears with the brake points moved to where they actually brake, and it keeps moving as more laps come in.</p>
+    <div id="cloudSetup">
+      <p class="small muted" style="margin:0 0 6px">One-time setup by whoever runs the team, about ten minutes: a free Supabase project, its URL and public key pasted here, and the four email addresses added to its members list. The steps are in the repository under cloud/README.md.</p>
+      <div class="row"><label class="f" style="flex:1;min-width:180px">Project URL<input type="url" id="cloudUrl" placeholder="https://xxxx.supabase.co" autocomplete="off"></label><label class="f" style="flex:1;min-width:180px">Public (anon) key<input type="text" id="cloudKey" placeholder="eyJ..." autocomplete="off"></label><button type="button" class="btn small" id="cloudSave">Save</button></div>
+    </div>
+    <div id="cloudAuth" hidden>
+      <div class="row"><label class="f" style="flex:1;min-width:180px">Your email<input type="email" id="cloudEmail" placeholder="you@example.com" autocomplete="email"></label><button type="button" class="btn primary" id="cloudLogin">Send me a sign-in link</button></div>
+    </div>
+    <div class="status" id="cloudStatus">Not set up.</div>
+    <div class="row"><button type="button" class="btn small" id="cloudRefresh" hidden>Fetch the team's laps</button><button type="button" class="btn small" id="cloudOut" hidden>Sign out</button><button type="button" class="btn small" id="cloudForget" hidden>Change project</button></div>
+    <p class="small muted" id="cloudLearn" style="margin:6px 0 0"></p>
   </div>
 </section>
 
@@ -713,12 +728,12 @@ const LABELS = {
 const st = { layout: 'intl', chic: true, wet: false, profile: 'novice', tab: 'start', sel: null, show: { names: true, markers: true, kerbs: true } };
 const pick = v => { if (v && typeof v === 'object') { if ('c' in v || 'n' in v) return pick(v[st.chic ? 'c' : 'n']); if ('nat' in v || 'intl' in v) return v[st.layout]; } return v; };
 const INTER_NOTE = 'As an intermediate, start a few metres earlier than that and work up to it over the session, and take the kerbs only once the corner is consistent.';
-const doFor = c => st.wet ? pick(c.wet) : st.profile === 'novice' ? pick(c.doN) : st.profile === 'inter' ? (c.doI ? pick(c.doI) : pick(c.doE) + (lvOf(c) >= 3 ? ' ' + INTER_NOTE : lvOf(c) === 2 ? ' As an intermediate, lift a touch earlier at first.' : '')) : pick(c.doE);   // model level reads the advanced plan; flat corners need no note
-const lvOf = c => { if (!st.wet && st.profile !== 'model') { const l = pick(c.lv); return l[st.profile] != null ? l[st.profile] : l.novice; } const L = LY(), lv = LVL(L), n = lv.length, a = L.corners[c.prims[0]], b = L.corners[c.prims[c.prims.length - 1]]; let m = 1; rangeIdx(a.a - 30, b.i, n).forEach(i => { m = Math.max(m, +lv[i]); }); return m; };
+const doFor = c => st.wet ? pick(c.wet) : st.profile === 'novice' ? pick(c.doN) : st.profile === 'inter' ? (c.doI ? pick(c.doI) : pick(c.doE) + (lvOf(c) >= 3 ? ' ' + INTER_NOTE : lvOf(c) === 2 ? ' As an intermediate, lift a touch earlier at first.' : '')) : pick(c.doE);   // model and team levels read the advanced plan; flat corners need no note
+const lvOf = c => { if (!st.wet && st.profile !== 'model' && st.profile !== 'team') { const l = pick(c.lv); return l[st.profile] != null ? l[st.profile] : l.novice; } const L = LY(), lv = LVL(L), n = lv.length, a = L.corners[c.prims[0]], b = L.corners[c.prims[c.prims.length - 1]]; let m = 1; rangeIdx(a.a - 30, b.i, n).forEach(i => { m = Math.max(m, +lv[i]); }); return m; };
 const LY = () => D.layouts[st.layout + (st.chic ? '_c' : '_n')];
 // the model result the app follows when the driver level is Model: the hire kart, dry or wet
 const MK = () => { const lay = M && M.layouts[st.layout + (st.chic ? '_c' : '_n')]; return (lay && lay.karts['hire' + (st.wet ? '_w' : '')]) || null; };
-const LVL = L => st.profile === 'model' && MK() ? MK().levels : (st.wet ? L.levels_w : L.levels)[st.profile === 'model' ? 'expert' : st.profile];
+const LVL = L => st.profile === 'model' && MK() ? MK().levels : st.profile === 'team' ? (teamLevels(L) || (st.wet ? L.levels_w : L.levels).expert) : (st.wet ? L.levels_w : L.levels)[st.profile === 'model' ? 'expert' : st.profile];
 const modelLineCache = {};
 function modelLine(L) {
   // the model's line: sideways offsets every 4 m (left of travel positive) laid onto the centreline
@@ -1122,6 +1137,7 @@ function refreshAll() {
   $$('[data-chic]').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.chic === '1') === st.chic)));
   $$('[data-wet]').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.wet === '1') === st.wet)));
   if (st.sel && !cardList().some(x => x[0] === st.sel)) st.sel = null;
+  const tb = $('[data-profile="team"]'); if (tb) { const ok = !!teamLevels(LY()); tb.hidden = !ok; if (!ok && st.profile === 'team') { st.profile = 'expert'; tb.setAttribute('aria-pressed', 'false'); $('[data-profile="expert"]').setAttribute('aria-pressed', 'true'); } }
   const mb = $('[data-profile="model"]'); if (mb) { mb.disabled = !MK(); if (!MK() && st.profile === 'model') { st.profile = 'expert'; mb.setAttribute('aria-pressed', 'false'); $('[data-profile="expert"]').setAttribute('aria-pressed', 'true'); } }
   drawMain(); renderStrip(); renderCard(); renderAcc(); renderPlan(); renderStart(); drawStart(); drawSim();
 }
@@ -1436,10 +1452,74 @@ function renderDebrief() {
     (Object.keys(E.leadAdj).some(k => E.leadAdj[k]) ? '<p class="small" style="margin:8px 0 0">Brake calls moved earlier from your laps: ' + Object.keys(E.leadAdj).filter(k => E.leadAdj[k]).map(k => CARDS[k].name + ' ' + E.leadAdj[k] + ' m').join(', ') + '.</p>' : '') +
     '<p class="small muted" style="margin:8px 0 0">' + (E.rate && E.rate < 3 ? 'GPS is giving about ' + E.rate.toFixed(0) + ' fix a second, so braking points here are good to roughly 10 to 20 metres and corner times to a tenth or two. A 10 to 25 Hz receiver tightens all of this.' : 'Laps: ' + E.laps.map(l => fmtLap(l.ms)).join(', ') + '.') + '</p>';
 }
+/* ---------------- the team's shared brain: a Supabase project the team signs into; laps go up, everyone's laps come down, and a Team level is learned from them ---------------- */
+const CLOUD_DEFAULT = { url: '', anon: '' };   // whoever runs the team can also bake their project in here
+const cloud = { cfg: store.get('wm.cloud', null) || CLOUD_DEFAULT, sess: store.get('wm.cloudsess', null), busy: false, count: null, lastErr: null };
+const cloudReady = () => !!(cloud.cfg.url && cloud.cfg.anon);
+const cloudHeaders = (json) => { const h = { apikey: cloud.cfg.anon, Authorization: 'Bearer ' + (cloud.sess && cloud.sess.access_token || cloud.cfg.anon) }; if (json) h['Content-Type'] = 'application/json'; return h; };
+async function cloudFetch(path, opts) {
+  if (!cloudReady()) throw new Error('not set up');
+  if (cloud.sess && cloud.sess.expires_at && Date.now() / 1000 > cloud.sess.expires_at - 60 && cloud.sess.refresh_token) await cloudRefreshSession();
+  const r = await fetch(cloud.cfg.url.replace(/\/$/, '') + path, Object.assign({ headers: cloudHeaders(true) }, opts || {}, { headers: Object.assign(cloudHeaders(true), (opts || {}).headers || {}) }));
+  if (!r.ok) { const t = await r.text().catch(() => ''); throw new Error(r.status + ' ' + t.slice(0, 120)); } const ct = r.headers.get('content-type') || ''; return ct.includes('json') ? r.json() : null;
+}
+async function cloudRefreshSession() {
+  try { const j = await (await fetch(cloud.cfg.url.replace(/\/$/, '') + '/auth/v1/token?grant_type=refresh_token', { method: 'POST', headers: { apikey: cloud.cfg.anon, 'Content-Type': 'application/json' }, body: JSON.stringify({ refresh_token: cloud.sess.refresh_token }) })).json();
+    if (j && j.access_token) { cloud.sess = { access_token: j.access_token, refresh_token: j.refresh_token, expires_at: Math.floor(Date.now() / 1000) + (j.expires_in || 3600), email: (j.user && j.user.email) || cloud.sess.email }; store.set('wm.cloudsess', cloud.sess); } } catch (e) { }
+}
+function cloudTakeHash() {         // back from the sign-in email: the tokens arrive in the URL fragment
+  const h = location.hash || ''; if (!/access_token=/.test(h)) return false; const q = new URLSearchParams(h.replace(/^#/, ''));
+  cloud.sess = { access_token: q.get('access_token'), refresh_token: q.get('refresh_token'), expires_at: Math.floor(Date.now() / 1000) + (+q.get('expires_in') || 3600), email: null }; store.set('wm.cloudsess', cloud.sess);
+  try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { } return true;
+}
+async function cloudWhoAmI() { try { const u = await cloudFetch('/auth/v1/user'); if (u && u.email) { cloud.sess.email = u.email; store.set('wm.cloudsess', cloud.sess); } } catch (e) { cloud.lastErr = e.message; } }
+async function cloudLogin(email) {
+  if (!cloudReady()) { toast('Set the project up first.'); return; } email = (email || '').trim(); if (!/@/.test(email)) { toast('Type your email address.'); return; }
+  try { await cloudFetch('/auth/v1/otp', { method: 'POST', body: JSON.stringify({ email, create_user: true, options: { email_redirect_to: location.href.split('#')[0] } }) }); $('#cloudStatus').textContent = 'Sign-in link sent to ' + email + '. Open it on this phone; it brings you back here signed in.'; }
+  catch (e) { $('#cloudStatus').textContent = 'Could not send the link: ' + e.message + (/(403|not allowed|members)/i.test(e.message) ? ' Ask whoever runs the team to add your email to the members list.' : ''); }
+}
+function cloudSignOut() { cloud.sess = null; store.del('wm.cloudsess'); cloudRender(); }
+async function cloudPush(row) {     // one lap up, if signed in; a failure is remembered and shown, never spoken
+  if (!cloudReady() || !cloud.sess) return; try { await cloudFetch('/rest/v1/laps', { method: 'POST', headers: { Prefer: 'return=minimal' }, body: JSON.stringify({ driver: row.d, layout: row.lay, ms: row.ms, m: row.m, at: row.at, rate: row.rate || null }) }); cloud.lastErr = null; } catch (e) { cloud.lastErr = e.message; cloudRender(); }
+}
+async function cloudPushOfficial(rows) { if (!cloudReady() || !cloud.sess) return; try { await cloudFetch('/rest/v1/official', { method: 'POST', headers: { Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify(rows.map(r => ({ driver: r.d, ms: r.ms, laps: r.laps }))) }); } catch (e) { cloud.lastErr = e.message; cloudRender(); } }
+async function cloudPull() {        // everyone's laps down, merged into this phone's table without duplicates
+  if (!cloudReady() || !cloud.sess || cloud.busy) return; cloud.busy = true; cloudRender();
+  try { const rows = await cloudFetch('/rest/v1/laps?select=driver,layout,ms,m,at,rate&order=at.desc&limit=2000'); let added = 0;
+    (rows || []).forEach(r => { if (!team.laps.some(x => x.d === r.driver && x.at === r.at && x.ms === r.ms)) { team.laps.push({ d: r.driver, lay: r.layout, ms: r.ms, m: r.m, at: r.at, rate: r.rate }); added++; } });
+    team.laps.sort((a, b) => a.at - b.at); if (team.laps.length > 600) team.laps.splice(0, team.laps.length - 600); store.set('wm.team', team.laps); cloud.count = (rows || []).length; cloud.lastErr = null;
+    const off = await cloudFetch('/rest/v1/official?select=driver,ms,laps').catch(() => null); (off || []).forEach(r => { if (!official.rows.some(x => x.d.toLowerCase() === r.driver.toLowerCase())) official.rows.push({ d: r.driver, ms: r.ms, laps: r.laps }); }); store.set('wm.official', official.rows);
+    teamLevels.cache = null; refreshAll(); renderDebrief(); if (added) toast(added + ' of the team\'s laps merged in.'); }
+  catch (e) { cloud.lastErr = e.message; } cloud.busy = false; cloudRender();
+}
+function cloudRender() {
+  const setup = $('#cloudSetup'), auth = $('#cloudAuth'), st_ = $('#cloudStatus'); if (!setup) return; const ready = cloudReady();
+  setup.hidden = ready; auth.hidden = !ready || !!cloud.sess; $('#cloudRefresh').hidden = !(ready && cloud.sess); $('#cloudOut').hidden = !(ready && cloud.sess); $('#cloudForget').hidden = !ready;
+  st_.textContent = !ready ? 'Not set up. Paste the project URL and public key, or run without: laps stay on this phone and team files still work.' : !cloud.sess ? 'Project set. Sign in with your email to share laps.' : 'Signed in' + (cloud.sess.email ? ' as ' + cloud.sess.email : '') + '. ' + (cloud.busy ? 'Fetching the team\'s laps.' : cloud.count != null ? cloud.count + ' laps in the shared store, ' + team.laps.length + ' on this phone.' : 'Your live laps go up as you drive them.') + (cloud.lastErr ? ' Last problem: ' + cloud.lastErr : '');
+  const L = LY(), tl = teamLevels(L), best = teamBest(L); $('#cloudLearn').textContent = tl ? 'Team level learned from ' + best.d + '\'s ' + best.n + ' quickest laps on this layout (best ' + fmtLap(best.ms) + '): the brake points are where they brake. Switch the driver level to Team to hear it.' : 'The Team level appears once one driver has five laps on this layout' + (best ? ' (' + best.d + ' has ' + best.n + ').' : '.');
+}
+function teamBest(L) {              // the driver with the quickest lap on this layout, and their clean laps
+  const lay = st.layout + (st.chic ? '_c' : '_n'), laps = team.laps.filter(l => l.lay === lay && l.m); if (!laps.length) return null;
+  const byD = {}; laps.forEach(l => (byD[l.d] = byD[l.d] || []).push(l)); const d = Object.keys(byD).sort((a, b) => Math.min(...byD[a].map(l => l.ms)) - Math.min(...byD[b].map(l => l.ms)))[0];
+  const mine = byD[d].slice().sort((a, b) => a.ms - b.ms), best = mine[0].ms, clean = mine.filter(l => l.ms < best * 1.03);   // within 3% of their best: no spins, no traffic
+  return { d, n: clean.length, ms: best, laps: clean.slice(0, 5) };
+}
+function teamLevels(L) {            // the advanced levels with each brake zone's start moved to the quickest driver's median brake onset, learned from the shared laps
+  const lay = st.layout + (st.chic ? '_c' : '_n'); if (st.wet) return null; const key = lay + ':' + team.laps.length; if (teamLevels.cache && teamLevels.cache.key === key) return teamLevels.cache.lv;
+  const best = teamBest(L); if (!best || best.n < 5) { teamLevels.cache = { key, lv: null }; return null; }
+  const exp = L.levels.expert, nov = L.levels.novice, n = exp.length, lv = exp.split(''); let moved = 0;
+  cardList().forEach(([k]) => { const c = CARDS[k], l = pick(c.lv); if (!l || l.expert < 3) return; const a = L.corners[c.prims[0]].a;
+    const ons = best.laps.map(x => x.m[k] && x.m[k].brakeOn).filter(v => v != null); if (ons.length < 3) return; ons.sort((x, y) => x - y); const med = ons[ons.length >> 1];
+    let es = null, ns = null; for (let i = a - 60; i <= a + 4; i++) { if (es == null && exp[mod(i - 1, n)] === '1' && +exp[mod(i, n)] >= 3) es = i; if (ns == null && nov[mod(i - 1, n)] === '1' && +nov[mod(i, n)] >= 3) ns = i; } if (es == null) return;
+    const start = Math.round(Math.min(Math.max(med, ns != null ? ns : es - 15), es + 5));   // clamped: never earlier than the novice's start, never later than 10 m past the advanced plan's
+    const level = exp[mod(es, n)]; if (start < es) { for (let i = start; i < es; i++) lv[mod(i, n)] = level; moved++; } else if (start > es) { for (let i = es; i < start; i++) lv[mod(i, n)] = '1'; moved++; } });
+  const out = moved ? lv.join('') : null; teamLevels.cache = { key, lv: out }; return out;
+}
 const team = { laps: store.get('wm.team', []) };
 function teamLog(lap) {        // every live lap, tagged with the driver's name, kept on the phone so four drivers sharing it can compare after their stints
-  const d = ($('#driverName').value || '').trim() || 'Driver', m = {}; Object.keys(lap.m).forEach(k => { m[k] = { tSeg: +lap.m[k].tSeg.toFixed(2), vMin: +lap.m[k].vMin.toFixed(1) }; });
-  team.laps.push({ d, ms: Math.round(lap.ms), m, lay: lapE.layKey, at: Date.now() }); if (team.laps.length > 300) team.laps.splice(0, team.laps.length - 300); store.set('wm.team', team.laps);
+  const d = ($('#driverName').value || '').trim() || 'Driver', m = {}; Object.keys(lap.m).forEach(k => { const x = lap.m[k]; m[k] = { tSeg: +x.tSeg.toFixed(2), vMin: +x.vMin.toFixed(1), brakeOn: x.brakeOn == null ? null : +x.brakeOn.toFixed(1), thrLag: x.thrLag == null ? null : +x.thrLag.toFixed(1) }; });
+  const row = { d, ms: Math.round(lap.ms), m, lay: lapE.layKey, at: Date.now(), rate: +(lapE.rate || 0).toFixed(1) };
+  team.laps.push(row); if (team.laps.length > 300) team.laps.splice(0, team.laps.length - 300); store.set('wm.team', team.laps); cloudPush(row);
 }
 function teamTable() {         // each driver's best lap and best time through each corner, fastest of the team marked
   const lay = st.layout + (st.chic ? '_c' : '_n'), L = team.laps.filter(l => l.lay === lay), drivers = [...new Set(L.map(l => l.d))]; if (drivers.length < 1) return '';
@@ -1855,7 +1935,7 @@ $('#pkHide').addEventListener('click', () => pocketShow(false));
 $('#driverName').value = store.get('wm.driver', ''); $('#driverName').addEventListener('change', e => store.set('wm.driver', e.target.value.trim()));
 $('#debriefBody').addEventListener('click', e => {
   if (e.target.id === 'teamClear') { team.laps = []; store.del('wm.team'); renderDebrief(); toast('Team table cleared.'); }
-  else if (e.target.id === 'officialAdd') { const rows = parseOfficial($('#officialPaste').value); if (!rows.length) { toast('No lap times found. A line needs a name and a time like 1:05.23.'); return; } rows.forEach(r => { const i = official.rows.findIndex(x => x.d.toLowerCase() === r.d.toLowerCase()); if (i >= 0) official.rows[i] = r; else official.rows.push(r); }); store.set('wm.official', official.rows); renderDebrief(); toast(rows.length + ' official time' + (rows.length === 1 ? '' : 's') + ' added.'); }
+  else if (e.target.id === 'officialAdd') { const rows = parseOfficial($('#officialPaste').value); if (!rows.length) { toast('No lap times found. A line needs a name and a time like 1:05.23.'); return; } rows.forEach(r => { const i = official.rows.findIndex(x => x.d.toLowerCase() === r.d.toLowerCase()); if (i >= 0) official.rows[i] = r; else official.rows.push(r); }); store.set('wm.official', official.rows); cloudPushOfficial(rows); renderDebrief(); toast(rows.length + ' official time' + (rows.length === 1 ? '' : 's') + ' added.'); }
   else if (e.target.id === 'officialClear') { official.rows = []; store.del('wm.official'); renderDebrief(); }
   else if (e.target.id === 'teamExport') { saveFile('whilton-team.json', JSON.stringify({ laps: team.laps, official: official.rows, exported: Date.now() })); }
 });
@@ -1871,6 +1951,12 @@ $('#quizA').addEventListener('click', e => { const b = e.target.closest('[data-q
 $('#testSound').addEventListener('click', soundTest); $('#startSound').addEventListener('click', soundTest);
 $('#walkBtn').addEventListener('click', () => walk.on ? walkStop() : walkStart());
 $('#loopBtn').addEventListener('click', () => loop.on ? loopStop() : loopStart());
+$('#cloudSave').addEventListener('click', () => { const url = $('#cloudUrl').value.trim().replace(/\/$/, ''), anon = $('#cloudKey').value.trim(); if (!/^https:\/\/.+/.test(url) || anon.length < 20) { toast('The URL should start with https:// and the key is a long string.'); return; } cloud.cfg = { url, anon }; store.set('wm.cloud', cloud.cfg); cloudRender(); });
+$('#cloudLogin').addEventListener('click', () => cloudLogin($('#cloudEmail').value));
+$('#cloudRefresh').addEventListener('click', cloudPull);
+$('#cloudOut').addEventListener('click', cloudSignOut);
+$('#cloudForget').addEventListener('click', () => { cloud.cfg = CLOUD_DEFAULT; store.del('wm.cloud'); cloudSignOut(); });
+(async () => { if (cloudTakeHash()) { await cloudWhoAmI(); } cloudRender(); if (cloudReady() && cloud.sess) { if (!cloud.sess.email) await cloudWhoAmI(); cloudPull(); } })();
 document.addEventListener('click', e => {         // the Start tab's buttons jump to the right place on the Coach tab
   const t = e.target.closest('[data-go]'); if (!t) return; const go = t.dataset.go; setTab('coach');
   const openFor = id => { const d = $(id).closest('details'); if (d) d.open = true; };
@@ -1897,7 +1983,7 @@ bindNum('#setWordLead', 'wordLead'); bindNum('#setToneLead', 'toneLead'); bindNu
 $('#setMode').value = set.mode; $('#setMode').addEventListener('change', e => { set.mode = e.target.value; saveSettings(); });
 
 renderLegend(); refreshAll(); lockInfo(); renderDebrief(); walkDraw(); setTab(st.tab);
-window.__wm = { parseOfficial, official, gpsQuality, loop, loopFit, loopStart, loopStop, modelAgreement, guideOffset, pocketShow, walk, walkStart, walkStop, renderStart, D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, MK, modelLine, M, refTimes, mindTap, mind, quizAsk, quizAnswer, quiz, virtualStart, team, teamLog, teamTable, live, speechLag, speechLags, SHORT, setRec: r => { rec = r; }, getRec: () => rec };
+window.__wm = { cloud, cloudPull, cloudPush, cloudRender, cloudTakeHash, teamLevels, teamBest, parseOfficial, official, gpsQuality, loop, loopFit, loopStart, loopStop, modelAgreement, guideOffset, pocketShow, walk, walkStart, walkStop, renderStart, D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, MK, modelLine, M, refTimes, mindTap, mind, quizAsk, quizAnswer, quiz, virtualStart, team, teamLog, teamTable, live, speechLag, speechLags, SHORT, setRec: r => { rec = r; }, getRec: () => rec };
 })();
 </script>
 </body>
