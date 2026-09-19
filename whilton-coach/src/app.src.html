@@ -227,7 +227,7 @@ svg text{font-family:var(--display);fill:var(--ink)}
 
 <section class="tab" id="tab-coach" hidden>
   <h2>Audio coach</h2>
-  <p class="muted" style="max-width:64ch">A tone sounds for exactly as long as your foot should be off the throttle. Its pitch tells you how hard: a low hum is a lift, a high tone is full braking. A word a moment earlier tells you what is coming, and two quick rising notes mean back to full throttle. After each lap it tells you the one thing to change.</p>
+  <p class="muted" style="max-width:64ch">A tone sounds for exactly as long as your foot should be off the throttle. Its pitch tells you how hard: a low hum is a lift, a high tone is full braking. A word a moment earlier tells you what is coming, and two quick rising notes mean back to full throttle. After each lap it gives you the time, how far off your best it was, and the one thing to change.</p>
 
   <div class="two">
     <div class="panel">
@@ -253,8 +253,8 @@ svg text{font-family:var(--display);fill:var(--ink)}
     <div class="panel">
       <h3>At the circuit</h3>
       <ol>
-        <li>Press Start GPS, zip the phone away and drive. After one full lap the app fits the track map to your GPS trace and locks it. It remembers the lock for next time.</li>
-        <li>From then on you get the tones, the words and a lap time each lap, and one coaching point on the climb to Christmas.</li>
+        <li>Press Start GPS, wait for it to say GPS ready, zip the phone away and drive. After one full lap the app fits the track map to your GPS trace, says Map locked, and remembers the lock for next time.</li>
+        <li>From then on you get the tones, the words, the lap time and gap to your best each lap, and one coaching point on the climb to Christmas. If the phone loses its fix it says GPS lost and goes quiet, then GPS back when it returns.</li>
         <li>In the pits, read the debrief below.</li>
       </ol>
       <div class="pedalnow" id="livePedal" aria-live="off">Flat out</div>
@@ -274,6 +274,15 @@ svg text{font-family:var(--display);fill:var(--ink)}
       </div>
       <div class="status" id="liveStatus">Not running.</div>
       <p class="small muted" id="lockInfo" style="margin:0"></p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>In the queue, before you go out</h3>
+    <p style="max-width:64ch">Put the earpieces in and let it read the lap to you: every corner in order, what your feet do, and the brake marker, for the layout, driver level and conditions chosen on the Map tab. It takes about two minutes. Close your eyes and picture each corner as it comes.</p>
+    <div class="row">
+      <button type="button" class="btn primary" id="readBtn">Read me the lap</button>
+      <div class="word" id="readWord" aria-live="polite" style="flex:1"></div>
     </div>
   </div>
 
@@ -920,6 +929,7 @@ function lapFix(f) {          // f: { t (ms), lat, lon, spd (m/s or null), acc }
 }
 function lapTick(now) {       // runs ten times a second: carries the last fix forward along the track and drives the sound
   const E = lapE; if (!E.T || E.s == null || E.off) { setTone(1); return null; }
+  if (now - E.tFix > 3000) { setTone(1); return null; }                                   // no fix for three seconds: say nothing rather than guess
   const age = Math.min(2.5, Math.max(0, (now - E.tFix) / 1000) + set.gpsDelay), vNow = Math.max(0, E.v + E.acc * age), moved = Math.max(0, E.v * age + .5 * E.acc * age * age);
   const cumNow = E.cum + moved / E.L.step, lv = LVL(E.L), at = c => +lv[mod(Math.floor(c), E.n)];
   if (E.quiet || vNow < 3) { setTone(1); return { cum: cumNow, v: vNow, level: at(cumNow) }; }
@@ -977,11 +987,13 @@ function coachTips(m, best) {
 }
 function finishLap(tc, endCum) {
   const E = lapE, ms = tc - E.lapStartT, m = lapMetrics(E.lapStartCum), tips = coachTips(m, E.bestSeg), lap = { n: E.laps.length + 1, ms, m, tips };
-  E.laps.push(lap); if (!E.best || ms < E.best.ms) E.best = lap;
+  const prevBest = E.best; E.laps.push(lap); if (!prevBest || ms < prevBest.ms) E.best = lap;
   Object.keys(m).forEach(k => { if (!E.bestSeg[k] || m[k].tSeg < E.bestSeg[k].tSeg) E.bestSeg[k] = m[k]; });
   const fl = E.L.corners.finelady; E.tipAt = endCum + (fl ? fl.b + 4 : 100);          // say it on the climb after Fine Lady, the longest quiet stretch
   E.pendingTip = tips.length ? tips[0].name + ': ' + tips[0].tip + '.' : (E.laps.length > 1 && lap === E.best ? 'Best lap. Same again.' : null);
-  if (!E.quiet) { if (set.lapSay) speak((ms / 1000).toFixed(1)); if (E.onLap) E.onLap(lap); }
+  // the lap time, then how it compares: "71.5, best" or "71.9, 0.4 off"
+  const g = prevBest ? (ms - E.best.ms) / 1000 : 0, gap = !prevBest ? '' : E.best === lap ? ', best' : g < .05 ? ', equal best' : ', ' + g.toFixed(1) + ' off';
+  if (!E.quiet) { if (set.lapSay) speak((ms / 1000).toFixed(1) + gap); if (E.onLap) E.onLap(lap); }
 }
 function renderDebrief() {
   const E = lapE, box = $('#debriefBody'); if (!box) return;
@@ -1035,7 +1047,7 @@ function simStep(dt, now, quiet) {
 function pedalShow(id, level) { const b = $(id); if (b._l === level) return; b._l = level; b.textContent = level === 1 ? 'Flat out' : level === 2 ? 'Lift' : LV[level].name; b.style.background = lvColor(level); }
 function wordShow(id, text) { const b = $(id); b.textContent = text; clearTimeout(b._t); b._t = setTimeout(() => { b.textContent = ''; }, 2600); }
 function simStart() {
-  audioInit(); keepAwake(true); drawSim(); sim.rate = +$('#simRate').value; sim.bad = $('#simBad').checked; lapReset(simT());
+  if (reader.on) readStop(); audioInit(); keepAwake(true); drawSim(); sim.rate = +$('#simRate').value; sim.bad = $('#simBad').checked; lapReset(simT());
   lapE.onWord = t => wordShow('#simWord', t); lapE.onLap = lap => { $('#simLast').textContent = fmtLap(lap.ms); renderDebrief(); };
   const n = LY().centre.length; sim.on = true; sim.pos = n - 18; sim.v = 17; sim.lastT = 0; sim.fixAcc = 1e9; sim.tickAcc = 0;
   $('#simBtn').textContent = 'Stop demo'; requestAnimationFrame(simFrame);
@@ -1047,8 +1059,34 @@ function simFrame(ts) {
   requestAnimationFrame(simFrame);
 }
 
+/* ---------------- before you go out: the lap read aloud, corner by corner ---------------- */
+const reader = { on: false, i: 0, items: [] };
+function lapScript() {
+  return cardList().map(([key, tn]) => {
+    const c = CARDS[key], num = tn === 'new' || tn === 'kink' ? '' : (/,| to /.test(tn) ? 'turns ' + tn.replace(/T/g, '').replace(', ', ' and ') : 'turn ' + tn.replace('T', '')) + ', ';
+    const doIt = st.wet ? c.wet : pick(st.profile === 'novice' ? c.doN : c.doE), mk = pick(c.marker);
+    return num + c.name + '. ' + doIt + (mk && !/^None/.test(mk) ? ' Marker: ' + mk : '');
+  });
+}
+function readNext() {
+  if (!reader.on) return;
+  if (reader.i >= reader.items.length) { readStop(); return; }
+  const text = reader.items[reader.i++]; wordShow('#readWord', text.split('. ')[0]);
+  try {
+    const u = new SpeechSynthesisUtterance(text); u.rate = 1.0; u.lang = 'en-GB';
+    u.onend = () => setTimeout(readNext, 700); u.onerror = () => setTimeout(readNext, 300);
+    speechSynthesis.speak(u);
+  } catch (e) { readStop(); }
+}
+function readStart() {
+  if (!('speechSynthesis' in window)) { toast('This browser cannot read aloud.'); return; }
+  if (sim.on) simStop(); try { speechSynthesis.cancel(); } catch (e) { }
+  reader.on = true; reader.i = 0; reader.items = lapScript(); $('#readBtn').textContent = 'Stop reading'; readNext();
+}
+function readStop() { reader.on = false; $('#readBtn').textContent = 'Read me the lap'; try { speechSynthesis.cancel(); } catch (e) { } }
+
 /* ---------------- live GPS ---------------- */
-const live = { on: false, watch: null, timer: null, fixes: 0, rec: [], lastFit: 0 };
+const live = { on: false, watch: null, timer: null, fixes: 0, rec: [], lastFit: 0, lost: false };
 function liveStatus(msg) { $('#liveStatus').textContent = msg; }
 function lockInfo() { const k = store.get('wm.lock', null); $('#lockInfo').textContent = k ? 'Map locked to GPS (' + (k.lay === 'nat' ? 'National' : 'International') + ', average error ' + k.rms.toFixed(1) + ' m).' : 'Map not locked to GPS yet. Drive one full lap with GPS on and it locks itself.'; $('#forgetLock').hidden = !k; }
 function useLock(k) { if (st.layout !== k.lay || st.chic !== k.chic) { st.layout = k.lay; st.chic = k.chic; refreshAll(); } lapReset(k); lapE.onWord = t => wordShow('#liveWord', t); lapE.onLap = () => renderDebrief(); }
@@ -1059,11 +1097,13 @@ function tryLock(R, announce) {
 }
 function liveStart() {
   if (sim.on) simStop(); if (!('geolocation' in navigator)) { liveStatus('This browser has no location support.'); return; }
-  audioInit(); keepAwake(true); live.rec = []; live.fixes = 0; live.on = true; live.lastFit = 0; $('#liveBtn').textContent = 'Stop GPS';
+  if (reader.on) readStop(); audioInit(); keepAwake(true); live.rec = []; live.fixes = 0; live.on = true; live.lastFit = 0; live.lost = false; $('#liveBtn').textContent = 'Stop GPS';
   const k = store.get('wm.lock', null); if (k) useLock(k); else lapE.T = null;
   liveStatus('Waiting for a GPS fix. Stand in the open.');
   live.watch = navigator.geolocation.watchPosition(pos => {
     const c = pos.coords, now = performance.now(); live.fixes++;
+    if (live.fixes === 1) speak(lapE.T ? 'GPS ready. Coaching on.' : 'GPS ready. Drive a full lap to lock the map.');
+    if (live.lost) { live.lost = false; speak('GPS back'); }
     live.rec.push([Date.now(), +c.latitude.toFixed(7), +c.longitude.toFixed(7), c.speed == null || isNaN(c.speed) ? null : +c.speed.toFixed(2), c.heading == null || isNaN(c.heading) ? null : Math.round(c.heading), Math.round(c.accuracy || 0)]);
     if (lapE.T) lapFix({ t: now, lat: c.latitude, lon: c.longitude, spd: c.speed, acc: c.accuracy });
     else if (live.rec.length > 60 && now - live.lastFit > 15000) { live.lastFit = now; const got = tryLock(live.rec, false); if (got) { useLock(got); speak('Map locked'); } }
@@ -1075,7 +1115,9 @@ function liveStart() {
     if (blocked) liveStop(true);
   }, { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 });
   live.timer = setInterval(() => {
-    const s = lapTick(performance.now()), E = lapE; $('#liveSpd').textContent = s ? Math.round(s.v * MPH) : 0; $('#liveRate').textContent = E.rate ? E.rate.toFixed(1) : '0.0';
+    const s = lapTick(performance.now()), E = lapE;
+    if (live.fixes && !live.lost && performance.now() - E.tFix > 4000 && E.tFix) { live.lost = true; setTone(1); speak('GPS lost'); liveStatus('No GPS fix for a few seconds. Coaching paused until it returns.'); }
+    $('#liveSpd').textContent = s ? Math.round(s.v * MPH) : 0; $('#liveRate').textContent = E.rate ? E.rate.toFixed(1) : '0.0';
     $('#liveLap').textContent = E.lapStartT != null ? fmtLap(performance.now() - E.lapStartT) : '0:00.0'; $('#liveLast').textContent = fmtLap(E.laps.length ? E.laps[E.laps.length - 1].ms : null); $('#liveBest').textContent = fmtLap(E.best && E.best.ms);
     pedalShow('#livePedal', s ? +LVL(E.L)[mod(Math.floor(s.cum + s.v * set.toneLead / E.L.step), E.n)] : 1);
   }, 100);
@@ -1121,6 +1163,7 @@ document.addEventListener('click', e => {
 document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('hit')) { e.preventDefault(); select(e.target.dataset.card, true); } });
 $('#simBtn').addEventListener('click', () => sim.on ? simStop() : simStart());
 $('#liveBtn').addEventListener('click', () => live.on ? liveStop() : liveStart());
+$('#readBtn').addEventListener('click', () => reader.on ? readStop() : readStart());
 $('#testSound').addEventListener('click', () => { audioInit(); if (set.mode !== 'tones') speak(set.mode === 'talk' ? callFor({ key: 'christmas', level: 5 }) : WORD[5]); setTimeout(() => setTone(5), 900); setTimeout(() => setTone(2), 2100); setTimeout(() => setTone(1), 2700); });
 $('#forgetLock').addEventListener('click', () => { store.del('wm.lock'); lapE.T = null; lockInfo(); toast('Map lock forgotten.'); });
 $('#lockNow').addEventListener('click', () => { const R = live.on ? live.rec : rec; if (!R || R.length < 40) { toast('Record at least one full lap first.'); return; } const k = tryLock(R, true); if (k && live.on) useLock(k); });
@@ -1138,7 +1181,7 @@ bindNum('#setWordLead', 'wordLead'); bindNum('#setToneLead', 'toneLead'); bindNu
 $('#setMode').value = set.mode; $('#setMode').addEventListener('change', e => { set.mode = e.target.value; saveSettings(); });
 
 renderLegend(); refreshAll(); lockInfo(); renderDebrief();
-window.__wm = { D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, setRec: r => { rec = r; }, getRec: () => rec };
+window.__wm = { D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, setRec: r => { rec = r; }, getRec: () => rec };
 })();
 </script>
 </body>
