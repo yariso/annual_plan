@@ -92,6 +92,22 @@ dl.facts dd{margin:0;max-width:64ch}
 .btn{border:1.5px solid var(--ink);background:transparent;border-radius:10px;padding:10px 14px;font:600 16px/1 var(--display);cursor:pointer;min-height:42px}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
 .btn.small{padding:7px 10px;min-height:34px;font-size:14px}
+.btn.big{width:100%;min-height:76px;font-size:26px;border-radius:14px}
+details.panel>summary{list-style:none;cursor:pointer;font:700 19px/1.2 var(--display);padding:2px 0}
+details.panel>summary::-webkit-details-marker{display:none}
+details.panel>summary::before{content:'+';display:inline-block;width:22px;color:var(--muted)}
+details.panel[open]>summary::before{content:'\2013'}
+details.panel[open]>summary{margin-bottom:8px}
+#pocket{position:fixed;inset:0;z-index:60;background:#000;color:#fff;display:grid;place-items:center;padding:24px;text-align:center}
+#pocket .pk{width:100%;max-width:420px}
+.pkStatus{color:#9a9a9a;font-size:16px;margin-bottom:10px}
+.pkBig{font:700 72px/1 var(--display);font-variant-numeric:tabular-nums}
+.pkRow{display:flex;justify-content:space-around;margin:14px 0;font-size:18px;color:#cfcfcf}
+.pkRow b{color:#fff}
+.pkWord{min-height:32px;font:700 26px/1.2 var(--display);margin:10px 0}
+.pkStop{width:100%;min-height:84px;font-size:22px;border:2px solid #fff;color:#fff;background:transparent;margin-top:20px}
+.pkStop.holding{background:#333}
+.pkHide{background:none;border:0;color:#8a8a8a;margin-top:18px;font-size:15px;padding:12px}
 .btn[disabled]{opacity:.45;cursor:default}
 .nav2 .btn{flex:1}
 
@@ -234,11 +250,43 @@ svg text{font-family:var(--display);fill:var(--ink)}
 </section>
 
 <section class="tab" id="tab-coach" hidden>
-  <h2>Audio coach</h2>
-  <p class="muted" style="max-width:64ch">A tone sounds for exactly as long as your foot should be off the throttle. Its pitch tells you how hard: a low hum is a lift, a high tone is full braking. A word a moment earlier tells you what is coming, and two quick rising notes mean back to full throttle. After each lap it gives you the time, how far off your best it was, and the one thing to change.</p>
+  <div class="panel" id="startPanel">
+    <h2 style="margin:0 0 4px">GPS coach</h2>
+    <p class="muted" style="margin:0 0 10px;max-width:64ch">Earphones in. Press Start in the pits, wait for it to say GPS ready, phone in your pocket, drive. It talks you round every corner, gives the lap time after each lap and one thing to change, and shows the team's best corners afterwards.</p>
+    <label class="f" style="margin:0 0 10px">Driver<input type="text" id="driverName" placeholder="Your name" maxlength="16" autocomplete="off"></label>
+    <button type="button" class="btn primary big" id="liveBtn">Start GPS</button>
+    <div class="status" id="liveStatus">Not running.</div>
+    <div class="pedalnow" id="livePedal" aria-live="off">Flat out</div>
+    <div class="word" id="liveWord" aria-live="assertive"></div>
+    <div class="read">
+      <div><b id="liveLap">0:00.0</b><span>this lap</span></div>
+      <div><b id="liveLast">none</b><span>last lap</span></div>
+      <div><b id="liveBest">none</b><span>best lap</span></div>
+      <div><b id="liveSpd">0</b><span>mph</span></div>
+      <div><b id="liveRate">0.0</b><span>fixes a second</span></div>
+      <div><b id="liveAcc">none</b><span>accuracy, m</span></div>
+    </div>
+    <div class="row">
+      <button type="button" class="btn small" id="pocketBtn" hidden>Show the pocket screen</button>
+      <button type="button" class="btn small" id="testSound">Test the sound</button>
+      <button type="button" class="btn small" id="lockNow">Lock map now</button>
+      <button type="button" class="btn small" id="forgetLock" hidden>Forget map lock</button>
+    </div>
+    <p class="small muted" id="lockInfo" style="margin:0"></p>
+    <p class="small muted" style="margin:6px 0 0">Set the chicane, driver level and dry or wet on the Map tab before you start; the lock picks International or National for you. Once running, a black pocket screen covers the page so touches through your pocket do nothing; hold its button for two seconds to stop. Bluetooth earphones add a fraction of a second: if the calls feel late, raise the leads under What you hear. GPS delay now: <b id="liveLag">0.00</b> s.</p>
+  </div>
 
-  <div class="panel">
-    <h3>Practice at home</h3>
+  <details class="panel">
+    <summary>In the queue: read me the lap</summary>
+    <p style="max-width:64ch">Put the earpieces in and let it read the lap to you: every corner in order, what your feet do, and the brake marker, for the layout, driver level and conditions chosen on the Map tab. It takes about two minutes. Close your eyes and picture each corner as it comes.</p>
+    <div class="row">
+      <button type="button" class="btn primary" id="readBtn">Read me the lap</button>
+      <div class="word" id="readWord" aria-live="polite" style="flex:1"></div>
+    </div>
+  </details>
+
+  <details class="panel">
+    <summary>Practice at home</summary>
     <p style="max-width:64ch">No track time before the day? Ten minutes of this, daily, puts the lap in your head: the corner order, what your feet do at each one, and the rhythm. Earpieces in. Set the layout, driver level and conditions on the Map tab first.</p>
     <div class="row">
       <button type="button" class="btn primary" id="virtBtn">Virtual lap, talked round</button>
@@ -256,12 +304,11 @@ svg text{font-family:var(--display);fill:var(--ink)}
       <p class="small muted" id="quizScore" style="margin:6px 0 0"></p>
     </div>
     <p class="small muted" style="margin:8px 0 0">The virtual lap runs the demo kart round the map with the Talk me round sentences, so you hear each corner named with what to do. Watch the map, then do it with your eyes shut. The lap in your head trains the rhythm; the demo lap's timing is a rough stand-in for a hire kart, not a target.</p>
-  </div>
+  </details>
 
-  <div class="two">
-    <div class="panel">
-      <h3>Try it on the map</h3>
-      <div class="mapbox" style="padding:2px"><svg id="simmap" role="img" aria-label="Demo lap"></svg></div>
+  <details class="panel" id="demoDetails">
+    <summary>Try it on the map: the demo lap</summary>
+    <div class="mapbox" style="padding:2px"><svg id="simmap" role="img" aria-label="Demo lap"></svg></div>
       <div class="pedalnow" id="simPedal" aria-live="off">Flat out</div>
       <div class="word" id="simWord" aria-live="assertive"></div>
       <div class="read">
@@ -277,51 +324,21 @@ svg text{font-family:var(--display);fill:var(--ink)}
       </div>
       <label class="sw"><input type="checkbox" id="simBad"> Demo driver makes novice mistakes, so the coach has something to say</label>
       <p class="small muted" style="margin-top:8px">The demo follows the layout, driver level and dry or wet setting chosen on the Map tab. Turn your volume up and let it run two laps to hear the coaching. The demo kart is a rough stand-in for a hire kart at up to about 50 mph; its speeds and lap times are guesses, not targets.</p>
-    </div>
+  </details>
 
-    <div class="panel">
-      <h3>At the circuit</h3>
-      <ol>
-        <li>On the Map tab set the chicane on or off, the driver level and dry or wet before you start. The lock finds International or National from your trace, but it cannot tell the chicane apart. The lap runs clockwise; the arrow at the start line shows the direction.</li>
-        <li>Press Start GPS, wait for it to say GPS ready, zip the phone away and drive. After one full lap the app fits the track map to your GPS trace, says Map locked, and remembers the lock for next time. If the circuit is running the other layout today it re-locks itself once a quarter of your fixes fall off the map, or press Forget map lock before you start.</li>
-        <li>From then on you get the tones and the words, and at the next quiet moment after the line the lap time with the gap to your best and one coaching point. If the phone loses its fix it says GPS lost and goes quiet, then GPS back when it returns. It cannot see flags: a yellow flag overrides anything it says.</li>
-        <li>In the pits, read the debrief below. The venue times every session and prints your laps: compare them with the lap times here, because at one fix a second the app can be a few tenths out on the line. Its monthly rental leaderboard shows what quick hire drivers do on each layout.</li>
-      </ol>
-      <div class="pedalnow" id="livePedal" aria-live="off">Flat out</div>
-      <div class="word" id="liveWord" aria-live="assertive"></div>
-      <div class="read">
-        <div><b id="liveSpd">0</b><span>mph</span></div>
-        <div><b id="liveRate">0.0</b><span>fixes per second</span></div>
-        <div><b id="liveAcc">none</b><span>accuracy, m</span></div>
-        <div><b id="liveLag">0.00</b><span>GPS delay, s</span></div>
-        <div><b id="liveLap">0:00.0</b><span>this lap</span></div>
-        <div><b id="liveLast">none</b><span>last lap</span></div>
-        <div><b id="liveBest">none</b><span>best lap</span></div>
-      </div>
-      <div class="row">
-        <label class="f" style="flex:1;min-width:140px">Driver, for the team table<input type="text" id="driverName" placeholder="Name" maxlength="16" autocomplete="off"></label>
-      </div>
-      <div class="row">
-        <button type="button" class="btn primary" id="liveBtn">Start GPS</button>
-        <button type="button" class="btn small" id="lockNow">Lock map now</button>
-        <button type="button" class="btn small" id="forgetLock" hidden>Forget map lock</button>
-      </div>
-      <div class="status" id="liveStatus">Not running.</div>
-      <p class="small muted" id="lockInfo" style="margin:0"></p>
+  <details class="panel" id="debriefDetails">
+    <summary>Debrief and the team table</summary>
+    <div id="debriefBody"></div>
+    <div class="row" style="margin-top:10px">
+      <button type="button" class="btn small" id="replayBtn">Analyse my last recording</button>
+      <button type="button" class="btn small" id="saveCsv">Save recording as CSV</button>
+      <label class="btn small" style="display:inline-grid;place-items:center">Load a CSV from a lap timer<input type="file" id="loadFile" accept=".csv,.txt" hidden></label>
     </div>
-  </div>
+    <p class="small muted" style="margin:8px 0 0">Coaching compares each corner with your own best through it, and with what the guide expects there: flat, lift or brake. It looks at where you started slowing, your slowest speed and how soon you were accelerating again. From the second lap it picks one focus corner, the one costing most against your best, and keeps at it until it improves, then tells you what you found. Next lap that corner's brake word carries the cue, "Hard brake, brake later". The table shows every lap corner by corner with the model's time alongside. A loaded file needs latitude, longitude and time columns: time as seconds, milliseconds, a clock or a date stamp. Speed is read as m/s unless the column name or a units row says km/h, mph or knots.</p>
+  </details>
 
-  <div class="panel">
-    <h3>In the queue, before you go out</h3>
-    <p style="max-width:64ch">Put the earpieces in and let it read the lap to you: every corner in order, what your feet do, and the brake marker, for the layout, driver level and conditions chosen on the Map tab. It takes about two minutes. Close your eyes and picture each corner as it comes.</p>
-    <div class="row">
-      <button type="button" class="btn primary" id="readBtn">Read me the lap</button>
-      <div class="word" id="readWord" aria-live="polite" style="flex:1"></div>
-    </div>
-  </div>
-
-  <div class="panel">
-    <h3>What you hear</h3>
+  <details class="panel">
+    <summary>What you hear, and the settings</summary>
     <div class="grid3">
       <label class="f">Style
         <select id="setMode"><option value="words">Words and tones</option><option value="tones">Tones only</option><option value="talk">Talk me round, for slow laps</option></select>
@@ -347,7 +364,6 @@ svg text{font-family:var(--display);fill:var(--ink)}
       <label class="sw"><input type="checkbox" id="set_coachSay"> Coaching point each lap</label>
       <label class="sw"><input type="checkbox" id="set_prepCue"> Chirp a second before each brake word</label>
       <label class="sw"><input type="checkbox" id="set_autoLead"> Learn my brake timing</label>
-      <button type="button" class="btn small" id="testSound">Test the sound</button>
     </div>
     <ul class="small muted" style="margin-top:8px">
       <li>Words: Hard brake, Firm brake, Dab, Lift, Flat. They match levels 5 to 1 on the map.</li>
@@ -362,20 +378,17 @@ svg text{font-family:var(--display);fill:var(--ink)}
       <li>With the driver level set to Model, the tones and words follow the physics model's fastest lap for the hire kart on its own line. That is the limit for a perfect driver, so its brake points will feel late and its lifts short. Use it to hear where time is, not as a first-day target.</li>
       <li>In the wet, Talk me round uses general wet sentences (off the dry line, no kerbs, gentle) rather than the corner guides, because no Whilton-specific wet guide exists in writing.</li>
     </ul>
-  </div>
+  </details>
 
-  <div class="panel">
-    <h3>Debrief</h3>
-    <div id="debriefBody"></div>
-    <div class="row" style="margin-top:10px">
-      <button type="button" class="btn small" id="replayBtn">Analyse my last recording</button>
-      <button type="button" class="btn small" id="saveCsv">Save recording as CSV</button>
-      <label class="btn small" style="display:inline-grid;place-items:center">Load a CSV from a lap timer<input type="file" id="loadFile" accept=".csv,.txt" hidden></label>
-    </div>
-    <p class="small muted" style="margin:8px 0 0">Coaching compares each corner with your own best through it, and with what the guide expects there: flat, lift or brake. It looks at where you started slowing, your slowest speed and how soon you were accelerating again. From the second lap it picks one focus corner, the one costing most against your best, and keeps at it until it improves, then tells you what you found. Next lap that corner's brake word carries the cue, "Hard brake, brake later". The table shows every lap corner by corner with the model's time alongside. A loaded file needs latitude, longitude and time columns: time as seconds, milliseconds, a clock or a date stamp. Speed is read as m/s unless the column name or a units row says km/h, mph or knots.</p>
-  </div>
-
-  <div class="panel">
+  <details class="panel">
+    <summary>How it works at the circuit</summary>
+    <p class="muted" style="max-width:64ch">A tone sounds for exactly as long as your foot should be off the throttle. Its pitch tells you how hard: a low hum is a lift, a high tone is full braking. A chirp and then a word a moment earlier tell you what is coming, and two quick rising notes mean back to full throttle.</p>
+    <ol>
+        <li>On the Map tab set the chicane on or off, the driver level and dry or wet before you start. The lock finds International or National from your trace, but it cannot tell the chicane apart. The lap runs clockwise; the arrow at the start line shows the direction.</li>
+        <li>Press Start GPS, wait for it to say GPS ready, zip the phone away and drive. After one full lap the app fits the track map to your GPS trace, says Map locked, and remembers the lock for next time. If the circuit is running the other layout today it re-locks itself once a quarter of your fixes fall off the map, or press Forget map lock before you start.</li>
+        <li>From then on you get the tones and the words, and at the next quiet moment after the line the lap time with the gap to your best and one coaching point. If the phone loses its fix it says GPS lost and goes quiet, then GPS back when it returns. It cannot see flags: a yellow flag overrides anything it says.</li>
+        <li>In the pits, read the debrief below. The venue times every session and prints your laps: compare them with the lap times here, because at one fix a second the app can be a few tenths out on the line. Its monthly rental leaderboard shows what quick hire drivers do on each layout.</li>
+      </ol>
     <h3>Hearing it inside a helmet</h3>
     <ul>
       <li>Kart coaches already talk to drivers through in-ear race earpieces worn under the helmet, so the listening side is proven. The foam-tipped or custom-moulded kind sold with kart radio systems blocks engine noise and sits flat under the helmet padding. Ordinary earbuds tend to get dragged out as the helmet goes on.</li>
@@ -395,15 +408,26 @@ svg text{font-family:var(--display);fill:var(--ink)}
       <li>On an iPhone, turn off silent mode (the side switch, or the Action button or Control Centre on newer models) or the tones, and probably the words, will not play.</li>
     </ul>
   </div>
+  </details>
 </section>
+<div id="pocket" hidden role="dialog" aria-label="Coaching">
+  <div class="pk">
+    <div class="pkStatus" id="pkStatus">Coaching</div>
+    <div class="pkBig" id="pkLap">0:00.0</div>
+    <div class="pkRow"><span>last <b id="pkLast">none</b></span><span>best <b id="pkBest">none</b></span><span><b id="pkSpd">0</b> mph</span></div>
+    <div class="pkWord" id="pkWord" aria-live="off"></div>
+    <button type="button" class="btn pkStop" id="pkStop">Hold to stop</button>
+    <button type="button" class="pkHide" id="pkHide">Hide this screen, keep coaching</button>
+  </div>
+</div>
 </main>
 </div>
 
 <nav class="tabs" role="tablist" aria-label="Sections">
-  <button type="button" role="tab" data-tab="map" aria-selected="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 15c0-5 3-9 8-9s8 3 8 7-3 5-6 5-3-3-6-3-4 3-4 0z"/></svg>Map</button>
+  <button type="button" role="tab" data-tab="coach" aria-selected="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 14v-2a7 7 0 0 1 14 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></svg>Coach</button>
+  <button type="button" role="tab" data-tab="map" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 15c0-5 3-9 8-9s8 3 8 7-3 5-6 5-3-3-6-3-4 3-4 0z"/></svg>Map</button>
   <button type="button" role="tab" data-tab="corners" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V10a6 6 0 0 1 6-6h8"/><path d="M15 8l4-4-4-4" transform="translate(0 4)"/></svg>Corners</button>
   <button type="button" role="tab" data-tab="plan" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10a2 2 0 0 1 2 2v14H5V6a2 2 0 0 1 2-2z"/><path d="M9 9h6M9 13h6M9 17h3"/></svg>Plan</button>
-  <button type="button" role="tab" data-tab="coach" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 14v-2a7 7 0 0 1 14 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></svg>Coach</button>
 </nav>
 <div id="toast" hidden></div>
 
@@ -601,7 +625,7 @@ const LABELS = {
 };
 
 /* ---------------- state ---------------- */
-const st = { layout: 'intl', chic: true, wet: false, profile: 'novice', tab: 'map', sel: null, show: { names: true, markers: true, kerbs: true } };
+const st = { layout: 'intl', chic: true, wet: false, profile: 'novice', tab: 'coach', sel: null, show: { names: true, markers: true, kerbs: true } };
 const pick = v => { if (v && typeof v === 'object') { if ('c' in v || 'n' in v) return pick(v[st.chic ? 'c' : 'n']); if ('nat' in v || 'intl' in v) return v[st.layout]; } return v; };
 const lvOf = c => { if (!st.wet && st.profile !== 'model') return pick(c.lv)[st.profile]; const L = LY(), lv = LVL(L), n = lv.length, a = L.corners[c.prims[0]], b = L.corners[c.prims[c.prims.length - 1]]; let m = 1; rangeIdx(a.a - 30, b.i, n).forEach(i => { m = Math.max(m, +lv[i]); }); return m; };
 const LY = () => D.layouts[st.layout + (st.chic ? '_c' : '_n')];
@@ -1380,7 +1404,7 @@ function simFrame(ts) {
 /* ---------------- practice at home: a talked virtual lap, the lap in your head, a corner quiz ---------------- */
 function virtualStart() {
   if (sim.on) { simStop(); return; }
-  sim.modeWas = set.mode; set.mode = 'talk'; $('#setMode').value = 'talk'; $('#simRate').value = '10'; $('#simBad').checked = false; simStart(); $('#virtBtn').textContent = 'Stop the virtual lap';
+  $('#demoDetails').open = true; sim.modeWas = set.mode; set.mode = 'talk'; $('#setMode').value = 'talk'; $('#simRate').value = '10'; $('#simBad').checked = false; simStart(); $('#virtBtn').textContent = 'Stop the virtual lap';
   try { $('#simmap').scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) { }
 }
 function refTimes() {           // the demo kart's time at each corner from the start line, run silently, for the layout, driver level and conditions chosen
@@ -1467,7 +1491,8 @@ function readStop() { reader.on = false; $('#readBtn').textContent = 'Read me th
 
 /* ---------------- live GPS ---------------- */
 const live = { on: false, watch: null, timer: null, fixes: 0, rec: [], lastFit: 0, lost: false, stored: false, chk: 0, bad: 0, lag: 0 };
-function liveStatus(msg) { $('#liveStatus').textContent = msg; }
+function liveStatus(msg) { $('#liveStatus').textContent = msg; const k = $('#pkStatus'); if (k) k.textContent = msg; }
+function pocketShow(on) { $('#pocket').hidden = !on; $('#pocketBtn').hidden = on || !live.on; if (on) window.scrollTo(0, 0); }
 function lockInfo() {
   const k = store.get('wm.lock', null);
   if (k) { const L = D.layouts[k.lay + (st.chic ? '_c' : '_n')], len = Math.round(L.total * k.s), days = k.at ? Math.floor((Date.now() - k.at) / 864e5) : null;
@@ -1475,7 +1500,7 @@ function lockInfo() {
   else $('#lockInfo').textContent = 'Map not locked to GPS yet. Drive one full lap with GPS on and it locks itself.';
   $('#forgetLock').hidden = !k;
 }
-function useLock(k) { if (st.layout !== k.lay) { st.layout = k.lay; refreshAll(); } lapReset(k); lapE.onWord = t => wordShow('#liveWord', t); lapE.onLap = () => renderDebrief(); }
+function useLock(k) { if (st.layout !== k.lay) { st.layout = k.lay; refreshAll(); } lapReset(k); lapE.onWord = t => { wordShow('#liveWord', t); wordShow('#pkWord', t); }; lapE.onLap = () => renderDebrief(); }
 function tryLock(R, announce) {
   const k = fitRecording(R); if (!k) return false;
   if (k.rms > 8 || k.cover < .8) { if (announce) toast('Could not lock the map: the recording does not cover a full lap cleanly yet.'); return false; }
@@ -1487,7 +1512,7 @@ function liveStart() {
   if (set.mode !== 'tones') speak('Coach on. Waiting for GPS.');           // spoken inside the button press, which is what lets the phone speak later from a timer
   const k = store.get('wm.lock', null); live.stored = !!k;
   if (k) { if (st.layout !== k.lay) toast('Using the stored ' + (k.lay === 'nat' ? 'National' : 'International') + ' lock. Press Forget map lock if the circuit is running the other layout today.'); useLock(k); } else lapE.T = null;
-  liveStatus('Waiting for a GPS fix. Stand in the open.');
+  liveStatus('Waiting for a GPS fix. Stand in the open.'); pocketShow(true);
   live.watch = navigator.geolocation.watchPosition(pos => {
     const c = pos.coords, now = performance.now(); live.fixes++;
     const rawLag = pos.timestamp ? (Date.now() - pos.timestamp) / 1000 : NaN, lag = rawLag >= 0 && rawLag <= 1.5 ? rawLag : 0;   // how old the fix already is when the browser hands it over; a clock that disagrees with the fix time gives nonsense, which is ignored
@@ -1513,12 +1538,13 @@ function liveStart() {
     if (live.fixes && !live.lost && E.tAny && performance.now() - E.tAny > 4000) { live.lost = true; setTone(1); speak('GPS lost'); liveStatus('No GPS fix for a few seconds. Coaching paused until it returns.'); }
     if (!(live.tick = (live.tick || 0) + 1) % 10) audioResume();                        // once a second: a call or another app can leave the audio suspended
     $('#liveSpd').textContent = s ? Math.round(s.v * MPH) : 0; $('#liveRate').textContent = E.rate ? E.rate.toFixed(1) : '0.0';
-    $('#liveLap').textContent = E.lapStartT != null ? fmtLap(performance.now() - E.lapStartT) : '0:00.0'; $('#liveLast').textContent = fmtLap(E.laps.length ? E.laps[E.laps.length - 1].ms : null); $('#liveBest').textContent = fmtLap(E.best && E.best.ms);
+    const lapTxt = E.lapStartT != null ? fmtLap(performance.now() - E.lapStartT) : '0:00.0', lastTxt = fmtLap(E.laps.length ? E.laps[E.laps.length - 1].ms : null), bestTxt = fmtLap(E.best && E.best.ms);
+    $('#liveLap').textContent = lapTxt; $('#liveLast').textContent = lastTxt; $('#liveBest').textContent = bestTxt; $('#pkLap').textContent = lapTxt; $('#pkLast').textContent = lastTxt; $('#pkBest').textContent = bestTxt; $('#pkSpd').textContent = s ? Math.round(s.v * MPH) : 0;
     pedalShow('#livePedal', s ? +LVL(E.L)[mod(Math.floor(s.cum + s.v * set.toneLead / E.L.step), E.n)] : 1);
   }, 100);
 }
 function liveStop(keepMsg) {
-  live.on = false; if (live.watch != null) navigator.geolocation.clearWatch(live.watch); live.watch = null; clearInterval(live.timer); setTone(1); keepAwake(false); $('#liveBtn').textContent = 'Start GPS';
+  live.on = false; if (live.watch != null) navigator.geolocation.clearWatch(live.watch); live.watch = null; clearInterval(live.timer); setTone(1); keepAwake(false); $('#liveBtn').textContent = 'Start GPS'; pocketShow(false); $('#pocketBtn').hidden = true; if (lapE.laps.length) $('#debriefDetails').open = true;
   if (live.rec.length > 5) { rec = live.rec; const ok = store.set('wm.rec', rec); if (!keepMsg) liveStatus('Stopped. ' + rec.length + ' fixes recorded' + (ok ? ' and kept on this phone.' : '. Could not store them on this phone, so save the CSV now.')); }
   else if (!keepMsg) liveStatus('Stopped.');
   renderDebrief();
@@ -1577,6 +1603,11 @@ $('#simBtn').addEventListener('click', () => sim.on ? simStop() : simStart());
 $('#liveBtn').addEventListener('click', () => live.on ? liveStop() : liveStart());
 $('#readBtn').addEventListener('click', () => reader.on ? readStop() : readStart());
 $('#virtBtn').addEventListener('click', virtualStart);
+$('#demoDetails').addEventListener('toggle', () => { if ($('#demoDetails').open) drawSim(); });
+$('#pocketBtn').addEventListener('click', () => pocketShow(true));
+$('#pkHide').addEventListener('click', () => pocketShow(false));
+(() => { const b = $('#pkStop'); let t = null; const arm = e => { e.preventDefault(); b.classList.add('holding'); b.textContent = 'Keep holding'; clearTimeout(t); t = setTimeout(() => { b.classList.remove('holding'); b.textContent = 'Hold to stop'; liveStop(); }, 1800); }, disarm = () => { clearTimeout(t); b.classList.remove('holding'); b.textContent = 'Hold to stop'; };
+  b.addEventListener('pointerdown', arm); ['pointerup', 'pointercancel', 'pointerleave'].forEach(ev => b.addEventListener(ev, disarm)); })();
 $('#driverName').value = store.get('wm.driver', ''); $('#driverName').addEventListener('change', e => store.set('wm.driver', e.target.value.trim()));
 $('#debriefBody').addEventListener('click', e => { if (e.target.id === 'teamClear') { team.laps = []; store.del('wm.team'); renderDebrief(); toast('Team table cleared.'); } });
 $('#mindBtn').addEventListener('click', () => { const b = $('#mindBox'); b.hidden = !b.hidden; if (!b.hidden) { $('#quizBox').hidden = true; if (sim.on) simStop(); if (reader.on) readStop(); } });
@@ -1599,8 +1630,8 @@ bindNum('#setWordLead', 'wordLead'); bindNum('#setToneLead', 'toneLead'); bindNu
 ['toneBrake', 'toneLift', 'goBlip', 'sayBrake', 'sayLift', 'sayFlat', 'lapSay', 'coachSay', 'prepCue', 'autoLead'].forEach(k => bindChk('#set_' + k, k));
 $('#setMode').value = set.mode; $('#setMode').addEventListener('change', e => { set.mode = e.target.value; saveSettings(); });
 
-renderLegend(); refreshAll(); lockInfo(); renderDebrief();
-window.__wm = { D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, MK, modelLine, M, refTimes, mindTap, mind, quizAsk, quizAnswer, quiz, virtualStart, team, teamLog, teamTable, live, speechLag, speechLags, SHORT, setRec: r => { rec = r; }, getRec: () => rec };
+renderLegend(); refreshAll(); lockInfo(); renderDebrief(); setTab(st.tab);
+window.__wm = { pocketShow, D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, MK, modelLine, M, refTimes, mindTap, mind, quizAsk, quizAnswer, quiz, virtualStart, team, teamLog, teamTable, live, speechLag, speechLags, SHORT, setRec: r => { rec = r; }, getRec: () => rec };
 })();
 </script>
 </body>
