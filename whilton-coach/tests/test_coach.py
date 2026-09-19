@@ -152,4 +152,17 @@ with sync_playwright() as p:
       const res = { levels: Object.values(out).every(Boolean), flatNote: /intermediate/.test(flat), brakeOwn: /novice's early point/.test(brake), words: words.length, laps: W.lapE.laps.length }; document.querySelector('[data-profile="novice"]').click(); return res; }""")
     print('INTERMEDIATE:', r)
     assert r['levels'] and not r['flatNote'] and r['brakeOwn'] and r['words'] > 20 and r['laps'] >= 1, 'intermediate level incomplete'
+
+    # the practice loop: a walker jogs and walks round the shrunk lap laid on the ground; every call comes, laps time, coaching speaks
+    LOOP = """(sc) => { const W = window.__wm; window.speechSynthesis.speak = () => {}; document.querySelector('[data-profile="novice"]').click(); Object.assign(W.st, { layout: 'intl', chic: true, wet: false }); Object.assign(W.set, { mode: 'words', sayFlat: true, sayLift: true, sayBrake: true, lapSay: true, coachSay: true });
+      const origin = { lat: 52.2, lon: -1.1 }, heading = [Math.cos(.4), Math.sin(.4)], T = W.loopFit(origin, heading, sc); W.lapReset(T); W.lapE.gate = .35; W.lapE.offScale = 1.5;
+      const L = W.LY(), n = L.centre.length, lv = W.LVL(L), words = [], laps = []; W.lapE.onWord = (t, l) => { if (l > 0) words.push(t); }; W.lapE.onLap = lap => laps.push({ s: +(lap.ms / 1000).toFixed(1), say: lap.say });
+      let pos = n - 6, now = 1000, t = 0, fixes = 0;
+      for (let k = 0; k < 9000; k++) { now += 100; const i = Math.floor(pos) % n, level = +lv[i], vReal = level >= 3 ? 1.2 : level === 2 ? 1.8 : 2.5; pos += vReal / sc * .1 / L.step; t += .1;
+        if (Math.round(t * 10) % 10 === 0) { const j = Math.floor(pos - (0.3 * vReal / sc) / L.step) % n, p = L.centre[(j + n) % n], w = W.m2w(T, p[0], p[1]), ll = W.toLL(w[0] + (Math.random() - .5) * 4, w[1] + (Math.random() - .5) * 4, origin); W.lapFix({ t: now, lat: ll[0], lon: ll[1], spd: (vReal + (Math.random() - .5) * .5) / sc, acc: 3 }); fixes++; }
+        W.lapTick(now); if (laps.length >= 2) break; }
+      const startAt = W.m2w(T, L.centre[0][0], L.centre[0][1]); W.lapReset(W.simT()); return { len: Math.round(L.total * sc), fixes, nWords: words.length, brakes: words.filter(w => /brake/i.test(w)).length, laps, startAt: startAt.map(x => +x.toFixed(2)) }; }"""
+    r = pg.evaluate(LOOP, 1 / 3); print('PRACTICE LOOP 1:3:', r)
+    assert abs(r['startAt'][0]) < 0.01 and abs(r['startAt'][1]) < 0.01, 'the start line must sit on the origin'
+    assert len(r['laps']) == 2 and 150 < r['laps'][0]['s'] < 220 and r['brakes'] >= 8 and r['nWords'] >= 20, 'the practice loop did not coach a full walked lap'
     print('errors', errs); b.close()

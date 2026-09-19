@@ -251,6 +251,26 @@ svg text{font-family:var(--display);fill:var(--ink)}
     <p class="small muted" style="margin:6px 0 0">Indoors expect a poor or missing fix; outside expect 5 to 15 m and about one fix a second, which is all the coach needs. If location is blocked, open this link in Safari itself rather than inside another app.</p>
   </div>
   <div class="panel">
+    <h3>2b. Practice loop: walk the whole lap in a field</h3>
+    <p style="max-width:64ch">The full coach, without the circuit. It lays a shrunk copy of Whilton Mill on the ground where you stand, and you walk or jog round it following the dot on the map: every chirp, word and tone at the corners, the lap time at the line, and one thing to change after each lap. Jog where it says flat, walk where it says brake, and it will coach you exactly as it will in the kart. You need an open space about a hundred metres across and a clear view of the sky.</p>
+    <div class="row">
+      <label class="f">Scale
+        <select id="loopScale"><option value="0.333">1 to 3, a 350 m loop</option><option value="0.25">1 to 4, a 260 m loop</option><option value="0.5">1 to 2, a 530 m loop</option></select>
+      </label>
+      <button type="button" class="btn primary" id="loopBtn">Start practice loop</button>
+    </div>
+    <div class="status" id="loopStatus">Not running.</div>
+    <div class="mapbox" style="padding:2px"><svg id="loopmap" role="img" aria-label="The practice loop"></svg></div>
+    <div class="pedalnow" id="loopPedal" aria-live="off">Flat out</div>
+    <div class="word" id="loopWord" aria-live="assertive"></div>
+    <div class="read">
+      <div><b id="loopLap">0:00.0</b><span>this lap</span></div>
+      <div><b id="loopLast">none</b><span>last lap</span></div>
+      <div><b id="loopAcc">none</b><span>accuracy, m</span></div>
+    </div>
+    <p class="small muted" style="margin:6px 0 0">Press Start, then walk straight ahead for about ten metres: that sets the pit straight along your path, with the first corner, Oblivion, turning left. Keep the dot on the track. Stray more than a few metres and it goes quiet until you are back on. GPS noise of a few metres is a whole kart width here, so expect the odd wobble; the calls still come in the right order at the right places.</p>
+  </div>
+  <div class="panel">
     <h3>3. At the circuit: the GPS coach</h3>
     <p style="max-width:64ch">Ask at the briefing whether the chicane is in and whether earpieces are allowed. Then: Coach tab, your name, Start, phone in your pocket. It talks you round, gives the lap time after each lap and one thing to change.</p>
     <button type="button" class="btn primary big" data-go="start">Go to the GPS coach</button>
@@ -1217,14 +1237,15 @@ function buildEvents() {
   return ev.sort((a, b) => a.i - b.i);
 }
 function lapReset(T, quiet) {
+  lapE.gate = 1; lapE.offScale = 1; lapE.lastM = null;
   const L = LY(); Object.assign(lapE, { T, L, layKey: st.layout + (st.chic ? '_c' : '_n'), n: L.centre.length, s: null, cum: 0, v: 0, acc: 0, tFix: 0, tAny: 0, far: 0, off: false, rate: 0, times: [], samples: [], lapStartT: null, lapStartCum: null, laps: [], best: null, bestSeg: {}, events: buildEvents(), wordCum: null, prepCum: null, queue: [], quiet: !!quiet, said: {}, prof: null, profs: [], leadAdj: {}, cal: {}, focus: null, dropped: null, flatTicks: 0 });
   setTone(1);
 }
 function lapFix(f) {          // f: { t (ms), lat, lon, spd (m/s or null), acc }
   const E = lapE; if (!E.T) return; E.tAny = f.t;
   const w = toENU(f.lat, f.lon, E.T.origin), m = w2m(E.T, w[0], w[1]), hit = nearestIdx(E.L, m[0], m[1], E.s);
-  if (hit.d > 18) { if (++E.far >= 3) E.off = true; return hit.d; }        // 18 m is the track half width plus phone error; three fixes in a row before we call it the pits or the paddock
-  const rejoin = E.off; E.far = 0; E.off = false;
+  if (hit.d > 18 * (E.offScale || 1)) { if (++E.far >= 3) E.off = true; return hit.d; }        // 18 m is the track half width plus phone error; three fixes in a row before we call it the pits or the paddock
+  const rejoin = E.off; E.far = 0; E.off = false; E.lastM = m;
   let v = f.spd; const prev = E.samples[E.samples.length - 1];
   if (E.s != null && rejoin) {                                              // back on the map after the pits: same lap count, new place on it, and no lap time until the line has been driven again
     let c = Math.floor(E.cum / E.n) * E.n + hit.i; if (c < E.cum - E.n / 2) c += E.n;
@@ -1234,7 +1255,7 @@ function lapFix(f) {          // f: { t (ms), lat, lon, spd (m/s or null), acc }
     if (dt > 0 && (v == null || isNaN(v))) v = Math.max(0, ds * E.L.step / dt);
     if (dt > .02 && dt < 1.6) E.acc = Math.max(-8, Math.min(5, ((v || 0) - E.v) / dt)) * .7; else E.acc = 0;
     const before = E.cum; E.cum += ds;
-    const k = Math.floor(E.cum / E.n); if (k > Math.floor(before / E.n) && ds > 0 && prev && (v || 0) > 8) {        // crossed the start line at speed (a pit-lane pass does not count)
+    const k = Math.floor(E.cum / E.n); if (k > Math.floor(before / E.n) && ds > 0 && prev && (v || 0) > 8 * (E.gate || 1)) {        // crossed the start line at speed (a pit-lane pass does not count)
       const tc = prev.t + (k * E.n - before) / ds * (f.t - prev.t), gapped = dt > 5;                             // a crossing inside a GPS gap cannot be timed
       if (E.lapStartT != null && tc - E.lapStartT > 20000 && !gapped) finishLap(tc, k * E.n);
       E.lapStartT = gapped ? null : tc; E.lapStartCum = k * E.n;
@@ -1251,12 +1272,13 @@ function lapTick(now) {       // runs ten times a second: carries the last fix f
   const age = Math.min(2.5, Math.max(0, (now - E.tFix) / 1000) + (E.lagKnown ? 0 : set.gpsDelay)), lv = LVL(E.L), at = c => +lv[mod(Math.floor(c), E.n)];   // a measured fix age is already in tFix; the allowance is for phones that report none
   const run = advance(E.cum, E.v, E.acc, age), cumNow = run.c, vNow = run.v;
   const evPos = ev => ev.i - (E.leadAdj[ev.key] || 0) / E.L.step;                                   // a corner whose call the driver keeps braking late for gets its word (and chirp) earlier
-  if (E.quiet || vNow < 3) { setTone(1); return { cum: cumNow, v: vNow, level: at(cumNow) }; }
+  const G = E.gate || 1;   // 1 on the track; smaller on the practice loop, where a jog counts as flat out
+  if (E.quiet || vNow < 3 * G) { setTone(1); return { cum: cumNow, v: vNow, level: at(cumNow) }; }
   const want = at(cumNow + vNow * set.toneLead / E.L.step); E.flatTicks = want === 1 ? E.flatTicks + 1 : 0;
   if (want !== 1 || E.flatTicks >= 2 || toneNow === 1) setTone(want);                                     // back to flat only once it has held for two ticks: a backward GPS snap must not play the go blip inside a brake zone
   const evOn = ev => ev.level >= 3 ? set.sayBrake : ev.level === 2 ? set.sayLift : set.sayFlat, busy = () => { try { return speechSynthesis.speaking || speechSynthesis.pending; } catch (e) { return false; } };
   const lead = set.wordLead + (set.mode === 'talk' ? 1.6 : 0) + (set.autoLead ? speechLag() : 0);      // plus how long this phone takes to start speaking, measured
-  if (set.mode !== 'tones' && vNow > 6) {                                                         // no words below about 13 mph: a crawl in the pit lane is not a lap
+  if (set.mode !== 'tones' && vNow > 6 * G) {                                                         // no words below about 13 mph: a crawl in the pit lane is not a lap
     const wc = advance(cumNow, vNow, E.acc, lead).c;
     if (E.wordCum != null && wc > E.wordCum && wc - E.wordCum < 45) for (const ev of E.events) {
       const p0 = evPos(ev), k = Math.ceil((E.wordCum - p0) / E.n), pos = p0 + k * E.n; if (pos <= E.wordCum || pos > wc) continue;
@@ -1269,7 +1291,7 @@ function lapTick(now) {       // runs ten times a second: carries the last fix f
     }
     E.wordCum = E.wordCum == null || wc < E.wordCum - 45 ? wc : Math.max(E.wordCum, wc);      // a noisy fix can pull the look-ahead back a few metres: never re-cross an event already spoken
   }
-  if (set.prepCue && set.mode !== 'tones' && set.sayBrake && vNow > 6) {                        // a rising chirp a second before each brake word, so the word only confirms the point
+  if (set.prepCue && set.mode !== 'tones' && set.sayBrake && vNow > 6 * G) {                        // a rising chirp a second before each brake word, so the word only confirms the point
     const pc = advance(cumNow, vNow, E.acc, lead + 1).c;
     if (E.prepCum != null && pc > E.prepCum && pc - E.prepCum < 45) for (const ev of E.events) {
       if (ev.level < 3) continue; const p0 = evPos(ev), pos = p0 + Math.ceil((E.prepCum - p0) / E.n) * E.n; if (pos <= E.prepCum || pos > pc) continue;
@@ -1278,7 +1300,7 @@ function lapTick(now) {       // runs ten times a second: carries the last fix f
     E.prepCum = E.prepCum == null ? (E.wordCum != null ? Math.min(pc, E.wordCum) : pc) : pc < E.prepCum - 45 ? pc : Math.max(E.prepCum, pc);   // seeded at the word mark, so a corner between the two marks still gets its chirp
   }
   // the lap time and the coaching point wait for a quiet moment: nothing to say for the next few seconds, and nothing still being said
-  if (E.queue.length && vNow > 6) {
+  if (E.queue.length && vNow > 6 * G) {
     const horizon = cumNow + vNow * (lead + 3) / E.L.step, soon = set.mode !== 'tones' && E.events.some(ev => ev.level >= 2 && evOn(ev) && ev.i + Math.ceil((cumNow - ev.i) / E.n) * E.n <= horizon);
     if (!soon && !busy()) { const q = E.queue.shift(); if (q.say) speak(q.text); if (E.onWord) E.onWord(q.text, 0); }
   }
@@ -1606,7 +1628,7 @@ function tryLock(R, announce) {
   store.set('wm.lock', k); lockInfo(); if (announce) toast('Map locked to the ' + (k.lay === 'nat' ? 'National' : 'International') + '. Typical fit error ' + k.rms.toFixed(1) + ' m. Lap count starts again.'); return k;
 }
 function liveStart() {
-  if (sim.on) simStop(); if (!('geolocation' in navigator)) { liveStatus('This browser has no location support.'); return; }
+  if (sim.on) simStop(); if (loop.on) loopStop(true); if (!('geolocation' in navigator)) { liveStatus('This browser has no location support.'); return; }
   if (reader.on) readStop(); audioInit(); keepAwake(true); live.rec = []; live.fixes = 0; live.on = true; live.lastFit = 0; live.lost = false; live.chk = 0; live.bad = 0; live.lag = 0; $('#liveBtn').textContent = 'Stop GPS';
   if (set.mode !== 'tones') speak('Coach on. Waiting for GPS.');           // spoken inside the button press, which is what lets the phone speak later from a timer
   const k = store.get('wm.lock', null); live.stored = !!k;
@@ -1642,6 +1664,39 @@ function liveStart() {
     pedalShow('#livePedal', s ? +LVL(E.L)[mod(Math.floor(s.cum + s.v * set.toneLead / E.L.step), E.n)] : 1);
   }, 100);
 }
+/* ---------------- the practice loop: the whole coach on a shrunk copy of the lap laid on the ground ---------------- */
+const loop = { on: false, watch: null, timer: null, origin: null, first: null, T: null, s: .333, fixes: 0 };
+function loopFit(origin, heading, sc) {    // a map transform that puts the start line at the origin, the pit straight along the heading, at scale sc (real metres per map metre)
+  const L = LY(), p0 = L.centre[0], p1 = L.centre[2], tx = p1[0] - p0[0], ty = p1[1] - p0[1];
+  const th = Math.atan2(heading[1], heading[0]) - Math.atan2(-ty, tx), c = Math.cos(th), sn = Math.sin(th);
+  return { th, s: sc, tx: -sc * (c * p0[0] - sn * -p0[1]), ty: -sc * (sn * p0[0] + c * -p0[1]), origin, lay: st.layout, rms: 0, cover: 1, key: st.layout + (st.chic ? '_c' : '_n') };
+}
+function loopDraw() { renderMap($('#loopmap'), { names: true, markers: true, kerbs: false, targets: false, select: false, dot: 'loopdot' }); }
+function loopStart() {
+  if (live.on || sim.on || walk.on) { toast('Stop the other GPS or demo run first.'); return; } if (!('geolocation' in navigator)) { $('#loopStatus').textContent = 'This browser has no location support.'; return; }
+  audioInit(); keepAwake(true); loop.s = parseFloat($('#loopScale').value) || .333; Object.assign(loop, { on: true, origin: null, first: null, T: null, fixes: 0 }); lapE.T = null; loopDraw(); $('#loopBtn').textContent = 'Stop practice loop';
+  $('#loopStatus').textContent = 'Waiting for a GPS fix. Stand where you can see the sky.'; speak('Practice loop. Waiting for GPS.');
+  loop.watch = navigator.geolocation.watchPosition(pos => {
+    const c = pos.coords, now = performance.now(); loop.fixes++; $('#loopAcc').textContent = Math.round(c.accuracy || 0);
+    if (!loop.origin) { loop.origin = { lat: c.latitude, lon: c.longitude }; $('#loopStatus').textContent = 'GPS ready. Walk straight ahead for about ten metres to set the pit straight.'; speak('GPS ready. Walk straight ahead for ten metres.'); return; }
+    if (!loop.T) {
+      const e = toENU(c.latitude, c.longitude, loop.origin), d = Math.hypot(e[0], e[1]); if (d < 8) { $('#loopStatus').textContent = 'Keep walking straight: ' + Math.round(d) + ' of 10 m.'; return; }
+      loop.T = loopFit(loop.origin, [e[0] / d, e[1] / d], loop.s); lapReset(loop.T); lapE.gate = .35; lapE.offScale = 1.5; lapE.onWord = t => { wordShow('#loopWord', t); }; lapE.onLap = lap => { $('#loopLast').textContent = fmtLap(lap.ms); renderDebrief(); };
+      $('#loopStatus').textContent = 'Loop laid out along your path, ' + Math.round(LY().total * loop.s) + ' m round. Follow the dot: Oblivion turns left first. Jog on flat, walk on brake.'; speak('Loop set. Follow the map. Oblivion turns left first.');
+    }
+    const d = lapFix({ t: now, lat: c.latitude, lon: c.longitude, spd: c.speed != null && !isNaN(c.speed) ? c.speed / loop.s : null, acc: c.accuracy });   // the phone's own speed, scaled up to the shrunk lap, so a jog counts as flat out; from track distance when the phone gives none
+    if (lapE.lastM) { const dot = $('#loopdot'); if (dot) dot.setAttribute('transform', 'translate(' + lapE.lastM[0].toFixed(1) + ' ' + lapE.lastM[1].toFixed(1) + ')'); }
+    $('#loopStatus').textContent = lapE.off ? 'Off the loop: walk back towards the track on the map.' : 'On the loop. ' + (d != null ? Math.round(d * loop.s) + ' m from the line you should be on.' : '');
+  }, err => { $('#loopStatus').textContent = err && err.code === 1 ? 'Location is blocked for this page. Allow it in the browser prompt, or in Settings, Safari, Location.' : 'No GPS fix (' + (err && err.message ? err.message : 'unknown error') + '). Move into the open.'; if (err && err.code === 1) loopStop(true); },
+  { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 });
+  loop.timer = setInterval(() => { const s_ = lapTick(performance.now()), E = lapE; if (!E.T) return; if (!(loop.tick = (loop.tick || 0) + 1) % 10) audioResume();
+    $('#loopLap').textContent = E.lapStartT != null ? fmtLap(performance.now() - E.lapStartT) : '0:00.0'; pedalShow('#loopPedal', s_ ? +LVL(E.L)[mod(Math.floor(s_.cum + s_.v * set.toneLead / E.L.step), E.n)] : 1); }, 100);
+}
+function loopStop(quiet) {
+  if (loop.watch != null) navigator.geolocation.clearWatch(loop.watch); loop.watch = null; clearInterval(loop.timer); loop.on = false; setTone(1); keepAwake(false); $('#loopBtn').textContent = 'Start practice loop';
+  if (lapE.T === loop.T) { lapE.gate = 1; lapE.offScale = 1; }
+  if (!quiet) { $('#loopStatus').textContent = lapE.laps.length ? 'Stopped after ' + lapE.laps.length + ' lap' + (lapE.laps.length === 1 ? '' : 's') + '. The debrief on the Coach tab has the corners.' : 'Stopped before a full lap.'; try { speechSynthesis.cancel(); } catch (e) { } renderDebrief(); }
+}
 const walk = { on: false, watch: null, pts: [], origin: null, dist: 0, said: 0, times: [], acc: null, t0: 0 };
 function tileImages(origin, cx, cy, size) {   // OpenStreetMap tiles under the walk, placed in the same metre frame as the trace (north up)
   const z = size < 140 ? 18 : size < 300 ? 17 : size < 700 ? 16 : 15, N = Math.pow(2, z), ll = toLL(cx, cy, origin), lat = ll[0], lon = ll[1];
@@ -1669,7 +1724,7 @@ function walkDraw() {
     '<rect x="' + (cx - size / 2 + size * .03) + '" y="' + (-cy + size / 2 - size * .12) + '" width="' + (10 + size * .04) + '" height="' + (size * .1) + '" fill="#fff" fill-opacity=".8"/><line x1="' + (cx - size / 2 + size * .05) + '" y1="' + (-cy + size / 2 - size * .06) + '" x2="' + (cx - size / 2 + size * .05 + 10) + '" y2="' + (-cy + size / 2 - size * .06) + '" stroke="#111" stroke-width="' + sw + '"/><text x="' + (cx - size / 2 + size * .05) + '" y="' + (-cy + size / 2 - size * .08) + '" font-size="' + (size * .05) + '" fill="#111">10 m</text>';
 }
 function walkStart() {          // a local test of the GPS the coach will use: the trace of a walk, drawn live, with the signal quality spoken
-  if (live.on) { toast('Stop the GPS coach first.'); return; } if (!('geolocation' in navigator)) { $('#walkStatus').textContent = 'This browser has no location support.'; return; }
+  if (live.on || loop.on) { toast('Stop the GPS coach or the practice loop first.'); return; } if (!('geolocation' in navigator)) { $('#walkStatus').textContent = 'This browser has no location support.'; return; }
   audioInit(); keepAwake(true); Object.assign(walk, { on: true, pts: [], origin: null, dist: 0, said: 0, times: [], acc: null, t0: performance.now() }); walkDraw(); $('#walkBtn').textContent = 'Stop walk test'; $('#walkStatus').textContent = 'Waiting for a GPS fix. Go outside or to a window.'; speak('Walk test. Waiting for GPS.');
   walk.watch = navigator.geolocation.watchPosition(pos => {
     const c = pos.coords, now = performance.now(); if (!walk.origin) { walk.origin = { lat: c.latitude, lon: c.longitude }; speak('GPS working. Accuracy ' + Math.round(c.accuracy || 0) + ' metres. Walk.'); }
@@ -1782,6 +1837,7 @@ $('#quizBtn').addEventListener('click', () => { const b = $('#quizBox'); b.hidde
 $('#quizA').addEventListener('click', e => { const b = e.target.closest('[data-quiz]'); if (b) quizAnswer(b.dataset.quiz); });
 $('#testSound').addEventListener('click', soundTest); $('#startSound').addEventListener('click', soundTest);
 $('#walkBtn').addEventListener('click', () => walk.on ? walkStop() : walkStart());
+$('#loopBtn').addEventListener('click', () => loop.on ? loopStop() : loopStart());
 document.addEventListener('click', e => {         // the Start tab's buttons jump to the right place on the Coach tab
   const t = e.target.closest('[data-go]'); if (!t) return; const go = t.dataset.go; setTab('coach');
   const openFor = id => { const d = $(id).closest('details'); if (d) d.open = true; };
@@ -1808,7 +1864,7 @@ bindNum('#setWordLead', 'wordLead'); bindNum('#setToneLead', 'toneLead'); bindNu
 $('#setMode').value = set.mode; $('#setMode').addEventListener('change', e => { set.mode = e.target.value; saveSettings(); });
 
 renderLegend(); refreshAll(); lockInfo(); renderDebrief(); walkDraw(); setTab(st.tab);
-window.__wm = { modelAgreement, guideOffset, pocketShow, walk, walkStart, walkStop, renderStart, D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, MK, modelLine, M, refTimes, mindTap, mind, quizAsk, quizAnswer, quiz, virtualStart, team, teamLog, teamTable, live, speechLag, speechLags, SHORT, setRec: r => { rec = r; }, getRec: () => rec };
+window.__wm = { loop, loopFit, loopStart, loopStop, modelAgreement, guideOffset, pocketShow, walk, walkStart, walkStop, renderStart, D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, MK, modelLine, M, refTimes, mindTap, mind, quizAsk, quizAnswer, quiz, virtualStart, team, teamLog, teamTable, live, speechLag, speechLags, SHORT, setRec: r => { rec = r; }, getRec: () => rec };
 })();
 </script>
 </body>

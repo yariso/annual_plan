@@ -26,6 +26,7 @@ python3 build/build.py              # embeds data/model.json in dist/index.html
 `model/laptime.py` finds the fastest possible lap for a point-mass kart on the traced track with an estimated hill: for any racing line it solves the speed profile at the limit of grip, engine and rear brakes, then it re-optimises the line over and over until it stops improving. Results go to `data/model.json` and `docs/laptime-model.md`, and the app shows them as the Model driver level and a Plan tab panel. Everything in it rests on estimates (hill, width, lap length, grip), so read the caveats in the report.
 
 ## What it does
+- A practice loop: the whole coach on a shrunk copy of the lap laid on the ground where you stand, so you can walk or jog round it in a field and hear every call, the lap time and the coaching before you ever reach the circuit.
 - The Start tab lays the journey out in order: learn the lap, test the phone at home with a walk test that draws your GPS trace live, then the GPS coach at the circuit, then the debrief.
 - At home before the day: a virtual lap talked round on the map, the lap in your head (tap at each corner with your eyes shut and it checks your rhythm against the demo lap), and a corner quiz on order and pedals.
 - Four driver levels, novice, intermediate, advanced and the physics model, and every feature follows the one chosen: the map's line and braking colours, the corner cards, the read-aloud lap, the virtual lap, the demo and the coach's calls.
