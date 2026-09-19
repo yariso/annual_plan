@@ -239,7 +239,8 @@ svg text{font-family:var(--display);fill:var(--ink)}
       <button type="button" class="btn" id="startSound">Test the sound</button>
     </div>
     <div class="status" id="walkStatus">Not running.</div>
-    <div class="mapbox" style="padding:2px"><svg id="walkmap" role="img" aria-label="Your walk" viewBox="-20 -20 40 40" style="max-height:260px"></svg></div>
+    <div class="mapbox" style="padding:2px"><svg id="walkmap" role="img" aria-label="Your walk" viewBox="0 0 100 60" style="max-height:300px"></svg></div>
+    <p class="small muted" style="margin:2px 0 0">Map tiles: &copy; OpenStreetMap contributors. They load over the internet; without signal you still get the trace.</p>
     <div class="read">
       <div><b id="walkDist">0</b><span>metres walked</span></div>
       <div><b id="walkAcc">none</b><span>accuracy, m</span></div>
@@ -1621,17 +1622,30 @@ function liveStart() {
   }, 100);
 }
 const walk = { on: false, watch: null, pts: [], origin: null, dist: 0, said: 0, times: [], acc: null, t0: 0 };
+function tileImages(origin, cx, cy, size) {   // OpenStreetMap tiles under the walk, placed in the same metre frame as the trace (north up)
+  const z = size < 140 ? 18 : size < 300 ? 17 : size < 700 ? 16 : 15, N = Math.pow(2, z), ll = toLL(cx, cy, origin), lat = ll[0], lon = ll[1];
+  const tx = (lon + 180) / 360 * N, ty = (1 - Math.log(Math.tan(lat * RAD) + 1 / Math.cos(lat * RAD)) / Math.PI) / 2 * N;
+  const tileLL = (x, y) => [Math.atan(Math.sinh(Math.PI * (1 - 2 * y / N))) / RAD, x / N * 360 - 180];
+  let out = ''; const r = Math.max(1, Math.min(3, Math.ceil(size / (40075016.686 * Math.cos(lat * RAD) / N) / 2)));   // enough tiles to cover the view, never more than 49
+  for (let dx = -r; dx <= r; dx++) for (let dy = -r; dy <= r; dy++) {
+    const x = Math.floor(tx) + dx, y = Math.floor(ty) + dy; if (y < 0 || y >= N) continue;
+    const a = tileLL(x, y), b = tileLL(x + 1, y + 1), pa = toENU(a[0], a[1], origin), pb = toENU(b[0], b[1], origin);
+    out += '<image href="https://tile.openstreetmap.org/' + z + '/' + ((x % N) + N) % N + '/' + y + '.png" x="' + pa[0].toFixed(1) + '" y="' + (-pa[1]).toFixed(1) + '" width="' + (pb[0] - pa[0]).toFixed(1) + '" height="' + (pa[1] - pb[1]).toFixed(1) + '" opacity=".85" preserveAspectRatio="none"/>';
+  }
+  return out;
+}
 function walkDraw() {
-  const svg = $('#walkmap'); if (!svg) return; const P = walk.pts; if (!P.length) { svg.innerHTML = ''; return; }
+  const svg = $('#walkmap'); if (!svg) return; const P = walk.pts;
+  if (!P.length) { svg.setAttribute('viewBox', '0 0 100 60'); svg.innerHTML = '<text x="50" y="27" text-anchor="middle" font-size="5" fill="var(--muted)">Your trace appears here, over a street map,</text><text x="50" y="35" text-anchor="middle" font-size="5" fill="var(--muted)">once the walk test has a fix.</text>'; return; }
   let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9; P.forEach(p => { x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); });
   const pad = Math.max(8, (walk.acc || 0)), w = Math.max(30, x1 - x0 + 2 * pad), h = Math.max(30, y1 - y0 + 2 * pad), cx = (x0 + x1) / 2, cy = (y0 + y1) / 2, size = Math.max(w, h);
   svg.setAttribute('viewBox', (cx - size / 2) + ' ' + (-cy - size / 2) + ' ' + size + ' ' + size);
   const last = P[P.length - 1], sw = size / 200;
-  svg.innerHTML = '<polyline points="' + P.map(p => p[0].toFixed(1) + ',' + (-p[1]).toFixed(1)).join(' ') + '" fill="none" stroke="var(--ink)" stroke-width="' + (sw * 1.5) + '" stroke-linejoin="round" stroke-linecap="round"/>' +
+  svg.innerHTML = tileImages(walk.origin, cx, cy, size) + '<polyline points="' + P.map(p => p[0].toFixed(1) + ',' + (-p[1]).toFixed(1)).join(' ') + '" fill="none" stroke="#111" stroke-width="' + (sw * 2) + '" stroke-linejoin="round" stroke-linecap="round"/>' +
     '<circle cx="' + P[0][0].toFixed(1) + '" cy="' + (-P[0][1]).toFixed(1) + '" r="' + (sw * 3) + '" fill="var(--muted)"/>' +
     (walk.acc ? '<circle cx="' + last[0].toFixed(1) + '" cy="' + (-last[1]).toFixed(1) + '" r="' + walk.acc.toFixed(1) + '" fill="var(--accent)" fill-opacity=".12" stroke="var(--accent)" stroke-width="' + sw + '" stroke-dasharray="' + (sw * 3) + '"/>' : '') +
-    '<circle cx="' + last[0].toFixed(1) + '" cy="' + (-last[1]).toFixed(1) + '" r="' + (sw * 4) + '" fill="var(--accent)"/>' +
-    '<line x1="' + (cx - size / 2 + size * .05) + '" y1="' + (-cy + size / 2 - size * .06) + '" x2="' + (cx - size / 2 + size * .05 + 10) + '" y2="' + (-cy + size / 2 - size * .06) + '" stroke="var(--ink)" stroke-width="' + sw + '"/><text x="' + (cx - size / 2 + size * .05) + '" y="' + (-cy + size / 2 - size * .08) + '" font-size="' + (size * .05) + '" fill="var(--muted)">10 m</text>';
+    '<circle cx="' + last[0].toFixed(1) + '" cy="' + (-last[1]).toFixed(1) + '" r="' + (sw * 4) + '" fill="var(--accent)" stroke="#fff" stroke-width="' + sw + '"/>' +
+    '<rect x="' + (cx - size / 2 + size * .03) + '" y="' + (-cy + size / 2 - size * .12) + '" width="' + (10 + size * .04) + '" height="' + (size * .1) + '" fill="#fff" fill-opacity=".8"/><line x1="' + (cx - size / 2 + size * .05) + '" y1="' + (-cy + size / 2 - size * .06) + '" x2="' + (cx - size / 2 + size * .05 + 10) + '" y2="' + (-cy + size / 2 - size * .06) + '" stroke="#111" stroke-width="' + sw + '"/><text x="' + (cx - size / 2 + size * .05) + '" y="' + (-cy + size / 2 - size * .08) + '" font-size="' + (size * .05) + '" fill="#111">10 m</text>';
 }
 function walkStart() {          // a local test of the GPS the coach will use: the trace of a walk, drawn live, with the signal quality spoken
   if (live.on) { toast('Stop the GPS coach first.'); return; } if (!('geolocation' in navigator)) { $('#walkStatus').textContent = 'This browser has no location support.'; return; }
@@ -1772,7 +1786,7 @@ bindNum('#setWordLead', 'wordLead'); bindNum('#setToneLead', 'toneLead'); bindNu
 ['toneBrake', 'toneLift', 'goBlip', 'sayBrake', 'sayLift', 'sayFlat', 'lapSay', 'coachSay', 'prepCue', 'autoLead'].forEach(k => bindChk('#set_' + k, k));
 $('#setMode').value = set.mode; $('#setMode').addEventListener('change', e => { set.mode = e.target.value; saveSettings(); });
 
-renderLegend(); refreshAll(); lockInfo(); renderDebrief(); setTab(st.tab);
+renderLegend(); refreshAll(); lockInfo(); renderDebrief(); walkDraw(); setTab(st.tab);
 window.__wm = { modelAgreement, guideOffset, pocketShow, walk, walkStart, walkStop, renderStart, D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, MK, modelLine, M, refTimes, mindTap, mind, quizAsk, quizAnswer, quiz, virtualStart, team, teamLog, teamTable, live, speechLag, speechLags, SHORT, setRec: r => { rec = r; }, getRec: () => rec };
 })();
 </script>
