@@ -2,7 +2,20 @@
 
 | Claim | Status | Sources |
 |---|---|---|
-| Corner order, both layouts | Agreed | BUKC National guide, NRDD International lap, KCL Motorsport 2013 guide, circuit map |
+| Corner order, both layouts | Agreed | BUKC National guide, NRDD International lap, KCL Motorsport 2013 guide, Club100 venue page and race report, circuit map |
+| Direction of travel: clockwise | Derived | Every centreline in data.json closes clockwise and each corner's hand matches the guides; no page states the word |
+| Turn numbers | Convention | International numbers follow BUKC and NRDD (Fine Lady unnumbered, Christmas T3, Pit Bend T11); the BUKC National guide numbers only Turns 1 and 2, so the National count here follows the same pattern. Other listings count 12, 13 or 14 turns |
+| Alternative names: Chapmans for the left into The Boot (KCL 2013), Wilkins and Osiers for Parker and Chapmans (Club100 race report), Osiers before the short straight to The Boot (Club100 venue page), Championship Bend for the last corner (Kart Directory) | Single sources each | Search excerpts only |
+| Lap lengths | Disagree | Venue 1200 m and 960 m; WMKC 2025 and BKC 2025 supplementary regulations 1054 m; BKC event page, IAME and RJ Racing 1190 m; no post-chicane figure published. The map is scaled to 1200 m with the chicane; the National then measures 969 m (978 m with the chicane). The Coach tab shows the length measured from a locked GPS trace |
+| Marker positions on the map (22 m, 24 m and 14 m before turn-in) | Assumed | Set in build_data.py, not traced; the experienced braking points are drawn at them by definition |
+| Chicane approach: 6 to 8 m of straight after The Boot on the trace | Unverified | Read from a small map; the designer says drivers follow the penultimate apex for longer and stay right |
+| Start line position | Unchecked | Where the trace begins, 26 m before Oblivion; not checked against the venue's timing line |
+| Hire fleet: BirelART N35 390cc, arrived autumn 2024, up to 50 mph; sessions on both layouts, 20-minute voucher on the National; 450 m Mill circuit for juniors; Sprint, Grand Prix and Endurance formats; age and height limits differ between pages | Venue pages, search excerpts | whiltonmill.co.uk arrive-and-drive, voucher, open races and Open Sprint pages; Facebook fleet post; Alpha Timing session titles |
+| Chicane not always used at hire events; run-off a bog in the rain | Single report | CUAC October 2024: the old layout was kept that day because a cycle event had used it and the new tarmac was the only wet surface |
+| Wet: turn in very late and turn quickly to full lock off the rubber | Single source | Kart Directory notes on the Rich Tea Racing wet lap |
+| Flags | General | UK karting guides (Team Karting, Jack Stedman Racing, Flow Racers); not Whilton's briefing |
+| Radio or audio to the driver at race meetings | Club100 only | Club100 2021 rules say pit-to-kart radio is not permitted; Motorsport UK wording not checked; Whilton's hire rule on phones and earpieces not found |
+| Phone behaviour (GPS stops when locked, wake lock support, silent switch, Bluetooth latency) | From memory, unverified | Could not be checked in this session |
 | Oblivion and Crook as a pair, lift then flat | Agreed | BUKC, NRDD, KCL |
 | Crook apex timing | Sources disagree | BUKC (turn in early) against KCL 2013 (late apex) |
 | Christmas: marshal post on the left, hill shortens the stop, late apex | Agreed | BUKC, NRDD, KCL |
@@ -26,6 +39,15 @@
 
 ## Links
 - https://bukc.co.uk/circuits/whilton-mill-national/
+- https://bukc.co.uk/circuits/whilton-mill-international/
+- https://www.club100.co.uk/circuit-listing/whilton-mill/
+- https://club100.co.uk/race-report/newman-battles-through-to-take-title-with-another-whilton-triumph/
+- https://kartdirectory.racing/uk/video/whilton-mill-international-wet-with-rich-tea-racing/
+- https://www.whiltonmill.co.uk/individuals/arrive-drive/
+- https://www.whiltonmill.co.uk/individuals/open-races/
+- https://www.whiltonmillkc.co.uk/wp-content/uploads/sites/3/2025/10/WMKC-SRs-Club-Championship-Rounds-2025-V14-clean.pdf
+- https://results.alphatiming.co.uk/whilton
+- https://www.kartingeverything.com/2019/01/29/track-limits-has-it-gone-too-far/
 - https://nrdd.racing/track-guide/whilton-mill-track-guide/
 - https://kclmotorsport.wordpress.com/2013/06/23/whilton-mill-track-guide-club-100s/
 - https://www.cuautomobileclub.org/post/varsity-2024
@@ -37,3 +59,7 @@
 - Circuit changes explained: https://www.youtube.com/watch?v=0OREA7Ejbi0
 - In-depth 2021 guide: https://www.youtube.com/watch?v=aenDbbbgKio
 - Rich Tea Racing wet and dry International laps (Kart Directory video pages)
+- Chicane analysis from the week it opened, March 2024: https://m.youtube.com/watch?v=OtTFytSbqvo
+- The venue's Monday Night Race Club on how to take the chicane in a hire kart: https://www.facebook.com/mondaynightraceclub/videos/how-the-chicane-should-be-taken-whilton-mill-go-karting-and-outdoor-activities/651790110561495/
+- Alpha Live first-test-day footage of the new final sector (kerbs): title only seen
+- The Whilton Mill Kart Club 2025 supplementary regulations PDF may hold circuit-specific track-limit notes

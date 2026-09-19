@@ -17,7 +17,7 @@ python tests/test_coach.py
 In a sandbox with a preinstalled Chromium (such as Claude Code on the web) install the Playwright version whose Chromium revision matches it instead of running `playwright install`; Playwright 1.56 matches Chromium revision 1194.
 
 ## What it does
-- Before the race: the Map, Corners and Plan tabs give the line, the pedal plan, the brake marker and a kerb verdict for every corner, plus a session plan. On the Coach tab, Read me the lap speaks the whole lap corner by corner for the queue.
+- Before the race: the Map, Corners and Plan tabs give the line, the pedal plan, the brake marker and a kerb verdict for every corner, plus a session plan, what to bring and ask at the briefing, the flags, the hire-kart facts and what was checked against which source. On the Coach tab, Read me the lap speaks the whole lap corner by corner for the queue.
 - During the race: tones and words in the earpiece for every lift and brake, the lap time and gap to best after each lap, one coaching point per lap, and GPS ready, lost and back announcements.
 
 ## Share with team mates

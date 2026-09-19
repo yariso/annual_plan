@@ -247,19 +247,20 @@ svg text{font-family:var(--display);fill:var(--ink)}
       <div class="row">
         <button type="button" class="btn primary" id="simBtn">Start demo lap</button>
         <label class="f" style="flex:1;min-width:170px">GPS quality to simulate
-          <select id="simRate"><option value="1">Phone, 1 fix per second</option><option value="10">Receiver, 10 per second</option><option value="25">Receiver, 25 per second</option></select>
+          <select id="simRate"><option value="1">Phone, 1 fix per second, about 5 m accuracy</option><option value="10">Receiver, 10 per second</option><option value="25">Receiver, 25 per second</option></select>
         </label>
       </div>
       <label class="sw"><input type="checkbox" id="simBad"> Demo driver makes novice mistakes, so the coach has something to say</label>
-      <p class="small muted" style="margin-top:8px">The demo follows the layout, driver level and dry or wet setting chosen on the Map tab. Turn your volume up and let it run two laps to hear the coaching.</p>
+      <p class="small muted" style="margin-top:8px">The demo follows the layout, driver level and dry or wet setting chosen on the Map tab. Turn your volume up and let it run two laps to hear the coaching. The demo kart is a rough stand-in for a hire kart at up to about 50 mph; its speeds and lap times are guesses, not targets.</p>
     </div>
 
     <div class="panel">
       <h3>At the circuit</h3>
       <ol>
-        <li>Press Start GPS, wait for it to say GPS ready, zip the phone away and drive. After one full lap the app fits the track map to your GPS trace, says Map locked, and remembers the lock for next time.</li>
-        <li>From then on you get the tones, the words, the lap time and gap to your best each lap, and one coaching point on the climb to Christmas. If the phone loses its fix it says GPS lost and goes quiet, then GPS back when it returns.</li>
-        <li>In the pits, read the debrief below.</li>
+        <li>On the Map tab set the chicane on or off, the driver level and dry or wet before you start. The lock finds International or National from your trace, but it cannot tell the chicane apart. The lap runs clockwise; the arrow at the start line shows the direction.</li>
+        <li>Press Start GPS, wait for it to say GPS ready, zip the phone away and drive. After one full lap the app fits the track map to your GPS trace, says Map locked, and remembers the lock for next time. If the circuit is running the other layout today it re-locks itself once a quarter of your fixes fall off the map, or press Forget map lock before you start.</li>
+        <li>From then on you get the tones and the words, and at the next quiet moment after the line the lap time with the gap to your best and one coaching point. If the phone loses its fix it says GPS lost and goes quiet, then GPS back when it returns. It cannot see flags: a yellow flag overrides anything it says.</li>
+        <li>In the pits, read the debrief below. The venue times every session and prints your laps: compare them with the lap times here, because at one fix a second the app can be a few tenths out on the line. Its monthly rental leaderboard shows what quick hire drivers do on each layout.</li>
       </ol>
       <div class="pedalnow" id="livePedal" aria-live="off">Flat out</div>
       <div class="word" id="liveWord" aria-live="assertive"></div>
@@ -322,7 +323,9 @@ svg text{font-family:var(--display);fill:var(--ink)}
       <li>Words: Hard brake, Firm brake, Dab, Lift, Flat. They match levels 5 to 1 on the map.</li>
       <li>Tone pitch: high for full braking, lower for firm and light braking, a soft hum for a lift or for coasting to the apex after braking. Silence means full throttle.</li>
       <li>The tone starts a fraction early to allow for your reaction time. If you find yourself braking late, raise the tone lead.</li>
-      <li>With a phone giving one fix a second, the start of a tone is good to about 10 metres and its end to rather less, because a braking zone only lasts a second or so. At 10 to 25 fixes a second both are good to a metre or two.</li>
+      <li>With a phone giving one fix a second, the start of a tone is good to about 10 metres and its end to rather less, because a braking zone only lasts a second or so. At 10 to 25 fixes a second the receiver stops being the limit. What is left is the map itself, traced from a drawing and locked to your trace with a fit error of a few metres (shown under the Start GPS button), and the brake zones, which are estimates until you calibrate them from your own laps.</li>
+      <li>The word lead counts from when the word starts, not when it ends, and phones take a moment to start speaking. Run the demo with your earpiece in and raise the word lead until the word has finished before the tone starts.</li>
+      <li>In the wet, Talk me round uses general wet sentences (off the dry line, no kerbs, gentle) rather than the corner guides, because no Whilton-specific wet guide exists in writing.</li>
     </ul>
   </div>
 
@@ -334,26 +337,27 @@ svg text{font-family:var(--display);fill:var(--ink)}
       <button type="button" class="btn small" id="saveCsv">Save recording as CSV</button>
       <label class="btn small" style="display:inline-grid;place-items:center">Load a CSV from a lap timer<input type="file" id="loadFile" accept=".csv,.txt" hidden></label>
     </div>
-    <p class="small muted" style="margin:8px 0 0">Coaching compares each corner with your own best through it, and with what the guide expects there: flat, lift or brake. It looks at where you started slowing, your slowest speed and how soon you were accelerating again.</p>
+    <p class="small muted" style="margin:8px 0 0">Coaching compares each corner with your own best through it, and with what the guide expects there: flat, lift or brake. It looks at where you started slowing, your slowest speed and how soon you were accelerating again. A loaded file needs latitude, longitude and time columns: time as seconds, milliseconds, a clock or a date stamp. Speed is read as m/s unless the column name or a units row says km/h, mph or knots.</p>
   </div>
 
   <div class="panel">
     <h3>Hearing it inside a helmet</h3>
     <ul>
       <li>Kart coaches already talk to drivers through in-ear race earpieces worn under the helmet, so the listening side is proven. The foam-tipped or custom-moulded kind sold with kart radio systems blocks engine noise and sits flat under the helmet padding. Ordinary earbuds tend to get dragged out as the helmet goes on.</li>
-      <li>Wire them to the phone if you can. Bluetooth adds roughly a fifth of a second. If you use it, add 0.2 to both lead times above.</li>
-      <li>Carry the phone the way coaching radios are carried: zipped inside the suit or strapped to the rib protector, never loose. A phone against your body sees less sky, so check the accuracy readout before trusting it.</li>
+      <li>Wire them to the phone if you can. Bluetooth adds roughly a fifth of a second. If you use it, add 0.2 to both lead times above. Most phones now have no headphone socket, so you will need the phone maker's USB-C or Lightning to 3.5 mm adapter, and race earpieces usually end in a 3.5 mm mono plug or a radio connector, so check it fits or get a lead that does. Route the cable inside the suit and out at the collar so nothing can catch on the wheel.</li>
+      <li>Carry the phone the way coaching radios are carried: zipped inside the suit or strapped to the rib protector, never loose. A phone against your body sees less sky, so check the accuracy readout before trusting it. In hire kit you will have neither a closed pocket nor a rib protector, so ask the desk whether a phone in an inside pocket or an armband is allowed. If it is not, keep this app for your own kit.</li>
       <li>Set the volume with your helmet on and an engine running nearby. You should still be able to hear karts around you.</li>
     </ul>
   </div>
   <div class="panel">
     <h3>Before you take it on track</h3>
     <ul>
-      <li>Ask the circuit first. Hire sessions usually ban loose items and may not allow earpieces, and race meetings do not allow coaching audio to the driver. Practice and test days are the realistic place for this.</li>
-      <li>Never hold the phone or look at it while driving.</li>
+      <li>Ask the circuit first. Hire circuits generally ban phones and loose items on track and may not allow earpieces; Whilton's own written rule was not found, so ask at the desk before you sign on. Club100 rules say pit-to-kart radio is not permitted, and assume any other race series is the same until you have read its regulations. For a hire driver the realistic place for this is an ordinary arrive-and-drive session with the venue's permission, or the venue's Arrive and Drive PLUS coaching session; Whilton's Owner Practice days are for drivers with their own karts.</li>
+      <li>Never hold the phone or look at it while driving. The lap timer ignores the start line below about 18 mph, so a pit-lane pass does not count as a lap.</li>
+      <li>Press Test the sound once before every session, with the phone set up exactly as you will run it, and check you hear both the word and the tone.</li>
       <li>If location is blocked when you press Start GPS, open this page in Safari or Chrome instead of inside the Claude app, or put the downloaded copy on any HTTPS web host.</li>
-      <li>Keep the screen on. The browser stops GPS when the phone locks, so set auto-lock to never for the session.</li>
-      <li>On an iPhone, turn off silent mode or the tones will not play.</li>
+      <li>Keep the screen on. The app asks the browser to keep it awake, which works in Chrome for Android and in Safari on iOS 16.4 or later, but browsers stop GPS once the phone locks. As a backstop set the screen timeout as long as your phone allows, and on an iPhone turn off Low Power Mode, which forces a 30 second lock. Lock the phone to this page so pocket touches cannot stop it: Guided Access on an iPhone, app pinning on Android.</li>
+      <li>On an iPhone, turn off silent mode (the side switch, or the Action button or Control Centre on newer models) or the tones, and probably the words, will not play.</li>
     </ul>
   </div>
 </section>
@@ -404,7 +408,7 @@ const CARDS = {
     kerbX: 'With care. The coach\'s line runs out over the concrete on the left, but the concrete is beyond the white line. Ask at the briefing whether it counts as track. If it does, dry only: let the kart run onto it rather than fighting it back, never aim for it, and stop if warned once. You are lifting for these two corners anyway, so you do not need it.',
     mistake: 'Getting Oblivion wrong, arriving badly placed, and bogging down on the bumps.',
     wet: 'A light brake. Keep off the concrete run-off, which is slippery when wet.' },
-  finelady: { name: 'Fine Lady', kind: 'Right kink on the climb', prims: ['finelady'], lv: { novice: 1, expert: 1 },
+  finelady: { name: 'Fine Lady', kind: 'Right kink before the climb', prims: ['finelady'], lv: { novice: 1, expert: 1 },
     doN: 'Flat out, always.', doE: 'Flat out, always.',
     marker: 'None.',
     line: 'Straighten it as much as the track allows, then ease over to the left as you climb towards Christmas.',
@@ -415,7 +419,8 @@ const CARDS = {
     doN: 'Your first big stop. Brake hard in a straight line, well before the marshal post to begin with. Come off the brake, turn in, and go back to full throttle once you pass the apex.',
     doE: 'The hill helps you stop, so braking at the marshal post is possible on a grippy day.',
     marker: 'Marshal post on the left. Fast drivers brake at it. Start well before it and move your braking point a little later each lap.',
-    line: 'Approach on the left, turn in late and take a late apex. Do not let the kart run fully wide on the way out, because a left kink follows straight away. One guide puts the ideal exit about a third of the track width in from the left.',
+    line: { intl: 'Approach on the left, turn in late and take a late apex. Do not let the kart run fully wide on the way out: the left kink and Inkermans follow at once, and the coach lap says slower in, faster out. A 2013 guide puts the ideal exit about a third of the track width in from the left.',
+      nat: 'Approach on the left, turn in late and take a late apex. Aim to exit about a third of the track width in from the left so the kink stays flat. The BUKC advanced notes say some quick drivers brake later and let the kart run all the way across, accepting a slower kink because the hairpin comes straight after. Learn the tidy exit first.' },
     kerbA: 'Look first. No guide mentions it. Sort the braking and the late apex first, they matter far more. Flat and painted: a light clip with the two inside wheels once your braking is consistent. Raised: stay a wheel\'s width off, and never drop the inside rear onto it on the throttle.',
     kerbX: 'You should not reach it. Running that wide spoils the kink.',
     mistake: 'Braking too late in the first few laps, arriving too fast and running wide. If that happens, brake earlier next time round. If you crawl to the apex, brake a little later. If a wheel locks, ease off the pedal and press again.',
@@ -437,7 +442,7 @@ const CARDS = {
     kerbX: 'Stay off. There is astroturf and dirty track on the outside. Bring the kart back to the middle, or right of it, for the first left of Zulu.',
     mistake: 'Staying out wide on the exit, which leaves you badly placed for Zulu.',
     note: 'Slow corners like this one forgive rough steering. Fast corners do not.',
-    wet: 'Earlier, gentler braking. Downhill and loose, so wait for the kart to turn before you touch the throttle.' },
+    wet: 'Earlier, gentler braking. Downhill, off camber by the Club100 description of this section, and loose, so wait for the kart to turn before you touch the throttle.' },
   inkermans: { name: 'Inkermans', kind: 'Fast right, downhill', prims: ['inkermans'], lv: { novice: 1, expert: 1 },
     doN: 'Flat out. If it feels too quick in your first laps, a brief lift at turn-in is fine.',
     doE: 'Flat out. It is full throttle from Christmas all the way to the Ashby hairpin, so smoothness is what counts.',
@@ -455,7 +460,7 @@ const CARDS = {
     kerbX: 'With care. The coach\'s line uses the concrete on the left to carry speed out, but the concrete is beyond the white line. Briefing permitting and dry only, let the kart drift onto it rather than steering against it, and keep off the grass beyond.',
     mistake: 'Braking too deep and missing the apex.',
     pass: 'The second-best passing place.',
-    wet: 'Off camber and downhill: brake early and in a straight line. Try the outside of the hairpin, where there is less rubber, and stay off the run-off.' },
+    wet: 'Off camber and downhill: brake early and in a straight line. Stay a kart width or two off the inside kerb, where there is less rubber, and stay off the run-off.' },
   parker: { name: 'Parker', kind: 'Fast left', prims: ['parker'], lv: { novice: 3, expert: 3 },
     doN: 'A light dab of brake, then one smooth turn. Do not try it flat.',
     doE: 'Nearly flat, but a dab and a tidy line is quicker.',
@@ -469,10 +474,11 @@ const CARDS = {
     doN: 'A quick, firm stab of brake in a straight line. Turn in later than feels natural and aim for a late apex.',
     doE: 'Quick sharp stab, late turn-in, hook the late apex.',
     marker: 'None given. It arrives quickly after Parker.',
-    line: 'Late turn-in, late apex, then a clean run onto the back straight. The exit matters more than the entry.',
+    line: 'Late turn-in, late apex, then a clean run onto the short straight down to The Boot. The exit matters more than the entry.',
     kerbA: 'Look first. No guide mentions the apex kerb. Hook the apex on the tarmac; only if the sighting lap shows a flat kerb, let the inside front touch it late in the corner. It is off camber, so a bounce here sends you out towards the big exit kerb.',
     kerbX: 'With care. This is the big kerb on the outside of the exit. The coach\'s guide says you can run on it, but never thump it with a rear wheel because that kills the revs: outside front at most. If you need it every lap you are carrying too much speed in. As a novice, aim to finish the corner just inside it. Check whether tyres sit on it that day; the documented tyre stack is at Parker.',
-    mistake: 'Turning in early, or carrying too much speed and thumping the outside kerb. A small right kink follows before the straight, so a wide exit here puts you on its inside.',
+    mistake: 'Turning in early, or carrying too much speed and thumping the outside kerb. The coach lap says a good exit drifts right to touch the kerb, but a rear wheel on it kills the revs, so as a novice finish just inside it.',
+    note: 'The map shows a right-hand bend between the exit of Chapmans and the straight down to The Boot. No guide mentions it, so treat it as part of the exit: the line drifts right out of Chapmans, which puts you on its inside.',
     pass: 'The late turn-in leaves the inside open. Expect to be passed here, and look for the same gap yourself.',
     wet: 'Off camber. Earlier braking, a rounder and wider arc, and stay off the big exit kerb.' },
   zulu: { name: 'Zulu chicane', kind: 'Left, right kink, left', prims: ['zulu1', 'zulu2', 'zulu3'], lv: { novice: 2, expert: 2 },
@@ -481,29 +487,29 @@ const CARDS = {
     marker: 'None. It is a rhythm section.',
     line: 'After the first apex keep the kart to the left, so you can apex the right kink late. After the kink sit slightly right, then turn in early for the last left.',
     kerbs: 'First left and the right kink: no guide describes their kerbs, so look first. A light clip of a low painted kerb with the inside wheels is harmless but not needed. Last left, inside: use all of the painted kerb, inside front on the first lap, then both inside wheels. Last left, exit: with care. The guide\'s race-kart line drifts out to touch the exit kerb; let the kart run out under power, but touch it with the outside front only once the sighting lap has shown it is flat, and do not steer to reach it.',
-    mistake: 'Rushing the first two parts and spoiling the exit of the last left. That costs speed along the whole back straight.',
-    wet: 'Lift where you would be flat in the dry, and brake lightly for the last left. Keep off the painted kerb.' },
+    mistake: 'Rushing the first two parts and spoiling the exit of the last left. That costs speed all the way down to The Boot.',
+    wet: 'Club100 describes this section as off camber, so water runs across it. Lift where you would be flat in the dry, brake lightly for the last left, and keep off the painted kerb.' },
   boot: { name: 'The Boot', kind: 'Left, then a long right', prims: ['boot1', 'boot2', 'boot3'], lv: { novice: 5, expert: 5 },
     doN: 'Your other big stop. Brake hard in a straight line, well before the marshal post at first. Take the left-hander slower than you think you need to, coast to the apex of the right-hander, then squeeze the throttle back on.',
     doE: { c: 'Brake at the marshal post. Keep the left-hander tight and carry speed through the right-hander, ready to brake again for the chicane.', n: 'Brake at the marshal post. Keep the left-hander tight and take the right-hander flat.' },
-    marker: 'Marshal post on the right of the back straight. Three guides agree on it. One also uses the pit entry markings: be just to the right of them before you turn into the right-hander.',
+    marker: 'Marshal post on the right of the short straight before The Boot. Three guides agree on it. One also uses the pit entry markings: be just to the right of them before you turn into the right-hander.',
     line: { c: 'Approach on the right. Coming out of the left, do not let the kart drift past the middle of the track. Pull it back to the left, then apex the right-hander. With the chicane in use, hold the kart over to the right through the second half of the corner so you arrive on the right-hand side for the chicane.',
-      n: 'Approach on the right. Coming out of the left, do not let the kart drift past the middle of the track. Pull it back to the left, then apex the right-hander. Ignore the second apex and keep to the middle of the track on the exit, as the coach\'s guide says, so you have room to set up the final corner.' },
+      n: 'Approach on the right. Coming out of the left, do not let the kart drift past the middle of the track. Pull it back to the left, then apex the right-hander. Ignore the second apex. The guides differ on the exit: the BUKC National notes let the kart run out to the edge, the NRDD lap keeps it to the middle of the track to line up the final corner. As a novice keep to the middle; either works if you are smooth.' },
     kerbs: { c: 'Left-hander: no guide mentions its kerb, so look first and stay off it by default; you do not need it. Right-hander, inside: the coach calls it nasty, so skim it with the inside front at most, never the rears, and only once the corner is consistent. Second apex: stay a wheel\'s width off it, because you are about to brake. Exit: you stay right for the chicane, so you do not reach the outside.',
-      n: 'Left-hander: no guide mentions its kerb, so look first and stay off it by default; you do not need it. Right-hander, inside: the coach calls it nasty, so skim it with the inside front at most, never the rears, and only once the corner is consistent. Second apex: ignore it. Exit: keep to the middle of the track, so you never reach the outside.' },
+      n: 'Left-hander: no guide mentions its kerb, so look first and stay off it by default; you do not need it. Right-hander, inside: the coach calls it nasty, so skim it with the inside front at most, never the rears, and only once the corner is consistent. Second apex: ignore it. Exit: keep to the middle of the track and you never reach the outside; if you let it run out as the BUKC notes allow, stay inside the white line.' },
     mistake: { c: 'Attacking the left-hander. Give up speed there so the right-hander and the chicane after it flow.', n: 'Attacking the left-hander. The right-hander after it is the most important corner on the lap, because its exit speed carries through Pit Bend, along the pit straight and up the hill to Christmas.' },
     pass: 'A move between the left and the right is possible but easy to mistime.',
     wet: 'Earlier, gentler braking. Stay off the harsh inside kerb entirely.' },
   chicane: { name: 'Chicane', kind: 'Tight left, built in 2024', prims: ['chic1'], lv: { novice: 4, expert: 4 },
-    doN: 'Brake firmly in a straight line for a moment as you leave The Boot, then turn in to the tight left. There is grass straight ahead at the end of the braking zone, so brake a touch early and do not lock up. Be patient, because the right-hander that follows is the one that matters.',
+    doN: 'Brake firmly as the right-hander of The Boot opens out, then turn in to the tight left. On the map there is almost no straight between The Boot and the chicane, so expect to start braking while you are still coming off the right-hander, and keep the wheel as straight as you can. The run-off straight ahead at the end of the braking zone is soft ground, a bog in the rain by one 2024 report, so brake a touch early and do not lock up. Be patient, because the right-hander that follows is the one that matters.',
     doE: 'A short, firm brake, a late apex on the left, and the throttle on early through the final right.',
     marker: 'None published. Pick your own on the sighting laps and brake before it at first.',
     line: 'Stay on the right-hand side after The Boot. Turn in to the left a little later than feels natural and apex late, so the kart is already pointing into the final right-hander.',
-    kerbA: 'Stay off by default. The kerbs were new in March 2024, no guide covers them, and race karts were filmed hopping the new final-sector kerbs on the first test day. Only if the briefing or the sighting lap shows a low painted strip may the inside front touch it; never the rears. A bounce here costs the whole pit straight.',
+    kerbA: 'Stay off by default. The kerbs were new in March 2024 and no guide covers them; a video from the first test day of the new final sector was posted as kart kerb jumping, so assume they are raised until you have looked. Only if the briefing or the sighting lap shows a low painted strip may the inside front touch it; never the rears. A bounce here costs the whole pit straight.',
     kerbX: 'No separate exit kerb. The right-hand side after the chicane is the inside of Pit Bend, so see that kerb. Do not track out: a late apex leaves the kart already pointing into the final right.',
     mistake: 'Rushing the left, running wide, and then waiting on the throttle all the way round the last corner.',
-    note: 'The chicane is the normal route: a university race report from October 2024 describes needing special permission to run the old layout at a hire-kart event, and a 2025 Club100 onboard guide shows it in use. That report also confirms a braking zone with soft grass beyond it. No written guide says how to drive it, so the line here is reasoned from its shape, the designer\'s description (hold the right-hand side for longer after The Boot) and general technique. Confirm it on track.',
-    wet: 'New tarmac can hold water and the run-off beyond the braking zone is soft grass. Brake early.' },
+    note: 'The chicane is the normal route: the venue and the designer announced it in February 2024 and built it that March, a 2025 onboard guide shows it in use, and a university race report from October 2024 says the marshals agreed to keep a hire-kart race on the old layout only because a cycle event had already used the circuit that way that day and the unused new tarmac was still wet. That report says the run-off at the end of the chicane braking zone was a bog in the rain. No written guide says how to drive it, so the line here is reasoned from its shape, the designer\'s description (hold the right-hand side for longer after The Boot) and general technique. The approach length is read from a small map and may be compressed. Confirm it on track.',
+    wet: 'The run-off beyond the chicane braking zone turns to bog when wet, one 2024 report says. Brake early and do not lock up.' },
   pitbend: { name: 'Pit Bend', kind: { c: 'Final right onto the pit straight', n: 'Very fast right onto the pit straight' }, prims: ['pitbend'], lv: { c: { novice: 2, expert: 2 }, n: { novice: 2, expert: 1 } },
     doN: { c: 'Out of the chicane, let the kart settle, clip the inside, then go to full throttle and hold it. Your speed here carries along the pit straight, through Oblivion and Crook and up the hill.', n: 'Lift as you arrive and let the kart coast to the apex. Once past it, full throttle and use all of the track.' },
     doE: { c: 'Throttle as early as the kart will take it and use every bit of the exit.', n: 'Just about flat on a dry day with warm tyres, but only with the turn-in timed right. A small lift to settle the kart is normal.' },
@@ -517,7 +523,7 @@ const CARDS = {
     wet: 'Lift more and keep it smooth. Stay off the kerb and the concrete.' }
 };
 const LAYOUTS = {
-  nat: { name: 'National', cards: [['oblivion', 'T1'], ['crook', 'T2'], ['finelady', 'T3'], ['christmas', 'T4'], ['kink', 'T5'], ['inkhair', 'T6'], ['zulu', 'T7 to T9'], ['boot', 'T10 to T12'], ['pitbend', 'T13']] },
+  nat: { name: 'National', cards: [['oblivion', 'T1'], ['crook', 'T2'], ['finelady', 'kink'], ['christmas', 'T3'], ['kink', 'T4'], ['inkhair', 'T5'], ['zulu', 'T6 to T8'], ['boot', 'T9, T10'], ['pitbend', 'T11']] },
   intl: { name: 'International', cards: [['oblivion', 'T1'], ['crook', 'T2'], ['finelady', 'kink'], ['christmas', 'T3'], ['kink', 'T4'], ['inkermans', 'T5'], ['ashby', 'T6'], ['parker', 'T7'], ['chapmans', 'T8'], ['boot', 'T9, T10'], ['pitbend', 'T11']] }
 };
 // what the in-ear guide says on the approach to each corner in "talk me round" mode
@@ -528,13 +534,13 @@ const CALLS = {
   christmas: 'Christmas. Brake hard before the post. Late apex.',
   kink: { nat: 'Kink. Flat. Finish far left.', intl: 'Kink. Flat.' },
   inkhair: 'Hairpin. Brake before the tarmac change. Late apex.',
-  inkermans: 'Inkermans. Flat, over the inside kerb.',
+  inkermans: { c: 'Inkermans. Lift if you need to, then over the inside kerb.', e: 'Inkermans. Flat, over the inside kerb.' },
   ashby: 'Ashby. Brake hard. Off camber, be patient.',
   parker: 'Parker. Dab. Stay off the tyres.',
   chapmans: 'Chapmans. Quick brake. Turn in late.',
   zulu: 'Zulu. Smooth. Early into the last left.',
   boot: 'Boot. Brake before the post. Slow in the left.',
-  chicane: 'Chicane. Brake. Tight left, then early throttle.',
+  chicane: { c: 'Chicane. Brake. Tight left, then be patient for the last right.', e: 'Chicane. Brake. Tight left, then early throttle.' },
   pitbend: { chic: '', nochic: 'Pit Bend. Lift. One smooth turn.' }
 };
 function callFor(c) {
@@ -671,7 +677,7 @@ function renderMap(svg, o) {
   if (o.dot) { const g = el('g', { id: o.dot }, [el('circle', { r: 5.5, fill: 'var(--ink)', stroke: '#fff', 'stroke-width': 2.2 })]); g.setAttribute('transform', 'translate(' + LN[0][0] + ' ' + LN[0][1] + ')'); svg.appendChild(g); }
 }
 function drawMain() {
-  $('#mapcap').textContent = (st.layout === 'intl' ? 'International circuit, the blue line on the Kart Directory map.' : 'National circuit. It turns off at Inkermans and rejoins on the back straight.') + ' Grey is tarmac this layout does not use. Track width is exaggerated so the line shows up.' + (st.wet ? ' Wet line: off the rubbered dry line, earlier and gentler braking, no kerbs. This is general wet technique, not a Whilton-specific source.' : '');
+  $('#mapcap').textContent = 'The lap runs clockwise and Oblivion, the first corner, is a left. ' + (st.layout === 'intl' ? 'International circuit, the blue line on the Kart Directory map.' : 'National circuit. It turns off at Inkermans and rejoins on the short straight before The Boot.') + ' Grey is tarmac this layout does not use. Track width is exaggerated so the line shows up. The lengths on the buttons are the venue\'s figures.' + (st.wet ? ' Wet line: off the rubbered dry line, earlier and gentler braking, no kerbs. This is general wet technique, not a Whilton-specific source.' : '');
   renderMap($('#map'), { names: st.show.names, markers: st.show.markers, kerbs: st.show.kerbs, targets: true, select: true });
 }
 
@@ -756,6 +762,14 @@ function renderPlan() {
   const nat = st.layout === 'nat';
   const kb = (s, t) => '<li><span class="kb" style="background:var(--' + s + ')">' + ({ ok: '&#10003;', care: '!', no: '&#10005;' }[s]) + '</span><span>' + t + '</span></li>';
   $('#plan').innerHTML =
+    '<div class="panel"><h3>Before you get there</h3><ul>' +
+    '<li>Arrive early enough to sign on and sit through the safety briefing before your slot. Hire circuits do not let you drive if you miss the briefing, and Whilton needs you to follow it in English. Ask how early when you book; half an hour is a safe guess.</li>' +
+    '<li>Wear close-fitting clothes and closed shoes; trainers are fine. The venue provides helmets and race suits. Gloves and balaclavas are provided at some sessions and sold at others, so bring your own if you have them. Your own helmet, suit, gloves and boots are allowed.</li>' +
+    '<li>Empty your pockets and leave anything loose, including phones, scarves, hoods and jewellery, in the car or a locker, unless the desk has said the phone can go out with you.</li>' +
+    '<li>The circuit is outdoors and runs in the rain. Bring a waterproof, a towel and a change of clothes. Wet mode in this app covers the driving side.</li>' +
+    '<li>There is a restaurant on site. Eat something light an hour or two before you drive and drink water between sessions.</li>' +
+    '<li>At the briefing, ask how the start works (a rolling start behind a lead kart, or a standing grid), where the pit entry is and how slowly to drive in the pit lane, and what to do after a spin or a stall. The usual hire-circuit rule is to stay in the kart with your hands on the wheel and wait for a marshal. Confirm it, do not assume it.</li>' +
+    '</ul><p class="small muted" style="margin-top:8px">Kit, briefing and food details are from the venue\'s pages as read in search results; arrival time and the spin rule are general hire-circuit practice.</p></div>' +
     '<div class="two"><div class="panel"><h3>What matters most here</h3><ul>' +
     '<li>' + (NUM[bigStops().length] || '').replace(/^./, m => m.toUpperCase()) + ' real braking zones: ' + joinNames(bigStops()) + '. The rest of the lap is flat out, a lift or a dab.</li>' +
     '<li>Brake in a straight line, finish braking, then turn.</li>' +
@@ -799,14 +813,27 @@ function renderPlan() {
     '<li>Oblivion and Crook change from a lift to a light brake.</li>' +
     '<li>Painted kerbs and the concrete run-off are slippery. Stay off them.</li>' +
     '<li>The rubbered-in dry line can be the slipperiest part of the track. In slow corners, try a wider line and feel for grip.</li>' +
-    '</ul><p class="small muted" style="margin-top:8px">The low grip and the Oblivion and Crook advice come from the Whilton guides. The rest is general karting practice.</p></div></div>' +
+    '<li>Off the rubber, Kart Directory\'s notes on the Rich Tea Racing wet lap say to turn in very late and turn the wheel quickly to full lock rather than easing it in. That is for the slow corners: keep your hands smooth in the fast ones.</li>' +
+    '</ul><p class="small muted" style="margin-top:8px">The low grip, the Oblivion and Crook advice and the late, quick turn-in come from the Whilton guides. The rest is general karting practice.</p></div></div>' +
     '<div class="panel"><h3>In a Whilton hire kart</h3><ul>' +
-    '<li>Keep your left foot clear of the brake pedal whenever you are on the throttle. A race report on the fleet that arrived in autumn 2024 says even resting a foot on the pedal cuts the engine.</li>' +
-    '<li>The same report says staff described the brakes as sensitive, so squeeze the pedal on your first laps and build up.</li>' +
+    '<li>The hire karts are BirelART N35s with 390cc engines, which the venue quotes at up to 50 mph. The fleet arrived in autumn 2024. One page on the venue site still says 390cc Sodi karts; the newer pages and the race listings say BirelART N35.</li>' +
+    '<li>Keep your left foot clear of the brake pedal whenever you are on the throttle, including over kerbs where feet get jolted. A race report on that fleet says even resting a foot on the pedal cuts the throttle.</li>' +
+    '<li>Staff had warned that report\'s drivers of sensitive brakes. The drivers found the brakes themselves fine and the throttle cut was the real catch. Even so, squeeze the pedal on your first laps and build up.</li>' +
     '<li>That is one report, so ask at the briefing whether it still applies.</li></ul></div>' +
+    '<div class="panel"><h3>Flags</h3><ul>' +
+    '<li>Yellow: slow down, hold your place, no overtaking until you are past the incident. The coach in your ear cannot see flags: if it says Flat under a yellow, ignore it.</li>' +
+    '<li>Blue: a faster kart is about to lap you. Hold your line and let it through.</li>' +
+    '<li>Red: the session is stopped. Slow to walking pace and drive back to the pits.</li>' +
+    '<li>Black, pointed at you: come into the pits now, for your driving or a fault with the kart.</li>' +
+    '<li>Black and white: a warning for your driving. Tidy up or a penalty follows.</li>' +
+    '<li>Green: the track is clear again.</li>' +
+    '<li>Chequered: the end of the session. Ease off and follow the karts ahead into the pits.</li>' +
+    '<li>Some hire circuits use a white flag or a board for the last lap; at licensed meetings a white flag means a slow kart ahead. Meanings vary a little between venues and series, so the briefing wins over this list.</li>' +
+    '</ul><p class="small muted" style="margin-top:8px">General UK karting flag meanings, not Whilton\'s briefing.</p></div>' +
     '<div class="panel"><h3>Passing places</h3><p>Into Christmas under braking' + (nat ? ', into the Inkermans hairpin,' : ', into the Ashby hairpin, up the inside at Chapmans,') + ' and between the two parts of The Boot, which is easy to mistime' + (st.chic ? '. The braking zone for the chicane is likely to be another, though no guide covers it yet' : '') + '. When defending, hold the inside line into those braking zones and keep the exit of The Boot tidy.</p></div>' +
     '<div class="panel"><h3>What was checked, and against what</h3><ul class="kl">' +
-    kb('ok', 'Corner order on both layouts: three written guides and the circuit map agree. Names vary between sources. One guide calls the left into The Boot Chapmans, an older Club100 report calls Parker and Chapmans Wilkins and Osiers, and the last corner is also known as Championship Bend.') +
+    kb('ok', 'Corner order on both layouts: three written guides, a Club100 race report and the circuit map agree. Names vary between sources: the 2013 KCL guide calls the left into The Boot Chapmans, a Club100 race report calls Parker and Chapmans Wilkins and Osiers, the Club100 venue page places Osiers before the short straight to The Boot, and the last corner is also known as Championship Bend. The guides call both long straights the back straight, so this guide says the straight up to Christmas and the short straight down to The Boot instead.') +
+    kb('care', 'Turn numbers on the International follow the BUKC and NRDD guides. The BUKC National guide numbers only the first two corners, so the National numbers here are this guide\'s own count on the same pattern, keeping shared corners on the same numbers. Other listings count 12, 13 or 14 turns. Use the names at the briefing.') +
     kb('ok', 'Oblivion and Crook as a pair, lifting as a novice and flat when experienced, staying left after Oblivion: three guides.') +
     kb('care', 'Crook apex: the current BUKC notes say turn in early, a 2013 Club100 guide says apex late. Both are on the Crook card.') +
     kb('ok', 'Christmas: brake by the marshal post on the left, the hill shortens the stop, late apex: three guides.') +
@@ -815,9 +842,11 @@ function renderPlan() {
     kb('ok', 'National hairpin: clip the kerb running the inside on the way out, astroturf outside: the BUKC guide.') +
     kb('care', 'The concrete run-offs at Crook and Ashby: the coach\'s line uses them, but they lie beyond the white line and no hire-session rule was found, so the briefing decides.') +
     kb('care', 'The chicane kerbs: the only evidence is a caption to first-test-day footage of race karts hopping the new kerbs. Nothing describes their profile.') +
-    kb('care', 'Ashby, Parker and Chapmans: one coach (the NRDD lap, which Club100 and BUKC republish as their own guide), plus a Club100 report that calls Ashby and Chapmans off camber. Treat as less certain.') +
+    kb('care', 'Ashby, Parker and Chapmans: one coach (the NRDD lap, which Club100 and BUKC republish as their own guide). The Club100 venue page calls the kink after Christmas and Ashby off camber, and a Club100 race report calls Osiers, its name for Chapmans, off camber. Treat as less certain.') +
     kb('ok', 'The Boot: brake by the marshal post on the right and give up speed in the left: three guides.') +
-    kb('ok', 'Pit Bend without the chicane, lift or near flat and inside the white line: three guides. The tall inside kerb was removed in 2024: confirmed by a race report.') +
+    kb('ok', 'Pit Bend without the chicane, lift or near flat and within track limits: three guides. The BUKC National notes name the white line and say four wheels over it may be penalised, and the kart club has policed this exit with a camera since 2019. The tall inside kerb was removed in 2024: confirmed by a race report.') +
+    kb('no', 'Where the marshal posts and the change of tarmac sit on the map is assumed (22 m, 24 m and 14 m before turn-in), not traced or measured. The experienced braking points are drawn at them by definition, so the map cannot tell you whether a fast driver really brakes at the post. Use the real post on track.') +
+    kb('no', 'The approach to the chicane is read from a small map and shows only a few metres of straight after The Boot, so the braking tone starts while you are still in the right-hander. Unverified; check it on the sighting lap.') +
     kb('ok', 'The chicane is the normal route: venue and designer announcements, a 2024 race report and a 2025 onboard guide.') +
     kb('no', 'How to drive the chicane: nothing written found. The line and braking level shown are reasoned from its shape.') +
     kb('no', 'The 1 to 5 braking levels, and where the line sits across the track, are a grading and reading of the guides. They are not measured.') +
@@ -830,13 +859,17 @@ function renderPlan() {
     '<li><a target="_blank" rel="noopener" href="https://kclmotorsport.wordpress.com/2013/06/23/whilton-mill-track-guide-club-100s/">King\'s College London Motorsport guide</a>, 2013, Club100 karts on the National layout.</li>' +
     '<li><a target="_blank" rel="noopener" href="https://www.cuautomobileclub.org/post/varsity-2024">Cambridge University Automobile Club race report</a>, October 2024: the chicane, the removed kerb and the new hire karts.</li>' +
     '<li><a target="_blank" rel="noopener" href="https://driven-international.com/whilton-mill-kart-circuit-enhancements-announced">Driven International</a> and <a target="_blank" rel="noopener" href="https://www.whiltonmill.co.uk/blog/2024/02/22/whilton-mill-ltd-announce-track-enhancements/">Whilton Mill</a> on the 2024 works.</li>' +
-    '<li><a target="_blank" rel="noopener" href="https://kartdirectory.racing/uk/video/whilton-mill-international-with-rich-tea-racing/">Kart Directory notes on the Rich Tea Racing lap</a>: passing places and the old last-corner kerb.</li>' +
-    '<li>To watch: <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=SCg5JWaubVo">the 2025 chicane guide by Wolemid</a>, <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=0OREA7Ejbi0">the circuit changes explained</a>, <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=aenDbbbgKio">an in-depth 2021 guide</a> and <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=7kLhkriwlRo">a 2025 onboard lap</a>. If the chicane video disagrees with the chicane card, trust the video.</li>' +
+    '<li><a target="_blank" rel="noopener" href="https://kartdirectory.racing/uk/video/whilton-mill-international-with-rich-tea-racing/">Kart Directory notes on the Rich Tea Racing lap</a>: passing places and the old last-corner kerb; and <a target="_blank" rel="noopener" href="https://kartdirectory.racing/uk/video/whilton-mill-international-wet-with-rich-tea-racing/">its notes on the wet lap</a>: the late, quick turn-in off the rubber.</li>' +
+    '<li><a target="_blank" rel="noopener" href="https://www.club100.co.uk/circuit-listing/whilton-mill/">Club100 venue page</a>: the National layout, Osiers, and which corners are off camber.</li>' +
+    '<li><a target="_blank" rel="noopener" href="https://results.alphatiming.co.uk/whilton">Whilton Mill session results on Alpha Timing</a> and <a target="_blank" rel="noopener" href="https://flow.alphatiming.co.uk/whiltonmill/leaderboard/Bj-PAYK7XEWr-ZzMBzVCgwD4">the monthly rental leaderboard</a>: real hire-kart lap times per layout.</li>' +
+    '<li>To watch: <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=SCg5JWaubVo">the 2025 chicane guide by Wolemid</a>, <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=0OREA7Ejbi0">the circuit changes explained</a>, <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=aenDbbbgKio">an in-depth 2021 guide</a> and <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=7kLhkriwlRo">a 2025 onboard lap</a>, <a target="_blank" rel="noopener" href="https://m.youtube.com/watch?v=OtTFytSbqvo">a chicane analysis from the week it opened, March 2024</a>, and <a target="_blank" rel="noopener" href="https://www.facebook.com/mondaynightraceclub/videos/how-the-chicane-should-be-taken-whilton-mill-go-karting-and-outdoor-activities/651790110561495/">the venue\'s own race club on how to take the chicane</a> in a hire kart. Some listings date the chicane to 2025; it was built in March 2024. If the chicane videos disagree with the chicane card, trust the videos.</li>' +
     '</ul></div>' +
     '<div class="panel"><h3>About this guide</h3><ul>' +
     '<li>Both coach guides were written for Club100 style two-stroke karts. A 390cc hire kart is slower down the straights, so its braking zones are likely to be a little shorter. The same corners are still the big stops.</li>' +
-    '<li>The venue advertises arrive-and-drive sessions on the National layout. Check which one you are on, and whether the chicane is in use that day.</li>' +
-    '<li>The track shape is traced from the Kart Directory circuit map. Scaled to the 1200 m International lap it gives 1190 m without the chicane, which matches the published figure, so distances on the map are close to real. Track width is drawn wider than life.</li>' +
+    '<li>The venue sells arrive-and-drive sessions on both the National (960 m) and the International (1200 m), in 20, 30 and 40 minute slots for age 14 and over, in BirelART N35 390cc karts. Its 20-minute voucher session is on the National, and the National section is floodlit while the International is not, so evening sessions are likely to be on the National. There is also a separate 450 m Mill circuit for junior sessions, which this guide does not cover. Club championship and British championship rounds run the International; Club100 and BUKC race both. Check which layout you are booked on, and whether the chicane is in use that day: a 2024 report describes a hire event run without it.</li>' +
+    '<li>Open races for individuals, from the venue\'s pages: Sprint (10 minutes of practice, then a 20 minute race), Grand Prix (a 5 minute warm-up, three 10 minute heats and a 10 minute final) and Endurance (300 laps of the National in teams of three, light and heavy classes). Practice before a race is short, so learn the track in an arrive-and-drive session first.</li>' +
+    '<li>Age and height limits differ between the venue\'s own pages: 14 or 16 and over, minimum height 1.4 m or 1.55 m, maximum 1.9 m or 1.92 m. Check the page for the session you book.</li>' +
+    '<li>The track shape is traced from the Kart Directory circuit map and scaled so the International lap with the chicane measures 1200 m, the figure the venue quotes. Published lengths disagree: the venue says 1200 m and 960 m, the 2025 club and British championship regulations say 1054 m, and the BKC event page says 1190 m, and none gives a separate figure for the chicane. On the 1200 m scale the National comes out at 969 m, or 978 m with the chicane. Treat map distances as approximate, and possibly a tenth long, until a GPS lap has been fitted: after a lock the Coach tab shows the lap length measured from your own trace. Track width is drawn wider than life.</li>' +
     '</ul></div>';
 }
 
@@ -1076,7 +1109,7 @@ function renderDebrief() {
 }
 
 /* ---------------- demo lap on the map ---------------- */
-const SIM_ORIGIN = { lat: 52.28014, lon: -1.08403 };
+const SIM_ORIGIN = { lat: 52.28014, lon: -1.08403 };   // demo origin only: near Whilton Mill (NN11 2NH), about half a kilometre north-east of the venue's map pin, not checked against the tarmac
 const sim = { on: false, pos: 0, v: 9, lastT: 0, fixAcc: 0, tickAcc: 0, rate: 1, rot: 0, bad: false };
 const simT = () => ({ th: sim.rot * RAD, s: 1, tx: 0, ty: 0, origin: SIM_ORIGIN });
 const simProfCache = {};

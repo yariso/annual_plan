@@ -29,10 +29,15 @@ A single-file web app (dist/index.html) for a novice kart driver at Whilton Mill
 - Demo (`simStep`): a simulated kart follows the painted levels; "makes mistakes" brakes early, over-slows and lifts at flat corners so the coach has something to say. Emulated GPS (1, 10 or 25 Hz, noise, latency) feeds the same engine as live GPS.
 
 ## Known limits (be honest about these in any UI text)
-- Phone browser GPS is about 1 fix per second. Tone start is good to roughly 10 m, tone end less. Real accuracy needs a 10 to 25 Hz receiver.
-- Geometry was traced from the Kart Directory circuit map image (a commercial map). It validated well (1190 m without the chicane when scaled to 1200 m). For anything public, replace it with your own GPS survey. The map lock plus a clean recording can generate that.
+- Phone browser GPS is about 1 fix per second. Tone start is good to roughly 10 m, tone end less. A 10 to 25 Hz receiver removes the receiver as the limit; the traced map and the lock (a few metres) then set the floor.
+- Geometry was traced from the Kart Directory circuit map image (a commercial map) and scaled so the International lap with the chicane measures 1200 m, the venue's figure. Published lengths disagree (venue 1200 m and 960 m, 2025 club and BKC regulations 1054 m, BKC event page 1190 m), so map distances may be up to a tenth long; the lock's fitted scale reports the length measured from the trace. The marker positions (22, 24 and 14 m before turn-in) and the chicane approach length are assumed, not traced. For anything public, replace the trace with your own GPS survey. The map lock plus a clean recording can generate that.
+- The lock fixes the layout only. The chicane switch, driver level and wet setting are taken from the Map tab and cannot be changed while GPS runs.
+- The demo kart's top speed and grip are guesses, not measured; calibrate from recorded laps (backlog 3).
+- Phone behaviour (GPS stopping when the phone locks, wake lock support, the silent switch, Bluetooth latency, speech needing a first utterance inside a tap) is from memory and needs a hand test on an iPhone and an Android phone.
 - Braking levels 1 to 5, zone lengths and lateral line positions are a reading of the written guides, not measured data.
-- The 2024 chicane has no written driving guide. Its card is reasoned from shape and general technique.
+- The 2024 chicane has no written driving guide. Its card is reasoned from shape and general technique; its kerbs and the new Pit Bend kerb are undescribed, so the app says stay off or look first.
+- Kerb verdicts come from the written guides where one covers the kerb (see docs/validation.md and the Plan tab table); the rest are marked Look first. Christmas, the Chapmans apex, the left of The Boot, the chicane, the Pit Bend apex and Zulu 1 and 2 have no source.
+- Race-day content (flags, kit, briefing, formats, age and height limits) is from the venue's pages as seen in search excerpts and from general UK karting guides, not from the venue's briefing.
 - Wet line is general technique. Whilton-specific wet guides exist only as videos that could not be read.
 - YouTube transcripts could not be fetched. docs/validation.md lists the videos to review by hand.
 
@@ -40,7 +45,7 @@ A single-file web app (dist/index.html) for a novice kart driver at Whilton Mill
 1. Native app (React Native or Expo) reading a RaceBox Mini S over BLE at 25 Hz (protocol is published by RaceBox). Port the lap engine, audio and coaching as a TypeScript module with unit tests. Wired audio to race earpieces.
 2. Survey mode: build the centreline, brake zones and corner windows from the driver's own clean laps, so the map no longer depends on a traced image.
 3. Calibrate levels and zone lengths from recorded laps of a quick driver. Replace estimates with measured brake points per kart type (390cc hire kart, Club100, Rotax).
-4. Watch the 2025 chicane guide by Wolemid and the wet laps by Rich Tea Racing, and update the chicane card and wet line.
+4. Watch the 2025 chicane guide by Wolemid, the March 2024 chicane analysis, the venue's race-club chicane clip and the wet laps by Rich Tea Racing, and update the chicane card, its kerbs and the wet line. Read the WMKC 2025 supplementary regulations for the licensed lap length and track-limit rules.
 5. Team sharing: export and import of laps, best-lap ghosts, a shared leaderboard per corner.
 6. Coaching: add consistency scoring, racing-line deviation (needs 10 Hz or better), and trend across sessions.
 7. Accessibility and offline: make it an installable PWA for Android with Web Bluetooth to the RaceBox.
