@@ -26,6 +26,8 @@ jobs:
           mkdir -p site
           cp whilton-coach/dist/index.html site/index.html
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true     # try to switch Pages on for the repository; if the token may not, enable it once under Settings, Pages, Source: GitHub Actions
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
