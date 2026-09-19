@@ -237,6 +237,27 @@ svg text{font-family:var(--display);fill:var(--ink)}
   <h2>Audio coach</h2>
   <p class="muted" style="max-width:64ch">A tone sounds for exactly as long as your foot should be off the throttle. Its pitch tells you how hard: a low hum is a lift, a high tone is full braking. A word a moment earlier tells you what is coming, and two quick rising notes mean back to full throttle. After each lap it gives you the time, how far off your best it was, and the one thing to change.</p>
 
+  <div class="panel">
+    <h3>Practice at home</h3>
+    <p style="max-width:64ch">No track time before the day? Ten minutes of this, daily, puts the lap in your head: the corner order, what your feet do at each one, and the rhythm. Earpieces in. Set the layout, driver level and conditions on the Map tab first.</p>
+    <div class="row">
+      <button type="button" class="btn primary" id="virtBtn">Virtual lap, talked round</button>
+      <button type="button" class="btn" id="mindBtn">Lap in your head</button>
+      <button type="button" class="btn" id="quizBtn">Corner quiz</button>
+    </div>
+    <div id="mindBox" hidden>
+      <p class="small muted" style="margin:6px 0">Close your eyes. Press the big button at the start line, then press it again each time you pass a corner in your mind. It says the next corner's name each time. After the line it compares your rhythm with the demo lap, corner by corner.</p>
+      <button type="button" class="btn primary" id="mindTap" style="width:100%;min-height:88px;font-size:22px">Start line. Press to go</button>
+      <div id="mindOut" class="small" style="margin-top:8px"></div>
+    </div>
+    <div id="quizBox" hidden>
+      <p id="quizQ" style="font-weight:600;margin:6px 0"></p>
+      <div class="row" id="quizA"></div>
+      <p class="small muted" id="quizScore" style="margin:6px 0 0"></p>
+    </div>
+    <p class="small muted" style="margin:8px 0 0">The virtual lap runs the demo kart round the map with the Talk me round sentences, so you hear each corner named with what to do. Watch the map, then do it with your eyes shut. The lap in your head trains the rhythm; the demo lap's timing is a rough stand-in for a hire kart, not a target.</p>
+  </div>
+
   <div class="two">
     <div class="panel">
       <h3>Try it on the map</h3>
@@ -276,6 +297,9 @@ svg text{font-family:var(--display);fill:var(--ink)}
         <div><b id="liveLap">0:00.0</b><span>this lap</span></div>
         <div><b id="liveLast">none</b><span>last lap</span></div>
         <div><b id="liveBest">none</b><span>best lap</span></div>
+      </div>
+      <div class="row">
+        <label class="f" style="flex:1;min-width:140px">Driver, for the team table<input type="text" id="driverName" placeholder="Name" maxlength="16" autocomplete="off"></label>
       </div>
       <div class="row">
         <button type="button" class="btn primary" id="liveBtn">Start GPS</button>
@@ -1045,7 +1069,7 @@ function buildEvents() {
   return ev.sort((a, b) => a.i - b.i);
 }
 function lapReset(T, quiet) {
-  const L = LY(); Object.assign(lapE, { T, L, n: L.centre.length, s: null, cum: 0, v: 0, acc: 0, tFix: 0, tAny: 0, far: 0, off: false, rate: 0, times: [], samples: [], lapStartT: null, lapStartCum: null, laps: [], best: null, bestSeg: {}, events: buildEvents(), wordCum: null, prepCum: null, queue: [], quiet: !!quiet, said: {}, prof: null, leadAdj: {}, cal: {}, focus: null, dropped: null });
+  const L = LY(); Object.assign(lapE, { T, L, layKey: st.layout + (st.chic ? '_c' : '_n'), n: L.centre.length, s: null, cum: 0, v: 0, acc: 0, tFix: 0, tAny: 0, far: 0, off: false, rate: 0, times: [], samples: [], lapStartT: null, lapStartCum: null, laps: [], best: null, bestSeg: {}, events: buildEvents(), wordCum: null, prepCum: null, queue: [], quiet: !!quiet, said: {}, prof: null, leadAdj: {}, cal: {}, focus: null, dropped: null });
   setTone(1);
 }
 function lapFix(f) {          // f: { t (ms), lat, lon, spd (m/s or null), acc }
@@ -1136,12 +1160,14 @@ function calibrateLead(m) {    // if the driver's brake point keeps landing late
 }
 function cornerWindow(key) {   // the stretch a corner is judged over: from before its braking zone to a little past its exit, in centreline points from the lap start
   const L = lapE.L || LY(), n = L.centre.length, list = cardList(), q = Math.max(0, list.findIndex(x => x[0] === key)), c = CARDS[key];
-  const A = L.corners[c.prims[0]], B = L.corners[c.prims[c.prims.length - 1]], prevB = L.corners[CARDS[list[mod(q - 1, list.length)][0]].prims.slice(-1)[0]].b, nextA = L.corners[CARDS[list[(q + 1) % list.length][0]].prims[0]].a;
+  const A = L.corners[c.prims[0]], B = L.corners[c.prims[c.prims.length - 1]], pc = L.corners[CARDS[list[mod(q - 1, list.length)][0]].prims.slice(-1)[0]], nc = L.corners[CARDS[list[(q + 1) % list.length][0]].prims[0]];
+  if (!A || !B || !pc || !nc) return null; const prevB = pc.b, nextA = nc.a;      // the Map tab can be on the other layout from the one the laps were driven on
   const zs = lvOf(c) >= 3 ? zoneStartIdx(key) : null, pre = Math.max(zs != null ? mod(A.a - zs, n) + 3 : 0, Math.min(lvOf(c) >= 3 ? 30 : 10, Math.max(2, mod(A.a - prevB, n) - 2))), post = Math.min(7, Math.max(1, mod(nextA - B.b, n) - 2));
   let c0 = A.a - pre, c1 = B.b + post; if (B.b < A.a) c1 += n; return { c0, c1 };
 }
 function modelSeg(key) {       // the model lap's time and slowest speed through the same window, hire kart, today's conditions
-  const mk = MK(); if (!mk || !mk.v4 || !mk.v4.length) return null; const L = lapE.L || LY(), n = L.centre.length, w = cornerWindow(key), vAt = i => mk.v4[Math.floor(mod(i, n) / 2) % mk.v4.length];
+  const mk = MK(); if (!mk || !mk.v4 || !mk.v4.length || (lapE.L && lapE.layKey !== st.layout + (st.chic ? '_c' : '_n'))) return null;   // the model row only makes sense for the layout the laps were driven on
+  const L = lapE.L || LY(), n = L.centre.length, w = cornerWindow(key); if (!w) return null; const vAt = i => mk.v4[Math.floor(mod(i, n) / 2) % mk.v4.length];
   let t = 0, vMin = 1e9; for (let i = Math.floor(w.c0); i < w.c1; i++) { const v = Math.max(2, vAt(i)); t += L.step / v; vMin = Math.min(vMin, v); } return { tSeg: t, vMin };
 }
 const tenths = s => { if (s >= .95) return s.toFixed(1) + ' seconds'; const t = Math.max(1, Math.round(s * 10)); return t === 1 ? 'a tenth' : t + ' tenths'; };
@@ -1152,7 +1178,7 @@ function lapMetrics(startCum) {
   const tAt = c => { for (let j = 1; j < S.length; j++) if (S[j].c >= c && S[j - 1].c <= c) { const a = S[j - 1], b = S[j]; return a.t + (b.c === a.c ? 0 : (c - a.c) / (b.c - a.c)) * (b.t - a.t); } return null; };
   const vAt = c => { for (let j = 1; j < S.length; j++) if (S[j].c >= c && S[j - 1].c <= c) { const a = S[j - 1], b = S[j]; return a.v + (b.c === a.c ? 0 : (c - a.c) / (b.c - a.c)) * (b.v - a.v); } return null; };
   cardList().forEach(([key]) => {
-    const w = cornerWindow(key), c0 = startCum + w.c0, c1 = startCum + w.c1;
+    const w = cornerWindow(key); if (!w) return; const c0 = startCum + w.c0, c1 = startCum + w.c1;
     const t0 = tAt(c0), t1 = tAt(c1); if (t0 == null || t1 == null) return;
     const W = S.filter(p => p.c >= c0 - 1 && p.c <= c1 + 1); if (W.length < 2) return;
     let vMin = 1e9, cMin = c0, brakeOn = null, decel = 0; W.forEach((p, j) => { if (p.v < vMin) { vMin = p.v; cMin = p.c; } if (j) { const q = W[j - 1], d = (q.v - p.v) / Math.max(.05, (p.t - q.t) / 1000); decel = Math.max(decel, d); if (brakeOn == null && d > 1.6) brakeOn = (q.c + p.c) / 2; } });
@@ -1201,6 +1227,7 @@ function finishLap(tc, endCum) {
   else if (tips.length) tip = tips[0].name + ': ' + tips[0].tip + '.';
   else if (E.laps.length > 1 && lap === E.best) tip = 'Best lap. Same again.';
   lap.tip = tip;
+  if (live.on) teamLog(lap);
   // the lap time, then how it compares: "71.5, best" or "71.9, 0.4 off"; both are said at the next quiet moment so no brake word cuts them off
   const g = prevBest ? (ms - E.best.ms) / 1000 : 0, gap = !prevBest ? '' : E.best === lap ? ', best' : g < .05 ? ', equal best' : ', ' + g.toFixed(1) + ' off';
   E.queue = []; E.said = {};
@@ -1208,16 +1235,30 @@ function finishLap(tc, endCum) {
 }
 function renderDebrief() {
   const E = lapE, box = $('#debriefBody'); if (!box) return;
-  if (!E.laps.length) { box.innerHTML = '<p class="muted" style="margin:0">No complete laps yet. Run the demo, start GPS at the circuit, or load a CSV trace from a lap timer.</p>'; return; }
+  if (!E.laps.length) { box.innerHTML = '<p class="muted" style="margin:0">No complete laps yet. Run the demo, start GPS at the circuit, or load a CSV trace from a lap timer.</p>' + teamTable(); return; }
   const last = E.laps[E.laps.length - 1], best = E.best, rows = cardList().map(([key]) => { const x = last.m[key], b = E.bestSeg[key]; if (!x) return ''; const d = b ? x.tSeg - b.tSeg : 0; return '<tr><td>' + CARDS[key].name + '</td><td>' + x.tSeg.toFixed(2) + '</td><td class="' + (d > .08 ? 'neg' : '') + '">' + (d > .005 ? '+' + d.toFixed(2) : 'best') + '</td><td>' + Math.round(x.vIn * MPH) + '</td><td>' + Math.round(x.vMin * MPH) + '</td></tr>'; }).join('');
   box.innerHTML = '<p style="margin:0 0 8px"><b>Lap ' + last.n + ': ' + fmtLap(last.ms) + '</b>' + (best && best !== last ? ', ' + ((last.ms - best.ms) / 1000).toFixed(2) + ' s off your best (' + fmtLap(best.ms) + ', lap ' + best.n + ')' : ', your best so far') + '.</p>' +
     (last.said ? '<p style="margin:0 0 8px"><b>' + esc(last.said) + '.</b></p>' : '') +
     (last.focus ? '<p style="margin:0 0 8px">Focus corner: <b>' + esc(CARDS[last.focus].name) + '</b>' + (last.tip && !last.said ? ', ' + esc(last.tip.replace(/^[^:]+: /, '')) : '.') + '</p>' : '') +
     (last.tips.length ? '<ol class="tips">' + last.tips.map(t => '<li><b>' + t.name + ':</b> ' + esc(t.tip) + '.' + (t.loss > .05 ? ' <span class="muted">About ' + t.loss.toFixed(2) + ' s lost to your best there.</span>' : '') + '</li>').join('') + '</ol>' : '<p class="muted">Nothing stands out on that lap. Keep it consistent.</p>') +
     '<div style="overflow-x:auto"><table class="deb"><thead><tr><th>Corner</th><th>Time, s</th><th>To best</th><th>In, mph</th><th>Min, mph</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
-    sessionTable() +
+    sessionTable() + teamTable() +
     (Object.keys(E.leadAdj).some(k => E.leadAdj[k]) ? '<p class="small" style="margin:8px 0 0">Brake calls moved earlier from your laps: ' + Object.keys(E.leadAdj).filter(k => E.leadAdj[k]).map(k => CARDS[k].name + ' ' + E.leadAdj[k] + ' m').join(', ') + '.</p>' : '') +
     '<p class="small muted" style="margin:8px 0 0">' + (E.rate && E.rate < 3 ? 'GPS is giving about ' + E.rate.toFixed(0) + ' fix a second, so braking points here are good to roughly 10 to 20 metres and corner times to a tenth or two. A 10 to 25 Hz receiver tightens all of this.' : 'Laps: ' + E.laps.map(l => fmtLap(l.ms)).join(', ') + '.') + '</p>';
+}
+const team = { laps: store.get('wm.team', []) };
+function teamLog(lap) {        // every live lap, tagged with the driver's name, kept on the phone so four drivers sharing it can compare after their stints
+  const d = ($('#driverName').value || '').trim() || 'Driver', m = {}; Object.keys(lap.m).forEach(k => { m[k] = { tSeg: +lap.m[k].tSeg.toFixed(2), vMin: +lap.m[k].vMin.toFixed(1) }; });
+  team.laps.push({ d, ms: Math.round(lap.ms), m, lay: lapE.layKey, at: Date.now() }); if (team.laps.length > 300) team.laps.splice(0, team.laps.length - 300); store.set('wm.team', team.laps);
+}
+function teamTable() {         // each driver's best lap and best time through each corner, fastest of the team marked
+  const lay = st.layout + (st.chic ? '_c' : '_n'), L = team.laps.filter(l => l.lay === lay), drivers = [...new Set(L.map(l => l.d))]; if (drivers.length < 1) return '';
+  const list = cardList().filter(([k]) => L.some(l => l.m[k])), best = {}, top = {};
+  drivers.forEach(d => { const mine = L.filter(l => l.d === d); best[d] = { n: mine.length, ms: Math.min(...mine.map(l => l.ms)), c: {} }; list.forEach(([k]) => { const t = mine.map(l => l.m[k] && l.m[k].tSeg).filter(v => v != null); if (t.length) { best[d].c[k] = Math.min(...t); if (top[k] == null || best[d].c[k] < top[k]) top[k] = best[d].c[k]; } }); });
+  const fastest = drivers.slice().sort((a, b) => best[a].ms - best[b].ms)[0];
+  return '<h4 style="margin:12px 0 4px">The team so far, best through each corner</h4><div style="overflow-x:auto"><table class="deb tight"><thead><tr><th>Driver</th><th>Laps</th><th>Best lap</th>' + list.map(([k]) => '<th>' + esc(CARDS[k].name) + '</th>').join('') + '</tr></thead><tbody>' +
+    drivers.map(d => '<tr><td>' + esc(d) + '</td><td>' + best[d].n + '</td><td class="' + (d === fastest && drivers.length > 1 ? 'pos' : '') + '">' + fmtLap(best[d].ms) + '</td>' + list.map(([k]) => '<td class="' + (best[d].c[k] != null && best[d].c[k] <= top[k] + .005 && drivers.length > 1 ? 'pos' : '') + '">' + (best[d].c[k] != null ? best[d].c[k].toFixed(1) : '') + '</td>').join('') + '</tr>').join('') + '</tbody></table></div>' +
+    '<p class="small muted" style="margin:4px 0 0">Green is the quickest of the team through that corner: the person to ask how they drive it. Live GPS laps only, kept on this phone. <button type="button" class="btn small" id="teamClear">Clear the team table</button></p>';
 }
 function sessionTable() {      // every lap by every corner, with the best of each corner marked, the model's time and the spread across the session
   const E = lapE; if (E.laps.length < 2) return '';
@@ -1280,11 +1321,76 @@ function simStart() {
   const n = LY().centre.length; sim.on = true; sim.pos = n - 18; sim.v = 17; sim.lastT = 0; sim.fixAcc = 1e9; sim.tickAcc = 0;
   $('#simBtn').textContent = 'Stop demo'; requestAnimationFrame(simFrame);
 }
-function simStop() { sim.on = false; setTone(1); keepAwake(false); $('#simBtn').textContent = 'Start demo lap'; try { speechSynthesis.cancel(); } catch (e) { } renderDebrief(); }
+function simStop() {
+  sim.on = false; setTone(1); keepAwake(false); $('#simBtn').textContent = 'Start demo lap'; try { speechSynthesis.cancel(); } catch (e) { }
+  if (sim.modeWas) { set.mode = sim.modeWas; $('#setMode').value = set.mode; sim.modeWas = null; } $('#virtBtn').textContent = 'Virtual lap, talked round'; renderDebrief();
+}
 function simFrame(ts) {
   if (!sim.on) return; const dt = sim.lastT ? Math.min(.05, (ts - sim.lastT) / 1000) : .016; sim.lastT = ts;
   const p = simStep(dt, performance.now(), false), dot = $('#simdot'); if (dot) dot.setAttribute('transform', 'translate(' + p.x.toFixed(1) + ' ' + p.y.toFixed(1) + ')');
   requestAnimationFrame(simFrame);
+}
+
+/* ---------------- practice at home: a talked virtual lap, the lap in your head, a corner quiz ---------------- */
+function virtualStart() {
+  if (sim.on) { simStop(); return; }
+  sim.modeWas = set.mode; set.mode = 'talk'; $('#setMode').value = 'talk'; $('#simRate').value = '10'; $('#simBad').checked = false; simStart(); $('#virtBtn').textContent = 'Stop the virtual lap';
+  try { $('#simmap').scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) { }
+}
+function refTimes() {           // the demo kart's time at each corner from the start line, run silently, for the layout, driver level and conditions chosen
+  const id = st.layout + st.chic + st.wet + st.profile; if (refTimes.cache && refTimes.cache.id === id) return refTimes.cache;
+  if (sim.on) return null;
+  const keep = { pos: sim.pos, v: sim.v, fixAcc: sim.fixAcc, tickAcc: sim.tickAcc, bad: sim.bad, late: sim.late }, T = lapE.T; lapE.T = null;   // the lap engine is left out of this: no fixes, no ticks, no sound
+  const L = LY(), n = L.centre.length, list = cardList(), at = list.map(([k]) => L.corners[CARDS[k].prims[0]].i), out = { id, corners: [], lap: 0 };
+  sim.pos = 0; sim.v = 12; sim.bad = false; sim.late = false; sim.fixAcc = -1e9; sim.tickAcc = -1e9;
+  let t = 0, j = 0, last = 0, laps = 0, t0 = 0; const dt = .05;
+  for (let s = 0; s < 8000; s++) {
+    simStep(dt, 0, true); t += dt; const p = sim.pos;
+    if (p < last - n / 2) { laps++; if (laps === 1) { t0 = t; j = 0; } else { out.lap = t - t0; break; } }      // the first lap is a run-up from rest; the second is the one recorded
+    if (laps === 1 && j < at.length && p >= at[j] && p - last < n / 2) { out.corners.push({ key: list[j][0], t: t - t0 }); j++; }
+    last = p;
+  }
+  Object.assign(sim, keep); lapE.T = T; if (out.corners.length !== list.length || !out.lap) return null; refTimes.cache = out; return out;
+}
+const mind = { on: false, t0: 0, taps: [], ref: null };
+function mindShow(text) { $('#mindTap').textContent = text; }
+function mindTap() {
+  const list = cardList();
+  if (!mind.on) {
+    const R = refTimes(); if (!R) { toast('Stop the demo lap first.'); return; }
+    audioInit(); mind.on = true; mind.t0 = performance.now(); mind.taps = []; mind.ref = R; $('#mindOut').innerHTML = '';
+    speak('Go. ' + CARDS[list[0][0]].name + ' next'); mindShow('Next: ' + CARDS[list[0][0]].name); return;
+  }
+  const t = (performance.now() - mind.t0) / 1000; mind.taps.push(t);
+  if (mind.taps.length < list.length) { const nm = CARDS[list[mind.taps.length][0]].name; speak(nm); mindShow('Next: ' + nm); return; }
+  if (mind.taps.length === list.length) { speak('Now the line'); mindShow('Next: the start line'); return; }
+  mind.on = false; mindShow('Start line. Press to go'); mindReport(list);
+}
+function mindReport(list) {
+  const R = mind.ref, yours = mind.taps, lap = yours[yours.length - 1], segs = [];
+  for (let j = 0; j < list.length; j++) { const a = j ? yours[j - 1] : 0, b = yours[j], ra = j ? R.corners[j - 1].t : 0, rb = R.corners[j].t; segs.push({ from: j ? CARDS[list[j - 1][0]].name : 'the line', to: CARDS[list[j][0]].name, you: b - a, ref: rb - ra }); }
+  segs.push({ from: CARDS[list[list.length - 1][0]].name, to: 'the line', you: lap - yours[list.length - 1], ref: R.lap - R.corners[list.length - 1].t });
+  const off = segs.map(x => ({ ...x, d: x.you - x.ref })).sort((a, b) => Math.abs(b.d) - Math.abs(a.d)), big = off.filter(x => Math.abs(x.d) > Math.max(1.5, .3 * x.ref)).slice(0, 2);
+  const sayBits = big.map(x => (x.d < 0 ? 'you rushed from ' : 'you dawdled from ') + x.from + ' to ' + x.to + ' by ' + Math.round(Math.abs(x.d)) + ' seconds'), word = lap < R.lap - 5 ? 'quick' : lap > R.lap + 5 ? 'slow' : 'about right';
+  const summary = 'Your lap in your head: ' + lap.toFixed(0) + ' seconds, the demo lap takes ' + R.lap.toFixed(0) + '. That is ' + word + (sayBits.length ? ', and ' + sayBits.join(', ') : ', and the rhythm matches corner to corner') + '.';
+  speak(summary);
+  $('#mindOut').innerHTML = '<p style="margin:0 0 6px"><b>' + esc(summary) + '</b></p><div style="overflow-x:auto"><table class="deb tight"><thead><tr><th>Stretch</th><th>You, s</th><th>Demo, s</th></tr></thead><tbody>' +
+    segs.map(x => '<tr><td>' + esc(x.from + ' to ' + x.to) + '</td><td class="' + (Math.abs(x.you - x.ref) > Math.max(1.5, .3 * x.ref) ? 'neg' : '') + '">' + x.you.toFixed(1) + '</td><td class="muted">' + x.ref.toFixed(1) + '</td></tr>').join('') + '</tbody></table></div>';
+}
+const quiz = { n: 0, right: 0, cur: null, t: null };
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const FEET = ['Flat', 'Lift', 'Dab of brake', 'Firm brake', 'Hard brake'];
+function quizAsk() {
+  clearTimeout(quiz.t); const list = cardList(), q = Math.floor(Math.random() * list.length), key = list[q][0], c = CARDS[key], kind = Math.random() < .5 ? 'next' : 'feet'; let text, answer, opts, why;
+  if (kind === 'next') { answer = CARDS[list[(q + 1) % list.length][0]].name; text = 'After ' + c.name + ', which corner comes next?'; opts = [answer].concat(shuffle(list.map(([k]) => CARDS[k].name).filter(nm => nm !== answer && nm !== c.name)).slice(0, 2)); why = ''; }
+  else { const lv = lvOf(c); answer = FEET[Math.min(5, Math.max(1, lv)) - 1]; text = 'What do your feet do at ' + c.name + '?'; opts = [answer].concat(shuffle(FEET.filter(o => o !== answer)).slice(0, 2)); why = (st.wet ? c.wet : pick(st.profile === 'novice' ? c.doN : c.doE)).split('. ')[0].replace(/\.$/, '') + '.'; }
+  quiz.cur = { answer, why }; $('#quizQ').textContent = text; $('#quizScore').textContent = quiz.n ? quiz.right + ' of ' + quiz.n + ' right' : '';
+  $('#quizA').innerHTML = shuffle(opts).map(o => '<button type="button" class="btn small" data-quiz="' + esc(o) + '">' + esc(o) + '</button>').join('');
+}
+function quizAnswer(o) {
+  const c = quiz.cur; if (!c) return; quiz.n++; const ok = o === c.answer; if (ok) quiz.right++;
+  $('#quizScore').textContent = (ok ? 'Right. ' : 'No: ' + c.answer + '. ') + c.why + ' ' + quiz.right + ' of ' + quiz.n + ' right.'; $('#quizA').querySelectorAll('button').forEach(b => { b.disabled = true; if (b.dataset.quiz === c.answer) b.classList.add('primary'); });
+  quiz.t = setTimeout(quizAsk, ok ? 1200 : 2600);
 }
 
 /* ---------------- before you go out: the lap read aloud, corner by corner ---------------- */
@@ -1424,6 +1530,13 @@ document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === 
 $('#simBtn').addEventListener('click', () => sim.on ? simStop() : simStart());
 $('#liveBtn').addEventListener('click', () => live.on ? liveStop() : liveStart());
 $('#readBtn').addEventListener('click', () => reader.on ? readStop() : readStart());
+$('#virtBtn').addEventListener('click', virtualStart);
+$('#driverName').value = store.get('wm.driver', ''); $('#driverName').addEventListener('change', e => store.set('wm.driver', e.target.value.trim()));
+$('#debriefBody').addEventListener('click', e => { if (e.target.id === 'teamClear') { team.laps = []; store.del('wm.team'); renderDebrief(); toast('Team table cleared.'); } });
+$('#mindBtn').addEventListener('click', () => { const b = $('#mindBox'); b.hidden = !b.hidden; if (!b.hidden) { $('#quizBox').hidden = true; if (sim.on) simStop(); if (reader.on) readStop(); } });
+$('#mindTap').addEventListener('click', mindTap);
+$('#quizBtn').addEventListener('click', () => { const b = $('#quizBox'); b.hidden = !b.hidden; if (!b.hidden) { $('#mindBox').hidden = true; quizAsk(); } });
+$('#quizA').addEventListener('click', e => { const b = e.target.closest('[data-quiz]'); if (b) quizAnswer(b.dataset.quiz); });
 $('#testSound').addEventListener('click', () => { audioInit(); if (set.mode !== 'tones') speak(set.mode === 'talk' ? callFor({ key: 'christmas', level: 5 }) : WORD[5]); setTimeout(() => setTone(5), 900); setTimeout(() => setTone(2), 2100); setTimeout(() => setTone(1), 2700); });
 $('#forgetLock').addEventListener('click', () => { store.del('wm.lock'); lapE.T = null; lockInfo(); toast('Map lock forgotten.'); });
 $('#lockNow').addEventListener('click', () => { const R = live.on ? live.rec : rec; if (!R || R.length < 40) { toast('Record at least one full lap first.'); return; } const k = tryLock(R, true); if (k && live.on) { useLock(k); live.stored = false; } });
@@ -1441,7 +1554,7 @@ bindNum('#setWordLead', 'wordLead'); bindNum('#setToneLead', 'toneLead'); bindNu
 $('#setMode').value = set.mode; $('#setMode').addEventListener('change', e => { set.mode = e.target.value; saveSettings(); });
 
 renderLegend(); refreshAll(); lockInfo(); renderDebrief();
-window.__wm = { D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, MK, modelLine, M, setRec: r => { rec = r; }, getRec: () => rec };
+window.__wm = { D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, MK, modelLine, M, refTimes, mindTap, mind, quizAsk, quizAnswer, quiz, virtualStart, team, teamLog, teamTable, live, setRec: r => { rec = r; }, getRec: () => rec };
 })();
 </script>
 </body>

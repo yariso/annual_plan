@@ -83,4 +83,34 @@ with sync_playwright() as p:
     print('SESSION TABLE rows', r['rows'], 'model row', r['modelRow'], 'spread', r['spread'])
     assert r['rows'] >= len(r['laps']) + 2 and r['spread'], 'session table incomplete'
     if m != 'no model': assert r['modelRow'], 'model row missing'
+
+    # practice at home: the silent reference lap, the lap in your head, the corner quiz and the talked virtual lap
+    r = pg.evaluate("""() => { const W = window.__wm; window.speechSynthesis.speak = () => {}; Object.assign(W.st, { layout: 'intl', chic: true, wet: false, profile: 'novice' }); W.setTab('coach');
+      const R = W.refTimes(), list = W.LY() && R.corners; document.querySelector('#mindBtn').click(); W.mindTap();
+      for (let j = 0; j < list.length; j++) { W.mind.t0 = performance.now() - R.corners[j].t * 1000 * (j < 4 ? 0.6 : 1.0); W.mindTap(); }
+      W.mind.t0 = performance.now() - R.lap * 1000 * 0.9; W.mindTap(); const out = document.querySelector('#mindOut');
+      document.querySelector('#quizBtn').click(); const btns = document.querySelectorAll('#quizA button').length; W.quizAnswer(W.quiz.cur.answer); const s1 = document.querySelector('#quizScore').textContent; W.quizAsk(); W.quizAnswer('nonsense'); const s2 = document.querySelector('#quizScore').textContent;
+      const was = W.set.mode; W.virtualStart(); const v = { on: W.sim.on, mode: W.set.mode }; W.simStop();
+      return { corners: R.corners.length, lap: +R.lap.toFixed(1), mono: R.corners.every((c, i) => !i || c.t > R.corners[i - 1].t), mindOn: W.mind.on, summary: out.querySelector('b') && out.querySelector('b').textContent, rows: out.querySelectorAll('tr').length, btns, s1: s1.slice(0, 6), s2: s2.slice(0, 3), virtual: v, restored: W.set.mode === was }; }""")
+    print('HOME PRACTICE:', r)
+    assert r['corners'] == 12 and 50 < r['lap'] < 90 and r['mono'], 'reference lap wrong'
+    assert not r['mindOn'] and 'demo lap takes' in r['summary'] and r['rows'] == r['corners'] + 2, 'lap in your head report wrong'
+    assert r['btns'] == 3 and r['s1'] == 'Right.' and r['s2'] == 'No:', 'quiz wrong'
+    assert r['virtual'] == {'on': True, 'mode': 'talk'} and r['restored'], 'virtual lap did not run in talk mode or did not restore the mode'
+
+    # laps driven on one layout, then the Map tab switched to the other: the debrief must not crash and the model row must not mix layouts
+    r = pg.evaluate("""() => { const W = window.__wm; const errs = []; window.addEventListener('error', e => errs.push(String(e.message)));
+      Object.assign(W.st, { layout: 'nat', chic: true, wet: false, profile: 'novice' }); W.renderDebrief(); const before = document.querySelector('#debriefBody').innerHTML.length;
+      Object.assign(W.st, { layout: 'intl' }); W.setTab('coach'); W.renderDebrief(); const html = document.querySelector('#debriefBody').innerHTML; Object.assign(W.st, { layout: 'intl' });
+      return { before, after: html.length, modelRow: /<td>Model<\/td>/.test(html), errs }; }""")
+    print('LAYOUT SWITCH debrief:', r)
+    assert r['after'] > 0 and not r['errs'] and not r['modelRow'], 'debrief broke after a layout switch'
+
+    # the team table: two drivers' live laps kept on the phone, fastest per corner marked, cleared by the button
+    r = pg.evaluate("""() => { const W = window.__wm; Object.assign(W.st, { layout: 'intl', chic: true, wet: false, profile: 'novice' }); W.lapReset(W.simT()); W.team.laps = [];
+      const mk = (d, ms, t) => { document.querySelector('#driverName').value = d; const m = {}; W.LY(); ['oblivion', 'christmas', 'boot'].forEach((k, i) => { m[k] = { tSeg: t + i, vMin: 10 }; }); W.teamLog({ ms, m }); };
+      mk('Sam', 66000, 5.0); mk('Sam', 65500, 4.8); mk('Jo', 70000, 5.6); W.renderDebrief(); const html = document.querySelector('#debriefBody').innerHTML, rows = (html.match(/<tr>/g) || []).length, greens = (html.match(/class="pos"/g) || []).length;
+      document.querySelector('#teamClear').click(); const after = document.querySelector('#debriefBody').innerHTML; return { rows, greens, hasSam: /Sam/.test(html), cleared: !/Sam/.test(after), stored: (JSON.parse(localStorage.getItem('wm.team') || '[]')).length }; }""")
+    print('TEAM TABLE:', r)
+    assert r['rows'] == 3 and r['hasSam'] and r['greens'] >= 4 and r['cleared'] and r['stored'] == 0, 'team table wrong'
     print('errors', errs); b.close()
