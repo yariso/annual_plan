@@ -268,6 +268,7 @@ svg text{font-family:var(--display);fill:var(--ink)}
     </div>
     <div class="row">
       <button type="button" class="btn small" id="pocketBtn" hidden>Show the pocket screen</button>
+      <button type="button" class="btn small" id="gpsCheck">Check GPS here</button>
       <button type="button" class="btn small" id="testSound">Test the sound</button>
       <button type="button" class="btn small" id="lockNow">Lock map now</button>
       <button type="button" class="btn small" id="forgetLock" hidden>Forget map lock</button>
@@ -385,7 +386,7 @@ svg text{font-family:var(--display);fill:var(--ink)}
     <p class="muted" style="max-width:64ch">A tone sounds for exactly as long as your foot should be off the throttle. Its pitch tells you how hard: a low hum is a lift, a high tone is full braking. A chirp and then a word a moment earlier tell you what is coming, and two quick rising notes mean back to full throttle.</p>
     <ol>
         <li>On the Map tab set the chicane on or off, the driver level and dry or wet before you start. The lock finds International or National from your trace, but it cannot tell the chicane apart. The lap runs clockwise; the arrow at the start line shows the direction.</li>
-        <li>Press Start GPS, wait for it to say GPS ready, zip the phone away and drive. After one full lap the app fits the track map to your GPS trace, says Map locked, and remembers the lock for next time. If the circuit is running the other layout today it re-locks itself once a quarter of your fixes fall off the map, or press Forget map lock before you start.</li>
+        <li>Check GPS here works anywhere: ten seconds of fixes, then how many came, how accurate they were and how far you are from the circuit. Press Start GPS, wait for it to say GPS ready, zip the phone away and drive. After one full lap the app fits the track map to your GPS trace, says Map locked, and remembers the lock for next time. If the circuit is running the other layout today it re-locks itself once a quarter of your fixes fall off the map, or press Forget map lock before you start.</li>
         <li>From then on you get the tones and the words, and at the next quiet moment after the line the lap time with the gap to your best and one coaching point. If the phone loses its fix it says GPS lost and goes quiet, then GPS back when it returns. It cannot see flags: a yellow flag overrides anything it says.</li>
         <li>In the pits, read the debrief below. The venue times every session and prints your laps: compare them with the lap times here, because at one fix a second the app can be a few tenths out on the line. Its monthly rental leaderboard shows what quick hire drivers do on each layout.</li>
       </ol>
@@ -1543,6 +1544,24 @@ function liveStart() {
     pedalShow('#livePedal', s ? +LVL(E.L)[mod(Math.floor(s.cum + s.v * set.toneLead / E.L.step), E.n)] : 1);
   }, 100);
 }
+function gpsCheck() {           // anywhere, not only at the track: ten seconds of fixes, then how many came, how accurate, and how far from Whilton Mill
+  if (live.on) { toast('GPS is already running.'); return; } if (!('geolocation' in navigator)) { liveStatus('This browser has no location support.'); return; }
+  audioInit(); const b = $('#gpsCheck'); b.disabled = true; liveStatus('Checking GPS for ten seconds. Stand where you can see the sky.'); speak('Checking GPS');
+  const t0 = performance.now(), fixes = []; let w = null;
+  const done = () => {
+    if (w != null) navigator.geolocation.clearWatch(w); w = null; b.disabled = false;
+    if (!fixes.length) { liveStatus('No GPS fix in ten seconds. Move outside or nearer a window and try again.'); speak('No GPS fix yet'); return; }
+    const last = fixes[fixes.length - 1], acc = Math.min(...fixes.map(f => f.acc)), secs = Math.max(1, (performance.now() - t0) / 1000), rate = (fixes.length / secs).toFixed(1);
+    const R = 6371, dLat = (last.lat - SIM_ORIGIN.lat) * RAD, dLon = (last.lon - SIM_ORIGIN.lon) * RAD, h = Math.sin(dLat / 2) ** 2 + Math.cos(last.lat * RAD) * Math.cos(SIM_ORIGIN.lat * RAD) * Math.sin(dLon / 2) ** 2, km = 2 * R * Math.asin(Math.sqrt(h));
+    const where = km < 1 ? 'at Whilton Mill' : 'about ' + (km < 10 ? km.toFixed(1) : Math.round(km)) + ' km from Whilton Mill';
+    const msg = 'GPS works. ' + fixes.length + (fixes.length === 1 ? ' fix' : ' fixes') + ' in ' + Math.round(secs) + ' s (' + rate + ' a second), best accuracy ' + Math.round(acc) + ' m' + (last.spd != null ? ', speed ' + Math.round(last.spd * MPH) + ' mph' : '') + ', ' + where + '. Position ' + last.lat.toFixed(5) + ', ' + last.lon.toFixed(5) + '.';
+    liveStatus(msg); speak('GPS works. Accuracy ' + Math.round(acc) + ' metres, ' + rate + ' fixes a second.'); $('#liveAcc').textContent = Math.round(acc); $('#liveRate').textContent = rate;
+  };
+  w = navigator.geolocation.watchPosition(pos => { const c = pos.coords; fixes.push({ lat: c.latitude, lon: c.longitude, acc: c.accuracy || 999, spd: c.speed == null || isNaN(c.speed) ? null : c.speed }); liveStatus('Fix ' + fixes.length + ': accuracy ' + Math.round(c.accuracy || 0) + ' m. Keep still for ten seconds.'); },
+    err => { b.disabled = false; if (w != null) navigator.geolocation.clearWatch(w); w = null; liveStatus(err && err.code === 1 ? 'Location is blocked for this page. Allow it in the browser prompt, or in Settings, Safari, Location. If you opened this inside another app, open the link in Safari.' : 'No GPS fix (' + (err && err.message ? err.message : 'unknown error') + '). Move into the open and try again.'); },
+    { enableHighAccuracy: true, maximumAge: 0, timeout: 12000 });
+  setTimeout(done, 10000);
+}
 function liveStop(keepMsg) {
   live.on = false; if (live.watch != null) navigator.geolocation.clearWatch(live.watch); live.watch = null; clearInterval(live.timer); setTone(1); keepAwake(false); $('#liveBtn').textContent = 'Start GPS'; pocketShow(false); $('#pocketBtn').hidden = true; if (lapE.laps.length) $('#debriefDetails').open = true;
   if (live.rec.length > 5) { rec = live.rec; const ok = store.set('wm.rec', rec); if (!keepMsg) liveStatus('Stopped. ' + rec.length + ' fixes recorded' + (ok ? ' and kept on this phone.' : '. Could not store them on this phone, so save the CSV now.')); }
@@ -1601,6 +1620,7 @@ document.addEventListener('click', e => {
 document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('hit')) { e.preventDefault(); select(e.target.dataset.card, true); } });
 $('#simBtn').addEventListener('click', () => sim.on ? simStop() : simStart());
 $('#liveBtn').addEventListener('click', () => live.on ? liveStop() : liveStart());
+$('#gpsCheck').addEventListener('click', gpsCheck);
 $('#readBtn').addEventListener('click', () => reader.on ? readStop() : readStart());
 $('#virtBtn').addEventListener('click', virtualStart);
 $('#demoDetails').addEventListener('toggle', () => { if ($('#demoDetails').open) drawSim(); });
