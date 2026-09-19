@@ -37,4 +37,18 @@ with sync_playwright() as p:
     r = pg.evaluate(RUN, dict(layout='intl', rate=1, seconds=190, wet=True)); print('WET intl: laps', [l['s'] for l in r['laps']], 'first words', r['words'][:6])
     for cfg in (dict(truth='nat', startSel='intl', rot=37), dict(truth='intl', startSel='nat', rot=212)):
         print('FIT', cfg, '->', pg.evaluate(FIT, cfg))
+    # the Model driver level: a level string and a line for every layout, no one-point blips, and a lap of words and tones through the engine
+    m = pg.evaluate("""() => { const W = window.__wm; if (!W.M) return 'no model'; const out = {}; for (const lay of ['intl', 'nat']) for (const chic of [true, false]) for (const wet of [false, true]) {
+      Object.assign(W.st, { layout: lay, chic, wet, profile: 'model' }); const L = W.LY(), mk = W.MK(); if (!mk) { out[lay + chic + wet] = 'missing'; continue; }
+      const lv = W.LVL(L), n = L.centre.length, line = W.modelLine(L); let blips = 0; for (let i = 0; i < n; i++) { const a = lv[(i - 1 + n) % n], b = lv[(i + 1) % n]; if (lv[i] !== a && lv[i] !== b && a === b) blips++; }
+      out[lay + (chic ? '_c' : '_n') + (wet ? '_wet' : '')] = { lap: mk.lap, lvOk: lv.length === n, lineOk: line.length === n, blips }; }
+      Object.assign(W.st, { layout: 'intl', chic: true, wet: false, profile: 'novice' }); return out; }""")
+    print('MODEL levels and lines:', m)
+    if m != 'no model':
+        r = pg.evaluate(RUN, dict(layout='intl', rate=10, seconds=150, mode='words')); pg.evaluate("() => { window.__wm.st.profile = 'novice'; }")
+    r = pg.evaluate("""(cfg) => { const W = window.__wm; Object.assign(W.st, { layout: 'intl', chic: true, wet: false, profile: 'model' }); Object.assign(W.set, { mode: 'words', sayFlat: true, sayLift: true, sayBrake: true, coachSay: true, lapSay: false });
+      window.speechSynthesis.speak = () => {}; W.sim.rate = 10; W.sim.bad = false; W.sim.rot = 0; W.lapReset(W.simT()); const n = W.LY().centre.length, words = []; let now = 1000; W.lapE.onWord = (t, l) => words.push(t);
+      W.sim.pos = n - 18; W.sim.v = 17; W.sim.fixAcc = 1e9; W.sim.tickAcc = 0; const dt = 0.02; for (let s = 0; s < 150 / dt; s++) { now += dt * 1000; W.simStep(dt, now, true); }
+      const r = { words: words.length, laps: W.lapE.laps.map(l => +(l.ms / 1000).toFixed(2)) }; Object.assign(W.st, { profile: 'novice' }); return r; }""", {})
+    print('MODEL profile lap through the engine:', r)
     print('errors', errs); b.close()

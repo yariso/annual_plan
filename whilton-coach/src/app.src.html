@@ -180,6 +180,7 @@ svg text{font-family:var(--display);fill:var(--ink)}
   <div class="seg" role="group" aria-label="Driver level">
     <button type="button" data-profile="novice" aria-pressed="true">Novice</button>
     <button type="button" data-profile="expert" aria-pressed="false">Experienced</button>
+    <button type="button" data-profile="model" aria-pressed="false" title="The physics model's fastest lap for the hire kart: the limit for a perfect driver, not a target">Model</button>
   </div>
   <div class="seg" role="group" aria-label="2024 chicane before the last corner">
     <button type="button" data-chic="1" aria-pressed="true">With chicane</button>
@@ -325,6 +326,7 @@ svg text{font-family:var(--display);fill:var(--ink)}
       <li>The tone starts a fraction early to allow for your reaction time. If you find yourself braking late, raise the tone lead.</li>
       <li>With a phone giving one fix a second, the start of a tone is good to about 10 metres and its end to rather less, because a braking zone only lasts a second or so. At 10 to 25 fixes a second the receiver stops being the limit. What is left is the map itself, traced from a drawing and locked to your trace with a fit error of a few metres (shown under the Start GPS button), and the brake zones, which are estimates until you calibrate them from your own laps.</li>
       <li>The word lead counts from when the word starts, not when it ends, and phones take a moment to start speaking. Run the demo with your earpiece in and raise the word lead until the word has finished before the tone starts.</li>
+      <li>With the driver level set to Model, the tones and words follow the physics model's fastest lap for the hire kart on its own line. That is the limit for a perfect driver, so its brake points will feel late and its lifts short. Use it to hear where time is, not as a first-day target.</li>
       <li>In the wet, Talk me round uses general wet sentences (off the dry line, no kerbs, gentle) rather than the corner guides, because no Whilton-specific wet guide exists in writing.</li>
     </ul>
   </div>
@@ -376,6 +378,7 @@ svg text{font-family:var(--display);fill:var(--ink)}
 (function(){
 'use strict';
 const D = __DATA__;
+const M = __MODEL__;   // the lap time model's results (model/laptime.py), or null
 const NS = 'http://www.w3.org/2000/svg';
 const $ = (s, r) => (r || document).querySelector(s);
 const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
@@ -566,10 +569,25 @@ const LABELS = {
 /* ---------------- state ---------------- */
 const st = { layout: 'intl', chic: true, wet: false, profile: 'novice', tab: 'map', sel: null, show: { names: true, markers: true, kerbs: true } };
 const pick = v => { if (v && typeof v === 'object') { if ('c' in v || 'n' in v) return pick(v[st.chic ? 'c' : 'n']); if ('nat' in v || 'intl' in v) return v[st.layout]; } return v; };
-const lvOf = c => { if (!st.wet) return pick(c.lv)[st.profile]; const L = LY(), lv = LVL(L), n = lv.length, a = L.corners[c.prims[0]], b = L.corners[c.prims[c.prims.length - 1]]; let m = 1; rangeIdx(a.a - 30, b.i, n).forEach(i => { m = Math.max(m, +lv[i]); }); return m; };
+const lvOf = c => { if (!st.wet && st.profile !== 'model') return pick(c.lv)[st.profile]; const L = LY(), lv = LVL(L), n = lv.length, a = L.corners[c.prims[0]], b = L.corners[c.prims[c.prims.length - 1]]; let m = 1; rangeIdx(a.a - 30, b.i, n).forEach(i => { m = Math.max(m, +lv[i]); }); return m; };
 const LY = () => D.layouts[st.layout + (st.chic ? '_c' : '_n')];
-const LVL = L => (st.wet ? L.levels_w : L.levels)[st.profile];
-const LINE = L => st.wet ? L.line_w : L.line;
+// the model result the app follows when the driver level is Model: the hire kart, dry or wet
+const MK = () => { const lay = M && M.layouts[st.layout + (st.chic ? '_c' : '_n')]; return (lay && lay.karts['hire' + (st.wet ? '_w' : '')]) || null; };
+const LVL = L => st.profile === 'model' && MK() ? MK().levels : (st.wet ? L.levels_w : L.levels)[st.profile === 'model' ? 'expert' : st.profile];
+const modelLineCache = {};
+function modelLine(L) {
+  // the model's line: sideways offsets every 4 m (left of travel positive) laid onto the centreline
+  const id = st.layout + (st.chic ? '_c' : '_n') + (st.wet ? 'w' : 'd'); if (modelLineCache[id]) return modelLineCache[id];
+  const mk = MK(); if (!mk) return null; const n = L.centre.length, o = mk.o4, m = o.length, out = [];
+  for (let i = 0; i < n; i++) {
+    const q = i * m / n, j = Math.floor(q) % m, k = (j + 1) % m, off = o[j] + (o[k] - o[j]) * (q - Math.floor(q));
+    const p = L.centre[i], a = L.centre[mod(i - 1, n)], b = L.centre[(i + 1) % n], dx = b[0] - a[0], dy = b[1] - a[1], dl = Math.hypot(dx, dy) || 1;
+    const ex = D.half / (M.params.track_width / 2);     // the map draws the track wider than life, so the line's offsets are drawn wider too
+    out.push([p[0] + off * ex * dy / dl, p[1] - off * ex * dx / dl]);
+  }
+  return (modelLineCache[id] = out);
+}
+const LINE = L => (st.profile === 'model' && modelLine(L)) || (st.wet ? L.line_w : L.line);
 const cardList = () => { const base = LAYOUTS[st.layout].cards; if (!st.chic) return base; const out = base.slice(); out.splice(out.length - 1, 0, ['chicane', 'new']); return out; };
 const NUM = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven'];
 const joinNames = a => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
@@ -677,7 +695,7 @@ function renderMap(svg, o) {
   if (o.dot) { const g = el('g', { id: o.dot }, [el('circle', { r: 5.5, fill: 'var(--ink)', stroke: '#fff', 'stroke-width': 2.2 })]); g.setAttribute('transform', 'translate(' + LN[0][0] + ' ' + LN[0][1] + ')'); svg.appendChild(g); }
 }
 function drawMain() {
-  $('#mapcap').textContent = 'The lap runs clockwise and Oblivion, the first corner, is a left. ' + (st.layout === 'intl' ? 'International circuit, the blue line on the Kart Directory map.' : 'National circuit. It turns off at Inkermans and rejoins on the short straight before The Boot.') + ' Grey is tarmac this layout does not use. Track width is exaggerated so the line shows up. The lengths on the buttons are the venue\'s figures.' + (st.wet ? ' Wet line: off the rubbered dry line, earlier and gentler braking, no kerbs. This is general wet technique, not a Whilton-specific source.' : '');
+  $('#mapcap').textContent = 'The lap runs clockwise and Oblivion, the first corner, is a left. ' + (st.layout === 'intl' ? 'International circuit, the blue line on the Kart Directory map.' : 'National circuit. It turns off at Inkermans and rejoins on the short straight before The Boot.') + ' Grey is tarmac this layout does not use. Track width is exaggerated so the line shows up. The lengths on the buttons are the venue\'s figures.' + (st.profile === 'model' ? ' Model: the line and colours are the physics model\'s fastest lap for the hire kart, the limit for a perfect driver, not a guide. See the Plan tab.' : '') + (st.wet ? ' Wet line: off the rubbered dry line, earlier and gentler braking, no kerbs. This is general wet technique, not a Whilton-specific source.' : '');
   renderMap($('#map'), { names: st.show.names, markers: st.show.markers, kerbs: st.show.kerbs, targets: true, select: true });
 }
 
@@ -728,7 +746,7 @@ function pedalPlan(c) {
     return '<li><span class="lvdot" style="background:' + lvColor(r.l) + '">' + r.l + '</span><span><b>' + name + '</b> for about ' + Math.round(r.len) + ' m, starting ' + where(r.from) + '.</span></li>';
   });
   if (!items.length) return '<p style="margin:0">Full throttle all the way through.</p>';
-  return '<ul class="kl pedal">' + items.join('') + '<li><span class="lvdot" style="background:' + lvColor(1) + '">1</span><span><b>Full throttle</b> from the apex.</span></li></ul><p class="small muted" style="margin:4px 0 0">Distances are estimates read off the map for the ' + (st.profile === 'novice' ? 'novice' : 'experienced') + ' profile' + (st.wet ? ' in the wet' : '') + '. Use the brake marker on track and treat the metres as a guide.</p>';
+  return '<ul class="kl pedal">' + items.join('') + '<li><span class="lvdot" style="background:' + lvColor(1) + '">1</span><span><b>Full throttle</b> from the apex.</span></li></ul><p class="small muted" style="margin:4px 0 0">Distances are ' + (st.profile === 'model' ? 'what the physics model does on its own line, the limit for a perfect driver in a hire kart' : 'estimates read off the map for the ' + (st.profile === 'novice' ? 'novice' : 'experienced') + ' profile') + (st.wet ? ' in the wet' : '') + '. Use the brake marker on track and treat the metres as a guide.</p>';
 }
 function factRows(c) {
   const rows = [['How hard, and from where to where', null, pedalPlan(c)], ['Brake marker', c.marker], ['Line', c.line]];
@@ -834,6 +852,7 @@ function renderPlan() {
     '<li>Some hire circuits use a white flag or a board for the last lap; at licensed meetings a white flag means a slow kart ahead. Meanings vary a little between venues and series, so the briefing wins over this list.</li>' +
     '</ul><p class="small muted" style="margin-top:8px">General UK karting flag meanings, not Whilton\'s briefing.</p></div>' +
     '<div class="panel"><h3>Passing places</h3><p>Into Christmas under braking' + (nat ? ', into the Inkermans hairpin,' : ', into the Ashby hairpin, up the inside at Chapmans,') + ' and between the two parts of The Boot, which is easy to mistime' + (st.chic ? '. The braking zone for the chicane is likely to be another, though no guide covers it yet' : '') + '. When defending, hold the inside line into those braking zones and keep the exit of The Boot tidy.</p></div>' +
+    modelPanel() +
     '<div class="panel"><h3>What was checked, and against what</h3><ul class="kl">' +
     kb('ok', 'Corner order on both layouts: three written guides, a Club100 race report and the circuit map agree. Names vary between sources: the 2013 KCL guide calls the left into The Boot Chapmans, a Club100 race report calls Parker and Chapmans Wilkins and Osiers, the Club100 venue page places Osiers before the short straight to The Boot, and the last corner is also known as Championship Bend. The guides call both long straights the back straight, so this guide says the straight up to Christmas and the short straight down to The Boot instead.') +
     kb('care', 'Turn numbers on the International follow the BUKC and NRDD guides. The BUKC National guide numbers only the first two corners, so the National numbers here are this guide\'s own count on the same pattern, keeping shared corners on the same numbers. Other listings count 12, 13 or 14 turns. Use the names at the briefing.') +
@@ -874,6 +893,28 @@ function renderPlan() {
     '</ul></div>';
 }
 
+function modelPanel() {
+  const lay = M && M.layouts[st.layout + (st.chic ? '_c' : '_n')]; if (!lay) return '';
+  const h = lay.karts.hire, hw = lay.karts.hire_w, rc = lay.karts.race, rw = lay.karts.race_w, mph = v => Math.round(v) + ' mph';
+  const row = (name, r, w) => r ? '<tr><td>' + name + '</td><td>' + r.lap.toFixed(2) + ' s</td><td>' + r.cl.toFixed(2) + ' s</td><td>' + (w ? w.lap.toFixed(2) + ' s' : '') + '</td><td>' + r.v_mean + '</td><td>' + r.v_max + '</td><td>' + Math.round(r.flat * 100) + '%</td></tr>' : '';
+  const L = LY(), list = cardList();
+  const crow = ([key, tn]) => { const c = CARDS[key], first = h.corners[c.prims[0]]; if (!first) return ''; let vmin = 1e9, lvl = 1; c.prims.forEach(p => { const x = h.corners[p]; if (x) { vmin = Math.min(vmin, x.v_min); lvl = Math.max(lvl, x.level); } }); const bb = first.brake_before_turnin_m, lvN = pick(c.lv);
+    return '<tr><td>' + esc(c.name) + '</td><td>' + Math.round(vmin) + '</td><td>' + (bb == null ? 'none' : bb >= 0 ? Math.round(bb) + ' m before' : Math.round(-bb) + ' m after') + '</td><td>' + LV[lvl].name + '</td><td>' + LV[lvN.novice].name + ' / ' + LV[lvN.expert].name + '</td></tr>'; };
+  const sw = M.sweeps || {}, swRow = (label, k) => sw[k] ? '<tr><td>' + label + '</td><td>' + sw[k].lap.toFixed(2) + ' s</td><td>' + sw[k].v_mean + ' mph</td></tr>' : '';
+  const B = M.benchmark;
+  return '<div class="panel"><h3>What the physics model says</h3>' +
+    '<p style="max-width:64ch">A point-mass kart on the traced track with an estimated hill (' + M.params.hill + ' m from Ashby up to Christmas), driven at the limit of its grip, engine and rear brakes. Its racing line was optimised over and over, ' + h.rounds + ' rounds for the hire kart on this layout, until it stopped improving. This is the limit for a perfect driver, not a target for a novice: switch the driver level to Model to see its line on the map and hear its braking in the coach.</p>' +
+    '<div style="overflow-x:auto"><table class="deb"><thead><tr><th>Kart</th><th>Fastest lap</th><th>Centreline</th><th>Wet</th><th>Average, mph</th><th>Top, mph</th><th>Flat out</th></tr></thead><tbody>' + row('Hire kart, 390cc', h, hw) + row('Race kart, two-stroke', rc, rw) + '</tbody></table></div>' +
+    (B ? '<p class="small muted" style="margin:6px 0 0">For comparison, a ' + B.hire_record_s.toFixed(2) + ' s hire-kart lap has been recorded on the International before the chicane. The model with the published kart figures and the 1200 m map is slower than that; the sensitivity rows below show what closes the gap.</p>' : '') +
+    '<h3 style="margin-top:12px">Hire kart, corner by corner' + (st.wet ? ' (dry figures)' : '') + '</h3>' +
+    '<div style="overflow-x:auto"><table class="deb"><thead><tr><th>Corner</th><th>Slowest, mph</th><th>Brakes on, from turn-in</th><th>Model</th><th>Guide, novice / experienced</th></tr></thead><tbody>' + list.map(crow).join('') + '</tbody></table></div>' +
+    (Object.keys(sw).length ? '<h3 style="margin-top:12px">What nobody has measured, and how much it matters</h3><p class="small muted" style="margin:0 0 6px">International without the chicane, hire kart, dry, shorter runs.</p><div style="overflow-x:auto"><table class="deb"><thead><tr><th>Case</th><th>Lap</th><th>Average</th></tr></thead><tbody>' +
+      swRow('Flat track', 'hill_0m') + swRow('Hill 4 m', 'hill_4m') + swRow('Hill 8 m (used)', 'hill_8m') + swRow('Hill 12 m', 'hill_12m') +
+      swRow('Grip 15% less', 'grip_x0.85') + swRow('Grip as used', 'grip_x1.00') + swRow('Grip 15% more', 'grip_x1.15') + swRow('Grip 30% more', 'grip_x1.30') +
+      swRow('Track 7 m wide', 'width_7m') + swRow('Track 9 m wide', 'width_9m') + swRow('Lap 1054 m, as the 2025 regulations say', 'length_1054m') +
+      swRow('1054 m and grip 15% more', 'calib|len_1054m_grip_x1.15'.split('|')[1]) + swRow('1054 m and grip 30% more', 'len_1054m_grip_x1.30') + swRow('1054 m and grip 45% more', 'len_1054m_grip_x1.45') + swRow('1200 m and grip 30% more', 'len_1200m_grip_x1.30') + '</tbody></table></div>' : '') +
+    '<p class="small muted" style="margin-top:8px">Nothing here was measured at the circuit: the hill, the track width, the lap length and the kart\'s grip are estimates, and a point mass has no feel. Trust the relative results (which corners cost most, what the line is worth, how the hill moves the brake points) more than the lap time. Details and the round-by-round record: docs/laptime-model.md and data/model.json.</p></div>';
+}
 function select(key, scroll) {
   st.sel = key; drawMain(); renderCard(); renderStrip();
   if (scroll && window.matchMedia('(max-width:899px)').matches) { const c = $('#card'); if (c && c.scrollIntoView) c.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
@@ -884,6 +925,7 @@ function refreshAll() {
   $$('[data-chic]').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.chic === '1') === st.chic)));
   $$('[data-wet]').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.wet === '1') === st.wet)));
   if (st.sel && !cardList().some(x => x[0] === st.sel)) st.sel = null;
+  const mb = $('[data-profile="model"]'); if (mb) { mb.disabled = !MK(); if (!MK() && st.profile === 'model') { st.profile = 'expert'; mb.setAttribute('aria-pressed', 'false'); $('[data-profile="expert"]').setAttribute('aria-pressed', 'true'); } }
   drawMain(); renderStrip(); renderCard(); renderAcc(); renderPlan(); drawSim();
 }
 function setTab(t) {
@@ -1317,7 +1359,7 @@ bindNum('#setWordLead', 'wordLead'); bindNum('#setToneLead', 'toneLead'); bindNu
 $('#setMode').value = set.mode; $('#setMode').addEventListener('change', e => { set.mode = e.target.value; saveSettings(); });
 
 renderLegend(); refreshAll(); lockInfo(); renderDebrief();
-window.__wm = { D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, setRec: r => { rec = r; }, getRec: () => rec };
+window.__wm = { D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, MK, modelLine, M, setRec: r => { rec = r; }, getRec: () => rec };
 })();
 </script>
 </body>

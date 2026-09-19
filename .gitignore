@@ -2,3 +2,4 @@ __pycache__/
 *.pyc
 .DS_Store
 node_modules/
+whilton-coach/data/model_quick.json

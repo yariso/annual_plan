@@ -16,6 +16,15 @@ python tests/test_coach.py
 ```
 In a sandbox with a preinstalled Chromium (such as Claude Code on the web) install the Playwright version whose Chromium revision matches it instead of running `playwright install`; Playwright 1.56 matches Chromium revision 1194.
 
+## Lap time model
+```
+pip install numba
+python3 model/laptime.py            # all layouts, both karts, dry and wet, plus the sensitivity sweeps (about 20 minutes on 4 cores)
+python3 model/laptime.py --quick    # one layout, one kart: a smoke test
+python3 build/build.py              # embeds data/model.json in dist/index.html
+```
+`model/laptime.py` finds the fastest possible lap for a point-mass kart on the traced track with an estimated hill: for any racing line it solves the speed profile at the limit of grip, engine and rear brakes, then it re-optimises the line over and over until it stops improving. Results go to `data/model.json` and `docs/laptime-model.md`, and the app shows them as the Model driver level and a Plan tab panel. Everything in it rests on estimates (hill, width, lap length, grip), so read the caveats in the report.
+
 ## What it does
 - Before the race: the Map, Corners and Plan tabs give the line, the pedal plan, the brake marker and a kerb verdict for every corner, plus a session plan, what to bring and ask at the briefing, the flags, the hire-kart facts and what was checked against which source. On the Coach tab, Read me the lap speaks the whole lap corner by corner for the queue.
 - During the race: tones and words in the earpiece for every lift and brake, the lap time and gap to best after each lap, one coaching point per lap, and GPS ready, lost and back announcements.
