@@ -1,0 +1,1145 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Whilton Mill line guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --ground:#EDF1E8; --panel:#FFFFFF; --field:#DCE7D3; --ink:#17211B; --muted:#52615A; --rule:#C9D4C4;
+  --tarmac:#3D4349; --edge:#FFFFFF; --accent:#D9480F; --on-accent:#FFFFFF;
+  --l1:#22B565; --l2:#D2E34A; --l3:#FFC914; --l4:#FF8A1F; --l5:#FF3B4E; --on-level:#0E1A13;
+  --ghost:#B3BFAE; --kerb:#D7263D; --ok:#1E9E54; --care:#E0A100; --no:#D7263D;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:Barlow,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#111914; --panel:#1A251F; --field:#1E2D24; --ink:#E8F0E9; --muted:#A0B1A6; --rule:#2F3E35;
+    --tarmac:#4B535A; --edge:#CBD4CD; --accent:#FF7A2F; --on-accent:#1A0E06; --ghost:#3A4B40;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#111914; --panel:#1A251F; --field:#1E2D24; --ink:#E8F0E9; --muted:#A0B1A6; --rule:#2F3E35;
+  --tarmac:#4B535A; --edge:#CBD4CD; --accent:#FF7A2F; --on-accent:#1A0E06; --ghost:#3A4B40;
+}
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none !important}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.5 var(--body);padding-bottom:76px}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.1;margin:0;letter-spacing:.005em}
+h1{font-size:27px}
+h2{font-size:24px}
+h3{font-size:19px;font-weight:600}
+p{margin:0 0 10px}
+a{color:inherit}
+button{font:inherit;color:inherit}
+button:focus-visible,summary:focus-visible,select:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 14px}
+header.top{padding:16px 0 0}
+header.top p{color:var(--muted);margin:2px 0 9px;max-width:60ch;font-size:15px;line-height:1.35}
+.kerbline{height:7px;background:repeating-linear-gradient(90deg,var(--kerb) 0 22px,#fff 22px 44px);border-radius:2px}
+
+.controls{display:flex;flex-wrap:wrap;gap:8px 10px;margin:14px 0 10px}
+.seg{display:inline-flex;border:1.5px solid var(--ink);border-radius:999px;overflow:hidden;background:var(--panel)}
+.seg button{border:0;background:transparent;padding:8px 13px;font:600 15px/1 var(--display);letter-spacing:.01em;cursor:pointer;min-height:36px}
+.seg button small{font:500 12px/1 var(--display);opacity:.75;margin-left:4px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--ground)}
+
+.mapgrid{display:grid;gap:14px}
+@media (min-width:900px){.mapgrid{grid-template-columns:minmax(0,3fr) minmax(0,2fr);align-items:start}}
+.mapbox{background:var(--field);border-radius:14px;padding:6px 4px 8px;border:1px solid var(--rule)}
+.mapbox svg{display:block;width:100%;height:auto;touch-action:manipulation}
+.cap{font-size:13px;color:var(--muted);margin:6px 8px 0}
+.legend{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin:10px 0 0;padding:0;list-style:none}
+.legend li{display:grid;gap:4px;font:600 12.5px/1.1 var(--display);text-align:center;color:var(--muted)}
+.sw5{display:block;border-radius:5px;padding:5px 0;font:700 14px/1 var(--display);color:var(--on-level)}
+.key{display:flex;flex-wrap:wrap;gap:4px 14px;margin:9px 0 0;font-size:13.5px;color:var(--muted)}
+.key>span{display:inline-flex;align-items:center;gap:5px}
+.key .kb{margin:0;width:17px;height:17px;font-size:11px}
+.lvdot{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;font:700 12px/1 var(--display);color:var(--on-level)}
+.sym{display:inline-block;width:20px;height:20px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
+.chip{border:1.5px solid var(--rule);background:transparent;border-radius:999px;padding:6px 12px;font:600 14px/1 var(--display);cursor:pointer;min-height:32px}
+.chip[aria-pressed="true"]{border-color:var(--ink);background:var(--panel)}
+
+.strip{margin:14px 0 0}
+.strip .bar{display:flex;height:18px;border-radius:5px;overflow:hidden;border:1px solid var(--rule)}
+.strip .bar i{display:block;height:100%}
+.strip .ticks{position:relative;height:22px;margin-top:3px}
+.strip .ticks button{position:absolute;top:0;transform:translateX(-50%);border:0;background:none;padding:2px 3px;font:600 12px/1 var(--display);color:var(--muted);cursor:pointer}
+.strip .ticks button[aria-current="true"]{color:var(--accent)}
+.strip p{font-size:14px;color:var(--muted);margin:4px 0 0}
+
+.card{background:var(--panel);border:1px solid var(--rule);border-left:8px solid var(--lv,var(--rule));border-radius:12px;padding:14px 14px 12px}
+.card .head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin-bottom:6px}
+.card .tn{font:600 15px/1 var(--display);color:var(--muted)}
+.card .kind{color:var(--muted);font-size:14px;flex-basis:100%}
+.badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 11px 4px 5px;font:600 15px/1 var(--display);background:var(--lv);color:var(--on-level)}
+.badge b{display:inline-grid;place-items:center;width:21px;height:21px;border-radius:50%;background:rgba(255,255,255,.55);font-weight:700}
+.zoom{background:var(--field);border-radius:10px;margin:8px 0 2px;overflow:hidden}
+.zoom svg{display:block;width:100%;height:auto}
+.card .do{font-size:17px;line-height:1.45;margin:8px 0 10px;max-width:62ch}
+dl.facts{margin:0;display:grid;grid-template-columns:1fr;gap:0}
+dl.facts div{padding:8px 0;border-top:1px solid var(--rule)}
+dl.facts dt{font:600 14px/1.2 var(--display);color:var(--muted);margin-bottom:2px}
+dl.facts dd{margin:0;max-width:64ch}
+.nav2{display:flex;gap:8px;margin-top:10px}
+.btn{border:1.5px solid var(--ink);background:transparent;border-radius:10px;padding:10px 14px;font:600 16px/1 var(--display);cursor:pointer;min-height:42px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.small{padding:7px 10px;min-height:34px;font-size:14px}
+.btn[disabled]{opacity:.45;cursor:default}
+.nav2 .btn{flex:1}
+
+details.acc{background:var(--panel);border:1px solid var(--rule);border-left:8px solid var(--lv,var(--rule));border-radius:12px;margin:0 0 8px}
+details.acc summary{list-style:none;cursor:pointer;padding:12px 14px;display:flex;align-items:center;gap:10px}
+details.acc summary::-webkit-details-marker{display:none}
+details.acc summary .nm{font:700 20px/1.1 var(--display);flex:1}
+details.acc summary .tn{font:600 14px/1 var(--display);color:var(--muted);min-width:34px}
+details.acc .inner{padding:0 14px 12px}
+
+.panel{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:14px;margin:0 0 12px}
+.panel h3{margin-bottom:8px}
+.panel ul,.panel ol{margin:0;padding-left:20px}
+.panel li{margin:0 0 7px;max-width:64ch}
+.two{display:grid;gap:12px}
+@media (min-width:820px){.two{grid-template-columns:1fr 1fr}}
+.kl{list-style:none;padding:0 !important}
+.kl li{display:flex;gap:9px;align-items:flex-start}
+.kl.pedal{margin:2px 0 0}
+.kl.pedal li{margin:0 0 5px;align-items:center}
+.kl.pedal .lvdot{flex:none}
+.kb{flex:none;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;color:#fff;font:700 13px/1 var(--display);margin-top:2px}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+.read{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.read div{background:var(--ground);border-radius:10px;padding:8px 10px}
+.read b{display:block;font:700 26px/1 var(--display);font-variant-numeric:tabular-nums}
+.read span{font-size:12.5px;color:var(--muted)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}
+label.f{display:grid;gap:3px;font:600 14px/1.2 var(--display);color:var(--muted)}
+label.f select,label.f input[type=number]{font:500 16px/1.2 var(--body);color:var(--ink);background:var(--ground);border:1.5px solid var(--rule);border-radius:8px;padding:8px;min-width:0;width:100%}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:10px}
+.sw{display:flex;align-items:center;gap:8px;font-size:15px}
+.sw input{width:20px;height:20px;accent-color:var(--accent)}
+.status{font-size:14.5px;border-left:4px solid var(--accent);padding:6px 10px;background:var(--ground);border-radius:0 8px 8px 0;margin:8px 0}
+.pedalnow{font:700 30px/1 var(--display);text-align:center;padding:12px;border-radius:10px;background:var(--l1);color:var(--on-level);margin-top:8px}
+.word{font:600 19px/1.2 var(--display);text-align:center;min-height:26px;margin:6px 0 0;color:var(--ink)}
+table.deb{width:100%;border-collapse:collapse;font-size:14.5px;font-variant-numeric:tabular-nums}
+table.deb th{text-align:left;font:600 13px/1.2 var(--display);color:var(--muted);padding:4px 6px 4px 0;border-bottom:1.5px solid var(--rule)}
+table.deb td{padding:5px 6px 5px 0;border-bottom:1px solid var(--rule)}
+table.deb td.neg{color:var(--no);font-weight:600}
+ol.tips{margin:0 0 10px;padding-left:20px}
+ol.tips li{margin:0 0 6px}
+.cueflash{font:700 34px/1 var(--display);text-align:center;padding:10px;border-radius:10px;background:var(--ground);min-height:54px;transition:background .15s}
+.cueflash.on{background:var(--l5);color:var(--on-level)}
+.cuelist{list-style:none;padding:0 !important;margin:8px 0 0}
+.cuelist li{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--rule);max-width:none}
+.cuelist li>span:not(.lvdot){flex:1 1 120px}
+.cuelist .btns{flex-basis:100%;display:flex;gap:8px}
+.cuelist select.nm{flex:1 1 120px;min-width:0;font:500 16px/1.2 var(--body);color:var(--ink);background:var(--ground);border:1.5px solid var(--rule);border-radius:8px;padding:7px}
+#trace{display:block;width:100%;height:auto;background:var(--field);border-radius:10px;touch-action:manipulation}
+
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--panel);border-top:1px solid var(--rule);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.tabs button{flex:1;max-width:200px;border:0;background:none;padding:9px 4px 10px;display:grid;justify-items:center;gap:3px;font:600 14px/1 var(--display);color:var(--muted);cursor:pointer;border-top:3px solid transparent}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-top-color:var(--accent)}
+nav.tabs svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+section.tab{padding-top:4px}
+section.tab>h2{margin:14px 0 10px}
+#toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--ground);padding:9px 14px;border-radius:999px;font-size:14.5px;z-index:30;max-width:90vw}
+
+svg text{font-family:var(--display);fill:var(--ink)}
+.lbl{font-weight:600;font-size:12.5px;paint-order:stroke;stroke:var(--field);stroke-width:3.2px;stroke-linejoin:round;cursor:pointer}
+.lbl.sel{fill:var(--accent)}
+.hit{fill:none;stroke:transparent;stroke-width:36;pointer-events:stroke;cursor:pointer}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <h1>Whilton Mill line guide</h1>
+  <p>Where to brake, how hard, and which kerbs to use, corner by corner.</p>
+  <div class="kerbline" aria-hidden="true"></div>
+</header>
+
+<div class="controls" id="controls">
+  <div class="seg" role="group" aria-label="Circuit layout">
+    <button type="button" data-layout="intl" aria-pressed="true">International<small>1200 m</small></button>
+    <button type="button" data-layout="nat" aria-pressed="false">National<small>960 m</small></button>
+  </div>
+  <div class="seg" role="group" aria-label="Driver level">
+    <button type="button" data-profile="novice" aria-pressed="true">Novice</button>
+    <button type="button" data-profile="expert" aria-pressed="false">Experienced</button>
+  </div>
+  <div class="seg" role="group" aria-label="2024 chicane before the last corner">
+    <button type="button" data-chic="1" aria-pressed="true">With chicane</button>
+    <button type="button" data-chic="0" aria-pressed="false">Without</button>
+  </div>
+  <div class="seg" role="group" aria-label="Track conditions">
+    <button type="button" data-wet="0" aria-pressed="true">Dry</button>
+    <button type="button" data-wet="1" aria-pressed="false">Wet</button>
+  </div>
+</div>
+
+<main>
+<section class="tab" id="tab-map">
+  <div class="mapgrid">
+    <div>
+      <div class="mapbox">
+        <svg id="map" role="img" aria-label="Track diagram with the racing line coloured by braking effort"></svg>
+        <p class="cap" id="mapcap"></p>
+      </div>
+      <ul class="legend" id="legend" aria-label="Braking scale"></ul>
+      <div class="chips" role="group" aria-label="Map layers">
+        <button type="button" class="chip" data-show="names" aria-pressed="true">Corner names</button>
+        <button type="button" class="chip" data-show="markers" aria-pressed="true">Brake markers</button>
+        <button type="button" class="chip" data-show="kerbs" aria-pressed="true">Kerbs</button>
+      </div>
+      <div class="key">
+        <span><svg class="sym" style="width:16px;height:16px" viewBox="-10 -10 20 20" aria-hidden="true"><rect x="-6" y="-6" width="12" height="12" rx="1.5" transform="rotate(45)" fill="var(--accent)"/></svg>marshal post to brake by</span>
+        <span><svg class="sym" style="width:18px;height:16px" viewBox="-10 -10 20 20" aria-hidden="true"><line x1="-9" x2="9" stroke="var(--accent)" stroke-width="3.4" stroke-dasharray="4 2.5"/></svg>change of tarmac</span>
+        <span><span class="kb" style="background:var(--ok)">&#10003;</span>kerb or run-off to use</span>
+        <span><span class="kb" style="background:var(--care)">!</span>with care</span>
+        <span><span class="kb" style="background:var(--no)">&#10005;</span>stay off</span>
+        <span><span class="kb" style="background:var(--muted)">?</span>no guide covers it (shown in corner close-ups)</span>
+      </div>
+      <div class="strip" id="strip"></div>
+    </div>
+    <div id="card" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="tab" id="tab-corners" hidden>
+  <h2>Every corner in lap order</h2>
+  <div id="acc"></div>
+</section>
+
+<section class="tab" id="tab-plan" hidden>
+  <h2>Session plan</h2>
+  <div id="plan"></div>
+</section>
+
+<section class="tab" id="tab-coach" hidden>
+  <h2>Audio coach</h2>
+  <p class="muted" style="max-width:64ch">A tone sounds for exactly as long as your foot should be off the throttle. Its pitch tells you how hard: a low hum is a lift, a high tone is full braking. A word a moment earlier tells you what is coming, and two quick rising notes mean back to full throttle. After each lap it tells you the one thing to change.</p>
+
+  <div class="two">
+    <div class="panel">
+      <h3>Try it on the map</h3>
+      <div class="mapbox" style="padding:2px"><svg id="simmap" role="img" aria-label="Demo lap"></svg></div>
+      <div class="pedalnow" id="simPedal" aria-live="off">Flat out</div>
+      <div class="word" id="simWord" aria-live="assertive"></div>
+      <div class="read">
+        <div><b id="simSpd">0</b><span>mph</span></div>
+        <div><b id="simLap">0:00.0</b><span>this lap</span></div>
+        <div><b id="simLast">none</b><span>last lap</span></div>
+      </div>
+      <div class="row">
+        <button type="button" class="btn primary" id="simBtn">Start demo lap</button>
+        <label class="f" style="flex:1;min-width:170px">GPS quality to simulate
+          <select id="simRate"><option value="1">Phone, 1 fix per second</option><option value="10">Receiver, 10 per second</option><option value="25">Receiver, 25 per second</option></select>
+        </label>
+      </div>
+      <label class="sw"><input type="checkbox" id="simBad"> Demo driver makes novice mistakes, so the coach has something to say</label>
+      <p class="small muted" style="margin-top:8px">The demo follows the layout, driver level and dry or wet setting chosen on the Map tab. Turn your volume up and let it run two laps to hear the coaching.</p>
+    </div>
+
+    <div class="panel">
+      <h3>At the circuit</h3>
+      <ol>
+        <li>Press Start GPS, zip the phone away and drive. After one full lap the app fits the track map to your GPS trace and locks it. It remembers the lock for next time.</li>
+        <li>From then on you get the tones, the words and a lap time each lap, and one coaching point on the climb to Christmas.</li>
+        <li>In the pits, read the debrief below.</li>
+      </ol>
+      <div class="pedalnow" id="livePedal" aria-live="off">Flat out</div>
+      <div class="word" id="liveWord" aria-live="assertive"></div>
+      <div class="read">
+        <div><b id="liveSpd">0</b><span>mph</span></div>
+        <div><b id="liveRate">0.0</b><span>fixes per second</span></div>
+        <div><b id="liveAcc">none</b><span>accuracy, m</span></div>
+        <div><b id="liveLap">0:00.0</b><span>this lap</span></div>
+        <div><b id="liveLast">none</b><span>last lap</span></div>
+        <div><b id="liveBest">none</b><span>best lap</span></div>
+      </div>
+      <div class="row">
+        <button type="button" class="btn primary" id="liveBtn">Start GPS</button>
+        <button type="button" class="btn small" id="lockNow">Lock map now</button>
+        <button type="button" class="btn small" id="forgetLock" hidden>Forget map lock</button>
+      </div>
+      <div class="status" id="liveStatus">Not running.</div>
+      <p class="small muted" id="lockInfo" style="margin:0"></p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>What you hear</h3>
+    <div class="grid3">
+      <label class="f">Style
+        <select id="setMode"><option value="words">Words and tones</option><option value="tones">Tones only</option><option value="talk">Talk me round, for slow laps</option></select>
+      </label>
+      <label class="f">Words this many seconds ahead
+        <input type="number" id="setWordLead" min="0.5" max="4" step="0.1">
+      </label>
+      <label class="f">Tones this many seconds ahead
+        <input type="number" id="setToneLead" min="0" max="1.5" step="0.05">
+      </label>
+      <label class="f">GPS delay allowance, seconds
+        <input type="number" id="setDelay" min="0" max="1.5" step="0.05">
+      </label>
+    </div>
+    <div class="row">
+      <label class="sw"><input type="checkbox" id="set_toneBrake"> Brake tones</label>
+      <label class="sw"><input type="checkbox" id="set_toneLift"> Lift hum</label>
+      <label class="sw"><input type="checkbox" id="set_goBlip"> Throttle notes</label>
+      <label class="sw"><input type="checkbox" id="set_sayBrake"> Say brakes</label>
+      <label class="sw"><input type="checkbox" id="set_sayLift"> Say lifts</label>
+      <label class="sw"><input type="checkbox" id="set_sayFlat"> Say flat</label>
+      <label class="sw"><input type="checkbox" id="set_lapSay"> Lap times</label>
+      <label class="sw"><input type="checkbox" id="set_coachSay"> Coaching point each lap</label>
+      <button type="button" class="btn small" id="testSound">Test the sound</button>
+    </div>
+    <ul class="small muted" style="margin-top:8px">
+      <li>Words: Hard brake, Firm brake, Dab, Lift, Flat. They match levels 5 to 1 on the map.</li>
+      <li>Tone pitch: high for full braking, lower for firm and light braking, a soft hum for a lift or for coasting to the apex after braking. Silence means full throttle.</li>
+      <li>The tone starts a fraction early to allow for your reaction time. If you find yourself braking late, raise the tone lead.</li>
+      <li>With a phone giving one fix a second, the start of a tone is good to about 10 metres and its end to rather less, because a braking zone only lasts a second or so. At 10 to 25 fixes a second both are good to a metre or two.</li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <h3>Debrief</h3>
+    <div id="debriefBody"></div>
+    <div class="row" style="margin-top:10px">
+      <button type="button" class="btn small" id="replayBtn">Analyse my last recording</button>
+      <button type="button" class="btn small" id="saveCsv">Save recording as CSV</button>
+      <label class="btn small" style="display:inline-grid;place-items:center">Load a CSV from a lap timer<input type="file" id="loadFile" accept=".csv,.txt" hidden></label>
+    </div>
+    <p class="small muted" style="margin:8px 0 0">Coaching compares each corner with your own best through it, and with what the guide expects there: flat, lift or brake. It looks at where you started slowing, your slowest speed and how soon you were accelerating again.</p>
+  </div>
+
+  <div class="panel">
+    <h3>Hearing it inside a helmet</h3>
+    <ul>
+      <li>Kart coaches already talk to drivers through in-ear race earpieces worn under the helmet, so the listening side is proven. The foam-tipped or custom-moulded kind sold with kart radio systems blocks engine noise and sits flat under the helmet padding. Ordinary earbuds tend to get dragged out as the helmet goes on.</li>
+      <li>Wire them to the phone if you can. Bluetooth adds roughly a fifth of a second. If you use it, add 0.2 to both lead times above.</li>
+      <li>Carry the phone the way coaching radios are carried: zipped inside the suit or strapped to the rib protector, never loose. A phone against your body sees less sky, so check the accuracy readout before trusting it.</li>
+      <li>Set the volume with your helmet on and an engine running nearby. You should still be able to hear karts around you.</li>
+    </ul>
+  </div>
+  <div class="panel">
+    <h3>Before you take it on track</h3>
+    <ul>
+      <li>Ask the circuit first. Hire sessions usually ban loose items and may not allow earpieces, and race meetings do not allow coaching audio to the driver. Practice and test days are the realistic place for this.</li>
+      <li>Never hold the phone or look at it while driving.</li>
+      <li>If location is blocked when you press Start GPS, open this page in Safari or Chrome instead of inside the Claude app, or put the downloaded copy on any HTTPS web host.</li>
+      <li>Keep the screen on. The browser stops GPS when the phone locks, so set auto-lock to never for the session.</li>
+      <li>On an iPhone, turn off silent mode or the tones will not play.</li>
+    </ul>
+  </div>
+</section>
+</main>
+</div>
+
+<nav class="tabs" role="tablist" aria-label="Sections">
+  <button type="button" role="tab" data-tab="map" aria-selected="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 15c0-5 3-9 8-9s8 3 8 7-3 5-6 5-3-3-6-3-4 3-4 0z"/></svg>Map</button>
+  <button type="button" role="tab" data-tab="corners" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V10a6 6 0 0 1 6-6h8"/><path d="M15 8l4-4-4-4" transform="translate(0 4)"/></svg>Corners</button>
+  <button type="button" role="tab" data-tab="plan" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10a2 2 0 0 1 2 2v14H5V6a2 2 0 0 1 2-2z"/><path d="M9 9h6M9 13h6M9 17h3"/></svg>Plan</button>
+  <button type="button" role="tab" data-tab="coach" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 14v-2a7 7 0 0 1 14 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></svg>Coach</button>
+</nav>
+<div id="toast" hidden></div>
+
+<script>
+(function(){
+'use strict';
+const D = __DATA__;
+const NS = 'http://www.w3.org/2000/svg';
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const el = (n, a, kids) => { const e = document.createElementNS(NS, n); for (const k in (a || {})) e.setAttribute(k, a[k]); (kids || []).forEach(c => e.appendChild(c)); return e; };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const mod = (i, n) => ((i % n) + n) % n;
+
+const LV = {
+  1: { name: 'Flat out', w: 2.3 }, 2: { name: 'Lift', w: 2.9 }, 3: { name: 'Light brake', w: 3.6 },
+  4: { name: 'Firm brake', w: 4.3 }, 5: { name: 'Full brake', w: 5.1 }
+};
+
+/* ---------------- guide content ---------------- */
+const CARDS = {
+  oblivion: { name: 'Oblivion', kind: 'Fast left, slightly downhill', prims: ['oblivion'], lv: { novice: 2, expert: 1 },
+    doN: 'Come off the throttle early and let the kart coast to the apex. No brakes in the dry.',
+    doE: 'Flat in the dry, but only if you start from the right and hold the left after the apex.',
+    marker: 'None. This is a lift, not a braking zone.',
+    line: 'Start from the right-hand side of the pit straight. Clip the inside kerb, then stay over on the left after the apex. That feels wrong for a left-hander, but it opens up Crook. The two corners only work as a pair.',
+    kerbA: 'Use it. Take some of the inside kerb: two guides say so.',
+    kerbX: 'Not needed. You hold the left after the apex, so you never reach the outside of the track.',
+    mistake: 'Turning in early and drifting right on the way out. That spoils Crook and the whole run up the hill.',
+    wet: 'A light brake, not just a lift: the BUKC guide says so. Apex a kart width off the kerb.' },
+  crook: { name: 'Crook', kind: 'Right, straight after Oblivion', prims: ['crook'], lv: { novice: 2, expert: 1 },
+    doN: 'A short squeeze of throttle after Oblivion, then lift again and coast to the apex. Full power once you clip it.',
+    doE: 'Flat if Oblivion went well. Turn in early.',
+    marker: 'None.',
+    line: 'Turn in from the left, clip the apex, then use every bit of track on the way out. The guides disagree on the apex: the current BUKC notes say turn in early to stay off a bumpy patch, while a 2013 Club100 guide says apex late, near the end of the kerb. Start with the newer advice and see what the kart does.',
+    kerbA: 'Use it lightly. One guide says to give the apex kerb a nibble.',
+    kerbX: 'Use the concrete run-off on the left. It keeps your speed up the hill and the coach guides use it. An older guide warns that officials may flag habitual use, so listen at the briefing.',
+    mistake: 'Getting Oblivion wrong, arriving badly placed, and bogging down on the bumps.',
+    wet: 'A light brake. Keep off the concrete run-off, which is slippery when wet.' },
+  finelady: { name: 'Fine Lady', kind: 'Right kink on the climb', prims: ['finelady'], lv: { novice: 1, expert: 1 },
+    doN: 'Flat out, always.', doE: 'Flat out, always.',
+    marker: 'None.',
+    line: 'Straighten it as much as the track allows, then ease over to the left as you climb towards Christmas.',
+    kerbA: 'Nothing to use. It is a kink.', kerbX: 'None.',
+    mistake: 'Lifting. There is no need.',
+    wet: 'Still flat unless there is standing water.' },
+  christmas: { name: 'Christmas', kind: 'Right at the top of the hill', prims: ['christmas'], lv: { novice: 5, expert: 5 },
+    doN: 'Your first big stop. Brake hard in a straight line, well before the marshal post to begin with. Come off the brake, turn in, and go back to full throttle once you pass the apex.',
+    doE: 'The hill helps you stop, so braking at the marshal post is possible on a grippy day.',
+    marker: 'Marshal post on the left. Fast drivers brake at it. Start well before it and move your braking point a little later each lap.',
+    line: 'Approach on the left, turn in late and take a late apex. Do not let the kart run fully wide on the way out, because a left kink follows straight away. One guide puts the ideal exit about a third of the track width in from the left.',
+    kerbA: 'No guide mentions it. Look at it on your sighting lap. Flat and painted is fine to clip. If it is raised, stay off.',
+    kerbX: 'You should not reach it. Running that wide spoils the kink.',
+    mistake: 'Braking too late in the first few laps, arriving too fast and running wide. If that happens, brake earlier next time round. If you crawl to the apex, brake a little later. If a wheel locks, ease off the pedal and press again.',
+    pass: 'The best passing place on the lap.',
+    wet: 'Brake earlier and more gently, a kart width to the right of the usual approach if you can, where there is less rubber. Take a wider, rounder arc and cross the dry line, do not follow it.' },
+  kink: { name: 'Left kink', kind: 'Flat left after Christmas, off camber', prims: ['kink'], lv: { novice: 1, expert: 1 },
+    doN: 'Flat out.', doE: 'Flat out.',
+    marker: 'None.',
+    line: { nat: 'Finish it on the far left so you are lined up for the hairpin.', intl: 'Come out in the middle of the track, then drift left before you turn into Inkermans.' },
+    kerbA: 'Use it. One guide says the inside kerb can be clipped.', kerbX: 'Not needed.',
+    mistake: 'Ending up on the right afterwards, with a poor angle into the next right-hander.',
+    wet: 'Expect to lift. It is off camber, so water runs across it.' },
+  inkhair: { name: 'Inkermans hairpin', kind: 'Tight right, downhill', prims: ['inkhair'], lv: { novice: 4, expert: 4 },
+    doN: 'Firm, short braking in a straight line. Start before the change of tarmac. It is downhill, so the kart feels loose as you turn in. Come off the brake, coast to a late apex, and be patient with the throttle.',
+    doE: 'Brake on or near the change of surface and turn in from the far left.',
+    marker: 'A visible change in the colour of the tarmac across the track. Two independent guides use it.',
+    line: 'Turn in from the far left and apex late. After the apex bring the kart back to at least the middle of the track, ready for the first part of Zulu.',
+    kerbA: 'Use the inside kerb on the way out. An older Club100 guide suggests clipping it to stop the kart running wide.',
+    kerbX: 'Stay off. There is astroturf and dirty track on the outside.',
+    mistake: 'Staying out wide on the exit, which leaves you badly placed for Zulu.',
+    note: 'Slow corners like this one forgive rough steering. Fast corners do not.',
+    wet: 'Earlier, gentler braking. Downhill and loose, so wait for the kart to turn before you touch the throttle.' },
+  inkermans: { name: 'Inkermans', kind: 'Fast right, downhill', prims: ['inkermans'], lv: { novice: 1, expert: 1 },
+    doN: 'Flat out. If it feels too quick in your first laps, a brief lift at turn-in is fine.',
+    doE: 'Flat out. It is full throttle from Christmas all the way to the Ashby hairpin, so smoothness is what counts.',
+    marker: 'None.',
+    line: 'Turn in from the left, run over the flat inside kerb, and let the kart run wide on the exit.',
+    kerbA: 'Use it. The coach\'s line runs over the flat inside kerb.', kerbX: 'No kerb advice. Let the kart run wide on the tarmac.',
+    mistake: 'Jerky steering that scrubs speed before the long downhill run.',
+    wet: 'Expect to lift. Keep off the inside kerb.' },
+  ashby: { name: 'Ashby hairpin', kind: 'Tight right at the bottom of the hill, off camber', prims: ['ashby'], lv: { novice: 5, expert: 5 },
+    doN: 'You arrive fast and downhill. Brake hard in a straight line, early to begin with, then turn in. The corner is off camber, so the kart wants to run wide onto the grass.',
+    doE: 'A short, sharp stab of brake, then turn.',
+    marker: 'The guides give no fixed marker. Pick your own on the sighting laps, such as the start of a kerb or a mark at the trackside, and brake before it at first.',
+    line: 'Approach on the left, aim for the flat inside kerb, and let the kart drift wide onto the concrete run-off on the way out. Then cross back to the right for Parker.',
+    kerbA: 'Use it. It is a flat inside kerb.',
+    kerbX: 'Use the concrete run-off on the left to carry speed out.',
+    mistake: 'Braking too deep and missing the apex.',
+    pass: 'The second-best passing place.',
+    wet: 'Off camber and downhill: brake early and in a straight line. Try the outside of the hairpin, where there is less rubber, and stay off the run-off.' },
+  parker: { name: 'Parker', kind: 'Fast left', prims: ['parker'], lv: { novice: 3, expert: 3 },
+    doN: 'A light dab of brake, then one smooth turn. Do not try it flat.',
+    doE: 'Nearly flat, but a dab and a tidy line is quicker.',
+    marker: 'None. This one is by feel.',
+    line: 'Start from the right, run the flat inside kerb, and drift out close to the outside kerb.',
+    kerbA: 'Use it. Flat inside kerb.',
+    kerbX: 'Stay off. Get close to the outside kerb but not on it: there is usually a stack of tyres on it.',
+    mistake: 'Carrying too much speed and meeting the tyre stack on the exit.',
+    wet: 'A light brake in place of the dab. Keep off the inside kerb.' },
+  chapmans: { name: 'Chapmans', kind: 'Off camber left with a late apex', prims: ['chapmans', 'chap2'], lv: { novice: 4, expert: 4 },
+    doN: 'A quick, firm stab of brake in a straight line. Turn in later than feels natural and aim for a late apex.',
+    doE: 'Quick sharp stab, late turn-in, hook the late apex.',
+    marker: 'None given. It arrives quickly after Parker.',
+    line: 'Late turn-in, late apex, then a clean run onto the back straight. The exit matters more than the entry.',
+    kerbA: 'No guide mentions the apex kerb. Look first.',
+    kerbX: 'With care. This is the big kerb on the outside of the exit, guarded by tyres. The coach\'s guide says you can run on it, but never thump it with a rear wheel because that kills the revs. If you need it every lap you are carrying too much speed in. As a novice, aim to finish the corner just inside it.',
+    mistake: 'Turning in early, or carrying too much speed and thumping the outside kerb. A small right kink follows before the straight, so a wide exit here puts you on its inside.',
+    pass: 'The late turn-in leaves the inside open. Expect to be passed here, and look for the same gap yourself.',
+    wet: 'Off camber. Earlier braking, a rounder and wider arc, and stay off the big exit kerb.' },
+  zulu: { name: 'Zulu chicane', kind: 'Left, right kink, left', prims: ['zulu1', 'zulu2', 'zulu3'], lv: { novice: 2, expert: 2 },
+    doN: 'The first left is easily flat because you are still slow from the hairpin. Lift briefly before the right kink and before the last left if the kart feels unsettled. Back on the throttle as soon as you pass the last apex.',
+    doE: 'Flat with a small lift before the last left, or a quick stab of brake to help the kart turn. Drivers differ.',
+    marker: 'None. It is a rhythm section.',
+    line: 'After the first apex keep the kart to the left, so you can apex the right kink late. After the kink sit slightly right, then turn in early for the last left.',
+    kerbs: 'First left and the right kink: usable if you need them, says one guide. Last left, inside: use all of the painted kerb. Last left, exit: let the kart drift out to touch the exit kerb.',
+    mistake: 'Rushing the first two parts and spoiling the exit of the last left. That costs speed along the whole back straight.',
+    wet: 'Lift where you would be flat in the dry, and brake lightly for the last left. Keep off the painted kerb.' },
+  boot: { name: 'The Boot', kind: 'Left, then a long right', prims: ['boot1', 'boot2', 'boot3'], lv: { novice: 5, expert: 5 },
+    doN: 'Your other big stop. Brake hard in a straight line, well before the marshal post at first. Take the left-hander slower than you think you need to, coast to the apex of the right-hander, then squeeze the throttle back on.',
+    doE: { c: 'Brake at the marshal post. Keep the left-hander tight and carry speed through the right-hander, ready to brake again for the chicane.', n: 'Brake at the marshal post. Keep the left-hander tight and take the right-hander flat.' },
+    marker: 'Marshal post on the right of the back straight. Three guides agree on it. One also uses the pit entry markings: be just to the right of them before you turn into the right-hander.',
+    line: { c: 'Approach on the right. Coming out of the left, do not let the kart drift past the middle of the track. Pull it back to the left, then apex the right-hander. With the chicane in use, hold the kart over to the right through the second half of the corner so you arrive on the right-hand side for the chicane.',
+      n: 'Approach on the right. Coming out of the left, do not let the kart drift past the middle of the track. Pull it back to the left, then apex the right-hander. Ignore the second apex and let the kart run out to the edge.' },
+    kerbs: { c: 'Left-hander: no guide mentions its kerb, so look first. Right-hander, inside: harsh, skim it at most. Second apex: ignore it. Exit: you stay right for the chicane, so you do not reach the outside.',
+      n: 'Left-hander: no guide mentions its kerb, so look first. Right-hander, inside: harsh, skim it at most. Second apex: ignore it. Exit: let the kart run to the edge of the tarmac.' },
+    mistake: { c: 'Attacking the left-hander. Give up speed there so the right-hander and the chicane after it flow.', n: 'Attacking the left-hander. The right-hander after it is the most important corner on the lap, because its exit speed carries through Pit Bend, along the pit straight and up the hill to Christmas.' },
+    pass: 'A move between the left and the right is possible but easy to mistime.',
+    wet: 'Earlier, gentler braking. Stay off the harsh inside kerb entirely.' },
+  chicane: { name: 'Chicane', kind: 'Tight left, built in 2024', prims: ['chic1'], lv: { novice: 4, expert: 4 },
+    doN: 'Brake firmly in a straight line for a moment as you leave The Boot, then turn in to the tight left. There is grass straight ahead at the end of the braking zone, so brake a touch early and do not lock up. Be patient, because the right-hander that follows is the one that matters.',
+    doE: 'A short, firm brake, a late apex on the left, and the throttle on early through the final right.',
+    marker: 'None published. Pick your own on the sighting laps and brake before it at first.',
+    line: 'Stay on the right-hand side after The Boot. Turn in to the left a little later than feels natural and apex late, so the kart is already pointing into the final right-hander.',
+    kerbA: 'Unknown. The kerbs were new in 2024 and no guide covers them. Look on your sighting lap: flat and painted is usable, anything raised is not.',
+    kerbX: 'Unknown, for the same reason. The right-hander that follows matters more than any kerb here.',
+    mistake: 'Rushing the left, running wide, and then waiting on the throttle all the way round the last corner.',
+    note: 'The chicane is the normal route: a university race report from October 2024 describes needing special permission to run the old layout at a hire-kart event, and a 2025 Club100 onboard guide shows it in use. That report also confirms a braking zone with soft grass beyond it. No written guide says how to drive it, so the line here is reasoned from its shape, the designer\'s description (hold the right-hand side for longer after The Boot) and general technique. Confirm it on track.',
+    wet: 'New tarmac can hold water and the run-off beyond the braking zone is soft grass. Brake early.' },
+  pitbend: { name: 'Pit Bend', kind: { c: 'Final right onto the pit straight', n: 'Very fast right onto the pit straight' }, prims: ['pitbend'], lv: { c: { novice: 2, expert: 2 }, n: { novice: 2, expert: 1 } },
+    doN: { c: 'Out of the chicane, let the kart settle, clip the inside, then go to full throttle and hold it. Your speed here carries along the pit straight, through Oblivion and Crook and up the hill.', n: 'Lift as you arrive and let the kart coast to the apex. Once past it, full throttle and use all of the track.' },
+    doE: { c: 'Throttle as early as the kart will take it and use every bit of the exit.', n: 'Just about flat on a dry day with warm tyres, but only with the turn-in timed right. A small lift to settle the kart is normal.' },
+    marker: 'None.',
+    line: { c: 'Arrive from the late apex of the chicane, apex on the right, and let the kart run out to the white line on the left.', n: 'Approach on the left, make one smooth steering input, and let the kart run out to the white line.' },
+    kerbA: { c: 'Unknown. It is a new kerb from 2024 that no guide covers. The very tall kerb older guides warn about has gone: a race report from October 2024 confirms it. Look before you use it.',
+      n: 'Skim it. The very tall kerb older guides warn about was removed in 2024, and the newer coach guide says to skim the inside kerb.' },
+    kerbX: 'Stay inside the white line. The smooth concrete beyond it is out of bounds and brings a warning or a penalty.',
+    mistake: { c: 'Getting on the throttle before the kart is pointing down the straight, and running out of road.', n: 'Sharp steering inputs at speed.' },
+    note: { c: 'This is the most important exit on the lap when the chicane is in use.', n: 'A chicane was built just before this corner in March 2024. If your session runs it, switch the map to With chicane.' },
+    wet: 'Lift more and keep it smooth. Stay off the kerb and the concrete.' }
+};
+const LAYOUTS = {
+  nat: { name: 'National', cards: [['oblivion', 'T1'], ['crook', 'T2'], ['finelady', 'T3'], ['christmas', 'T4'], ['kink', 'T5'], ['inkhair', 'T6'], ['zulu', 'T7 to T9'], ['boot', 'T10 to T12'], ['pitbend', 'T13']] },
+  intl: { name: 'International', cards: [['oblivion', 'T1'], ['crook', 'T2'], ['finelady', 'kink'], ['christmas', 'T3'], ['kink', 'T4'], ['inkermans', 'T5'], ['ashby', 'T6'], ['parker', 'T7'], ['chapmans', 'T8'], ['boot', 'T9, T10'], ['pitbend', 'T11']] }
+};
+// what the in-ear guide says on the approach to each corner in "talk me round" mode
+const CALLS = {
+  oblivion: { c: 'Oblivion and Crook. Lift, stay left, then use all the road.', e: 'Oblivion and Crook. Flat. Stay left after the first apex.' },
+  crook: '',
+  finelady: 'Fine Lady. Flat. Drift left.',
+  christmas: 'Christmas. Brake hard before the post. Late apex.',
+  kink: { nat: 'Kink. Flat. Finish far left.', intl: 'Kink. Flat.' },
+  inkhair: 'Hairpin. Brake before the tarmac change. Late apex.',
+  inkermans: 'Inkermans. Flat, over the inside kerb.',
+  ashby: 'Ashby. Brake hard. Off camber, be patient.',
+  parker: 'Parker. Dab. Stay off the tyres.',
+  chapmans: 'Chapmans. Quick brake. Turn in late.',
+  zulu: 'Zulu. Smooth. Early into the last left.',
+  boot: 'Boot. Brake before the post. Slow in the left.',
+  chicane: 'Chicane. Brake. Tight left, then early throttle.',
+  pitbend: { chic: '', nochic: 'Pit Bend. Lift. One smooth turn.' }
+};
+function callFor(c) {
+  const key = c.key || Object.keys(CARDS).find(k => CARDS[k].name === c.label), v = key && CALLS[key];
+  if (v === '') return '';
+  if (!v) return c.say || sayOf(c.level);
+  if (typeof v === 'string') return v;
+  if ('chic' in v) return st.chic ? v.chic : v.nochic;
+  if (v.nat) return v[st.layout];
+  return st.profile === 'novice' ? v.c : v.e;
+}
+// where each name sits on the map, as an offset from the corner's apex: [dx, dy, anchor, anchor corner, short name, leader line]
+const LABELS = {
+  oblivion: [-6, 36, 'start'], crook: [0, 21, 'middle'], finelady: [-52, 50, 'start', null, null, [24, -10]], christmas: [7, -16, 'start'], kink: [4, 22, 'middle', null, 'Kink'],
+  inkermans: [4, -17, 'middle'], inkhair: [10, -12, 'start', null, 'Inkermans'], ashby: [16, -15, 'start', null, 'Ashby'], parker: [12, 31, 'start'],
+  chapmans: [8, -36, 'start', 'chapmans', null, [6, 3]], zulu: [13, 4, 'start', 'zulu2', 'Zulu'], boot: [8, -17, 'middle', 'boot2'], chicane: [22, 6, 'start'], pitbend: [5, 43, 'end']
+};
+
+/* ---------------- state ---------------- */
+const st = { layout: 'intl', chic: true, wet: false, profile: 'novice', tab: 'map', sel: null, show: { names: true, markers: true, kerbs: true } };
+const pick = v => { if (v && typeof v === 'object') { if ('c' in v || 'n' in v) return pick(v[st.chic ? 'c' : 'n']); if ('nat' in v || 'intl' in v) return v[st.layout]; } return v; };
+const lvOf = c => { if (!st.wet) return pick(c.lv)[st.profile]; const L = LY(), lv = LVL(L), n = lv.length, a = L.corners[c.prims[0]], b = L.corners[c.prims[c.prims.length - 1]]; let m = 1; rangeIdx(a.a - 30, b.i, n).forEach(i => { m = Math.max(m, +lv[i]); }); return m; };
+const LY = () => D.layouts[st.layout + (st.chic ? '_c' : '_n')];
+const LVL = L => (st.wet ? L.levels_w : L.levels)[st.profile];
+const LINE = L => st.wet ? L.line_w : L.line;
+const cardList = () => { const base = LAYOUTS[st.layout].cards; if (!st.chic) return base; const out = base.slice(); out.splice(out.length - 1, 0, ['chicane', 'new']); return out; };
+const NUM = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven'];
+const joinNames = a => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
+const bigStops = () => cardList().filter(x => lvOf(CARDS[x[0]]) >= 4).map(x => CARDS[x[0]].name === 'Chicane' ? 'the chicane' : CARDS[x[0]].name);
+const lvColor = l => 'var(--l' + l + ')';
+
+function rangeIdx(i0, i1, n) { const out = []; let k = mod(i0, n); const end = mod(i1, n); let guard = 0; while (guard++ <= n) { out.push(k); if (k === end) break; k = (k + 1) % n; } return out; }
+function pathOf(pts, idxs) { return 'M' + idxs.map(i => pts[i][0] + ' ' + pts[i][1]).join('L'); }
+function cardRange(key, pad) {
+  const L = LY(), c = CARDS[key], a = L.corners[c.prims[0]], b = L.corners[c.prims[c.prims.length - 1]];
+  return pad ? [a.i0, b.i1] : [a.i - 13, b.i + 11];
+}
+function cardAhead(i) {
+  const L = LY(), n = L.centre.length; let best = null, bd = 1e9;
+  for (const [key] of cardList()) for (const pr of CARDS[key].prims) { const d = mod(L.corners[pr].i - i, n); if (d < bd) { bd = d; best = key; } }
+  return best;
+}
+function cardAtIndex(i) {
+  const L = LY(), n = L.centre.length;
+  for (const [key] of cardList()) { const [a, b] = cardRange(key, true); if (rangeIdx(a, b, n).indexOf(mod(i, n)) >= 0) return key; }
+  return null;
+}
+
+/* ---------------- map ---------------- */
+function renderMap(svg, o) {
+  const L = LY(), n = L.centre.length, lv = LVL(L), LN = LINE(L);
+  svg.setAttribute('viewBox', '0 0 ' + D.w + ' ' + D.h);
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  const all = rangeIdx(0, n - 1, n);
+  const dC = pathOf(L.centre, all) + 'Z';
+  [D.layouts[(st.layout === 'nat' ? 'intl' : 'nat') + (st.chic ? '_c' : '_n')], D.layouts[st.layout + (st.chic ? '_n' : '_c')]].forEach(G => {
+    const m = G.centre.length; svg.appendChild(el('path', { d: pathOf(G.centre, rangeIdx(0, m - 1, m)) + 'Z', fill: 'none', stroke: 'var(--ghost)', 'stroke-width': 7, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }));
+  });
+  if (o.select && st.sel && CARDS[st.sel] && L.corners[CARDS[st.sel].prims[0]]) {
+    const [a, b] = cardRange(st.sel, true);
+    svg.appendChild(el('path', { d: pathOf(L.centre, rangeIdx(a, b, n)), fill: 'none', stroke: 'var(--accent)', 'stroke-width': D.half * 2 + 12, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', opacity: .55 }));
+  }
+  svg.appendChild(el('path', { d: dC, fill: 'none', stroke: 'var(--edge)', 'stroke-width': D.half * 2 + 3, 'stroke-linejoin': 'round' }));
+  svg.appendChild(el('path', { d: dC, fill: 'none', stroke: 'var(--tarmac)', 'stroke-width': D.half * 2, 'stroke-linejoin': 'round' }));
+  // start line and direction
+  const p0 = L.centre[0], p1 = L.centre[1], dx = p1[0] - p0[0], dy = p1[1] - p0[1], dl = Math.hypot(dx, dy) || 1, nx = -dy / dl, ny = dx / dl, h = D.half;
+  svg.appendChild(el('line', { x1: p0[0] + nx * h, y1: p0[1] + ny * h, x2: p0[0] - nx * h, y2: p0[1] - ny * h, stroke: '#fff', 'stroke-width': 4 }));
+  svg.appendChild(el('line', { x1: p0[0] + nx * h, y1: p0[1] + ny * h, x2: p0[0] - nx * h, y2: p0[1] - ny * h, stroke: '#111', 'stroke-width': 4, 'stroke-dasharray': '3.3 3.3' }));
+  if (o.names) {
+    const sx = p0[0] + 16, sy = p0[1] + h + 13;
+    const t = el('text', { x: sx, y: sy, 'text-anchor': 'start', class: 'lbl', style: 'cursor:default;font-weight:500' }); t.textContent = 'Start'; svg.appendChild(t);
+    svg.appendChild(el('path', { d: 'M' + (sx - 6) + ' ' + (sy - 4) + 'h-17m6 -4.5l-6 4.5l6 4.5', fill: 'none', stroke: 'var(--ink)', 'stroke-width': 1.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+  }
+  // kerbs
+  const kerbShown = k => o.zoom ? CARDS[o.zoom].prims.indexOf(k.corner) >= 0 || k.status !== 'unknown' : k.status !== 'unknown';   // the overview shows verdicts that have a source; the close-up shows every kerb on that corner
+  if (o.kerbs) L.kerbs.filter(kerbShown).forEach(k => {
+    const d = 'M' + k.path.map(p => p[0] + ' ' + p[1]).join('L');
+    svg.appendChild(el('path', { d, fill: 'none', stroke: 'var(--kerb)', 'stroke-width': 3.4 }));
+    svg.appendChild(el('path', { d, fill: 'none', stroke: '#fff', 'stroke-width': 3.4, 'stroke-dasharray': '2.6 2.6' }));
+  });
+  // racing line, coloured by level
+  for (let pass = 1; pass <= 5; pass++) {
+    let i = 0;
+    while (i < n) {
+      if (+lv[i] !== pass) { i++; continue; }
+      let j = i; while (j + 1 < n && +lv[j + 1] === pass) j++;
+      const idxs = []; for (let k = Math.max(0, i - 1); k <= j; k++) idxs.push(k); idxs.push((j + 1) % n);
+      svg.appendChild(el('path', { d: pathOf(LN, idxs), fill: 'none', stroke: lvColor(pass), 'stroke-width': LV[pass].w, 'stroke-linecap': pass === 1 ? 'butt' : 'round', 'stroke-linejoin': 'round' }));
+      i = j + 1;
+    }
+  }
+  // brake markers
+  if (o.markers) L.markers.forEach(m => {
+    if (m.kind === 'post') {
+      svg.appendChild(el('rect', { x: -4.2, y: -4.2, width: 8.4, height: 8.4, rx: 1.2, transform: 'translate(' + m.p[0] + ' ' + m.p[1] + ') rotate(45)', fill: 'var(--accent)', stroke: 'var(--field)', 'stroke-width': 1.4 }));
+      if (o.zoom && CARDS[o.zoom].prims.indexOf(m.corner) >= 0) { const c0 = L.centre[m.i], dx = m.p[0] - c0[0], dy = m.p[1] - c0[1], dd = Math.hypot(dx, dy) || 1, t = el('text', { x: m.p[0] + dx / dd * 8, y: m.p[1] + dy / dd * 8 + 2.5, 'text-anchor': dx > 0 ? 'start' : 'end', class: 'lbl', style: 'cursor:default;font-size:7px;stroke-width:2px' }); t.textContent = 'marshal post'; svg.appendChild(t); }
+    } else {
+      const c = L.centre[m.i], c2 = L.centre[(m.i + 1) % n], ux = c2[0] - c[0], uy = c2[1] - c[1], ul = Math.hypot(ux, uy) || 1, px = -uy / ul, py = ux / ul, hh = D.half + 4;
+      svg.appendChild(el('line', { x1: c[0] + px * hh, y1: c[1] + py * hh, x2: c[0] - px * hh, y2: c[1] - py * hh, stroke: 'var(--accent)', 'stroke-width': 2.4, 'stroke-dasharray': '3.4 2.2' }));
+      if (o.zoom && CARDS[o.zoom].prims.indexOf(m.corner) >= 0) { const s = py > 0 ? 1 : -1, t = el('text', { x: c[0] + px * s * (hh + 3), y: c[1] + py * s * (hh + 3) + 7, 'text-anchor': 'middle', class: 'lbl', style: 'cursor:default;font-size:7px;stroke-width:2px' }); t.textContent = 'change of tarmac'; svg.appendChild(t); }
+    }
+  });
+  // kerb badges
+  if (o.kerbs) L.kerbs.filter(kerbShown).forEach(k => {
+    const s = st.wet ? 'avoid' : k.status, col = { use: 'var(--ok)', care: 'var(--care)', avoid: 'var(--no)', unknown: 'var(--muted)' }[s], g = { use: 'M-2.8 .2l2 2.2l3.8-4.6', care: 'M0-3.2v3.6M0 2.6v.4', avoid: 'M-2.4-2.4l4.8 4.8M2.4-2.4l-4.8 4.8', unknown: 'M-1.9-1.6a1.9 1.9 0 1 1 2.6 1.8c-.6.3-.7.6-.7 1.2M0 3.1v.3' }[s];
+    svg.appendChild(el('g', { transform: 'translate(' + k.b[0] + ' ' + k.b[1] + ')' }, [el('circle', { r: 5.4, fill: col, stroke: 'var(--field)', 'stroke-width': 1.3 }), el('path', { d: g, fill: 'none', stroke: '#fff', 'stroke-width': 1.7, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' })]));
+  });
+  // corner names and tap targets
+  cardList().forEach(([key]) => {
+    const c = CARDS[key], mid = L.corners[c.prims[Math.floor(c.prims.length / 2)]];
+    if (o.targets) {
+      const [a, b] = cardRange(key, false);
+      const hit = el('path', { d: pathOf(L.centre, rangeIdx(a, b, n)), class: 'hit', 'data-card': key, tabindex: 0, role: 'button', 'aria-label': c.name });
+      svg.appendChild(hit);
+    }
+    if (o.names) {
+      const lb = LABELS[key] || [0, -18, 'middle'], an = L.corners[lb[3] || c.prims[0]] || mid, x = an.p[0] + lb[0], y = an.p[1] + lb[1];
+      if (lb[5]) { const lx = x + lb[5][0], ly = y + lb[5][1], dd = Math.hypot(lx - an.p[0], ly - an.p[1]) || 1, e = D.half + 2; svg.appendChild(el('line', { x1: lx, y1: ly, x2: an.p[0] + (lx - an.p[0]) / dd * e, y2: an.p[1] + (ly - an.p[1]) / dd * e, stroke: 'var(--ink)', 'stroke-width': .9, opacity: .7 })); }
+      const t = el('text', { x, y, 'text-anchor': lb[2], class: 'lbl' + (st.sel === key && o.select ? ' sel' : ''), 'data-card': key }); t.textContent = lb[4] || c.name; svg.appendChild(t);
+    }
+  });
+  if (o.cues) o.cues.forEach(q => { svg.appendChild(el('circle', { cx: q.xy[0], cy: q.xy[1], r: 5, fill: 'none', stroke: '#fff', 'stroke-width': 2 })); });
+  if (o.zoom) {   // close-up of one corner: crop the view to its stretch of track
+    const [a, b] = cardRange(o.zoom, true); let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+    rangeIdx(a, b, n).forEach(i => { const p = L.centre[i]; x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); });
+    const pad = 17; x0 -= pad; x1 += pad; y0 -= pad; y1 += pad; let w = x1 - x0, hh = y1 - y0; const ar = 1.7;
+    if (w / hh < ar) { const nw = hh * ar; x0 -= (nw - w) / 2; w = nw; } else { const nh = w / ar; y0 -= (nh - hh) / 2; hh = nh; }
+    svg.setAttribute('viewBox', x0.toFixed(1) + ' ' + y0.toFixed(1) + ' ' + w.toFixed(1) + ' ' + hh.toFixed(1));
+  }
+  if (o.dot) { const g = el('g', { id: o.dot }, [el('circle', { r: 5.5, fill: 'var(--ink)', stroke: '#fff', 'stroke-width': 2.2 })]); g.setAttribute('transform', 'translate(' + LN[0][0] + ' ' + LN[0][1] + ')'); svg.appendChild(g); }
+}
+function drawMain() {
+  $('#mapcap').textContent = (st.layout === 'intl' ? 'International circuit, the blue line on the Kart Directory map.' : 'National circuit. It turns off at Inkermans and rejoins on the back straight.') + ' Grey is tarmac this layout does not use. Track width is exaggerated so the line shows up.' + (st.wet ? ' Wet line: off the rubbered dry line, earlier and gentler braking, no kerbs. This is general wet technique, not a Whilton-specific source.' : '');
+  renderMap($('#map'), { names: st.show.names, markers: st.show.markers, kerbs: st.show.kerbs, targets: true, select: true });
+}
+
+function renderLegend() {
+  let s = '';
+  for (let l = 1; l <= 5; l++) s += '<li><span class="sw5" style="background:' + lvColor(l) + '">' + l + '</span>' + LV[l].name + '</li>';
+  $('#legend').innerHTML = s;
+}
+function renderStrip() {
+  const L = LY(), lv = LVL(L), n = lv.length; let html = '<div class="bar" aria-hidden="true">'; let i = 0, flat = 0;
+  while (i < n) { let j = i; while (j + 1 < n && lv[j + 1] === lv[i]) j++; html += '<i style="flex:' + (j - i + 1) + ' 0 0;background:' + lvColor(lv[i]) + '"></i>'; if (lv[i] === '1') flat += j - i + 1; i = j + 1; }
+  html += '</div><div class="ticks">';
+  cardList().forEach(([key, tn]) => { const c = CARDS[key], ap = L.corners[c.prims[Math.floor(c.prims.length / 2)]].i; const short = tn.replace(/^T(\d+).*$/, '$1').replace('kink', 'FL').replace('new', ''); if (short) html += '<button type="button" data-card="' + key + '" style="left:' + (ap / n * 100).toFixed(1) + '%" aria-current="' + (st.sel === key) + '" aria-label="' + esc(c.name) + '">' + short + '</button>'; });
+  const pct = Math.round(flat / n * 20) * 5;
+  html += '</div><p>The lap unrolled from the start line, with turn numbers. Roughly ' + pct + '% of it is flat out at this level.</p>';
+  $('#strip').innerHTML = html;
+}
+
+function pedalPlan(c) {
+  // what the feet do through this corner, read off the painted levels: phase, where it starts relative to turn-in, and for how long
+  const L = LY(), lv = LVL(L), n = lv.length, step = L.step, first = L.corners[c.prims[0]], last = L.corners[c.prims[c.prims.length - 1]];
+  let i = first.a - 32; while (i < first.a && lv[mod(i, n)] === '1') i++;          // start where the first lift or brake begins, up to 64 m before turn-in
+  const end = last.i + 1, rows = []; let k = i;
+  while (k <= end) { const l = lv[mod(k, n)]; let j = k; while (j + 1 <= end && lv[mod(j + 1, n)] === l) j++; rows.push({ l: +l, from: (k - first.a) * step, len: (j - k + 1) * step }); k = j + 1; }
+  while (rows.length && rows[rows.length - 1].l === 1) rows.pop();          // the closing line below already says full throttle
+  const where = m => Math.abs(m) < 3 ? 'at turn-in' : Math.round(Math.abs(m)) + ' m ' + (m < 0 ? 'before turn-in' : 'after turn-in');
+  const items = rows.filter(r => r.l > 1 || r.len > 6).map((r, q, arr) => {
+    const name = r.l === 1 ? 'Full throttle' : r.l === 2 ? (q > 0 && arr[q - 1].l >= 3 ? 'Off the brake, coast' : 'Lift') : LV[r.l].name;
+    return '<li><span class="lvdot" style="background:' + lvColor(r.l) + '">' + r.l + '</span><span><b>' + name + '</b> for about ' + Math.round(r.len) + ' m, starting ' + where(r.from) + '.</span></li>';
+  });
+  if (!items.length) return '<p style="margin:0">Full throttle all the way through.</p>';
+  return '<ul class="kl pedal">' + items.join('') + '<li><span class="lvdot" style="background:' + lvColor(1) + '">1</span><span><b>Full throttle</b> from the apex.</span></li></ul><p class="small muted" style="margin:4px 0 0">Distances are estimates read off the map for the ' + (st.profile === 'novice' ? 'novice' : 'experienced') + ' profile' + (st.wet ? ' in the wet' : '') + '. Use the brake marker on track and treat the metres as a guide.</p>';
+}
+function factRows(c) {
+  const rows = [['How hard, and from where to where', null, pedalPlan(c)], ['Brake marker', c.marker], ['Line', c.line]];
+  if (st.wet) rows.push(['In the wet', c.wet], ['Kerbs in the wet', 'Stay off all of them, and off painted lines and the concrete run-off. They are far slipperier than the tarmac.']);
+  else rows.push(['Apex kerb', c.kerbA], ['Exit kerb', c.kerbX], ['Kerbs', c.kerbs]);
+  rows.push(['Common mistake', c.mistake]); if (!st.wet) rows.push(['In the wet', c.wet]); rows.push(['Passing', c.pass], ['Worth knowing', c.note]);
+  return '<dl class="facts">' + rows.filter(r => r[1] || r[2]).map(r => '<div><dt>' + r[0] + '</dt><dd>' + (r[2] || esc(pick(r[1]))) + '</dd></div>').join('') + '</dl>';
+}
+function badge(l) { return '<span class="badge" style="--lv:' + lvColor(l) + '"><b>' + l + '</b>' + LV[l].name + '</span>'; }
+function renderCard() {
+  const box = $('#card'), list = cardList();
+  if (!st.sel || !list.some(x => x[0] === st.sel)) {
+    const stops = bigStops();
+    box.innerHTML = '<div class="card"><h2>Only ' + (NUM[stops.length] || stops.length) + ' corners need real braking</h2><p class="do">On this layout they are ' + joinNames(stops) + '. Everywhere else you are flat out, lifting for a moment or giving the brake a dab. Learn those and the rest of the lap follows.</p><p class="muted">Tap a corner on the map, or walk the lap in order.</p><div class="nav2"><button type="button" class="btn primary" data-card="' + list[0][0] + '">Start at turn one</button></div></div>';
+    return;
+  }
+  const pos = list.findIndex(x => x[0] === st.sel), key = st.sel, tn = list[pos][1], c = CARDS[key], l = lvOf(c);
+  const prev = list[mod(pos - 1, list.length)][0], next = list[mod(pos + 1, list.length)][0];
+  box.innerHTML = '<div class="card" style="--lv:' + lvColor(l) + '"><div class="head">' + (tn === 'new' ? '' : '<span class="tn">' + tn + '</span>') + '<h2>' + c.name + '</h2>' + badge(l) + '<span class="kind">' + esc(pick(c.kind)) + '</span></div><div class="zoom"><svg id="zoom" role="img" aria-label="Close-up of ' + esc(c.name) + '"></svg></div><p class="do">' + esc(st.wet ? c.wet : pick(st.profile === 'novice' ? c.doN : c.doE)) + '</p>' + factRows(c) + '<div class="nav2"><button type="button" class="btn" data-card="' + prev + '">Previous corner</button><button type="button" class="btn primary" data-card="' + next + '">Next corner</button></div></div>';
+  renderMap($('#zoom'), { names: false, markers: true, kerbs: true, targets: false, select: false, zoom: key });
+}
+function renderAcc() {
+  $('#acc').innerHTML = cardList().map(([key, tn]) => { const c = CARDS[key], l = lvOf(c); return '<details class="acc" style="--lv:' + lvColor(l) + '"><summary><span class="tn">' + tn.replace(' to ', '-').replace(', ', '-').replace('new', '') + '</span><span class="nm">' + c.name + '</span>' + badge(l) + '</summary><div class="inner"><p class="muted small" style="margin:0 0 6px">' + esc(pick(c.kind)) + '</p><p class="do" style="font-size:17px;margin:0 0 8px">' + esc(pick(st.profile === 'novice' ? c.doN : c.doE)) + '</p>' + factRows(c) + '</div></details>'; }).join('');
+}
+function renderPlan() {
+  const nat = st.layout === 'nat';
+  const kb = (s, t) => '<li><span class="kb" style="background:var(--' + s + ')">' + ({ ok: '&#10003;', care: '!', no: '&#10005;' }[s]) + '</span><span>' + t + '</span></li>';
+  $('#plan').innerHTML =
+    '<div class="two"><div class="panel"><h3>What matters most here</h3><ul>' +
+    '<li>' + (NUM[bigStops().length] || '').replace(/^./, m => m.toUpperCase()) + ' real braking zones: ' + joinNames(bigStops()) + '. The rest of the lap is flat out, a lift or a dab.</li>' +
+    '<li>Brake in a straight line, finish braking, then turn.</li>' +
+    (st.chic ? '<li>The last corner after the chicane sets your speed down the pit straight, through Oblivion and Crook and up the hill. Be patient in the chicane to get that exit right.</li>' : '<li>The right-hander in The Boot sets your speed through Pit Bend, down the pit straight and up the hill. Give up speed in the left before it to get that exit right.</li>') +
+    '<li>Smooth hands in the fast corners. Snatching at the wheel is what spins a kart. Slow corners tolerate rougher inputs.</li>' +
+    '<li>Use the fixed references: the marshal post on the left for Christmas, ' + (nat ? 'the change of tarmac for the hairpin, ' : '') + 'the marshal post on the right for The Boot.</li>' +
+    '</ul></div>' +
+    '<div class="panel"><h3>Your first session, in order</h3><ol>' +
+    '<li>First three laps: learn which way the track goes. Lift early everywhere and brake very early for the big stops.</li>' +
+    '<li>Pick a braking reference for each big stop and brake in a straight line every time.</li>' +
+    '<li>Move each braking point about a kart length later per lap. When the apex starts to feel rushed, go back one step and stay there.</li>' +
+    '<li>Work on position: left after Oblivion, far left before the ' + (nat ? 'Inkermans' : 'Ashby') + ' hairpin, no wider than mid-track out of the left in The Boot.</li>' +
+    '<li>Last, the exits: early, full throttle out of ' + (st.chic ? 'the final corner' : 'the right-hander in The Boot') + ' and from the ' + (nat ? 'last left in Zulu' : 'late apex at Chapmans') + '.</li>' +
+    '</ol></div></div>' +
+    '<div class="two"><div class="panel"><h3>Kerbs at a glance</h3><ul class="kl">' +
+    kb('ok', 'Oblivion inside kerb, and the concrete run-off on the exit of Crook.') +
+    (nat ? kb('ok', 'All of the painted inside kerb at the last left in Zulu.') : kb('ok', 'Flat inside kerbs at Inkermans, Ashby and Parker, and the concrete run-off leaving Ashby.')) +
+    (nat ? '' : kb('care', 'Parker exit kerb: close to it but not on it, because of the tyre stack. Chapmans exit kerb: usable, but never with a rear wheel.')) +
+    kb('care', 'Inside kerb of the right-hander in The Boot: harsh, skim it at most.') +
+    (st.chic ? kb('care', 'The chicane kerbs are new and not covered by any guide. Look before you use them.') : '') +
+    kb('no', 'Pit Bend inside kerb until you have looked at it closely, and the smooth concrete beyond the white line on the exit.') +
+    '</ul><p class="small muted" style="margin-top:8px">Rental karts are heavier and softer than race karts, so kerbs upset them more. Stick to the flat ones.</p></div>' +
+    '<div class="panel"><h3>In the wet</h3><ul>' +
+    '<li>The surface is low on grip even when dry. When wet, brake earlier and more gently everywhere.</li>' +
+    '<li>Oblivion and Crook change from a lift to a light brake.</li>' +
+    '<li>Painted kerbs and the concrete run-off are slippery. Stay off them.</li>' +
+    '<li>The rubbered-in dry line can be the slipperiest part of the track. In slow corners, try a wider line and feel for grip.</li>' +
+    '</ul><p class="small muted" style="margin-top:8px">The low grip and the Oblivion and Crook advice come from the Whilton guides. The rest is general karting practice.</p></div></div>' +
+    '<div class="panel"><h3>In a Whilton hire kart</h3><ul>' +
+    '<li>Keep your left foot clear of the brake pedal whenever you are on the throttle. A race report on the fleet that arrived in autumn 2024 says even resting a foot on the pedal cuts the engine.</li>' +
+    '<li>The same report says staff described the brakes as sensitive, so squeeze the pedal on your first laps and build up.</li>' +
+    '<li>That is one report, so ask at the briefing whether it still applies.</li></ul></div>' +
+    '<div class="panel"><h3>Passing places</h3><p>Into Christmas under braking' + (nat ? ', into the Inkermans hairpin,' : ', into the Ashby hairpin, up the inside at Chapmans,') + ' and between the two parts of The Boot, which is easy to mistime' + (st.chic ? '. The braking zone for the chicane is likely to be another, though no guide covers it yet' : '') + '. When defending, hold the inside line into those braking zones and keep the exit of The Boot tidy.</p></div>' +
+    '<div class="panel"><h3>What was checked, and against what</h3><ul class="kl">' +
+    kb('ok', 'Corner order on both layouts: three written guides and the circuit map agree. Names vary between sources. One guide calls the left into The Boot Chapmans, an older Club100 report calls Parker and Chapmans Wilkins and Osiers, and the last corner is also known as Championship Bend.') +
+    kb('ok', 'Oblivion and Crook as a pair, lifting as a novice and flat when experienced, staying left after Oblivion: three guides.') +
+    kb('care', 'Crook apex: the current BUKC notes say turn in early, a 2013 Club100 guide says apex late. Both are on the Crook card.') +
+    kb('ok', 'Christmas: brake by the marshal post on the left, the hill shortens the stop, late apex: three guides.') +
+    kb('ok', 'National hairpin: brake by the change in the tarmac: two independent guides.') +
+    kb('ok', 'Zulu: set up the last left, use its inside kerb, protect the exit: two guides.') +
+    kb('care', 'Ashby, Parker and Chapmans: one coach (the NRDD lap, which Club100 and BUKC republish as their own guide), plus a Club100 report that calls Ashby and Chapmans off camber. Treat as less certain.') +
+    kb('ok', 'The Boot: brake by the marshal post on the right and give up speed in the left: three guides.') +
+    kb('ok', 'Pit Bend without the chicane, lift or near flat and inside the white line: three guides. The tall inside kerb was removed in 2024: confirmed by a race report.') +
+    kb('ok', 'The chicane is the normal route: venue and designer announcements, a 2024 race report and a 2025 onboard guide.') +
+    kb('no', 'How to drive the chicane: nothing written found. The line and braking level shown are reasoned from its shape.') +
+    kb('no', 'The 1 to 5 braking levels, and where the line sits across the track, are a grading and reading of the guides. They are not measured.') +
+    kb('care', 'Hire karts cutting the throttle when the brake is touched: one 2024 report.') +
+    kb('no', 'Onboard video commentaries could not be read, because YouTube blocks automated access. They are listed below to watch, and the chicane video is the one that matters most.') +
+    '</ul></div>' +
+    '<div class="panel"><h3>Sources</h3><ul>' +
+    '<li><a target="_blank" rel="noopener" href="https://bukc.co.uk/circuits/whilton-mill-national/">BUKC guide to the National layout</a>, beginner and advanced notes by the coach Niki Richardson.</li>' +
+    '<li><a target="_blank" rel="noopener" href="https://nrdd.racing/track-guide/whilton-mill-track-guide/">NRDD lap of the International layout</a>, the same coach, also used by Club100 and BUKC as their International guide.</li>' +
+    '<li><a target="_blank" rel="noopener" href="https://kclmotorsport.wordpress.com/2013/06/23/whilton-mill-track-guide-club-100s/">King\'s College London Motorsport guide</a>, 2013, Club100 karts on the National layout.</li>' +
+    '<li><a target="_blank" rel="noopener" href="https://www.cuautomobileclub.org/post/varsity-2024">Cambridge University Automobile Club race report</a>, October 2024: the chicane, the removed kerb and the new hire karts.</li>' +
+    '<li><a target="_blank" rel="noopener" href="https://driven-international.com/whilton-mill-kart-circuit-enhancements-announced">Driven International</a> and <a target="_blank" rel="noopener" href="https://www.whiltonmill.co.uk/blog/2024/02/22/whilton-mill-ltd-announce-track-enhancements/">Whilton Mill</a> on the 2024 works.</li>' +
+    '<li><a target="_blank" rel="noopener" href="https://kartdirectory.racing/uk/video/whilton-mill-international-with-rich-tea-racing/">Kart Directory notes on the Rich Tea Racing lap</a>: passing places and the old last-corner kerb.</li>' +
+    '<li>To watch: <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=SCg5JWaubVo">the 2025 chicane guide by Wolemid</a>, <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=0OREA7Ejbi0">the circuit changes explained</a>, <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=aenDbbbgKio">an in-depth 2021 guide</a> and <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=7kLhkriwlRo">a 2025 onboard lap</a>. If the chicane video disagrees with the chicane card, trust the video.</li>' +
+    '</ul></div>' +
+    '<div class="panel"><h3>About this guide</h3><ul>' +
+    '<li>Both coach guides were written for Club100 style two-stroke karts. A 390cc hire kart is slower down the straights, so its braking zones are likely to be a little shorter. The same corners are still the big stops.</li>' +
+    '<li>The venue advertises arrive-and-drive sessions on the National layout. Check which one you are on, and whether the chicane is in use that day.</li>' +
+    '<li>The track shape is traced from the Kart Directory circuit map. Scaled to the 1200 m International lap it gives 1190 m without the chicane, which matches the published figure, so distances on the map are close to real. Track width is drawn wider than life.</li>' +
+    '</ul></div>';
+}
+
+function select(key, scroll) {
+  st.sel = key; drawMain(); renderCard(); renderStrip();
+  if (scroll && window.matchMedia('(max-width:899px)').matches) { const c = $('#card'); if (c && c.scrollIntoView) c.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+}
+function refreshAll() {
+  $$('[data-layout]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.layout === st.layout)));
+  $$('[data-profile]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.profile === st.profile)));
+  $$('[data-chic]').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.chic === '1') === st.chic)));
+  $$('[data-wet]').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.wet === '1') === st.wet)));
+  if (st.sel && !cardList().some(x => x[0] === st.sel)) st.sel = null;
+  drawMain(); renderStrip(); renderCard(); renderAcc(); renderPlan(); drawSim();
+}
+function setTab(t) {
+  st.tab = t;
+  $$('nav.tabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === t)));
+  $$('section.tab').forEach(s => { s.hidden = s.id !== 'tab-' + t; });
+  $('#controls').hidden = !(t === 'map' || t === 'corners');
+  window.scrollTo(0, 0);
+  if (t === 'coach') { drawSim(); renderDebrief(); lockInfo(); }
+}
+
+/* ---------------- settings and storage ---------------- */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } },
+  del(k) { try { localStorage.removeItem(k); } catch (e) { } }
+};
+const set = Object.assign({ mode: 'words', wordLead: 1.6, toneLead: 0.35, gpsDelay: 0.3, toneBrake: true, toneLift: true, goBlip: true, sayBrake: true, sayLift: true, sayFlat: true, lapSay: true, coachSay: true }, store.get('wm.settings2', {}));
+let rec = store.get('wm.rec', []);
+function saveSettings() { store.set('wm.settings2', set); }
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => { t.hidden = true; }, 3400); }
+const fmtLap = ms => { if (ms == null) return 'none'; const s = ms / 1000, m = Math.floor(s / 60); return m + ':' + (s - m * 60).toFixed(1).padStart(4, '0'); };
+const MPH = 2.23694, R_LAT = 110540, R_LON = 111320, RAD = Math.PI / 180;
+const toENU = (lat, lon, o) => [(lon - o.lon) * R_LON * Math.cos(o.lat * RAD), (lat - o.lat) * R_LAT];
+const toLL = (e, n, o) => [o.lat + n / R_LAT, o.lon + e / (R_LON * Math.cos(o.lat * RAD))];
+
+/* ---------------- audio: tones carry how hard and for how long, words say what is coming ---------------- */
+let actx = null, toneOsc = null, toneGain = null, toneNow = 0;
+function audioInit() {
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === 'suspended') actx.resume();
+    if (!toneOsc) { toneOsc = actx.createOscillator(); toneGain = actx.createGain(); toneOsc.type = 'triangle'; toneGain.gain.value = 0; toneOsc.connect(toneGain); toneGain.connect(actx.destination); toneOsc.start(); }
+  } catch (e) { }
+}
+// The tone sounds for exactly as long as the pedal should be down. Pitch is effort: low hum for a lift, rising to a high tone for full braking.
+function setTone(level) {
+  if (level === toneNow) return; const was = toneNow; toneNow = level;
+  if (!toneGain) return;
+  try {
+    const t = actx.currentTime, on = level >= 3 ? set.toneBrake : level === 2 ? set.toneLift : false;
+    if (on) { toneOsc.frequency.setTargetAtTime({ 2: 330, 3: 660, 4: 990, 5: 1320 }[level], t, .012); toneGain.gain.setTargetAtTime(level === 2 ? .2 : .5, t, .012); }
+    else toneGain.gain.setTargetAtTime(0, t, .012);
+    if (level === 1 && was >= 2 && set.goBlip) blip([1175, 1568]);      // two quick rising notes: back to full throttle
+  } catch (e) { }
+}
+function blip(freqs) { if (!actx) return; try { freqs.forEach((f, i) => { const o = actx.createOscillator(), g = actx.createGain(), t = actx.currentTime + .02 + i * .075; o.type = 'sine'; o.frequency.value = f; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.4, t + .006); g.gain.linearRampToValueAtTime(0, t + .06); o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + .08); }); } catch (e) { } }
+function speak(text) { try { if (!text || !('speechSynthesis' in window)) return; if (speechSynthesis.speaking || speechSynthesis.pending) speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.rate = 1.15; u.volume = 1; u.lang = 'en-GB'; speechSynthesis.speak(u); } catch (e) { } }
+const WORD = { 5: 'Hard brake', 4: 'Firm brake', 3: 'Dab', 2: 'Lift', 1: 'Flat' };
+let wl = null;
+async function keepAwake(on) { try { if (on && 'wakeLock' in navigator) wl = await navigator.wakeLock.request('screen'); else if (!on && wl) { await wl.release(); wl = null; } } catch (e) { } }
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && (sim.on || live.on)) keepAwake(true); });
+
+/* ---------------- map lock: fit the track map to a GPS recording ---------------- */
+// A lock is a rotation, scale and shift that carries map coordinates (metres, y up) onto east/north metres from an origin.
+const m2w = (T, x, y) => { const c = Math.cos(T.th), s = Math.sin(T.th), mx = x, my = -y; return [T.s * (c * mx - s * my) + T.tx, T.s * (s * mx + c * my) + T.ty]; };
+const w2m = (T, e, n) => { const c = Math.cos(T.th), s = Math.sin(T.th), dx = (e - T.tx) / T.s, dy = (n - T.ty) / T.s; return [c * dx + s * dy, -(-s * dx + c * dy)]; };
+function fitOne(L, P) {
+  const M = L.centre.map(p => [p[0], -p[1]]), n = M.length, cen = a => { let x = 0, y = 0; for (const p of a) { x += p[0]; y += p[1]; } return [x / a.length, y / a.length]; };
+  const sub = k => P.length > k ? P.filter((_, i) => i % Math.ceil(P.length / k) === 0) : P, cm = cen(M);
+  const run = (Q, th, s, tx, ty, its) => {
+    let rms = 1e9;
+    for (let it = 0; it <= its; it++) {
+      const c = Math.cos(th), sn = Math.sin(th), pr = []; let err = 0;
+      for (const q of Q) { const dx = (q[0] - tx) / s, dy = (q[1] - ty) / s, px = c * dx + sn * dy, py = -sn * dx + c * dy; let bi = 0, bd = 1e18; for (let i = 0; i < n; i++) { const ex = M[i][0] - px, ey = M[i][1] - py, d = ex * ex + ey * ey; if (d < bd) { bd = d; bi = i; } } pr.push([q, M[bi], bi]); err += bd; }
+      rms = Math.sqrt(err / Q.length) * s; if (it === its) return { rms, th, s, tx, ty, pr };
+      const pq = cen(pr.map(p => p[0])), pm = cen(pr.map(p => p[1])); let a = 0, b = 0, mm = 0;
+      for (const [q, m] of pr) { const qx = q[0] - pq[0], qy = q[1] - pq[1], ux = m[0] - pm[0], uy = m[1] - pm[1]; a += ux * qx + uy * qy; b += ux * qy - uy * qx; mm += ux * ux + uy * uy; }
+      th = Math.atan2(b, a); s = Math.min(1.12, Math.max(.9, Math.hypot(a, b) / mm)); const c2 = Math.cos(th), s2 = Math.sin(th); tx = pq[0] - s * (c2 * pm[0] - s2 * pm[1]); ty = pq[1] - s * (s2 * pm[0] + c2 * pm[1]);
+    }
+  };
+  const Qc = sub(90), cq = cen(Qc), starts = [];
+  for (let k = 0; k < 24; k++) { const th = k * 15 * RAD, c = Math.cos(th), sn = Math.sin(th); starts.push(run(Qc, th, 1, cq[0] - (c * cm[0] - sn * cm[1]), cq[1] - (sn * cm[0] + c * cm[1]), 6)); }
+  starts.sort((a, b) => a.rms - b.rms); let best = null;
+  for (const st0 of starts.slice(0, 3)) {
+    const r = run(sub(360), st0.th, st0.s, st0.tx, st0.ty, 12); let fwd = 0, tot = 0; const seen = new Uint8Array(n);
+    for (let j = 1; j < r.pr.length; j++) { const d = mod(r.pr[j][2] - r.pr[j - 1][2] + n / 2, n) - n / 2; if (d !== 0) { tot++; if (d > 0) fwd++; } seen[r.pr[j][2]] = 1; }
+    let cov = 0; for (let i = 0; i < n; i++) { let ok = 0; for (let q = -5; q <= 5; q++) if (seen[mod(i + q, n)]) { ok = 1; break; } cov += ok; }
+    r.forward = tot ? fwd / tot : 0; r.cover = cov / n; if (r.forward > .7 && (!best || r.rms < best.rms)) best = r;
+  }
+  return best;
+}
+function fitRecording(R) {
+  const mov = R.filter(r => (r[3] == null ? 9 : r[3]) > 4); if (mov.length < 40) return null;
+  const origin = { lat: mov[0][1], lon: mov[0][2] }, P = mov.map(r => toENU(r[1], r[2], origin)); let best = null;
+  ['intl', 'nat'].forEach(lay => { const key = lay + (st.chic ? '_c' : '_n'), f = fitOne(D.layouts[key], P); if (f && (!best || f.rms < best.rms)) best = Object.assign(f, { key, lay }); });
+  if (!best) return null;
+  return { th: best.th, s: best.s, tx: best.tx, ty: best.ty, origin, key: best.key, lay: best.lay, chic: st.chic, rms: best.rms, cover: best.cover };
+}
+
+/* ---------------- lap engine: where the kart is on the map, lap times, and what the audio should be doing ---------------- */
+const lapE = { T: null, L: null, n: 0, s: null, cum: 0, v: 0, acc: 0, tFix: 0, rate: 0, times: [], samples: [], lapStartT: null, lapStartCum: null, laps: [], best: null, bestSeg: {}, events: [], wordCum: null, pendingTip: null, tipAt: null, quiet: false, onWord: null, onLap: null };
+function nearestIdx(L, x, y, hint) {
+  const C = L.centre, n = C.length; let bi = -1, bd = 1e18;
+  const test = i => { const p = C[i], d = (p[0] - x) * (p[0] - x) + (p[1] - y) * (p[1] - y); if (d < bd) { bd = d; bi = i; } };
+  if (hint != null) { for (let q = -8; q <= 45; q++) test(mod(Math.floor(hint) + q, n)); if (bd > 25 * 25) { bi = -1; bd = 1e18; } }
+  if (bi < 0) for (let i = 0; i < n; i++) test(i);
+  const a = C[bi], b = C[(bi + 1) % n], ux = b[0] - a[0], uy = b[1] - a[1], f = Math.max(-.5, Math.min(1, ((x - a[0]) * ux + (y - a[1]) * uy) / (ux * ux + uy * uy || 1)));
+  return { i: mod(bi + f, n), d: Math.sqrt(bd) };
+}
+function buildEvents() {
+  const L = LY(), lv = LVL(L), n = lv.length, ev = [];
+  for (let i = 0; i < n; i++) if (lv[mod(i - 1, n)] === '1' && lv[i] !== '1') ev.push({ i, level: +lv[i], key: cardAhead(i) });
+  cardList().forEach(([key]) => { if (!ev.some(e => e.key === key) && lvOf(CARDS[key]) === 1) ev.push({ i: mod(L.corners[CARDS[key].prims[0]].a - 10, n), level: 1, key }); });
+  return ev.sort((a, b) => a.i - b.i);
+}
+function lapReset(T, quiet) {
+  const L = LY(); Object.assign(lapE, { T, L, n: L.centre.length, s: null, cum: 0, v: 0, acc: 0, tFix: 0, rate: 0, times: [], samples: [], lapStartT: null, lapStartCum: null, laps: [], best: null, bestSeg: {}, events: buildEvents(), wordCum: null, pendingTip: null, tipAt: null, quiet: !!quiet, said: {} });
+  setTone(1);
+}
+function lapFix(f) {          // f: { t (ms), lat, lon, spd (m/s or null), acc }
+  const E = lapE; if (!E.T) return;
+  const w = toENU(f.lat, f.lon, E.T.origin), m = w2m(E.T, w[0], w[1]), hit = nearestIdx(E.L, m[0], m[1], E.s);
+  if (hit.d > 30) { E.off = true; return; } E.off = false;                 // in the pits or the paddock
+  let v = f.spd; const prev = E.samples[E.samples.length - 1];
+  if (E.s != null) {
+    const ds = mod(hit.i - E.s + E.n / 2, E.n) - E.n / 2, dt = (f.t - E.tFix) / 1000;
+    if (dt > 0 && (v == null || isNaN(v))) v = Math.max(0, ds * E.L.step / dt);
+    if (dt > .05 && dt < 1.6) E.acc = Math.max(-8, Math.min(5, ((v || 0) - E.v) / dt)) * .7; else E.acc = 0;
+    const before = E.cum; E.cum += ds;
+    const k = Math.floor(E.cum / E.n); if (k > Math.floor(before / E.n) && ds > 0 && prev) {        // crossed the start line
+      const tc = prev.t + (k * E.n - before) / ds * (f.t - prev.t);
+      if (E.lapStartT != null && tc - E.lapStartT > 20000) finishLap(tc, k * E.n);
+      E.lapStartT = tc; E.lapStartCum = k * E.n;
+    }
+  }
+  if (E.s == null) E.cum = hit.i;
+  E.s = hit.i; E.v = v || 0; E.tFix = f.t; E.samples.push({ t: f.t, c: E.cum, v: E.v }); if (E.samples.length > 4000) E.samples.splice(0, 1000);
+  E.times.push(f.t); while (E.times.length > 2 && f.t - E.times[0] > 6000) E.times.shift(); E.rate = E.times.length > 1 ? (E.times.length - 1) / ((f.t - E.times[0]) / 1000) : 0;
+}
+function lapTick(now) {       // runs ten times a second: carries the last fix forward along the track and drives the sound
+  const E = lapE; if (!E.T || E.s == null || E.off) { setTone(1); return null; }
+  const age = Math.min(2.5, Math.max(0, (now - E.tFix) / 1000) + set.gpsDelay), vNow = Math.max(0, E.v + E.acc * age), moved = Math.max(0, E.v * age + .5 * E.acc * age * age);
+  const cumNow = E.cum + moved / E.L.step, lv = LVL(E.L), at = c => +lv[mod(Math.floor(c), E.n)];
+  if (E.quiet || vNow < 3) { setTone(1); return { cum: cumNow, v: vNow, level: at(cumNow) }; }
+  setTone(at(cumNow + vNow * set.toneLead / E.L.step));
+  if (set.mode !== 'tones') {
+    const lead = set.wordLead + (set.mode === 'talk' ? 1.6 : 0), wc = cumNow + vNow * lead / E.L.step;
+    if (E.wordCum != null && wc > E.wordCum && wc - E.wordCum < 45) for (const ev of E.events) {
+      const k = Math.ceil((E.wordCum - ev.i) / E.n), pos = ev.i + k * E.n; if (pos <= E.wordCum || pos > wc) continue;
+      const on = ev.level >= 3 ? set.sayBrake : ev.level === 2 ? set.sayLift : set.sayFlat; if (!on) continue;
+      const text = set.mode === 'talk' ? callFor({ key: ev.key, level: ev.level }) : WORD[ev.level]; if (!text) continue;
+      speak(text); if (E.onWord) E.onWord(text, ev.level);
+    }
+    E.wordCum = wc;
+  }
+  if (E.pendingTip && E.tipAt != null && cumNow >= E.tipAt) { if (set.coachSay) speak(E.pendingTip); if (E.onWord) E.onWord(E.pendingTip, 0); E.pendingTip = null; }
+  return { cum: cumNow, v: vNow, level: at(cumNow) };
+}
+
+/* ---------------- coaching: what the last lap says you should change ---------------- */
+function lapMetrics(startCum) {
+  const E = lapE, L = E.L, S = E.samples, out = {};
+  const tAt = c => { for (let j = 1; j < S.length; j++) if (S[j].c >= c && S[j - 1].c <= c) { const a = S[j - 1], b = S[j]; return a.t + (b.c === a.c ? 0 : (c - a.c) / (b.c - a.c)) * (b.t - a.t); } return null; };
+  const vAt = c => { for (let j = 1; j < S.length; j++) if (S[j].c >= c && S[j - 1].c <= c) { const a = S[j - 1], b = S[j]; return a.v + (b.c === a.c ? 0 : (c - a.c) / (b.c - a.c)) * (b.v - a.v); } return null; };
+  const list = cardList();
+  list.forEach(([key], q) => {
+    const c = CARDS[key], A = L.corners[c.prims[0]], B = L.corners[c.prims[c.prims.length - 1]], prevB = L.corners[CARDS[list[mod(q - 1, list.length)][0]].prims.slice(-1)[0]].b, nextA = L.corners[CARDS[list[(q + 1) % list.length][0]].prims[0]].a;
+    const pre = Math.min(lvOf(c) >= 3 ? 30 : 10, Math.max(2, mod(A.a - prevB, E.n) - 2)), post = Math.min(7, Math.max(1, mod(nextA - B.b, E.n) - 2));
+    let c0 = startCum + A.a - pre, c1 = startCum + B.b + post; if (B.b < A.a) c1 += E.n;
+    const t0 = tAt(c0), t1 = tAt(c1); if (t0 == null || t1 == null) return;
+    const W = S.filter(p => p.c >= c0 - 1 && p.c <= c1 + 1); if (W.length < 2) return;
+    let vMin = 1e9, cMin = c0, brakeOn = null, decel = 0; W.forEach((p, j) => { if (p.v < vMin) { vMin = p.v; cMin = p.c; } if (j) { const q = W[j - 1], d = (q.v - p.v) / Math.max(.05, (p.t - q.t) / 1000); decel = Math.max(decel, d); if (brakeOn == null && d > 1.6) brakeOn = (q.c + p.c) / 2; } });
+    let thr = null; for (const p of W) if (p.c > cMin && p.v > vMin + 1) { thr = p.c; break; }
+    out[key] = { tSeg: (t1 - t0) / 1000, vIn: vAt(c0), vMin, cMin: cMin - startCum, brakeOn: brakeOn == null ? null : brakeOn - startCum, decel, thrLag: thr == null ? null : thr - cMin };
+  });
+  return out;
+}
+function zoneStartIdx(key) { const L = LY(), lv = LVL(L), n = lv.length, a = L.corners[CARDS[key].prims[0]].a; for (let i = a - 40; i <= a + 4; i++) if (lv[mod(i - 1, n)] === '1' && +lv[mod(i, n)] >= 3) return i; return null; }
+function coachTips(m, best) {
+  const L = LY(), tips = [];
+  cardList().forEach(([key]) => {
+    const x = m[key]; if (!x) return; const c = CARDS[key], b = best && best[key], lvl = lvOf(c), loss = b ? x.tSeg - b.tSeg : 0, drop = (x.vIn - x.vMin) * MPH, apex = L.corners[c.prims[0]].i; let tip = null, sev = 0;
+    if (lvl === 1 && drop > 3.5) { tip = 'keep it flat. You dropped ' + Math.round(drop) + ' miles an hour'; sev = drop / 12; }
+    else if (lvl === 2 && x.decel > 3.8) { tip = 'a lift is enough. You braked'; sev = .45; }
+    else if (lvl >= 3) {
+      const zs = zoneStartIdx(key), early = zs != null && x.brakeOn != null ? (zs - x.brakeOn) * L.step : 0, slack = Math.max(14, 1.1 * x.vIn / Math.max(1, lapE.rate || 1));   // at one fix a second the braking point is only known to a kart length or two
+      if (early > slack) { tip = 'brake later, by about ' + Math.round(early / 5) * 5 + ' metres'; sev = early / 35; }
+      else if (early < -slack && c.prims.length === 1 && (lapE.rate || 1) >= 4 && x.cMin > apex + 3) { tip = 'you braked late and were still slowing past the apex. Brake a touch earlier'; sev = .5; }
+    }
+    const fine = (lapE.rate || 1) >= 4, minLoss = fine ? .12 : .3;   // one fix a second cannot resolve small differences, so only speak up about big ones
+    if (!tip && b && x.vMin < b.vMin - (fine ? 1.3 : 2.2) && loss > minLoss) { tip = 'you over-slowed. ' + Math.round((b.vMin - x.vMin) * MPH) + ' miles an hour down on your best at the apex'; sev = loss; }
+    if (!tip && b && x.thrLag != null && b.thrLag != null && x.thrLag > b.thrLag + (fine ? 6 : 12) && loss > minLoss) { tip = 'earlier throttle. You waited about ' + Math.round((x.thrLag - b.thrLag) * L.step / 5) * 5 + ' metres longer than on your best'; sev = loss; }
+    if (tip) tips.push({ key, name: c.name, tip, loss, sev: Math.max(sev, loss) });
+  });
+  return tips.sort((a, b) => b.sev - a.sev).slice(0, 3);
+}
+function finishLap(tc, endCum) {
+  const E = lapE, ms = tc - E.lapStartT, m = lapMetrics(E.lapStartCum), tips = coachTips(m, E.bestSeg), lap = { n: E.laps.length + 1, ms, m, tips };
+  E.laps.push(lap); if (!E.best || ms < E.best.ms) E.best = lap;
+  Object.keys(m).forEach(k => { if (!E.bestSeg[k] || m[k].tSeg < E.bestSeg[k].tSeg) E.bestSeg[k] = m[k]; });
+  const fl = E.L.corners.finelady; E.tipAt = endCum + (fl ? fl.b + 4 : 100);          // say it on the climb after Fine Lady, the longest quiet stretch
+  E.pendingTip = tips.length ? tips[0].name + ': ' + tips[0].tip + '.' : (E.laps.length > 1 && lap === E.best ? 'Best lap. Same again.' : null);
+  if (!E.quiet) { if (set.lapSay) speak((ms / 1000).toFixed(1)); if (E.onLap) E.onLap(lap); }
+}
+function renderDebrief() {
+  const E = lapE, box = $('#debriefBody'); if (!box) return;
+  if (!E.laps.length) { box.innerHTML = '<p class="muted" style="margin:0">No complete laps yet. Run the demo, start GPS at the circuit, or load a CSV trace from a lap timer.</p>'; return; }
+  const last = E.laps[E.laps.length - 1], best = E.best, rows = cardList().map(([key]) => { const x = last.m[key], b = E.bestSeg[key]; if (!x) return ''; const d = b ? x.tSeg - b.tSeg : 0; return '<tr><td>' + CARDS[key].name + '</td><td>' + x.tSeg.toFixed(2) + '</td><td class="' + (d > .08 ? 'neg' : '') + '">' + (d > .005 ? '+' + d.toFixed(2) : 'best') + '</td><td>' + Math.round(x.vIn * MPH) + '</td><td>' + Math.round(x.vMin * MPH) + '</td></tr>'; }).join('');
+  box.innerHTML = '<p style="margin:0 0 8px"><b>Lap ' + last.n + ': ' + fmtLap(last.ms) + '</b>' + (best && best !== last ? ', ' + ((last.ms - best.ms) / 1000).toFixed(2) + ' s off your best (' + fmtLap(best.ms) + ', lap ' + best.n + ')' : ', your best so far') + '.</p>' +
+    (last.tips.length ? '<ol class="tips">' + last.tips.map(t => '<li><b>' + t.name + ':</b> ' + esc(t.tip) + '.' + (t.loss > .05 ? ' <span class="muted">About ' + t.loss.toFixed(2) + ' s lost to your best there.</span>' : '') + '</li>').join('') + '</ol>' : '<p class="muted">Nothing stands out on that lap. Keep it consistent.</p>') +
+    '<div style="overflow-x:auto"><table class="deb"><thead><tr><th>Corner</th><th>Time, s</th><th>To best</th><th>In, mph</th><th>Min, mph</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+    '<p class="small muted" style="margin:8px 0 0">' + (E.rate && E.rate < 3 ? 'GPS is giving about ' + E.rate.toFixed(0) + ' fix a second, so braking points here are good to roughly 10 to 20 metres and corner times to a tenth or two. A 10 to 25 Hz receiver tightens all of this.' : 'Laps: ' + E.laps.map(l => fmtLap(l.ms)).join(', ') + '.') + '</p>';
+}
+
+/* ---------------- demo lap on the map ---------------- */
+const SIM_ORIGIN = { lat: 52.28014, lon: -1.08403 };
+const sim = { on: false, pos: 0, v: 9, lastT: 0, fixAcc: 0, tickAcc: 0, rate: 1, rot: 0, bad: false };
+const simT = () => ({ th: sim.rot * RAD, s: 1, tx: 0, ty: 0, origin: SIM_ORIGIN });
+const simProfCache = {};
+function simProf() {
+  const id = st.layout + st.chic + st.wet + st.profile; if (simProfCache[id]) return simProfCache[id];
+  const L = LY(), lv = LVL(L), n = lv.length, nov = st.profile === 'novice', wet = st.wet ? .62 : 1, grip = (nov ? 9.5 : 13) * wet, tight = nov ? .6 : .52, floor = { 5: nov ? 9 : 10.5, 4: nov ? 10 : 11.5, 3: nov ? 16 : 18 };
+  const cap = L.curv.map(c => { const kk = Math.abs(c) * tight; return kk > 0 ? Math.sqrt(grip / kk) : 99; }), runEnd = new Array(n), brakeEnd = new Array(n), vT = new Array(n);
+  for (let i = 0; i < n; i++) {
+    if (lv[i] === '1') { runEnd[i] = brakeEnd[i] = i; vT[i] = 99; continue; }
+    let a = i, g = 0; while (lv[mod(a - 1, n)] !== '1' && g++ < n) a--; let j = i; g = 0; while (lv[(j + 1) % n] !== '1' && g++ < n) j++; let b = i; g = 0; while (+lv[(b + 1) % n] >= 3 && +lv[b % n] >= 3 && g++ < n) b++;
+    let top = 0, m = 99; for (let q = a; q <= j; q++) { top = Math.max(top, +lv[mod(q, n)]); m = Math.min(m, cap[mod(q, n)]); }
+    runEnd[i] = j; brakeEnd[i] = b; vT[i] = top >= 3 ? Math.max(m, floor[top] * (st.wet ? .85 : 1)) : 99;
+  }
+  return (simProfCache[id] = { runEnd, brakeEnd, vT });
+}
+function drawSim() { if (st.tab !== 'coach') return; renderMap($('#simmap'), { names: false, markers: true, kerbs: false, targets: false, select: false, dot: 'simdot' }); }
+function simStep(dt, now, quiet) {
+  const L = LY(), n = L.centre.length, lvS = LVL(L), P = simProf(), ds = L.step, LN = LINE(L), i = Math.floor(sim.pos) % n, vmax = (st.profile === 'novice' ? 22.4 : 24.6) * (st.wet ? .93 : 1);
+  // a driver who makes the usual novice mistakes: brakes about 16 m early, coasts too long, and lifts where the guide says flat
+  let lv = +lvS[i], vt = P.vT[i], bEnd = P.brakeEnd[i], rEnd = P.runEnd[i];
+  if (sim.bad) { const ah = +lvS[(i + 9) % n], bk = +lvS[mod(i - 4, n)]; if (lv === 1 && ah >= 3) { lv = ah; vt = P.vT[(i + 9) % n] - 1.2; bEnd = P.brakeEnd[(i + 9) % n] - 4; } else if (lv >= 3) { vt = vt - 1.2; } else if (lv === 1 && bk >= 2) { lv = 2; vt = 99; } else if (lv === 1) { const k = cardAhead(i), c = k && CARDS[k], A = c && L.corners[c.prims[0]]; if (A && lvOf(c) === 1 && mod(A.a - i, n) < 9) { lv = 2; vt = 99; } } }
+  let a;
+  if (lv === 1) a = (st.profile === 'novice' ? 3.4 : 4.2) * (st.wet ? .8 : 1) * (1 - sim.v / vmax) + .3;
+  else if (vt > 90) a = -1.3;
+  else if (lv >= 3) { const d = Math.max(2, (bEnd - i + 1) * ds), v2 = Math.min(sim.v, vt + 1.2); a = Math.max(-9.5, Math.min(sim.bad ? -.2 : -1.5, (v2 * v2 - sim.v * sim.v) / (2 * d))); }
+  else { const d = Math.max(2, (rEnd - i + 1) * ds), v2 = Math.min(sim.v, vt); a = Math.max(-6, Math.min(sim.bad ? -.1 : -.5, (v2 * v2 - sim.v * sim.v) / (2 * d))); }
+  sim.v = Math.max(5, sim.v + a * dt); sim.pos = (sim.pos + sim.v * dt / ds) % n;
+  const at = pos => { const pp = mod(pos, n), j = Math.floor(pp), fr = pp - j, p = LN[j % n], q = LN[(j + 1) % n]; return { x: p[0] + (q[0] - p[0]) * fr, y: p[1] + (q[1] - p[1]) * fr }; };
+  const here = at(sim.pos); sim.fixAcc += dt;
+  if (sim.fixAcc >= 1 / sim.rate) {
+    sim.fixAcc = 0; const old = at(sim.pos - sim.v * set.gpsDelay / ds), noise = sim.rate === 1 ? 1.6 : .4, T = simT(), w = m2w(T, old.x, old.y);       // the receiver reports where you were a moment ago
+    const ll = toLL(w[0] + (Math.random() - .5) * 2 * noise, w[1] + (Math.random() - .5) * 2 * noise, SIM_ORIGIN); lapFix({ t: now, lat: ll[0], lon: ll[1], spd: sim.v, acc: noise * 2 });
+  }
+  sim.tickAcc += dt;
+  if (sim.tickAcc >= .1) { sim.tickAcc = 0; const s = lapTick(now); if (!quiet) { $('#simSpd').textContent = Math.round(sim.v * MPH); $('#simLap').textContent = lapE.lapStartT != null ? fmtLap(now - lapE.lapStartT) : '0:00.0'; pedalShow('#simPedal', s ? +lvS[mod(Math.floor(s.cum + s.v * set.toneLead / ds), n)] : 1); } }
+  return here;
+}
+function pedalShow(id, level) { const b = $(id); if (b._l === level) return; b._l = level; b.textContent = level === 1 ? 'Flat out' : level === 2 ? 'Lift' : LV[level].name; b.style.background = lvColor(level); }
+function wordShow(id, text) { const b = $(id); b.textContent = text; clearTimeout(b._t); b._t = setTimeout(() => { b.textContent = ''; }, 2600); }
+function simStart() {
+  audioInit(); keepAwake(true); drawSim(); sim.rate = +$('#simRate').value; sim.bad = $('#simBad').checked; lapReset(simT());
+  lapE.onWord = t => wordShow('#simWord', t); lapE.onLap = lap => { $('#simLast').textContent = fmtLap(lap.ms); renderDebrief(); };
+  const n = LY().centre.length; sim.on = true; sim.pos = n - 18; sim.v = 17; sim.lastT = 0; sim.fixAcc = 1e9; sim.tickAcc = 0;
+  $('#simBtn').textContent = 'Stop demo'; requestAnimationFrame(simFrame);
+}
+function simStop() { sim.on = false; setTone(1); keepAwake(false); $('#simBtn').textContent = 'Start demo lap'; try { speechSynthesis.cancel(); } catch (e) { } renderDebrief(); }
+function simFrame(ts) {
+  if (!sim.on) return; const dt = sim.lastT ? Math.min(.05, (ts - sim.lastT) / 1000) : .016; sim.lastT = ts;
+  const p = simStep(dt, performance.now(), false), dot = $('#simdot'); if (dot) dot.setAttribute('transform', 'translate(' + p.x.toFixed(1) + ' ' + p.y.toFixed(1) + ')');
+  requestAnimationFrame(simFrame);
+}
+
+/* ---------------- live GPS ---------------- */
+const live = { on: false, watch: null, timer: null, fixes: 0, rec: [], lastFit: 0 };
+function liveStatus(msg) { $('#liveStatus').textContent = msg; }
+function lockInfo() { const k = store.get('wm.lock', null); $('#lockInfo').textContent = k ? 'Map locked to GPS (' + (k.lay === 'nat' ? 'National' : 'International') + ', average error ' + k.rms.toFixed(1) + ' m).' : 'Map not locked to GPS yet. Drive one full lap with GPS on and it locks itself.'; $('#forgetLock').hidden = !k; }
+function useLock(k) { if (st.layout !== k.lay || st.chic !== k.chic) { st.layout = k.lay; st.chic = k.chic; refreshAll(); } lapReset(k); lapE.onWord = t => wordShow('#liveWord', t); lapE.onLap = () => renderDebrief(); }
+function tryLock(R, announce) {
+  const k = fitRecording(R); if (!k) return false;
+  if (k.rms > 8 || k.cover < .8) { if (announce) toast('Could not lock the map: the recording does not cover a full lap cleanly yet.'); return false; }
+  store.set('wm.lock', k); lockInfo(); if (announce) toast('Map locked. Average error ' + k.rms.toFixed(1) + ' m.'); return k;
+}
+function liveStart() {
+  if (sim.on) simStop(); if (!('geolocation' in navigator)) { liveStatus('This browser has no location support.'); return; }
+  audioInit(); keepAwake(true); live.rec = []; live.fixes = 0; live.on = true; live.lastFit = 0; $('#liveBtn').textContent = 'Stop GPS';
+  const k = store.get('wm.lock', null); if (k) useLock(k); else lapE.T = null;
+  liveStatus('Waiting for a GPS fix. Stand in the open.');
+  live.watch = navigator.geolocation.watchPosition(pos => {
+    const c = pos.coords, now = performance.now(); live.fixes++;
+    live.rec.push([Date.now(), +c.latitude.toFixed(7), +c.longitude.toFixed(7), c.speed == null || isNaN(c.speed) ? null : +c.speed.toFixed(2), c.heading == null || isNaN(c.heading) ? null : Math.round(c.heading), Math.round(c.accuracy || 0)]);
+    if (lapE.T) lapFix({ t: now, lat: c.latitude, lon: c.longitude, spd: c.speed, acc: c.accuracy });
+    else if (live.rec.length > 60 && now - live.lastFit > 15000) { live.lastFit = now; const got = tryLock(live.rec, false); if (got) { useLock(got); speak('Map locked'); } }
+    liveStatus(lapE.T ? (lapE.off ? 'Locked, but you are off the track map (pits or paddock).' : 'Recording and coaching.') : 'Recording. Drive a full lap and the map locks itself.');
+    $('#liveAcc').textContent = c.accuracy != null ? Math.round(c.accuracy) : 'none';
+  }, err => {
+    const blocked = err && err.code === 1;
+    liveStatus(blocked ? 'Location is blocked for this page. Allow it in the browser prompt. If you opened this inside the Claude app, open the link in Safari or Chrome instead, or host the downloaded copy on any HTTPS site.' : 'No GPS fix yet (' + (err && err.message ? err.message : 'unknown error') + '). Move into the open and wait a moment.');
+    if (blocked) liveStop(true);
+  }, { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 });
+  live.timer = setInterval(() => {
+    const s = lapTick(performance.now()), E = lapE; $('#liveSpd').textContent = s ? Math.round(s.v * MPH) : 0; $('#liveRate').textContent = E.rate ? E.rate.toFixed(1) : '0.0';
+    $('#liveLap').textContent = E.lapStartT != null ? fmtLap(performance.now() - E.lapStartT) : '0:00.0'; $('#liveLast').textContent = fmtLap(E.laps.length ? E.laps[E.laps.length - 1].ms : null); $('#liveBest').textContent = fmtLap(E.best && E.best.ms);
+    pedalShow('#livePedal', s ? +LVL(E.L)[mod(Math.floor(s.cum + s.v * set.toneLead / E.L.step), E.n)] : 1);
+  }, 100);
+}
+function liveStop(keepMsg) {
+  live.on = false; if (live.watch != null) navigator.geolocation.clearWatch(live.watch); live.watch = null; clearInterval(live.timer); setTone(1); keepAwake(false); $('#liveBtn').textContent = 'Start GPS';
+  if (live.rec.length > 5) { rec = live.rec; const ok = store.set('wm.rec', rec); if (!keepMsg) liveStatus('Stopped. ' + rec.length + ' fixes recorded' + (ok ? ' and kept on this phone.' : '. Could not store them on this phone, so save the CSV now.')); }
+  else if (!keepMsg) liveStatus('Stopped.');
+  renderDebrief();
+}
+// run a saved recording (or a lap timer's CSV) through the same engine, silently, to get lap times and coaching
+function replay(R) {
+  let k = store.get('wm.lock', null); const fresh = tryLock(R, false); if (fresh) k = fresh; if (!k) { toast('Could not fit this recording to the track map.'); return false; }
+  useLock(k); lapE.quiet = true; const t0 = R[0][0]; R.forEach(r => lapFix({ t: r[0] - t0, lat: r[1], lon: r[2], spd: r[3], acc: r[5] })); lapE.quiet = false; renderDebrief(); lockInfo();
+  toast(lapE.laps.length + ' laps found in the recording.'); return true;
+}
+function parseCsv(text) {
+  const lines = text.split(/\r?\n/); let hi = lines.findIndex(l => /lat/i.test(l) && /lon/i.test(l)); if (hi < 0) return null;
+  const delim = (lines[hi].match(/;/g) || []).length > (lines[hi].match(/,/g) || []).length ? ';' : ',', head = lines[hi].split(delim).map(s => s.trim().toLowerCase().replace(/"/g, ''));
+  const col = re => head.findIndex(h => re.test(h)), cLat = col(/^lat/), cLon = col(/^(lon|lng)/), cSpd = col(/speed/), cT = col(/^(time|timestamp|utc)/); if (cLat < 0 || cLon < 0) return null;
+  const sh = cSpd >= 0 ? head[cSpd] : '', k = /km|kph/.test(sh) ? 1 / 3.6 : /mph/.test(sh) ? 1 / MPH : 1, out = [];
+  for (let i = hi + 1; i < lines.length; i++) { const c = lines[i].split(delim), lat = parseFloat(c[cLat]), lon = parseFloat(c[cLon]); if (!isFinite(lat) || !isFinite(lon)) continue; let t = cT >= 0 ? parseFloat(c[cT]) : out.length; if (!isFinite(t)) t = out.length; if (t < 1e11) t *= 1000; const v = cSpd >= 0 ? parseFloat(c[cSpd]) * k : NaN; out.push([t, lat, lon, isFinite(v) ? +v.toFixed(2) : null, null, 0]); }
+  return out.length > 5 ? out : null;
+}
+let dlCap = null;
+if (window.claude && typeof window.claude.use === 'function') { try { window.claude.use('downloads').then(d => { dlCap = d; }).catch(() => { }); } catch (e) { } }
+async function saveFile(name, text) {
+  if (dlCap) { try { await dlCap.save({ filename: name, data: text }); return; } catch (e) { if (e && (e.code === 'declined' || e.code === 'rate_limited')) return; } }
+  try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain' })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); } catch (e) { toast('Could not save a file from here.'); }
+}
+
+/* ---------------- wiring ---------------- */
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-card],[data-layout],[data-profile],[data-chic],[data-wet],[data-tab],[data-show]'); if (!t) return;
+  if (t.dataset.card) { if (st.tab !== 'map') setTab('map'); select(t.dataset.card, true); }
+  else if (t.dataset.layout) { if (sim.on) simStop(); st.layout = t.dataset.layout; refreshAll(); }
+  else if (t.dataset.profile) { if (sim.on) simStop(); st.profile = t.dataset.profile; refreshAll(); }
+  else if (t.dataset.chic) { if (sim.on) simStop(); st.chic = t.dataset.chic === '1'; refreshAll(); }
+  else if (t.dataset.wet) { if (sim.on) simStop(); st.wet = t.dataset.wet === '1'; refreshAll(); }
+  else if (t.dataset.tab) setTab(t.dataset.tab);
+  else if (t.dataset.show) { const k = t.dataset.show; st.show[k] = !st.show[k]; t.setAttribute('aria-pressed', String(st.show[k])); drawMain(); }
+});
+document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('hit')) { e.preventDefault(); select(e.target.dataset.card, true); } });
+$('#simBtn').addEventListener('click', () => sim.on ? simStop() : simStart());
+$('#liveBtn').addEventListener('click', () => live.on ? liveStop() : liveStart());
+$('#testSound').addEventListener('click', () => { audioInit(); if (set.mode !== 'tones') speak(set.mode === 'talk' ? callFor({ key: 'christmas', level: 5 }) : WORD[5]); setTimeout(() => setTone(5), 900); setTimeout(() => setTone(2), 2100); setTimeout(() => setTone(1), 2700); });
+$('#forgetLock').addEventListener('click', () => { store.del('wm.lock'); lapE.T = null; lockInfo(); toast('Map lock forgotten.'); });
+$('#lockNow').addEventListener('click', () => { const R = live.on ? live.rec : rec; if (!R || R.length < 40) { toast('Record at least one full lap first.'); return; } const k = tryLock(R, true); if (k && live.on) useLock(k); });
+$('#replayBtn').addEventListener('click', () => { if (!rec || rec.length < 40) { toast('No recording to analyse yet.'); return; } replay(rec); });
+$('#saveCsv').addEventListener('click', () => { if (!rec.length) { toast('Nothing recorded yet.'); return; } saveFile('whilton-session.csv', 'time_ms,latitude,longitude,speed_mps,heading_deg,accuracy_m\n' + rec.map(r => r.map(v => v == null ? '' : v).join(',')).join('\n')); });
+$('#loadFile').addEventListener('change', e => {
+  const f = e.target.files && e.target.files[0]; if (!f) return; const rd = new FileReader();
+  rd.onload = () => { const r = parseCsv(String(rd.result || '')); if (r) { rec = r; store.set('wm.rec', rec); replay(rec); } else toast('That file has no latitude and longitude columns.'); };
+  rd.readAsText(f); e.target.value = '';
+});
+const bindNum = (id, key) => { const i = $(id); i.value = set[key]; i.addEventListener('change', () => { const v = parseFloat(i.value); if (isFinite(v)) { set[key] = v; saveSettings(); } }); };
+const bindChk = (id, key) => { const i = $(id); i.checked = !!set[key]; i.addEventListener('change', () => { set[key] = i.checked; saveSettings(); }); };
+bindNum('#setWordLead', 'wordLead'); bindNum('#setToneLead', 'toneLead'); bindNum('#setDelay', 'gpsDelay');
+['toneBrake', 'toneLift', 'goBlip', 'sayBrake', 'sayLift', 'sayFlat', 'lapSay', 'coachSay'].forEach(k => bindChk('#set_' + k, k));
+$('#setMode').value = set.mode; $('#setMode').addEventListener('change', e => { set.mode = e.target.value; saveSettings(); });
+
+renderLegend(); refreshAll(); lockInfo(); renderDebrief();
+window.__wm = { D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, setRec: r => { rec = r; }, getRec: () => rec };
+})();
+</script>
+</body>
+</html>
