@@ -4,8 +4,8 @@
 A single-file web app (dist/index.html) for a novice kart driver at Whilton Mill, UK. Four tabs:
 - Map: real track shape, racing line coloured 1 to 5 by braking effort, kerb verdicts, brake markers. Switches: layout (International 1200 m, National 960 m), driver (novice, experienced), 2024 chicane on or off, dry or wet.
 - Corners: every corner in lap order. Each card has a pedal plan (how hard, from where, for how long), brake marker, line, apex kerb, exit kerb, mistakes, wet notes, and a zoomed close-up.
-- Plan: session plan, kerb summary, wet notes, hire-kart notes, validation record and sources.
-- Coach: GPS audio coach. Demo lap on the map, live GPS, map lock, tones and words, lap-by-lap coaching, debrief.
+- Plan: session plan, a kerb verdict table for every corner (use, with care, stay off, look first; stay off everywhere in the wet), kerb summary, wet notes, hire-kart notes, validation record and sources. The layout, driver, chicane and wet controls stay visible on this tab.
+- Coach: GPS audio coach. Demo lap on the map, live GPS, map lock, tones and words, lap time with the gap to best spoken each lap, GPS ready, lost and back announcements, lap-by-lap coaching, debrief. Read me the lap: a pre-race walkthrough that speaks every corner in order with the pedal plan, brake marker and kerb verdict.
 
 ## House style (owner preference, keep to it)
 - UK English. Never use em dashes anywhere (build.py counts them). Plain headings, plain prose, no marketing tone.
@@ -16,14 +16,15 @@ A single-file web app (dist/index.html) for a novice kart driver at Whilton Mill
 - src/app.src.html: the whole app (HTML, CSS, JS). `__DATA__` is replaced at build time.
 - build/build_data.py: geometry to data. Reads data/*_px.npy (centrelines in image pixels) and data/scale.json, detects corners by curvature, names them per layout, builds the racing line (lateral offsets), dry and wet braking levels, kerbs, markers. Writes data/data.json.
 - build/build.py: injects data.json into the source, writes dist/index.html.
-- tests/test_coach.py: Playwright tests that run simulated laps through the real engine: words and tones, coaching on a deliberately poor driver, wet mode, and the map lock on rotated noisy synthetic GPS.
+- tests/test_coach.py: Playwright tests that run simulated laps through the real engine: words and tones, coaching on a deliberately poor driver, wet mode, and the map lock on rotated noisy synthetic GPS. Playwright's Chromium revision must match the browser installed (in the Claude Code web sandbox that is Playwright 1.56 with the preinstalled Chromium; do not run playwright install there).
 - tools/: how the centrelines were traced from a map image (reference only).
 - Build and test: `python build/build_data.py && python build/build.py && python tests/test_coach.py` (needs numpy, scipy, playwright with chromium).
 
 ## Engine design (src/app.src.html, second half of the script)
 - Map lock (`fitOne`, `fitRecording`): ICP with a 2D similarity transform fits the map centreline to a GPS recording, tries both layouts, reports RMS and coverage. Stored in localStorage as `wm.lock`.
 - Lap engine (`lapFix`, `lapTick`): each fix is transformed into map space and matched to the centreline (windowed nearest point). Position is carried forward between fixes using speed and acceleration. Lap timing by start-line crossing.
-- Audio: a continuous tone sounds for as long as the painted level is above 1 at the look-ahead position. Pitch encodes level (2 lift hum, 3 to 5 brake). Words (Hard brake, Firm brake, Dab, Lift, Flat) fire at a longer look-ahead. Talk-me-round mode speaks a sentence per corner.
+- Audio: a continuous tone sounds for as long as the painted level is above 1 at the look-ahead position. Pitch encodes level (2 lift hum, 3 to 5 brake). Words (Hard brake, Firm brake, Dab, Lift, Flat) fire at a longer look-ahead; the word look-ahead never runs backwards, so a noisy fix cannot repeat a word. Talk-me-round mode speaks a sentence per corner. After three seconds without a fix the tone stops rather than extrapolating; live mode says GPS lost after four seconds and GPS back when fixes resume. Lap times are spoken with the gap to best ("71.9, 0.4 off", "71.4, best", "equal best").
+- Reader (`lapScript`, `readStart`): the pre-race walkthrough, built from CARDS (novice or experienced text, or the wet text), the marker and the kerb verdicts (`kerbsOf`, `kerbSay`), spoken one corner at a time with a short pause between.
 - Coaching (`lapMetrics`, `coachTips`): per-corner windows, entry speed, slowest speed, brake onset, throttle pick-up, segment time. Rules compare with the guide (flat, lift, brake) and with the driver's own best through that corner. Thresholds widen at low GPS rates.
 - Demo (`simStep`): a simulated kart follows the painted levels; "makes mistakes" brakes early, over-slows and lifts at flat corners so the coach has something to say. Emulated GPS (1, 10 or 25 Hz, noise, latency) feeds the same engine as live GPS.
 
