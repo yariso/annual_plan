@@ -212,6 +212,53 @@ svg text{font-family:var(--display);fill:var(--ink)}
 </div>
 
 <main>
+<section class="tab" id="tab-start">
+  <h2>Start here</h2>
+  <p class="muted" style="max-width:64ch;margin:0 0 12px">Four novices, one phone, a pair of earphones. Do these in order.</p>
+  <div class="panel">
+    <h3>1. Before the day: learn the lap</h3>
+    <p style="max-width:64ch">Ten minutes a day, each of you, earphones in. By race day the corner names, what your feet do at each one and the rhythm of the lap are in your head.</p>
+    <div class="row">
+      <button type="button" class="btn primary" data-go="read">Read me the lap</button>
+      <button type="button" class="btn" data-go="virtual">Virtual lap on the map</button>
+      <button type="button" class="btn" data-go="mind">Lap in your head</button>
+      <button type="button" class="btn" data-go="quiz">Corner quiz</button>
+    </div>
+    <ul id="startPedals"></ul>
+    <div class="row">
+      <button type="button" class="btn small" data-tab="corners">Every corner, with the line and the kerbs</button>
+      <button type="button" class="btn small" data-tab="plan">The one-page race plan</button>
+      <button type="button" class="btn small" data-tab="map">The map</button>
+    </div>
+  </div>
+  <div class="panel">
+    <h3>2. Test it at home: the walk test</h3>
+    <p style="max-width:64ch">Prove the phone can follow you before you trust it in a kart. Press Start walk test, allow location, and walk round the garden or the block. The dot should follow you within a few metres and it says how good the signal is. Then press Test the sound with the earphones in.</p>
+    <div class="row">
+      <button type="button" class="btn primary" id="walkBtn">Start walk test</button>
+      <button type="button" class="btn" id="startSound">Test the sound</button>
+    </div>
+    <div class="status" id="walkStatus">Not running.</div>
+    <div class="mapbox" style="padding:2px"><svg id="walkmap" role="img" aria-label="Your walk" viewBox="-20 -20 40 40" style="max-height:260px"></svg></div>
+    <div class="read">
+      <div><b id="walkDist">0</b><span>metres walked</span></div>
+      <div><b id="walkAcc">none</b><span>accuracy, m</span></div>
+      <div><b id="walkRate">0.0</b><span>fixes a second</span></div>
+    </div>
+    <p class="small muted" style="margin:6px 0 0">Indoors expect a poor or missing fix; outside expect 5 to 15 m and about one fix a second, which is all the coach needs. If location is blocked, open this link in Safari itself rather than inside another app.</p>
+  </div>
+  <div class="panel">
+    <h3>3. At the circuit: the GPS coach</h3>
+    <p style="max-width:64ch">Ask at the briefing whether the chicane is in and whether earpieces are allowed. Then: Coach tab, your name, Start, phone in your pocket. It talks you round, gives the lap time after each lap and one thing to change.</p>
+    <button type="button" class="btn primary big" data-go="start">Go to the GPS coach</button>
+  </div>
+  <div class="panel">
+    <h3>4. After each stint: the debrief</h3>
+    <p style="max-width:64ch">One thing to change for the next driver, and the team table: who is quickest through each corner, so they can tell the others how.</p>
+    <button type="button" class="btn" data-go="debrief">Open the debrief</button>
+  </div>
+</section>
+
 <section class="tab" id="tab-map">
   <div class="mapgrid">
     <div>
@@ -425,7 +472,8 @@ svg text{font-family:var(--display);fill:var(--ink)}
 </div>
 
 <nav class="tabs" role="tablist" aria-label="Sections">
-  <button type="button" role="tab" data-tab="coach" aria-selected="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 14v-2a7 7 0 0 1 14 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></svg>Coach</button>
+  <button type="button" role="tab" data-tab="start" aria-selected="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4l14 8-14 8z"/></svg>Start</button>
+  <button type="button" role="tab" data-tab="coach" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 14v-2a7 7 0 0 1 14 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></svg>Coach</button>
   <button type="button" role="tab" data-tab="map" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 15c0-5 3-9 8-9s8 3 8 7-3 5-6 5-3-3-6-3-4 3-4 0z"/></svg>Map</button>
   <button type="button" role="tab" data-tab="corners" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V10a6 6 0 0 1 6-6h8"/><path d="M15 8l4-4-4-4" transform="translate(0 4)"/></svg>Corners</button>
   <button type="button" role="tab" data-tab="plan" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10a2 2 0 0 1 2 2v14H5V6a2 2 0 0 1 2-2z"/><path d="M9 9h6M9 13h6M9 17h3"/></svg>Plan</button>
@@ -626,7 +674,7 @@ const LABELS = {
 };
 
 /* ---------------- state ---------------- */
-const st = { layout: 'intl', chic: true, wet: false, profile: 'novice', tab: 'coach', sel: null, show: { names: true, markers: true, kerbs: true } };
+const st = { layout: 'intl', chic: true, wet: false, profile: 'novice', tab: 'start', sel: null, show: { names: true, markers: true, kerbs: true } };
 const pick = v => { if (v && typeof v === 'object') { if ('c' in v || 'n' in v) return pick(v[st.chic ? 'c' : 'n']); if ('nat' in v || 'intl' in v) return v[st.layout]; } return v; };
 const lvOf = c => { if (!st.wet && st.profile !== 'model') return pick(c.lv)[st.profile]; const L = LY(), lv = LVL(L), n = lv.length, a = L.corners[c.prims[0]], b = L.corners[c.prims[c.prims.length - 1]]; let m = 1; rangeIdx(a.a - 30, b.i, n).forEach(i => { m = Math.max(m, +lv[i]); }); return m; };
 const LY = () => D.layouts[st.layout + (st.chic ? '_c' : '_n')];
@@ -841,11 +889,17 @@ function renderCard() {
 function renderAcc() {
   $('#acc').innerHTML = cardList().map(([key, tn]) => { const c = CARDS[key], l = lvOf(c); return '<details class="acc" style="--lv:' + lvColor(l) + '"><summary><span class="tn">' + tn.replace(' to ', '-').replace(', ', '-').replace('new', '') + '</span><span class="nm">' + c.name + '</span>' + badge(l) + '</summary><div class="inner"><p class="muted small" style="margin:0 0 6px">' + esc(pick(c.kind)) + '</p><p class="do" style="font-size:17px;margin:0 0 8px">' + esc(pick(st.profile === 'novice' ? c.doN : c.doE)) + '</p>' + factRows(c) + '</div></details>'; }).join('');
 }
+function pedalLists() { const byLv = { flat: [], lift: [], brake: [] }; cardList().forEach(([k]) => { const c = CARDS[k], l = lvOf(c); (l === 1 ? byLv.flat : l === 2 ? byLv.lift : byLv.brake).push(c.name + (l >= 3 ? ' (' + { 3: 'dab', 4: 'firm', 5: 'hard' }[l] + ')' : '')); }); return byLv; }
+function renderStart() {
+  const b = pedalLists(), join = a => a.length ? a.join(', ') : 'none', lay = (st.layout === 'nat' ? 'National' : 'International') + (st.chic ? ' with the chicane' : ' without the chicane');
+  $('#startPedals').innerHTML = '<li>Know these by name for the ' + lay + '. <b>Flat:</b> ' + esc(join(b.flat)) + '. <b>Lift only:</b> ' + esc(join(b.lift)) + '. <b>Brake:</b> ' + esc(join(b.brake)) + '.</li>' +
+    '<li>Draw the track from memory with the brake corners marked. When all of you draw the same map, you know it.</li>' +
+    '<li>Watch the onboard lap from your own event with the Map tab open: <a href="https://www.youtube.com/watch?v=LLj-szfuBl4" target="_blank" rel="noopener">Whilton Mill flying lap, Karun\'s Karting Carnival 2022</a>, and Wolemid\'s <a href="https://www.youtube.com/watch?v=SCg5JWaubVo" target="_blank" rel="noopener">2025 guide to the chicane</a>.</li>';
+}
 function renderPlan() {
   const nat = st.layout === 'nat';
   const kb = (s, t) => '<li><span class="kb" style="background:var(--' + s + ')">' + ({ ok: '&#10003;', care: '!', no: '&#10005;' }[s]) + '</span><span>' + t + '</span></li>';
-  const byLv = { flat: [], lift: [], brake: [] }; cardList().forEach(([k]) => { const c = CARDS[k], l = lvOf(c); (l === 1 ? byLv.flat : l === 2 ? byLv.lift : byLv.brake).push(c.name + (l >= 3 ? ' (' + { 3: 'dab', 4: 'firm', 5: 'hard' }[l] + ')' : '')); });
-  const join = a => a.length ? a.join(', ') : 'none';
+  const byLv = pedalLists(), join = a => a.length ? a.join(', ') : 'none';
   $('#plan').innerHTML =
     '<div class="panel"><h3>Move up the table: the one-page plan</h3>' +
     '<p style="max-width:64ch">A novice team moves up a hire-kart enduro by three things, in this order: no spins, every driver at the same pace, and the flat corners taken flat. Speed comes last. This is standard coaching, and every line below is what the app measures or reads out.</p>' +
@@ -1009,7 +1063,7 @@ function refreshAll() {
   $$('[data-wet]').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.wet === '1') === st.wet)));
   if (st.sel && !cardList().some(x => x[0] === st.sel)) st.sel = null;
   const mb = $('[data-profile="model"]'); if (mb) { mb.disabled = !MK(); if (!MK() && st.profile === 'model') { st.profile = 'expert'; mb.setAttribute('aria-pressed', 'false'); $('[data-profile="expert"]').setAttribute('aria-pressed', 'true'); } }
-  drawMain(); renderStrip(); renderCard(); renderAcc(); renderPlan(); drawSim();
+  drawMain(); renderStrip(); renderCard(); renderAcc(); renderPlan(); renderStart(); drawSim();
 }
 function setTab(t) {
   st.tab = t;
@@ -1544,6 +1598,41 @@ function liveStart() {
     pedalShow('#livePedal', s ? +LVL(E.L)[mod(Math.floor(s.cum + s.v * set.toneLead / E.L.step), E.n)] : 1);
   }, 100);
 }
+const walk = { on: false, watch: null, pts: [], origin: null, dist: 0, said: 0, times: [], acc: null, t0: 0 };
+function walkDraw() {
+  const svg = $('#walkmap'); if (!svg) return; const P = walk.pts; if (!P.length) { svg.innerHTML = ''; return; }
+  let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9; P.forEach(p => { x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); });
+  const pad = Math.max(8, (walk.acc || 0)), w = Math.max(30, x1 - x0 + 2 * pad), h = Math.max(30, y1 - y0 + 2 * pad), cx = (x0 + x1) / 2, cy = (y0 + y1) / 2, size = Math.max(w, h);
+  svg.setAttribute('viewBox', (cx - size / 2) + ' ' + (-cy - size / 2) + ' ' + size + ' ' + size);
+  const last = P[P.length - 1], sw = size / 200;
+  svg.innerHTML = '<polyline points="' + P.map(p => p[0].toFixed(1) + ',' + (-p[1]).toFixed(1)).join(' ') + '" fill="none" stroke="var(--ink)" stroke-width="' + (sw * 1.5) + '" stroke-linejoin="round" stroke-linecap="round"/>' +
+    '<circle cx="' + P[0][0].toFixed(1) + '" cy="' + (-P[0][1]).toFixed(1) + '" r="' + (sw * 3) + '" fill="var(--muted)"/>' +
+    (walk.acc ? '<circle cx="' + last[0].toFixed(1) + '" cy="' + (-last[1]).toFixed(1) + '" r="' + walk.acc.toFixed(1) + '" fill="var(--accent)" fill-opacity=".12" stroke="var(--accent)" stroke-width="' + sw + '" stroke-dasharray="' + (sw * 3) + '"/>' : '') +
+    '<circle cx="' + last[0].toFixed(1) + '" cy="' + (-last[1]).toFixed(1) + '" r="' + (sw * 4) + '" fill="var(--accent)"/>' +
+    '<line x1="' + (cx - size / 2 + size * .05) + '" y1="' + (-cy + size / 2 - size * .06) + '" x2="' + (cx - size / 2 + size * .05 + 10) + '" y2="' + (-cy + size / 2 - size * .06) + '" stroke="var(--ink)" stroke-width="' + sw + '"/><text x="' + (cx - size / 2 + size * .05) + '" y="' + (-cy + size / 2 - size * .08) + '" font-size="' + (size * .05) + '" fill="var(--muted)">10 m</text>';
+}
+function walkStart() {          // a local test of the GPS the coach will use: the trace of a walk, drawn live, with the signal quality spoken
+  if (live.on) { toast('Stop the GPS coach first.'); return; } if (!('geolocation' in navigator)) { $('#walkStatus').textContent = 'This browser has no location support.'; return; }
+  audioInit(); keepAwake(true); Object.assign(walk, { on: true, pts: [], origin: null, dist: 0, said: 0, times: [], acc: null, t0: performance.now() }); walkDraw(); $('#walkBtn').textContent = 'Stop walk test'; $('#walkStatus').textContent = 'Waiting for a GPS fix. Go outside or to a window.'; speak('Walk test. Waiting for GPS.');
+  walk.watch = navigator.geolocation.watchPosition(pos => {
+    const c = pos.coords, now = performance.now(); if (!walk.origin) { walk.origin = { lat: c.latitude, lon: c.longitude }; speak('GPS working. Accuracy ' + Math.round(c.accuracy || 0) + ' metres. Walk.'); }
+    const p = toENU(c.latitude, c.longitude, walk.origin), last = walk.pts[walk.pts.length - 1]; walk.acc = c.accuracy || null;
+    if (!last || Math.hypot(p[0] - last[0], p[1] - last[1]) >= Math.max(1.5, (c.accuracy || 0) * .3)) { if (last) walk.dist += Math.hypot(p[0] - last[0], p[1] - last[1]); walk.pts.push(p); }   // small jitter while standing still is not distance
+    walk.times.push(now); while (walk.times.length > 2 && now - walk.times[0] > 6000) walk.times.shift(); const rate = walk.times.length > 1 ? (walk.times.length - 1) / ((now - walk.times[0]) / 1000) : 0;
+    $('#walkDist').textContent = Math.round(walk.dist); $('#walkAcc').textContent = Math.round(c.accuracy || 0); $('#walkRate').textContent = rate.toFixed(1);
+    $('#walkStatus').textContent = 'Following you. ' + walk.pts.length + ' points, accuracy ' + Math.round(c.accuracy || 0) + ' m' + (c.speed != null && !isNaN(c.speed) ? ', ' + (c.speed * MPH).toFixed(1) + ' mph' : '') + '.';
+    if (walk.dist - walk.said >= 25) { walk.said = Math.floor(walk.dist / 25) * 25; speak(walk.said + ' metres'); }
+    walkDraw();
+  }, err => { $('#walkStatus').textContent = err && err.code === 1 ? 'Location is blocked for this page. Allow it in the browser prompt, or in Settings, Safari, Location. If you opened this inside another app, open the link in Safari.' : 'No GPS fix (' + (err && err.message ? err.message : 'unknown error') + '). Move into the open.'; if (err && err.code === 1) walkStop(true); },
+  { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 });
+}
+function walkStop(quiet) {
+  if (walk.watch != null) navigator.geolocation.clearWatch(walk.watch); walk.watch = null; walk.on = false; keepAwake(false); $('#walkBtn').textContent = 'Start walk test';
+  if (quiet) return; const secs = Math.max(1, (performance.now() - walk.t0) / 1000), n = walk.times.length;
+  const msg = walk.pts.length ? 'Walked about ' + Math.round(walk.dist) + ' m in ' + Math.round(secs) + ' s, ' + walk.pts.length + ' points, last accuracy ' + Math.round(walk.acc || 0) + ' m. ' + (walk.acc && walk.acc <= 15 ? 'That is good enough for the coach.' : 'The coach wants 15 m or better: try it outside with clear sky.') : 'No fix came. Try again outside.';
+  $('#walkStatus').textContent = msg; speak(walk.pts.length ? 'Walk test done. ' + Math.round(walk.dist) + ' metres, accuracy ' + Math.round(walk.acc || 0) : 'No GPS fix');
+}
+function soundTest() { audioInit(); if (set.mode !== 'tones') speak(set.mode === 'talk' ? callFor({ key: 'christmas', level: 5 }) : WORD[5]); setTimeout(() => setTone(5), 900); setTimeout(() => setTone(2), 2100); setTimeout(() => setTone(1), 2700); }
 function gpsCheck() {           // anywhere, not only at the track: ten seconds of fixes, then how many came, how accurate, and how far from Whilton Mill
   if (live.on) { toast('GPS is already running.'); return; } if (!('geolocation' in navigator)) { liveStatus('This browser has no location support.'); return; }
   audioInit(); const b = $('#gpsCheck'); b.disabled = true; liveStatus('Checking GPS for ten seconds. Stand where you can see the sky.'); speak('Checking GPS');
@@ -1634,7 +1723,18 @@ $('#mindBtn').addEventListener('click', () => { const b = $('#mindBox'); b.hidde
 $('#mindTap').addEventListener('click', mindTap);
 $('#quizBtn').addEventListener('click', () => { const b = $('#quizBox'); b.hidden = !b.hidden; if (!b.hidden) { $('#mindBox').hidden = true; quizAsk(); } });
 $('#quizA').addEventListener('click', e => { const b = e.target.closest('[data-quiz]'); if (b) quizAnswer(b.dataset.quiz); });
-$('#testSound').addEventListener('click', () => { audioInit(); if (set.mode !== 'tones') speak(set.mode === 'talk' ? callFor({ key: 'christmas', level: 5 }) : WORD[5]); setTimeout(() => setTone(5), 900); setTimeout(() => setTone(2), 2100); setTimeout(() => setTone(1), 2700); });
+$('#testSound').addEventListener('click', soundTest); $('#startSound').addEventListener('click', soundTest);
+$('#walkBtn').addEventListener('click', () => walk.on ? walkStop() : walkStart());
+document.addEventListener('click', e => {         // the Start tab's buttons jump to the right place on the Coach tab
+  const t = e.target.closest('[data-go]'); if (!t) return; const go = t.dataset.go; setTab('coach');
+  const openFor = id => { const d = $(id).closest('details'); if (d) d.open = true; };
+  if (go === 'read') { openFor('#readBtn'); $('#readBtn').scrollIntoView({ block: 'center' }); }
+  else if (go === 'virtual') { openFor('#virtBtn'); virtualStart(); }
+  else if (go === 'mind') { openFor('#mindBtn'); if ($('#mindBox').hidden) $('#mindBtn').click(); $('#mindTap').scrollIntoView({ block: 'center' }); }
+  else if (go === 'quiz') { openFor('#quizBtn'); if ($('#quizBox').hidden) $('#quizBtn').click(); $('#quizBox').scrollIntoView({ block: 'center' }); }
+  else if (go === 'debrief') { $('#debriefDetails').open = true; $('#debriefDetails').scrollIntoView({ block: 'start' }); }
+  else window.scrollTo(0, 0);
+});
 $('#forgetLock').addEventListener('click', () => { store.del('wm.lock'); lapE.T = null; lockInfo(); toast('Map lock forgotten.'); });
 $('#lockNow').addEventListener('click', () => { const R = live.on ? live.rec : rec; if (!R || R.length < 40) { toast('Record at least one full lap first.'); return; } const k = tryLock(R, true); if (k && live.on) { useLock(k); live.stored = false; } });
 $('#replayBtn').addEventListener('click', () => { if (live.on) liveStop(); if (!rec || rec.length < 40) { toast('No recording to analyse yet.'); return; } replay(rec); });
@@ -1651,7 +1751,7 @@ bindNum('#setWordLead', 'wordLead'); bindNum('#setToneLead', 'toneLead'); bindNu
 $('#setMode').value = set.mode; $('#setMode').addEventListener('change', e => { set.mode = e.target.value; saveSettings(); });
 
 renderLegend(); refreshAll(); lockInfo(); renderDebrief(); setTab(st.tab);
-window.__wm = { pocketShow, D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, MK, modelLine, M, refTimes, mindTap, mind, quizAsk, quizAnswer, quiz, virtualStart, team, teamLog, teamTable, live, speechLag, speechLags, SHORT, setRec: r => { rec = r; }, getRec: () => rec };
+window.__wm = { pocketShow, walk, walkStart, walkStop, renderStart, D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, MK, modelLine, M, refTimes, mindTap, mind, quizAsk, quizAnswer, quiz, virtualStart, team, teamLog, teamTable, live, speechLag, speechLags, SHORT, setRec: r => { rec = r; }, getRec: () => rec };
 })();
 </script>
 </body>

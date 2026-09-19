@@ -1,7 +1,8 @@
 # Whilton Mill line guide and audio coach: project brief for Claude Code
 
 ## What this is
-A single-file web app (dist/index.html) for a novice kart driver at Whilton Mill, UK. Four tabs, Coach first and the default on load:
+A single-file web app (dist/index.html) for a novice kart driver at Whilton Mill, UK. Five tabs, Start first and the default on load:
+- Start: the journey in order. 1 Before the day (buttons into read me the lap, the virtual lap, the lap in your head and the quiz, the layout's corners by flat, lift and brake from `pedalLists`, the videos to watch); 2 Test it at home (the walk test: `walkStart` draws the phone's GPS trace live on a small map with the accuracy circle, counts distance while ignoring standing-still jitter, speaks the signal quality and every 25 m; and the sound test); 3 At the circuit (a big button to the GPS coach); 4 After each stint (the debrief). `data-go` buttons jump to the right place on the Coach tab.
 - Map: real track shape, racing line coloured 1 to 5 by braking effort, kerb verdicts, brake markers. Switches: layout (International 1200 m, National 960 m), driver (novice, experienced), 2024 chicane on or off, dry or wet.
 - Corners: every corner in lap order. Each card has a pedal plan (how hard, from where, for how long), brake marker, line, apex kerb, exit kerb, mistakes, wet notes, what the model does there (`modelNote`: the hire kart's entry speed, brake or lift point and slowest speed from data/model.json), and a zoomed close-up.
 - Plan: a one-page plan at the top (Move up the table: before the day, on the day, after each stint, with the layout's corners listed by flat, lift and brake from lvOf), session plan, a kerb verdict table for every corner (use, with care, stay off, look first; stay off everywhere in the wet), kerb summary, wet notes, hire-kart notes, validation record and sources. The layout, driver, chicane and wet controls stay visible on this tab.
