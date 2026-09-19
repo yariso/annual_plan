@@ -1,5 +1,5 @@
 # Publishes whilton-coach/dist/index.html to GitHub Pages so phones can use GPS (Safari needs HTTPS).
-# One-time setup in the repository settings: Pages, Build and deployment, Source: GitHub Actions.
+# One-time setup: either add a PAGES_TOKEN secret (see below) or set Pages, Build and deployment, Source: GitHub Actions.
 name: Publish the Whilton coach to GitHub Pages
 on:
   push:
@@ -27,7 +27,11 @@ jobs:
           cp whilton-coach/dist/index.html site/index.html
       - uses: actions/configure-pages@v5
         with:
-          enablement: true     # try to switch Pages on for the repository; if the token may not, enable it once under Settings, Pages, Source: GitHub Actions
+          # Switching Pages on needs a token with Administration and Pages write access on the repository.
+          # Store a fine-grained personal access token as the PAGES_TOKEN repository secret, or enable Pages
+          # once by hand under Settings, Pages, Source: GitHub Actions. Publishing itself works with the built-in token.
+          token: ${{ secrets.PAGES_TOKEN || github.token }}
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
