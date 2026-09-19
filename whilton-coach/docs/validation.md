@@ -8,6 +8,12 @@
 | Christmas: marshal post on the left, hill shortens the stop, late apex | Agreed | BUKC, NRDD, KCL |
 | National hairpin brake marker is the change in tarmac | Agreed | BUKC, KCL |
 | Zulu: set up the last left, use its inside kerb | Agreed | BUKC, KCL |
+| Zulu exit kerb onto the back straight: the race-kart line touches it | Single source | BUKC National; novice verdict is with care, outside front only, once seen flat |
+| National hairpin: clip the kerb on the inside on the way out, astroturf outside | Single source | BUKC National |
+| Crook and Ashby concrete run-offs | Single coach source, beyond the white line | BUKC and NRDD use them; Motorsport UK 2023 track-limit rule counts the contact patch beyond the line; no hire-session rule found, so the briefing decides |
+| Chicane kerbs | Caption only | Alpha Live first-test-day video title (March 2024) describes karts hopping the new final-sector kerbs; no profile published; default is stay off until seen |
+| Chapmans exit kerb guarded by tyres | No source | The documented tyre stack is at Parker (BUKC); removed from the card |
+| Pit Bend: skim the inside kerb | Out of date | The skim advice is the older BUKC International text, written before the 2019 to 2024 tall kerb; nothing describes the March 2024 replacement |
 | Ashby, Parker, Chapmans lines and kerbs | Single coach source | NRDD (republished by Club100 and BUKC); Club100 report says Ashby and Chapmans are off camber |
 | The Boot: marshal post on the right, give up the left | Agreed | BUKC, NRDD, KCL |
 | Pit Bend without chicane | Agreed | BUKC, NRDD, KCL |

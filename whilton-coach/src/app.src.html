@@ -390,7 +390,7 @@ const CARDS = {
     doE: 'Flat in the dry, but only if you start from the right and hold the left after the apex.',
     marker: 'None. This is a lift, not a braking zone.',
     line: 'Start from the right-hand side of the pit straight. Clip the inside kerb, then stay over on the left after the apex. That feels wrong for a left-hander, but it opens up Crook. The two corners only work as a pair.',
-    kerbA: 'Use it. Take some of the inside kerb: two guides say so.',
+    kerbA: 'Use it, inside wheels only. Take some of the inside kerb: two guides and a driver blog say so. First laps a wheel\'s width off, then the inside front, then both inside wheels. Do not try to mount it: a heavy hire kart bounces.',
     kerbX: 'Not needed. You hold the left after the apex, so you never reach the outside of the track.',
     mistake: 'Turning in early and drifting right on the way out. That spoils Crook and the whole run up the hill.',
     wet: 'A light brake, not just a lift: the BUKC guide says so. Apex a kart width off the kerb.' },
@@ -399,8 +399,8 @@ const CARDS = {
     doE: 'Flat if Oblivion went well. Turn in early.',
     marker: 'None.',
     line: 'Turn in from the left, clip the apex, then use every bit of track on the way out. The guides disagree on the apex: the current BUKC notes say turn in early to stay off a bumpy patch, while a 2013 Club100 guide says apex late, near the end of the kerb. Start with the newer advice and see what the kart does.',
-    kerbA: 'Use it lightly. One guide says to give the apex kerb a nibble.',
-    kerbX: 'Use the concrete run-off on the left. It keeps your speed up the hill and the coach guides use it. An older guide warns that officials may flag habitual use, so listen at the briefing.',
+    kerbA: 'With care. A 2013 guide says give it a nibble, a driver blog says touching it can ruin the lap, and the guides disagree on where the apex is. Inside front at most and keep the rears off: the climb needs revs, and a hire kart is slow to get them back.',
+    kerbX: 'With care. The coach\'s line runs out over the concrete on the left, but the concrete is beyond the white line. Ask at the briefing whether it counts as track. If it does, dry only: let the kart run onto it rather than fighting it back, never aim for it, and stop if warned once. You are lifting for these two corners anyway, so you do not need it.',
     mistake: 'Getting Oblivion wrong, arriving badly placed, and bogging down on the bumps.',
     wet: 'A light brake. Keep off the concrete run-off, which is slippery when wet.' },
   finelady: { name: 'Fine Lady', kind: 'Right kink on the climb', prims: ['finelady'], lv: { novice: 1, expert: 1 },
@@ -415,7 +415,7 @@ const CARDS = {
     doE: 'The hill helps you stop, so braking at the marshal post is possible on a grippy day.',
     marker: 'Marshal post on the left. Fast drivers brake at it. Start well before it and move your braking point a little later each lap.',
     line: 'Approach on the left, turn in late and take a late apex. Do not let the kart run fully wide on the way out, because a left kink follows straight away. One guide puts the ideal exit about a third of the track width in from the left.',
-    kerbA: 'No guide mentions it. Look at it on your sighting lap. Flat and painted is fine to clip. If it is raised, stay off.',
+    kerbA: 'Look first. No guide mentions it. Sort the braking and the late apex first, they matter far more. Flat and painted: a light clip with the two inside wheels once your braking is consistent. Raised: stay a wheel\'s width off, and never drop the inside rear onto it on the throttle.',
     kerbX: 'You should not reach it. Running that wide spoils the kink.',
     mistake: 'Braking too late in the first few laps, arriving too fast and running wide. If that happens, brake earlier next time round. If you crawl to the apex, brake a little later. If a wheel locks, ease off the pedal and press again.',
     pass: 'The best passing place on the lap.',
@@ -424,7 +424,7 @@ const CARDS = {
     doN: 'Flat out.', doE: 'Flat out.',
     marker: 'None.',
     line: { nat: 'Finish it on the far left so you are lined up for the hairpin.', intl: 'Come out in the middle of the track, then drift left before you turn into Inkermans.' },
-    kerbA: 'Use it. One guide says the inside kerb can be clipped.', kerbX: 'Not needed.',
+    kerbA: 'Use it lightly. A 2013 guide says the inside kerb can be clipped to set you up for the next corner: inside wheels only, and check on the sighting lap that it is still low. It is off camber and flat out, so a bounce here is worse than missing the kerb.', kerbX: 'Not needed.',
     mistake: 'Ending up on the right afterwards, with a poor angle into the next right-hander.',
     wet: 'Expect to lift. It is off camber, so water runs across it.' },
   inkhair: { name: 'Inkermans hairpin', kind: 'Tight right, downhill', prims: ['inkhair'], lv: { novice: 4, expert: 4 },
@@ -432,8 +432,8 @@ const CARDS = {
     doE: 'Brake on or near the change of surface and turn in from the far left.',
     marker: 'A visible change in the colour of the tarmac across the track. Two independent guides use it.',
     line: 'Turn in from the far left and apex late. After the apex bring the kart back to at least the middle of the track, ready for the first part of Zulu.',
-    kerbA: 'Use the inside kerb on the way out. An older Club100 guide suggests clipping it to stop the kart running wide.',
-    kerbX: 'Stay off. There is astroturf and dirty track on the outside.',
+    kerbA: 'Use it on the way out. The BUKC National guide says to clip the kerb running the inside of the corner on the exit, to stop the kart running wide onto the astroturf. Nothing on the way in: the kart is loose downhill. After the apex let the inside front, then both inside wheels, run along it.',
+    kerbX: 'Stay off. There is astroturf and dirty track on the outside. Bring the kart back to the middle, or right of it, for the first left of Zulu.',
     mistake: 'Staying out wide on the exit, which leaves you badly placed for Zulu.',
     note: 'Slow corners like this one forgive rough steering. Fast corners do not.',
     wet: 'Earlier, gentler braking. Downhill and loose, so wait for the kart to turn before you touch the throttle.' },
@@ -446,12 +446,12 @@ const CARDS = {
     mistake: 'Jerky steering that scrubs speed before the long downhill run.',
     wet: 'Expect to lift. Keep off the inside kerb.' },
   ashby: { name: 'Ashby hairpin', kind: 'Tight right at the bottom of the hill, off camber', prims: ['ashby'], lv: { novice: 5, expert: 5 },
-    doN: 'You arrive fast and downhill. Brake hard in a straight line, early to begin with, then turn in. The corner is off camber, so the kart wants to run wide onto the grass.',
+    doN: 'You arrive fast and downhill. Brake hard in a straight line, early to begin with, then turn in. The corner is off camber, so the kart wants to run wide, over the concrete on the exit and towards the grass beyond it.',
     doE: 'A short, sharp stab of brake, then turn.',
     marker: 'The guides give no fixed marker. Pick your own on the sighting laps, such as the start of a kerb or a mark at the trackside, and brake before it at first.',
     line: 'Approach on the left, aim for the flat inside kerb, and let the kart drift wide onto the concrete run-off on the way out. Then cross back to the right for Parker.',
-    kerbA: 'Use it. It is a flat inside kerb.',
-    kerbX: 'Use the concrete run-off on the left to carry speed out.',
+    kerbA: 'Use it. It is a flat inside kerb, says the coach\'s guide. Aim the inside front at it once the braking is done; the inside rear can follow once the kart points out of the corner. Do not brake on it.',
+    kerbX: 'With care. The coach\'s line uses the concrete on the left to carry speed out, but the concrete is beyond the white line. Briefing permitting and dry only, let the kart drift onto it rather than steering against it, and keep off the grass beyond.',
     mistake: 'Braking too deep and missing the apex.',
     pass: 'The second-best passing place.',
     wet: 'Off camber and downhill: brake early and in a straight line. Try the outside of the hairpin, where there is less rubber, and stay off the run-off.' },
@@ -461,7 +461,7 @@ const CARDS = {
     marker: 'None. This one is by feel.',
     line: 'Start from the right, run the flat inside kerb, and drift out close to the outside kerb.',
     kerbA: 'Use it. Flat inside kerb.',
-    kerbX: 'Stay off. Get close to the outside kerb but not on it: there is usually a stack of tyres on it.',
+    kerbX: 'Stay off. Get close to the outside kerb but not on it: there is usually a stack of tyres on it. Leave a kart width of margin on your first laps; getting close is for later. If you keep arriving at the tyres, brake a little more on the way in rather than trying to catch it on the way out.',
     mistake: 'Carrying too much speed and meeting the tyre stack on the exit.',
     wet: 'A light brake in place of the dab. Keep off the inside kerb.' },
   chapmans: { name: 'Chapmans', kind: 'Off camber left with a late apex', prims: ['chapmans', 'chap2'], lv: { novice: 4, expert: 4 },
@@ -469,8 +469,8 @@ const CARDS = {
     doE: 'Quick sharp stab, late turn-in, hook the late apex.',
     marker: 'None given. It arrives quickly after Parker.',
     line: 'Late turn-in, late apex, then a clean run onto the back straight. The exit matters more than the entry.',
-    kerbA: 'No guide mentions the apex kerb. Look first.',
-    kerbX: 'With care. This is the big kerb on the outside of the exit, guarded by tyres. The coach\'s guide says you can run on it, but never thump it with a rear wheel because that kills the revs. If you need it every lap you are carrying too much speed in. As a novice, aim to finish the corner just inside it.',
+    kerbA: 'Look first. No guide mentions the apex kerb. Hook the apex on the tarmac; only if the sighting lap shows a flat kerb, let the inside front touch it late in the corner. It is off camber, so a bounce here sends you out towards the big exit kerb.',
+    kerbX: 'With care. This is the big kerb on the outside of the exit. The coach\'s guide says you can run on it, but never thump it with a rear wheel because that kills the revs: outside front at most. If you need it every lap you are carrying too much speed in. As a novice, aim to finish the corner just inside it. Check whether tyres sit on it that day; the documented tyre stack is at Parker.',
     mistake: 'Turning in early, or carrying too much speed and thumping the outside kerb. A small right kink follows before the straight, so a wide exit here puts you on its inside.',
     pass: 'The late turn-in leaves the inside open. Expect to be passed here, and look for the same gap yourself.',
     wet: 'Off camber. Earlier braking, a rounder and wider arc, and stay off the big exit kerb.' },
@@ -479,7 +479,7 @@ const CARDS = {
     doE: 'Flat with a small lift before the last left, or a quick stab of brake to help the kart turn. Drivers differ.',
     marker: 'None. It is a rhythm section.',
     line: 'After the first apex keep the kart to the left, so you can apex the right kink late. After the kink sit slightly right, then turn in early for the last left.',
-    kerbs: 'First left and the right kink: usable if you need them, says one guide. Last left, inside: use all of the painted kerb. Last left, exit: let the kart drift out to touch the exit kerb.',
+    kerbs: 'First left and the right kink: no guide describes their kerbs, so look first. A light clip of a low painted kerb with the inside wheels is harmless but not needed. Last left, inside: use all of the painted kerb, inside front on the first lap, then both inside wheels. Last left, exit: with care. The guide\'s race-kart line drifts out to touch the exit kerb; let the kart run out under power, but touch it with the outside front only once the sighting lap has shown it is flat, and do not steer to reach it.',
     mistake: 'Rushing the first two parts and spoiling the exit of the last left. That costs speed along the whole back straight.',
     wet: 'Lift where you would be flat in the dry, and brake lightly for the last left. Keep off the painted kerb.' },
   boot: { name: 'The Boot', kind: 'Left, then a long right', prims: ['boot1', 'boot2', 'boot3'], lv: { novice: 5, expert: 5 },
@@ -487,9 +487,9 @@ const CARDS = {
     doE: { c: 'Brake at the marshal post. Keep the left-hander tight and carry speed through the right-hander, ready to brake again for the chicane.', n: 'Brake at the marshal post. Keep the left-hander tight and take the right-hander flat.' },
     marker: 'Marshal post on the right of the back straight. Three guides agree on it. One also uses the pit entry markings: be just to the right of them before you turn into the right-hander.',
     line: { c: 'Approach on the right. Coming out of the left, do not let the kart drift past the middle of the track. Pull it back to the left, then apex the right-hander. With the chicane in use, hold the kart over to the right through the second half of the corner so you arrive on the right-hand side for the chicane.',
-      n: 'Approach on the right. Coming out of the left, do not let the kart drift past the middle of the track. Pull it back to the left, then apex the right-hander. Ignore the second apex and let the kart run out to the edge.' },
-    kerbs: { c: 'Left-hander: no guide mentions its kerb, so look first. Right-hander, inside: harsh, skim it at most. Second apex: ignore it. Exit: you stay right for the chicane, so you do not reach the outside.',
-      n: 'Left-hander: no guide mentions its kerb, so look first. Right-hander, inside: harsh, skim it at most. Second apex: ignore it. Exit: let the kart run to the edge of the tarmac.' },
+      n: 'Approach on the right. Coming out of the left, do not let the kart drift past the middle of the track. Pull it back to the left, then apex the right-hander. Ignore the second apex and keep to the middle of the track on the exit, as the coach\'s guide says, so you have room to set up the final corner.' },
+    kerbs: { c: 'Left-hander: no guide mentions its kerb, so look first and stay off it by default; you do not need it. Right-hander, inside: the coach calls it nasty, so skim it with the inside front at most, never the rears, and only once the corner is consistent. Second apex: stay a wheel\'s width off it, because you are about to brake. Exit: you stay right for the chicane, so you do not reach the outside.',
+      n: 'Left-hander: no guide mentions its kerb, so look first and stay off it by default; you do not need it. Right-hander, inside: the coach calls it nasty, so skim it with the inside front at most, never the rears, and only once the corner is consistent. Second apex: ignore it. Exit: keep to the middle of the track, so you never reach the outside.' },
     mistake: { c: 'Attacking the left-hander. Give up speed there so the right-hander and the chicane after it flow.', n: 'Attacking the left-hander. The right-hander after it is the most important corner on the lap, because its exit speed carries through Pit Bend, along the pit straight and up the hill to Christmas.' },
     pass: 'A move between the left and the right is possible but easy to mistime.',
     wet: 'Earlier, gentler braking. Stay off the harsh inside kerb entirely.' },
@@ -498,8 +498,8 @@ const CARDS = {
     doE: 'A short, firm brake, a late apex on the left, and the throttle on early through the final right.',
     marker: 'None published. Pick your own on the sighting laps and brake before it at first.',
     line: 'Stay on the right-hand side after The Boot. Turn in to the left a little later than feels natural and apex late, so the kart is already pointing into the final right-hander.',
-    kerbA: 'Unknown. The kerbs were new in 2024 and no guide covers them. Look on your sighting lap: flat and painted is usable, anything raised is not.',
-    kerbX: 'Unknown, for the same reason. The right-hander that follows matters more than any kerb here.',
+    kerbA: 'Stay off by default. The kerbs were new in March 2024, no guide covers them, and race karts were filmed hopping the new final-sector kerbs on the first test day. Only if the briefing or the sighting lap shows a low painted strip may the inside front touch it; never the rears. A bounce here costs the whole pit straight.',
+    kerbX: 'No separate exit kerb. The right-hand side after the chicane is the inside of Pit Bend, so see that kerb. Do not track out: a late apex leaves the kart already pointing into the final right.',
     mistake: 'Rushing the left, running wide, and then waiting on the throttle all the way round the last corner.',
     note: 'The chicane is the normal route: a university race report from October 2024 describes needing special permission to run the old layout at a hire-kart event, and a 2025 Club100 onboard guide shows it in use. That report also confirms a braking zone with soft grass beyond it. No written guide says how to drive it, so the line here is reasoned from its shape, the designer\'s description (hold the right-hand side for longer after The Boot) and general technique. Confirm it on track.',
     wet: 'New tarmac can hold water and the run-off beyond the braking zone is soft grass. Brake early.' },
@@ -508,9 +508,9 @@ const CARDS = {
     doE: { c: 'Throttle as early as the kart will take it and use every bit of the exit.', n: 'Just about flat on a dry day with warm tyres, but only with the turn-in timed right. A small lift to settle the kart is normal.' },
     marker: 'None.',
     line: { c: 'Arrive from the late apex of the chicane, apex on the right, and let the kart run out to the white line on the left.', n: 'Approach on the left, make one smooth steering input, and let the kart run out to the white line.' },
-    kerbA: { c: 'Unknown. It is a new kerb from 2024 that no guide covers. The very tall kerb older guides warn about has gone: a race report from October 2024 confirms it. Look before you use it.',
-      n: 'Skim it. The very tall kerb older guides warn about was removed in 2024, and the newer coach guide says to skim the inside kerb.' },
-    kerbX: 'Stay inside the white line. The smooth concrete beyond it is out of bounds and brings a warning or a penalty.',
+    kerbA: { c: 'Look first. It is a new kerb from March 2024 that no guide covers, the same kerb whether or not the chicane is in use, met slower here. The very tall kerb older guides warn about has gone: a race report from October 2024 confirms it. Clip it with the inside front only once the sighting lap has shown a low painted kerb; otherwise stay a wheel\'s width off. A clean exit beats a kerb here.',
+      n: 'Look first, then skim at most. The very tall kerb of 2019 to 2024 was removed in March 2024: a race report from October 2024 confirms it. The only skim-it advice is an older guide written before that tall kerb went in, and nothing describes the 2024 replacement. Stay a wheel\'s width off until you have seen it is low, then inside front only, never the rears.' },
+    kerbX: 'Stay off. Keep the whole kart inside the white line: the smooth concrete beyond it is out of bounds, and this is the corner the club polices with a camera and a timing loop. If you keep running out to the line, you got on the throttle before the kart was pointing down the straight.',
     mistake: { c: 'Getting on the throttle before the kart is pointing down the straight, and running out of road.', n: 'Sharp steering inputs at speed.' },
     note: { c: 'This is the most important exit on the lap when the chicane is in use.', n: 'A chicane was built just before this corner in March 2024. If your session runs it, switch the map to With chicane.' },
     wet: 'Lift more and keep it smooth. Stay off the kerb and the concrete.' }
@@ -762,7 +762,7 @@ function renderPlan() {
     '<li>Last, the exits: early, full throttle out of ' + (st.chic ? 'the final corner' : 'the right-hander in The Boot') + ' and from the ' + (nat ? 'last left in Zulu' : 'late apex at Chapmans') + '.</li>' +
     '</ol></div></div>' +
     '<div class="panel"><h3>Can I ride the kerb? Every corner</h3>' +
-    '<p style="max-width:64ch">' + (st.wet ? 'It is wet, so the answer everywhere is no: painted kerbs, painted lines and the concrete are far slipperier than the tarmac.' : 'Rule of thumb in a hire kart: a flat, painted kerb on the inside of a corner is fine with the two inside wheels. Anything raised, and any exit kerb guarded by tyres, is not. Where no guide covers a kerb it says Look first: check it on the sighting lap, flat and painted is usable, anything raised is not.') + '</p>' +
+    '<p style="max-width:64ch">' + (st.wet ? 'It is wet, so the answer everywhere is no: painted kerbs, painted lines and the concrete are far slipperier than the tarmac.' : 'Rule of thumb in a hire kart: a flat, painted kerb on the inside of a corner is fine with the two inside wheels. Anything raised, and any exit kerb with tyres on it, is not. Exit kerbs take the outside front at most, never a rear wheel. Where no guide covers a kerb it says Look first: check it on the sighting lap, flat and painted is usable, anything raised is not. The white line is the track; the concrete, astroturf and grass beyond it are not, and the briefing decides whether the concrete run-offs count that day.') + '</p>' +
     '<div style="overflow-x:auto"><table class="deb kerbtab"><thead><tr><th>Corner</th><th>Apex kerb</th><th>Exit kerb</th></tr></thead><tbody>' +
     cardList().map(([key, tn]) => {
       const c = CARDS[key], ks = kerbsOf(key), cell = (arr, text) => {
@@ -777,13 +777,14 @@ function renderPlan() {
     }).join('') + '</tbody></table></div>' +
     '<p class="small muted" style="margin-top:8px">Verdicts come from the written guides where one covers the kerb, and are marked Look first where none does. The corner cards give the detail.</p></div>' +
     '<div class="two"><div class="panel"><h3>Kerbs at a glance</h3><ul class="kl">' +
-    kb('ok', 'Oblivion inside kerb, and the concrete run-off on the exit of Crook.') +
-    (nat ? kb('ok', 'All of the painted inside kerb at the last left in Zulu.') : kb('ok', 'Flat inside kerbs at Inkermans, Ashby and Parker, and the concrete run-off leaving Ashby.')) +
-    (nat ? '' : kb('care', 'Parker exit kerb: close to it but not on it, because of the tyre stack. Chapmans exit kerb: usable, but never with a rear wheel.')) +
-    kb('care', 'Inside kerb of the right-hander in The Boot: harsh, skim it at most.') +
-    (st.chic ? kb('care', 'The chicane kerbs are new and not covered by any guide. Look before you use them.') : '') +
+    kb('ok', 'Oblivion inside kerb, inside wheels only: two guides.') +
+    (nat ? kb('ok', 'All of the painted inside kerb at the last left in Zulu: two guides.') : kb('ok', 'Flat inside kerbs at Inkermans, Ashby and Parker: one coach\'s guide, republished by Club100 and BUKC.')) +
+    kb('care', 'Crook apex kerb: inside front at most, rears off. The concrete run-off leaving Crook' + (nat ? '' : ' and Ashby') + ' is beyond the white line, so ask at the briefing whether it counts as track. Dry only, never aim for it, stop if warned once.') +
+    (nat ? kb('care', 'Zulu exit kerb onto the back straight: outside front at most, and only once you have seen it is flat.') : kb('care', 'Parker exit kerb: close to it but not on it, because of the tyre stack. Chapmans exit kerb: usable, but never with a rear wheel.')) +
+    kb('care', 'Inside kerb of the right-hander in The Boot: the coach calls it nasty. Skim it with the inside front at most.') +
+    (st.chic ? kb('no', 'The chicane kerbs: new in 2024, no guide covers them, and race karts were filmed hopping them on the first test day. Stay off until you have looked.') : '') +
     kb('no', 'Pit Bend inside kerb until you have looked at it closely, and the smooth concrete beyond the white line on the exit.') +
-    '</ul><p class="small muted" style="margin-top:8px">Rental karts are heavier and softer than race karts, so kerbs upset them more. Stick to the flat ones.</p></div>' +
+    '</ul><p class="small muted" style="margin-top:8px">Build up in steps: first laps a wheel\'s width off every kerb, then the inside front on the flat ones, then both inside wheels. Exit kerbs: outside front at most, never a rear wheel. A hire kart is heavy and drives through a clutch on a solid axle, so a driven wheel bounced on a kerb drops the revs and takes a long time to get them back.</p></div>' +
     '<div class="panel"><h3>In the wet</h3><ul>' +
     '<li>The surface is low on grip even when dry. When wet, brake earlier and more gently everywhere.</li>' +
     '<li>Oblivion and Crook change from a lift to a light brake.</li>' +
@@ -801,7 +802,10 @@ function renderPlan() {
     kb('care', 'Crook apex: the current BUKC notes say turn in early, a 2013 Club100 guide says apex late. Both are on the Crook card.') +
     kb('ok', 'Christmas: brake by the marshal post on the left, the hill shortens the stop, late apex: three guides.') +
     kb('ok', 'National hairpin: brake by the change in the tarmac: two independent guides.') +
-    kb('ok', 'Zulu: set up the last left, use its inside kerb, protect the exit: two guides.') +
+    kb('ok', 'Zulu: set up the last left, use its inside kerb, protect the exit: two guides. The race-kart line touches the exit kerb onto the back straight: one guide.') +
+    kb('ok', 'National hairpin: clip the kerb running the inside on the way out, astroturf outside: the BUKC guide.') +
+    kb('care', 'The concrete run-offs at Crook and Ashby: the coach\'s line uses them, but they lie beyond the white line and no hire-session rule was found, so the briefing decides.') +
+    kb('care', 'The chicane kerbs: the only evidence is a caption to first-test-day footage of race karts hopping the new kerbs. Nothing describes their profile.') +
     kb('care', 'Ashby, Parker and Chapmans: one coach (the NRDD lap, which Club100 and BUKC republish as their own guide), plus a Club100 report that calls Ashby and Chapmans off camber. Treat as less certain.') +
     kb('ok', 'The Boot: brake by the marshal post on the right and give up speed in the left: three guides.') +
     kb('ok', 'Pit Bend without the chicane, lift or near flat and inside the white line: three guides. The tall inside kerb was removed in 2024: confirmed by a race report.') +

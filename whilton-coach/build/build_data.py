@@ -89,15 +89,15 @@ def markers(key):
 def kerbs(key):
     """(key, primitive, f0, f1, side, status, where). status: use | care | avoid | unknown."""
     nat = key.startswith('nat'); chic = key.endswith('_c')
-    k = [('oblivion_in', 'oblivion', 0.2, 0.8, 'L', 'use', 'apex'), ('crook_in', 'crook', 0.3, 0.7, 'R', 'use', 'apex'), ('crook_out', 'crook>', 0.04, 0.34, 'L', 'use', 'exit'),
+    k = [('oblivion_in', 'oblivion', 0.2, 0.8, 'L', 'use', 'apex'), ('crook_in', 'crook', 0.3, 0.7, 'R', 'care', 'apex'), ('crook_out', 'crook>', 0.04, 0.34, 'L', 'care', 'exit'),
          ('christmas_in', 'christmas', 0.45, 0.85, 'R', 'unknown', 'apex'), ('kink_in', 'kink', 0.25, 0.75, 'L', 'use', 'apex'),
          ('boot1_in', 'boot1', 0.3, 0.8, 'L', 'unknown', 'apex'), ('boot2_in', 'boot2', 0.35, 0.85, 'R', 'care', 'apex'), ('pitbend_out', 'pitbend>', 0.08, 0.38, 'L', 'avoid', 'exit')]
-    if chic: k += [('chic1_in', 'chic1', 0.3, 0.85, 'L', 'unknown', 'apex'), ('pitbend_in', 'pitbend', 0.35, 0.75, 'R', 'unknown', 'apex')]
+    if chic: k += [('chic1_in', 'chic1', 0.3, 0.85, 'L', 'avoid', 'apex'), ('pitbend_in', 'pitbend', 0.35, 0.75, 'R', 'unknown', 'apex')]
     else: k += [('pitbend_in', 'pitbend', 0.3, 0.7, 'R', 'care', 'apex')]
     if nat: k += [('inkhair_in', 'inkhair', 0.55, 0.95, 'R', 'use', 'apex'), ('inkhair_out', 'inkhair>', 0.0, 0.5, 'L', 'avoid', 'exit'),
                   ('zulu1_in', 'zulu1', 0.25, 0.75, 'L', 'care', 'apex'), ('zulu2_in', 'zulu2', 0.3, 0.8, 'R', 'care', 'apex'),
-                  ('zulu3_in', 'zulu3', 0.12, 0.65, 'L', 'use', 'apex'), ('zulu3_out', 'zulu3>', 0.0, 0.14, 'R', 'use', 'exit')]
-    else: k += [('inkermans_in', 'inkermans', 0.2, 0.8, 'R', 'use', 'apex'), ('ashby_in', 'ashby', 0.35, 0.75, 'R', 'use', 'apex'), ('ashby_out', 'ashby>', 0.06, 0.3, 'L', 'use', 'exit'),
+                  ('zulu3_in', 'zulu3', 0.12, 0.65, 'L', 'use', 'apex'), ('zulu3_out', 'zulu3>', 0.0, 0.14, 'R', 'care', 'exit')]
+    else: k += [('inkermans_in', 'inkermans', 0.2, 0.8, 'R', 'use', 'apex'), ('ashby_in', 'ashby', 0.35, 0.75, 'R', 'use', 'apex'), ('ashby_out', 'ashby>', 0.06, 0.3, 'L', 'care', 'exit'),
                 ('parker_in', 'parker', 0.25, 0.75, 'L', 'use', 'apex'), ('parker_out', 'parker>', 0.04, 0.4, 'R', 'avoid', 'exit'),
                 ('chapmans_in', 'chapmans', 0.5, 0.9, 'L', 'unknown', 'apex'), ('chapmans_out', 'chap2', 0.1, 0.9, 'R', 'care', 'exit')]
     return k
