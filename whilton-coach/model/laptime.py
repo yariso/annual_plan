@@ -208,19 +208,54 @@ def classify(v, dl, vlim, args):
         elif dec > 0.30: lv[i] = 4
         elif dec > 0.15: lv[i] = 3
         elif dec > 0.03 or (v[i] < vtop - 0.5 and abs(ax[i]) < 0.3 * G * 0.1 and v[i] >= vlim[i] - 0.15): lv[i] = 2   # at the cornering limit with the foot off: the coast to the apex
-    # tidy: a lift or a brake shorter than 3 m is curvature noise, not a pedal
-    for _ in range(2):
-        i = 0
-        while i < n:
-            j = i
-            while j + 1 < n and lv[j + 1] == lv[i]: j += 1
-            run = j - i + 1
-            if lv[i] >= 2 and run < 3:
-                left, right = lv[(i - 1) % n], lv[(j + 1) % n]
-                repl = min(left, right) if lv[i] >= 3 else 1
-                for q in range(i, j + 1): lv[q] = repl if repl < lv[i] else 1
-            i = j + 1
+    lv = np.array(tidy_array(lv, 3))   # a lift or a brake shorter than 3 m is curvature noise, not a pedal
     return lv, ax
+
+
+def tidy_array(lv, min_run):
+    """Fold pedal noise without losing short real brakes. A brake zone is a run of levels 3 to 5 whatever the mix: shorter than
+    min_run points it folds into its neighbours, shorter than twice min_run it takes its peak level throughout, longer than that
+    its own sub-runs shorter than min_run take the higher neighbouring level. A lift shorter than min_run folds to flat unless it
+    sits against a brake zone. The old rule folded each level separately, so an 8 m brake that ran 3, 5, 4 vanished."""
+    lv = [int(x) for x in lv]; n = len(lv)
+    if n == 0 or min(lv) > 1: return lv
+    rot = lv.index(1); a = lv[rot:] + lv[:rot]          # start at a flat point so no run wraps
+    def runs(seq, pred):
+        out = []; i = 0
+        while i < len(seq):
+            if pred(seq[i]):
+                j = i
+                while j + 1 < len(seq) and pred(seq[j + 1]): j += 1
+                out.append((i, j)); i = j + 1
+            else: i += 1
+        return out
+    for _ in range(2):
+        for i, j in runs(a, lambda x: x >= 3):
+            L = j - i + 1
+            if L < min_run:
+                left, right = a[i - 1] if i else 1, a[j + 1] if j + 1 < n else 1
+                for q in range(i, j + 1): a[q] = min(left, right) if min(left, right) >= 2 else 1
+            elif L < 2 * min_run:
+                peak = max(a[i:j + 1])
+                for q in range(i, j + 1): a[q] = peak
+            else:
+                sub = runs(a[i:j + 1], lambda x: True)   # every maximal run of one level inside the zone
+                k = i
+                while k <= j:
+                    e = k
+                    while e + 1 <= j and a[e + 1] == a[k]: e += 1
+                    if e - k + 1 < min_run:
+                        nb = [a[k - 1]] if k > i else []
+                        if e < j: nb.append(a[e + 1])
+                        repl = max(nb) if nb else a[k]
+                        for q in range(k, e + 1): a[q] = repl
+                    k = e + 1
+        for i, j in runs(a, lambda x: x == 2):
+            if j - i + 1 < min_run:
+                left, right = a[i - 1] if i else 1, a[j + 1] if j + 1 < n else 1
+                if left < 3 and right < 3:
+                    for q in range(i, j + 1): a[q] = 1
+    return a[n - rot:] + a[:n - rot]
 
 
 def corner_report(tr, v, lv, ax, key, ds=None):
@@ -259,20 +294,8 @@ def corner_report(tr, v, lv, ax, key, ds=None):
 
 
 def tidy_levels(text, min_run=3):
-    """On the app's 2 m grid, a lift or brake shorter than min_run points is noise: fold it into its neighbours."""
-    lv = [int(c) for c in text]; n = len(lv)
-    for _ in range(2):
-        i = 0
-        while i < n:
-            j = i
-            while j + 1 < n and lv[j + 1] == lv[i]: j += 1
-            run = j - i + 1
-            if lv[i] >= 2 and run < min_run:
-                left, right = lv[(i - 1) % n], lv[(j + 1) % n]
-                repl = min(left, right) if lv[i] >= 3 else 1
-                for q in range(i, j + 1): lv[q] = repl if repl < lv[i] else 1
-            i = j + 1
-    return ''.join(str(x) for x in lv)
+    """On the app's 2 m grid, a lift or brake shorter than min_run points is noise: fold it into its neighbours, zone-aware (tidy_array)."""
+    return ''.join(str(x) for x in tidy_array([int(c) for c in text], min_run))
 
 
 def resample_to_step(arr, tr, m, nearest=False):

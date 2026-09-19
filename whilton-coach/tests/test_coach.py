@@ -113,4 +113,28 @@ with sync_playwright() as p:
       document.querySelector('#teamClear').click(); const after = document.querySelector('#debriefBody').innerHTML; return { rows, greens, hasSam: /Sam/.test(html), cleared: !/Sam/.test(after), stored: (JSON.parse(localStorage.getItem('wm.team') || '[]')).length }; }""")
     print('TEAM TABLE:', r)
     assert r['rows'] == 3 and r['hasSam'] and r['greens'] >= 4 and r['cleared'] and r['stored'] == 0, 'team table wrong'
+
+    # a steady driver at one fix a second must not be coached on noise; the go blip must not fire inside brake zones on GPS snaps
+    r = pg.evaluate("""() => { const W = window.__wm; Object.assign(W.st, { layout: 'intl', chic: true, wet: false, profile: 'novice' }); Object.assign(W.set, { mode: 'words', sayFlat: true, sayLift: true, sayBrake: true, coachSay: true, lapSay: false, prepCue: true, autoLead: true, wordLead: 1.6 });
+      window.speechSynthesis.speak = () => {}; W.sim.rate = 1; W.sim.bad = false; W.sim.late = false; W.sim.crawl = false; W.sim.rot = 0; W.lapReset(W.simT()); W.lapE.goBlips = 0;
+      const n = W.LY().centre.length, laps = []; let now = 1000; W.lapE.onLap = lap => laps.push({ n: lap.n, s: +(lap.ms / 1000).toFixed(2), say: lap.say, focus: lap.focus });
+      W.sim.pos = n - 18; W.sim.v = 17; W.sim.fixAcc = 1e9; W.sim.tickAcc = 0; const dt = 0.02; for (let s = 0; s < 420 / dt; s++) { now += dt * 1000; W.simStep(dt, now, true); }
+      const zones = (W.LVL(W.LY()).match(/1[2-5]/g) || []).length; return { laps, goBlips: W.lapE.goBlips, zones }; }""")
+    print('STEADY 1Hz:', r['laps'], 'go blips', r['goBlips'], 'zones per lap', r['zones'])
+    spoken = [l for l in r['laps'] if l['say'] and not l['say'].startswith('Best lap')]
+    assert len(r['laps']) >= 5 and len(spoken) <= 1, 'a steady driver was coached on noise: ' + str(spoken)
+    assert r['goBlips'] <= (r['zones'] + 1) * len(r['laps']) + 2, 'go blips fired inside brake zones'
+    # a lap stuck behind a slower kart must not spoil the next lap's look-ahead: the realised word lead stays near the setting
+    r = pg.evaluate("""() => { const W = window.__wm; Object.assign(W.set, { autoLead: false, wordLead: 1.6, mode: 'words' }); W.sim.rate = 1; W.lapReset(W.simT());
+      const n = W.LY().centre.length, E = W.lapE, leads = {}; let now = 1000, lapNo = 1; W.lapE.onLap = lap => { lapNo = lap.n + 1; };
+      W.lapE.onWord = (t, l) => { if (l < 3) return; const ev = E.events.filter(e => e.level >= 3).map(e => ((e.i - W.sim.pos) % n + n) % n).sort((a, b) => a - b)[0]; (leads[lapNo] = leads[lapNo] || []).push(+(ev * 2 / W.sim.v).toFixed(2)); };
+      W.sim.pos = n - 18; W.sim.v = 17; W.sim.fixAcc = 1e9; W.sim.tickAcc = 0; const dt = 0.02;
+      for (let s = 0; s < 300 / dt; s++) { now += dt * 1000; W.sim.crawl = lapNo === 2 && W.sim.pos > 60 && W.sim.pos < 200; W.simStep(dt, now, true); } W.sim.crawl = false;
+      const mean = a => a.length ? +(a.reduce((x, y) => x + y, 0) / a.length).toFixed(2) : null; const out = {}; Object.keys(leads).forEach(k => { out[k] = { n: leads[k].length, mean: mean(leads[k]), min: Math.min(...leads[k]), max: Math.max(...leads[k]) }; }); return out; }""")
+    print('REALISED LEAD by lap (s):', r)
+    assert '3' in r and r['3']['min'] >= 1.0 and r['3']['max'] <= 2.6, 'the lap after a traffic lap has wrong word leads: ' + str(r.get('3'))
+    # speech start: the median of measured starts, capped at a second, nothing until three are known
+    r = pg.evaluate("""() => { const W = window.__wm; W.speechLags.length = 0; const a = W.speechLag(); W.speechLags.push(.2, .5, .3); const b = W.speechLag(); W.speechLags.push(9, 9, 9, 9); const c = W.speechLag(); W.speechLags.length = 0; return { a, b, c, short: [W.SHORT('brake later, by about 20 metres'), W.SHORT('you over-slowed. 3 miles an hour down'), W.SHORT('keep it flat. You dropped 5 miles an hour')] }; }""")
+    print('SPEECH LAG:', r)
+    assert r['a'] == 0 and abs(r['b'] - .3) < 1e-9 and r['c'] == 1 and r['short'] == ['brake later', 'carry speed', 'stay flat'], 'speech lag or short forms wrong'
     print('errors', errs); b.close()

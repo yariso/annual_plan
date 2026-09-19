@@ -357,7 +357,8 @@ svg text{font-family:var(--display);fill:var(--ink)}
       <li>The word lead counts from when the word starts, not when it ends, and phones take a moment to start speaking. Run the demo with your earpiece in and raise the word lead until the word has finished before the tone starts.</li>
       <li>A rising chirp comes a second before each brake word, so you are ready and the word only confirms the point. Switch it off above if you find it noise.</li>
       <li>From the second lap the coach predicts where you will be from your own last lap through that stretch, not just from your current speed, which steadies the calls into the corners on a phone's one fix a second.</li>
-      <li>Learn my brake timing: if your braking keeps landing later than the plan at a corner over three laps, the word and chirp there move earlier by the difference, up to 20 metres. The debrief lists any corner that has been moved. The tones are not moved.</li>
+      <li>Learn my brake timing: the word lead grows by how long this phone takes to start speaking, measured; and if your braking keeps landing later than the plan at a corner over three laps, the word and chirp there move earlier by the difference, up to 20 metres. With a phone's one fix a second the brake point is too coarse to learn from, so that part only acts with a 10 Hz or faster receiver. The debrief lists any corner that has been moved. The tones are not moved.</li>
+      <li>At one fix a second the coach stays quiet unless it has a reason: a rule (you lifted where it is flat, braked early), or an apex slower than your best on two laps running. Corner times alone are noise at that rate and are never spoken.</li>
       <li>With the driver level set to Model, the tones and words follow the physics model's fastest lap for the hire kart on its own line. That is the limit for a perfect driver, so its brake points will feel late and its lifts short. Use it to hear where time is, not as a first-day target.</li>
       <li>In the wet, Talk me round uses general wet sentences (off the dry line, no kerbs, gentle) rather than the corner guides, because no Whilton-specific wet guide exists in writing.</li>
     </ul>
@@ -371,7 +372,7 @@ svg text{font-family:var(--display);fill:var(--ink)}
       <button type="button" class="btn small" id="saveCsv">Save recording as CSV</button>
       <label class="btn small" style="display:inline-grid;place-items:center">Load a CSV from a lap timer<input type="file" id="loadFile" accept=".csv,.txt" hidden></label>
     </div>
-    <p class="small muted" style="margin:8px 0 0">Coaching compares each corner with your own best through it, and with what the guide expects there: flat, lift or brake. It looks at where you started slowing, your slowest speed and how soon you were accelerating again. From the second lap it picks one focus corner, the one costing most against your best, and keeps at it until it improves, then tells you what you found. The table shows every lap corner by corner with the model's time alongside. A loaded file needs latitude, longitude and time columns: time as seconds, milliseconds, a clock or a date stamp. Speed is read as m/s unless the column name or a units row says km/h, mph or knots.</p>
+    <p class="small muted" style="margin:8px 0 0">Coaching compares each corner with your own best through it, and with what the guide expects there: flat, lift or brake. It looks at where you started slowing, your slowest speed and how soon you were accelerating again. From the second lap it picks one focus corner, the one costing most against your best, and keeps at it until it improves, then tells you what you found. Next lap that corner's brake word carries the cue, "Hard brake, brake later". The table shows every lap corner by corner with the model's time alongside. A loaded file needs latitude, longitude and time columns: time as seconds, milliseconds, a clock or a date stamp. Speed is read as m/s unless the column name or a units row says km/h, mph or knots.</p>
   </div>
 
   <div class="panel">
@@ -1000,14 +1001,16 @@ function setTone(level) {
     const t = actx.currentTime, on = level >= 3 ? set.toneBrake : level === 2 ? set.toneLift : false;
     if (on) { toneOsc.frequency.setTargetAtTime({ 2: 330, 3: 660, 4: 990, 5: 1320 }[level], t, .012); toneGain.gain.setTargetAtTime(level === 2 ? .2 : .5, t, .012); }
     else toneGain.gain.setTargetAtTime(0, t, .012);
-    if (level === 1 && was >= 2 && set.goBlip) blip([1175, 1568]);      // two quick rising notes: back to full throttle
+    if (level === 1 && was >= 2) { lapE.goBlips = (lapE.goBlips || 0) + 1; if (set.goBlip) blip([1175, 1568]); }      // two quick rising notes: back to full throttle
   } catch (e) { }
 }
 function blip(freqs) { if (!actx) return; try { freqs.forEach((f, i) => { const o = actx.createOscillator(), g = actx.createGain(), t = actx.currentTime + .02 + i * .075; o.type = 'sine'; o.frequency.value = f; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.4, t + .006); g.gain.linearRampToValueAtTime(0, t + .06); o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + .08); }); } catch (e) { } }
 let voice = null, voiceTried = false;
 function pickVoice() { try { const vs = speechSynthesis.getVoices(); if (!vs.length) return; voiceTried = true; voice = vs.find(x => x.localService && /^en[-_]GB/i.test(x.lang)) || vs.find(x => x.localService && /^en/i.test(x.lang)) || vs.find(x => /^en[-_]GB/i.test(x.lang)) || null; } catch (e) { } }
 try { speechSynthesis.onvoiceschanged = () => { voiceTried = false; pickVoice(); }; } catch (e) { }
-function speak(text) { try { if (!text || !('speechSynthesis' in window)) return; if (!voiceTried) pickVoice(); if (speechSynthesis.speaking || speechSynthesis.pending) speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.rate = 1.15; u.volume = 1; u.lang = 'en-GB'; if (voice) u.voice = voice; speechSynthesis.speak(u); } catch (e) { } }
+const speechLags = [];
+function speechLag() { if (speechLags.length < 3) return 0; const s = speechLags.slice().sort((a, b) => a - b); return Math.min(1, s[s.length >> 1]); }   // how long this phone takes to start a word: the median of what was measured, at most a second
+function speak(text) { try { if (!text || !('speechSynthesis' in window)) return; if (!voiceTried) pickVoice(); if (speechSynthesis.speaking || speechSynthesis.pending) speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.rate = 1.15; u.volume = 1; u.lang = 'en-GB'; if (voice) u.voice = voice; const t0 = performance.now(); u.onstart = () => { speechLags.push((performance.now() - t0) / 1000); if (speechLags.length > 12) speechLags.shift(); }; speechSynthesis.speak(u); } catch (e) { } }
 function audioResume() { try { if (actx && actx.state !== 'running') actx.resume(); if ('speechSynthesis' in window && speechSynthesis.paused) speechSynthesis.resume(); } catch (e) { } }
 const WORD = { 5: 'Hard brake', 4: 'Firm brake', 3: 'Dab', 2: 'Lift', 1: 'Flat' };
 let wl = null, wlWant = false;
@@ -1053,7 +1056,7 @@ function fitRecording(R) {
 }
 
 /* ---------------- lap engine: where the kart is on the map, lap times, and what the audio should be doing ---------------- */
-const lapE = { T: null, L: null, n: 0, s: null, cum: 0, v: 0, acc: 0, tFix: 0, tAny: 0, far: 0, rate: 0, times: [], samples: [], lapStartT: null, lapStartCum: null, laps: [], best: null, bestSeg: {}, events: [], wordCum: null, prepCum: null, queue: [], quiet: false, onWord: null, onLap: null, onCue: null, said: {}, prof: null, leadAdj: {}, cal: {}, focus: null, dropped: null };
+const lapE = { T: null, L: null, n: 0, s: null, cum: 0, v: 0, acc: 0, tFix: 0, tAny: 0, far: 0, rate: 0, times: [], samples: [], lapStartT: null, lapStartCum: null, laps: [], best: null, bestSeg: {}, events: [], wordCum: null, prepCum: null, queue: [], quiet: false, onWord: null, onLap: null, onCue: null, said: {}, prof: null, profs: [], leadAdj: {}, cal: {}, focus: null, dropped: null, flatTicks: 0 };
 function nearestIdx(L, x, y, hint) {
   const C = L.centre, n = C.length; let bi = -1, bd = 1e18;
   const test = i => { const p = C[i], d = (p[0] - x) * (p[0] - x) + (p[1] - y) * (p[1] - y); if (d < bd) { bd = d; bi = i; } };
@@ -1069,7 +1072,7 @@ function buildEvents() {
   return ev.sort((a, b) => a.i - b.i);
 }
 function lapReset(T, quiet) {
-  const L = LY(); Object.assign(lapE, { T, L, layKey: st.layout + (st.chic ? '_c' : '_n'), n: L.centre.length, s: null, cum: 0, v: 0, acc: 0, tFix: 0, tAny: 0, far: 0, off: false, rate: 0, times: [], samples: [], lapStartT: null, lapStartCum: null, laps: [], best: null, bestSeg: {}, events: buildEvents(), wordCum: null, prepCum: null, queue: [], quiet: !!quiet, said: {}, prof: null, leadAdj: {}, cal: {}, focus: null, dropped: null });
+  const L = LY(); Object.assign(lapE, { T, L, layKey: st.layout + (st.chic ? '_c' : '_n'), n: L.centre.length, s: null, cum: 0, v: 0, acc: 0, tFix: 0, tAny: 0, far: 0, off: false, rate: 0, times: [], samples: [], lapStartT: null, lapStartCum: null, laps: [], best: null, bestSeg: {}, events: buildEvents(), wordCum: null, prepCum: null, queue: [], quiet: !!quiet, said: {}, prof: null, profs: [], leadAdj: {}, cal: {}, focus: null, dropped: null, flatTicks: 0 });
   setTone(1);
 }
 function lapFix(f) {          // f: { t (ms), lat, lon, spd (m/s or null), acc }
@@ -1084,7 +1087,7 @@ function lapFix(f) {          // f: { t (ms), lat, lon, spd (m/s or null), acc }
   } else if (E.s != null) {
     const ds = mod(hit.i - E.s + E.n / 2, E.n) - E.n / 2, dt = (f.t - E.tFix) / 1000;
     if (dt > 0 && (v == null || isNaN(v))) v = Math.max(0, ds * E.L.step / dt);
-    if (dt > .05 && dt < 1.6) E.acc = Math.max(-8, Math.min(5, ((v || 0) - E.v) / dt)) * .7; else E.acc = 0;
+    if (dt > .02 && dt < 1.6) E.acc = Math.max(-8, Math.min(5, ((v || 0) - E.v) / dt)) * .7; else E.acc = 0;
     const before = E.cum; E.cum += ds;
     const k = Math.floor(E.cum / E.n); if (k > Math.floor(before / E.n) && ds > 0 && prev && (v || 0) > 8) {        // crossed the start line at speed (a pit-lane pass does not count)
       const tc = prev.t + (k * E.n - before) / ds * (f.t - prev.t), gapped = dt > 5;                             // a crossing inside a GPS gap cannot be timed
@@ -1100,19 +1103,21 @@ function lapFix(f) {          // f: { t (ms), lat, lon, spd (m/s or null), acc }
 function lapTick(now) {       // runs ten times a second: carries the last fix forward along the track and drives the sound
   const E = lapE; if (!E.T || E.s == null || E.off) { setTone(1); return null; }
   if (now - E.tFix > 3000) { setTone(1); return null; }                                   // no fix for three seconds: say nothing rather than guess
-  const age = Math.min(2.5, Math.max(0, (now - E.tFix) / 1000) + set.gpsDelay), lv = LVL(E.L), at = c => +lv[mod(Math.floor(c), E.n)];
+  const age = Math.min(2.5, Math.max(0, (now - E.tFix) / 1000) + (E.lagKnown ? 0 : set.gpsDelay)), lv = LVL(E.L), at = c => +lv[mod(Math.floor(c), E.n)];   // a measured fix age is already in tFix; the allowance is for phones that report none
   const run = advance(E.cum, E.v, E.acc, age), cumNow = run.c, vNow = run.v;
   const evPos = ev => ev.i - (E.leadAdj[ev.key] || 0) / E.L.step;                                   // a corner whose call the driver keeps braking late for gets its word (and chirp) earlier
   if (E.quiet || vNow < 3) { setTone(1); return { cum: cumNow, v: vNow, level: at(cumNow) }; }
-  setTone(at(cumNow + vNow * set.toneLead / E.L.step));
+  const want = at(cumNow + vNow * set.toneLead / E.L.step); E.flatTicks = want === 1 ? E.flatTicks + 1 : 0;
+  if (want !== 1 || E.flatTicks >= 2 || toneNow === 1) setTone(want);                                     // back to flat only once it has held for two ticks: a backward GPS snap must not play the go blip inside a brake zone
   const evOn = ev => ev.level >= 3 ? set.sayBrake : ev.level === 2 ? set.sayLift : set.sayFlat, busy = () => { try { return speechSynthesis.speaking || speechSynthesis.pending; } catch (e) { return false; } };
-  const lead = set.wordLead + (set.mode === 'talk' ? 1.6 : 0);
+  const lead = set.wordLead + (set.mode === 'talk' ? 1.6 : 0) + (set.autoLead ? speechLag() : 0);      // plus how long this phone takes to start speaking, measured
   if (set.mode !== 'tones' && vNow > 6) {                                                         // no words below about 13 mph: a crawl in the pit lane is not a lap
     const wc = advance(cumNow, vNow, E.acc, lead).c;
     if (E.wordCum != null && wc > E.wordCum && wc - E.wordCum < 45) for (const ev of E.events) {
       const p0 = evPos(ev), k = Math.ceil((E.wordCum - p0) / E.n), pos = p0 + k * E.n; if (pos <= E.wordCum || pos > wc) continue;
       if (!evOn(ev)) continue;
-      const text = set.mode === 'talk' ? callFor({ key: ev.key, level: ev.level }) : WORD[ev.level]; if (!text) continue;
+      let text = set.mode === 'talk' ? callFor({ key: ev.key, level: ev.level }) : WORD[ev.level]; if (!text) continue;
+      if (set.mode !== 'talk' && E.focus && E.focus.cue && ev.key === E.focus.key && ev.level >= 2) { const tag = 'cue:' + ev.key + ':' + Math.floor(pos / E.n); if (!E.said[tag]) { E.said[tag] = 1; text += ', ' + E.focus.cue; } }   // the focus corner's word carries what to change, once per lap
       if (set.mode === 'talk') { const tag = ev.key + ':' + Math.floor(pos / E.n); if (E.said[tag]) continue; E.said[tag] = 1; }   // one sentence per corner per lap, however many parts it has
       if (ev.level === 1 && busy()) continue;                                                     // a Flat reminder never cuts off a lap time or a coaching point
       speak(text); if (E.onWord) E.onWord(text, ev.level);
@@ -1154,7 +1159,7 @@ function calibrateLead(m) {    // if the driver's brake point keeps landing late
   cardList().forEach(([key]) => {
     const c = CARDS[key], x = m[key]; if (!x || lvOf(c) < 3 || x.brakeOn == null) return; const zs = zoneStartIdx(key); if (zs == null) return;
     const d = (x.brakeOn - zs) * L.step + (E.leadAdj[key] || 0), h = E.cal[key] = (E.cal[key] || []).concat([d]).slice(-3);   // where the brake landed against the plan, given the lead already added
-    if (h.length < 3) return; const s = h.slice().sort((a, b) => a - b), slack = Math.max(8, .5 * x.vIn / Math.max(1, E.rate || 1));      // at one fix a second the brake point is only known to half a fix spacing
+    if (h.length < 3) return; const s = h.slice().sort((a, b) => a - b), slack = Math.max(8, 1.0 * x.vIn / Math.max(1, E.rate || 1));      // a full fix spacing: at one fix a second (about 20 m) nothing is learned, at 10 Hz and up it is
     E.leadAdj[key] = s[1] > slack && s[0] > 0 ? Math.min(20, Math.round(s[1] / 5) * 5) : 0;
   });
 }
@@ -1170,6 +1175,7 @@ function modelSeg(key) {       // the model lap's time and slowest speed through
   const L = lapE.L || LY(), n = L.centre.length, w = cornerWindow(key); if (!w) return null; const vAt = i => mk.v4[Math.floor(mod(i, n) / 2) % mk.v4.length];
   let t = 0, vMin = 1e9; for (let i = Math.floor(w.c0); i < w.c1; i++) { const v = Math.max(2, vAt(i)); t += L.step / v; vMin = Math.min(vMin, v); } return { tSeg: t, vMin };
 }
+const SHORT = tip => /keep it flat/.test(tip) ? 'stay flat' : /lift is enough/.test(tip) ? 'lift only' : /brake later/.test(tip) ? 'brake later' : /braked late/.test(tip) ? 'brake earlier' : /over-slowed/.test(tip) ? 'carry speed' : /earlier throttle/.test(tip) ? 'earlier throttle' : tip.split(/[.,]/)[0];
 const tenths = s => { if (s >= .95) return s.toFixed(1) + ' seconds'; const t = Math.max(1, Math.round(s * 10)); return t === 1 ? 'a tenth' : t + ' tenths'; };
 
 /* ---------------- coaching: what the last lap says you should change ---------------- */
@@ -1210,28 +1216,38 @@ function finishLap(tc, endCum) {
   const E = lapE, ms = tc - E.lapStartT, m = lapMetrics(E.lapStartCum), before = Object.assign({}, E.bestSeg), tips = coachTips(m, before), lap = { n: E.laps.length + 1, ms, m, tips, focus: null, said: null };
   const prevBest = E.best; E.laps.push(lap); if (!prevBest || ms < prevBest.ms) E.best = lap;
   Object.keys(m).forEach(k => { if (!E.bestSeg[k] || m[k].tSeg < E.bestSeg[k].tSeg) E.bestSeg[k] = m[k]; });
-  E.prof = lapProfile(E.lapStartCum); if (set.autoLead) calibrateLead(m);
+  const P = lapProfile(E.lapStartCum); if (P) { E.profs.push(P); if (E.profs.length > 3) E.profs.shift(); E.prof = new Float32Array(E.n); for (let i = 0; i < E.n; i++) { let b = 0; for (const q of E.profs) b = Math.max(b, q[i]); E.prof[i] = b; } }   // the quickest of the last three laps at each point: a lap held up in traffic cannot slow next lap's look-ahead
+  if (set.autoLead) calibrateLead(m);
   // one focus corner at a time: the one costing most against the driver's own best, held until it improves and then confirmed, dropped after three laps without progress
   const fine = (E.rate || 1) >= 4, minLoss = fine ? .12 : .3, F = E.focus; let said = null;
-  if (F && m[F.key]) { if (m[F.key].tSeg < F.t0 - minLoss) { said = CARDS[F.key].name + ' better, ' + tenths(F.t0 - m[F.key].tSeg) + ' found'; E.focus = null; E.dropped = F.key; } else if (++F.held >= 3) { E.focus = null; E.dropped = F.key; } }
-  // the next focus: the corner losing most time against the driver's best, if the loss comes with something to change (a rule tip, a slower apex or a later throttle: at one fix a second a segment time alone is noise); otherwise the top rule tip
-  const real = k => { const x = m[k], b = before[k]; return !!(tips.find(t => t.key === k) || (b && (x.vMin < b.vMin - (fine ? .3 : .6) || (x.thrLag != null && b.thrLag != null && x.thrLag > b.thrLag + (fine ? 4 : 8))))); };
+  // at one fix a second the best through a corner is the luckiest reading, so the reference is the median of the earlier laps once there are three, and an improvement must hold for two laps before it is called
+  const ref = k => { const t = E.laps.slice(0, -1).map(l => l.m[k] && l.m[k].tSeg).filter(v => v != null); if (fine || t.length < 3) return before[k] ? before[k].tSeg : null; t.sort((a, b) => a - b); return t[t.length >> 1]; };
+  if (F && m[F.key]) { const better = m[F.key].tSeg < F.t0 - minLoss; F.good = better ? (F.good || 0) + 1 : 0; if (F.good >= (fine ? 1 : 2)) { said = CARDS[F.key].name + ' better, ' + tenths(F.t0 - m[F.key].tSeg) + ' found'; E.focus = null; E.dropped = F.key; } else if (++F.held >= (fine ? 3 : 4)) { E.focus = null; E.dropped = F.key; } }
+  // the next focus: the corner losing most time against the reference, if the loss comes with something to change (a rule tip, or an apex slower on this lap and the one before at low rates: a segment time alone is noise); otherwise the top rule tip
+  const prev = E.laps.length > 1 ? E.laps[E.laps.length - 2].m : {};
+  const apexGap = k => { const x = m[k], b = before[k]; if (!b) return false; const g = fine ? .3 : 1.0; return x.vMin < b.vMin - g && (fine || (prev[k] && prev[k].vMin < b.vMin - g)); };
+  const real = k => { const x = m[k], b = before[k]; return !!(tips.find(t => t.key === k) || apexGap(k) || (fine && b && x.thrLag != null && b.thrLag != null && x.thrLag > b.thrLag + 4)); };
   if (!E.focus) {
-    const cost = Object.keys(m).filter(k => k !== E.dropped).map(k => ({ k, loss: before[k] ? m[k].tSeg - before[k].tSeg : 0 })).filter(c => c.loss > minLoss && real(c.k)).sort((a, b) => b.loss - a.loss)[0], top = tips.find(t => t.key !== E.dropped && m[t.key]);
-    const k = cost ? cost.k : top ? top.key : null; if (k) E.focus = { key: k, t0: m[k].tSeg, held: 0, from: lap.n };
+    const cost = Object.keys(m).filter(k => k !== E.dropped).map(k => { const r = ref(k); return { k, loss: r == null ? 0 : m[k].tSeg - r }; }).filter(c => c.loss > minLoss && real(c.k)).sort((a, b) => b.loss - a.loss)[0], top = tips.find(t => t.key !== E.dropped && m[t.key]);
+    const k = cost ? cost.k : top ? top.key : null; if (k) E.focus = { key: k, t0: m[k].tSeg, held: 0, good: 0, from: lap.n };
   }
   lap.focus = E.focus ? E.focus.key : null; lap.said = said;
-  let tip = null;
-  if (said) tip = said;
-  else if (E.focus) { const k = E.focus.key, t = tips.find(t => t.key === k), x = m[k], b = before[k], md = modelSeg(k); tip = CARDS[k].name + ': ' + (t ? t.tip : b && x.tSeg > b.tSeg ? tenths(x.tSeg - b.tSeg) + ' off your best. Apex ' + Math.round(x.vMin * MPH) + ', your best ' + Math.round(b.vMin * MPH) + (md && md.vMin > b.vMin + 2 / MPH ? ', the model ' + Math.round(md.vMin * MPH) : '') : 'same again, that is the one to tidy') + '.'; }
-  else if (tips.length) tip = tips[0].name + ': ' + tips[0].tip + '.';
-  else if (E.laps.length > 1 && lap === E.best) tip = 'Best lap. Same again.';
-  lap.tip = tip;
+  let tip = null, say = null;
+  if (said) tip = say = said;
+  else if (E.focus) {
+    const k = E.focus.key, t = tips.find(t => t.key === k), x = m[k], b = before[k], r = ref(k), md = modelSeg(k);
+    tip = CARDS[k].name + ': ' + (t ? t.tip : r != null && x.tSeg > r ? tenths(x.tSeg - r) + ' off your usual. Apex ' + Math.round(x.vMin * MPH) + ', your best ' + Math.round(b.vMin * MPH) + (md && md.vMin > b.vMin + 2 / MPH ? ', the model ' + Math.round(md.vMin * MPH) : '') : 'same again, that is the one to tidy') + '.';
+    say = CARDS[k].name + ', ' + (t ? SHORT(t.tip) : r != null && x.tSeg > r ? 'carry speed, apex ' + Math.round(b.vMin * MPH) : 'same again') + '.';       // a few words in the ear; the long form is in the debrief
+    E.focus.cue = t ? SHORT(t.tip) : 'carry speed';
+  }
+  else if (tips.length) { tip = tips[0].name + ': ' + tips[0].tip + '.'; say = tips[0].name + ', ' + SHORT(tips[0].tip) + '.'; }
+  else if (E.laps.length > 1 && lap === E.best) tip = say = 'Best lap. Same again.';
+  lap.tip = tip; lap.say = say;
   if (live.on) teamLog(lap);
   // the lap time, then how it compares: "71.5, best" or "71.9, 0.4 off"; both are said at the next quiet moment so no brake word cuts them off
   const g = prevBest ? (ms - E.best.ms) / 1000 : 0, gap = !prevBest ? '' : E.best === lap ? ', best' : g < .05 ? ', equal best' : ', ' + g.toFixed(1) + ' off';
   E.queue = []; E.said = {};
-  if (!E.quiet) { if (set.lapSay) E.queue.push({ text: (ms / 1000).toFixed(1) + gap, say: true }); if (tip) E.queue.push({ text: tip, say: set.coachSay }); if (E.onLap) E.onLap(lap); }
+  if (!E.quiet) { if (set.lapSay) E.queue.push({ text: (ms / 1000).toFixed(1) + gap, say: true }); if (say) E.queue.push({ text: say, say: set.coachSay }); if (E.onLap) E.onLap(lap); }
 }
 function renderDebrief() {
   const E = lapE, box = $('#debriefBody'); if (!box) return;
@@ -1302,7 +1318,7 @@ function simStep(dt, now, quiet) {
   else if (vt > 90) a = -1.3;
   else if (lv >= 3) { const d = Math.max(2, (bEnd - i + 1) * ds), v2 = Math.min(sim.v, vt + 1.2); a = Math.max(-9.5, Math.min(sim.bad ? -.2 : -1.5, (v2 * v2 - sim.v * sim.v) / (2 * d))); }
   else { const d = Math.max(2, (rEnd - i + 1) * ds), v2 = Math.min(sim.v, vt); a = Math.max(-6, Math.min(sim.bad ? -.1 : -.5, (v2 * v2 - sim.v * sim.v) / (2 * d))); }
-  sim.v = Math.max(5, sim.v + a * dt); sim.pos = (sim.pos + sim.v * dt / ds) % n;
+  sim.v = Math.max(5, sim.v + a * dt); if (sim.crawl) sim.v = Math.min(sim.v, 7); sim.pos = (sim.pos + sim.v * dt / ds) % n;   // crawl: stuck behind a slower kart
   const at = pos => { const pp = mod(pos, n), j = Math.floor(pp), fr = pp - j, p = LN[j % n], q = LN[(j + 1) % n]; return { x: p[0] + (q[0] - p[0]) * fr, y: p[1] + (q[1] - p[1]) * fr }; };
   const here = at(sim.pos); sim.fixAcc += dt;
   if (sim.fixAcc >= 1 / sim.rate) {
@@ -1445,10 +1461,10 @@ function liveStart() {
   live.watch = navigator.geolocation.watchPosition(pos => {
     const c = pos.coords, now = performance.now(); live.fixes++;
     const rawLag = pos.timestamp ? (Date.now() - pos.timestamp) / 1000 : NaN, lag = rawLag >= 0 && rawLag <= 1.5 ? rawLag : 0;   // how old the fix already is when the browser hands it over; a clock that disagrees with the fix time gives nonsense, which is ignored
-    live.lag = live.lag ? live.lag * .8 + lag * .2 : lag;
+    live.lag = live.lag ? live.lag * .8 + lag * .2 : lag; lapE.lagKnown = !!(pos.timestamp && rawLag >= 0 && rawLag <= 1.5);
     if (live.fixes === 1) speak(lapE.T ? 'GPS ready. Coaching on.' : 'GPS ready. Drive a full lap to lock the map.');
     if (live.lost) { live.lost = false; speak('GPS back'); }
-    live.rec.push([Date.now(), +c.latitude.toFixed(7), +c.longitude.toFixed(7), c.speed == null || isNaN(c.speed) ? null : +c.speed.toFixed(2), c.heading == null || isNaN(c.heading) ? null : Math.round(c.heading), Math.round(c.accuracy || 0)]);
+    live.rec.push([Date.now(), +c.latitude.toFixed(7), +c.longitude.toFixed(7), c.speed == null || isNaN(c.speed) ? null : +c.speed.toFixed(2), c.heading == null || isNaN(c.heading) ? null : Math.round(c.heading), Math.round(c.accuracy || 0), isFinite(rawLag) ? +rawLag.toFixed(2) : null]);
     if (lapE.T) {
       const d = lapFix({ t: now - lag * 1000, lat: c.latitude, lon: c.longitude, spd: c.speed, acc: c.accuracy });
       // a lock kept from another day can be for the other layout: if a quarter of the moving fixes fall off the map, fit today's trace instead
@@ -1541,7 +1557,7 @@ $('#testSound').addEventListener('click', () => { audioInit(); if (set.mode !== 
 $('#forgetLock').addEventListener('click', () => { store.del('wm.lock'); lapE.T = null; lockInfo(); toast('Map lock forgotten.'); });
 $('#lockNow').addEventListener('click', () => { const R = live.on ? live.rec : rec; if (!R || R.length < 40) { toast('Record at least one full lap first.'); return; } const k = tryLock(R, true); if (k && live.on) { useLock(k); live.stored = false; } });
 $('#replayBtn').addEventListener('click', () => { if (live.on) liveStop(); if (!rec || rec.length < 40) { toast('No recording to analyse yet.'); return; } replay(rec); });
-$('#saveCsv').addEventListener('click', () => { if (!rec.length) { toast('Nothing recorded yet.'); return; } saveFile('whilton-session.csv', 'time_ms,latitude,longitude,speed_mps,heading_deg,accuracy_m\n' + rec.map(r => r.map(v => v == null ? '' : v).join(',')).join('\n')); });
+$('#saveCsv').addEventListener('click', () => { if (!rec.length) { toast('Nothing recorded yet.'); return; } saveFile('whilton-session.csv', 'time_ms,latitude,longitude,speed_mps,heading_deg,accuracy_m,fix_age_s\n' + rec.map(r => r.map(v => v == null ? '' : v).join(',')).join('\n')); });
 $('#loadFile').addEventListener('change', e => {
   const f = e.target.files && e.target.files[0]; if (!f) return; const rd = new FileReader();
   rd.onload = () => { const r = parseCsv(String(rd.result || '')); if (r) { rec = r; store.set('wm.rec', rec); replay(rec); } else toast('Could not read that file. It needs latitude, longitude and time columns, and the times must change from row to row.'); };
@@ -1554,7 +1570,7 @@ bindNum('#setWordLead', 'wordLead'); bindNum('#setToneLead', 'toneLead'); bindNu
 $('#setMode').value = set.mode; $('#setMode').addEventListener('change', e => { set.mode = e.target.value; saveSettings(); });
 
 renderLegend(); refreshAll(); lockInfo(); renderDebrief();
-window.__wm = { D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, MK, modelLine, M, refTimes, mindTap, mind, quizAsk, quizAnswer, quiz, virtualStart, team, teamLog, teamTable, live, setRec: r => { rec = r; }, getRec: () => rec };
+window.__wm = { D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, MK, modelLine, M, refTimes, mindTap, mind, quizAsk, quizAnswer, quiz, virtualStart, team, teamLog, teamTable, live, speechLag, speechLags, SHORT, setRec: r => { rec = r; }, getRec: () => rec };
 })();
 </script>
 </body>
