@@ -1,6 +1,6 @@
 # Whilton Mill line guide and audio coach
 
-Open `dist/index.html` in a browser, or host it on any HTTPS site (GitHub Pages works) so that phone GPS is allowed.
+Open `dist/index.html` in a browser, or host it on any HTTPS site so that phone GPS is allowed: iPhones and Android phones only give a web page their location over HTTPS. The repository carries a GitHub Pages workflow (`.github/workflows/pages.yml`) that publishes `dist/index.html`; turn it on once under the repository's Settings, Pages, Source: GitHub Actions, and the link appears in the Actions run. Add the page to the phone's home screen and it opens full screen.
 
 ## Continue in Claude Code
 1. Unzip this folder on your computer.
