@@ -1244,7 +1244,7 @@ function lapReset(T, quiet) {
 function lapFix(f) {          // f: { t (ms), lat, lon, spd (m/s or null), acc }
   const E = lapE; if (!E.T) return; E.tAny = f.t;
   const w = toENU(f.lat, f.lon, E.T.origin), m = w2m(E.T, w[0], w[1]), hit = nearestIdx(E.L, m[0], m[1], E.s);
-  if (hit.d > 18 * (E.offScale || 1)) { if (++E.far >= 3) E.off = true; return hit.d; }        // 18 m is the track half width plus phone error; three fixes in a row before we call it the pits or the paddock
+  if (hit.d > 18 * (E.offScale || 1) + Math.min(12, f.acc || 0)) { if (++E.far >= 3) E.off = true; return hit.d; }   // a poor fix is allowed further off before we call it the pits        // 18 m is the track half width plus phone error; three fixes in a row before we call it the pits or the paddock
   const rejoin = E.off; E.far = 0; E.off = false; E.lastM = m;
   let v = f.spd; const prev = E.samples[E.samples.length - 1];
   if (E.s != null && rejoin) {                                              // back on the map after the pits: same lap count, new place on it, and no lap time until the line has been driven again
@@ -1425,7 +1425,7 @@ function finishLap(tc, endCum) {
 }
 function renderDebrief() {
   const E = lapE, box = $('#debriefBody'); if (!box) return;
-  if (!E.laps.length) { box.innerHTML = '<p class="muted" style="margin:0">No complete laps yet. Run the demo, start GPS at the circuit, or load a CSV trace from a lap timer.</p>' + teamTable(); return; }
+  if (!E.laps.length) { box.innerHTML = '<p class="muted" style="margin:0">No complete laps yet. Run the demo, start GPS at the circuit, or load a CSV trace from a lap timer.</p>' + (teamTable() || officialBlock([], {})); return; }
   const last = E.laps[E.laps.length - 1], best = E.best, rows = cardList().map(([key]) => { const x = last.m[key], b = E.bestSeg[key]; if (!x) return ''; const d = b ? x.tSeg - b.tSeg : 0; return '<tr><td>' + CARDS[key].name + '</td><td>' + x.tSeg.toFixed(2) + '</td><td class="' + (d > .08 ? 'neg' : '') + '">' + (d > .005 ? '+' + d.toFixed(2) : 'best') + '</td><td>' + Math.round(x.vIn * MPH) + '</td><td>' + Math.round(x.vMin * MPH) + '</td></tr>'; }).join('');
   box.innerHTML = '<p style="margin:0 0 8px"><b>Lap ' + last.n + ': ' + fmtLap(last.ms) + '</b>' + (best && best !== last ? ', ' + ((last.ms - best.ms) / 1000).toFixed(2) + ' s off your best (' + fmtLap(best.ms) + ', lap ' + best.n + ')' : ', your best so far') + '.</p>' +
     (last.said ? '<p style="margin:0 0 8px"><b>' + esc(last.said) + '.</b></p>' : '') +
@@ -1448,7 +1448,27 @@ function teamTable() {         // each driver's best lap and best time through e
   const fastest = drivers.slice().sort((a, b) => best[a].ms - best[b].ms)[0];
   return '<h4 style="margin:12px 0 4px">The team so far, best through each corner</h4><div style="overflow-x:auto"><table class="deb tight"><thead><tr><th>Driver</th><th>Laps</th><th>Best lap</th>' + list.map(([k]) => '<th>' + esc(CARDS[k].name) + '</th>').join('') + '</tr></thead><tbody>' +
     drivers.map(d => '<tr><td>' + esc(d) + '</td><td>' + best[d].n + '</td><td class="' + (d === fastest && drivers.length > 1 ? 'pos' : '') + '">' + fmtLap(best[d].ms) + '</td>' + list.map(([k]) => '<td class="' + (best[d].c[k] != null && best[d].c[k] <= top[k] + .005 && drivers.length > 1 ? 'pos' : '') + '">' + (best[d].c[k] != null ? best[d].c[k].toFixed(1) : '') + '</td>').join('') + '</tr>').join('') + '</tbody></table></div>' +
-    '<p class="small muted" style="margin:4px 0 0">Green is the quickest of the team through that corner: the person to ask how they drive it. Live GPS laps only, kept on this phone. <button type="button" class="btn small" id="teamClear">Clear the team table</button></p>';
+    '<p class="small muted" style="margin:4px 0 0">Green is the quickest of the team through that corner: the person to ask how they drive it. Live GPS laps only, kept on this phone. <button type="button" class="btn small" id="teamClear">Clear the team table</button></p>' + officialBlock(drivers, best);
+}
+const official = { rows: store.get('wm.official', []) };
+function parseOfficial(text) {   // the venue's results page, copied and pasted: any line with a name and a lap time in m:ss.sss; the quickest time on the line is the best lap, the largest small whole number the lap count
+  const out = []; String(text || '').split(/\r?\n/).forEach(line => {
+    const times = [...line.matchAll(/(\d{1,2}):(\d{2})\.(\d{1,3})/g)].map(m => (+m[1] * 60 + +m[2]) * 1000 + Math.round(+('0.' + m[3]) * 1000)); if (!times.length) return;
+    const name = line.replace(/(\d{1,2}):(\d{2})\.(\d{1,3})/g, ' ').replace(/[^A-Za-z' -]+/g, ' ').replace(/\s+/g, ' ').trim().replace(/^(st|nd|rd|th) /, ''); if (!name || name.length < 2) return;
+    const ints = [...line.replace(/(\d{1,2}):(\d{2})\.(\d{1,3})/g, ' ').matchAll(/\b(\d{1,2})\b/g)].map(m => +m[1]).filter(v => v >= 3 && v <= 60);
+    out.push({ d: name, ms: Math.min(...times), laps: ints.length ? Math.max(...ints) : null });
+  }); return out;
+}
+function officialBlock(drivers, best) {
+  const rows = official.rows, lay = st.layout + (st.chic ? '_c' : '_n');
+  const match = d => rows.find(r => r.d.toLowerCase() === d.toLowerCase() || r.d.toLowerCase().split(' ').some(w => w.length > 2 && d.toLowerCase().split(' ').includes(w)));
+  const tbl = rows.length ? '<div style="overflow-x:auto"><table class="deb tight"><thead><tr><th>Driver</th><th>Official best</th><th>Laps</th><th>The app\'s best</th><th>Gap</th></tr></thead><tbody>' +
+    rows.map(r => { const d = drivers.find(x => match(x) === r), b = d && best[d]; return '<tr><td>' + esc(r.d) + '</td><td>' + fmtLap(r.ms) + '</td><td>' + (r.laps != null ? r.laps : '') + '</td><td class="muted">' + (b ? fmtLap(b.ms) : '') + '</td><td class="muted">' + (b ? ((b.ms - r.ms) / 1000).toFixed(2) + ' s' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>' : '';
+  return '<h4 style="margin:12px 0 4px">The venue\'s official times</h4>' + tbl +
+    '<p class="small muted" style="margin:4px 0 6px">Whilton\'s transponder timing is the record. Every session is published at results.alphatiming.co.uk/whilton (find the session by date and time, or the live page during it). Open it on the phone, select the table, copy, and paste it here: names, best laps and lap counts are read out of it and set beside the app\'s own laps, which can be a few tenths out at one fix a second. A photo of the timing screen works too, typed in as "Name 1:05.23".</p>' +
+    '<div class="row"><textarea id="officialPaste" rows="3" style="flex:1;min-width:200px;font:14px/1.3 var(--body, sans-serif)" placeholder="Paste the results table or type: Alex 1:05.23 18"></textarea></div>' +
+    '<div class="row"><button type="button" class="btn small" id="officialAdd">Add official times</button>' + (rows.length ? '<button type="button" class="btn small" id="officialClear">Clear official times</button>' : '') + '<button type="button" class="btn small" id="teamExport">Export team file</button><label class="btn small" style="display:inline-grid;place-items:center">Import a team file<input type="file" id="teamImport" accept=".json" hidden></label></div>' +
+    '<p class="small muted" style="margin:4px 0 0">Four drivers, one phone: type the driver\'s name above Start GPS at each change and everything lands in one table. Each on their own phone: each exports a team file after the session and one phone imports the others; laps are merged, never duplicated.</p>';
 }
 function sessionTable() {      // every lap by every corner, with the best of each corner marked, the model's time and the spread across the session
   const E = lapE; if (E.laps.length < 2) return '';
@@ -1619,6 +1639,7 @@ function lockInfo() {
   if (k) { const L = D.layouts[k.lay + (st.chic ? '_c' : '_n')], len = Math.round(L.total * k.s), days = k.at ? Math.floor((Date.now() - k.at) / 864e5) : null;
     $('#lockInfo').textContent = 'Map locked to GPS: ' + (k.lay === 'nat' ? 'National' : 'International') + ', typical fit error ' + k.rms.toFixed(1) + ' m. On your trace the lap measures about ' + len + ' m' + (days == null ? '' : days < 1 ? ', locked today' : ', locked ' + days + (days === 1 ? ' day ago' : ' days ago')) + '.'; }
   else $('#lockInfo').textContent = 'Map not locked to GPS yet. Drive one full lap with GPS on and it locks itself.';
+  const q = gpsQuality(); if (q) $('#lockInfo').textContent += ' This phone\'s walk test: ' + q.acc + ' m, ' + q.rate + ' fixes a second' + (q.acc > 15 || q.rate < .7 ? ', which is poor: expect the calls to wander by a kart length or two and the lap times by a few tenths.' : ', good enough for the coach.');
   $('#forgetLock').hidden = !k;
 }
 function useLock(k) { if (st.layout !== k.lay) { st.layout = k.lay; refreshAll(); } lapReset(k); lapE.onWord = t => { wordShow('#liveWord', t); wordShow('#pkWord', t); }; lapE.onLap = () => renderDebrief(); }
@@ -1630,7 +1651,7 @@ function tryLock(R, announce) {
 function liveStart() {
   if (sim.on) simStop(); if (loop.on) loopStop(true); if (!('geolocation' in navigator)) { liveStatus('This browser has no location support.'); return; }
   if (reader.on) readStop(); audioInit(); keepAwake(true); live.rec = []; live.fixes = 0; live.on = true; live.lastFit = 0; live.lost = false; live.chk = 0; live.bad = 0; live.lag = 0; $('#liveBtn').textContent = 'Stop GPS';
-  if (set.mode !== 'tones') speak('Coach on. Waiting for GPS.');           // spoken inside the button press, which is what lets the phone speak later from a timer
+  const q = gpsQuality(); if (set.mode !== 'tones') speak('Coach on. Waiting for GPS.' + (q && (q.acc > 15 || q.rate < .7) ? ' Your walk test was poor, ' + Math.round(q.acc) + ' metres. Expect the calls to wander.' : ''));           // spoken inside the button press, which is what lets the phone speak later from a timer
   const k = store.get('wm.lock', null); live.stored = !!k;
   if (k) { if (st.layout !== k.lay) toast('Using the stored ' + (k.lay === 'nat' ? 'National' : 'International') + ' lock. Press Forget map lock if the circuit is running the other layout today.'); useLock(k); } else lapE.T = null;
   liveStatus('Waiting for a GPS fix. Stand in the open.'); pocketShow(true);
@@ -1697,7 +1718,8 @@ function loopStop(quiet) {
   if (lapE.T === loop.T) { lapE.gate = 1; lapE.offScale = 1; }
   if (!quiet) { $('#loopStatus').textContent = lapE.laps.length ? 'Stopped after ' + lapE.laps.length + ' lap' + (lapE.laps.length === 1 ? '' : 's') + '. The debrief on the Coach tab has the corners.' : 'Stopped before a full lap.'; try { speechSynthesis.cancel(); } catch (e) { } renderDebrief(); }
 }
-const walk = { on: false, watch: null, pts: [], origin: null, dist: 0, said: 0, times: [], acc: null, t0: 0 };
+const walk = { on: false, watch: null, pts: [], origin: null, dist: 0, said: 0, times: [], acc: null, accs: [], t0: 0 };
+const gpsQuality = () => store.get('wm.gpsq', null);   // the last walk test's median accuracy and fix rate, used by the coach's warnings and the off-track band
 function tileImages(origin, cx, cy, size) {   // OpenStreetMap tiles under the walk, placed in the same metre frame as the trace (north up)
   const z = size < 140 ? 18 : size < 300 ? 17 : size < 700 ? 16 : 15, N = Math.pow(2, z), ll = toLL(cx, cy, origin), lat = ll[0], lon = ll[1];
   const tx = (lon + 180) / 360 * N, ty = (1 - Math.log(Math.tan(lat * RAD) + 1 / Math.cos(lat * RAD)) / Math.PI) / 2 * N;
@@ -1725,10 +1747,10 @@ function walkDraw() {
 }
 function walkStart() {          // a local test of the GPS the coach will use: the trace of a walk, drawn live, with the signal quality spoken
   if (live.on || loop.on) { toast('Stop the GPS coach or the practice loop first.'); return; } if (!('geolocation' in navigator)) { $('#walkStatus').textContent = 'This browser has no location support.'; return; }
-  audioInit(); keepAwake(true); Object.assign(walk, { on: true, pts: [], origin: null, dist: 0, said: 0, times: [], acc: null, t0: performance.now() }); walkDraw(); $('#walkBtn').textContent = 'Stop walk test'; $('#walkStatus').textContent = 'Waiting for a GPS fix. Go outside or to a window.'; speak('Walk test. Waiting for GPS.');
+  audioInit(); keepAwake(true); Object.assign(walk, { on: true, pts: [], origin: null, dist: 0, said: 0, times: [], acc: null, accs: [], t0: performance.now() }); walkDraw(); $('#walkBtn').textContent = 'Stop walk test'; $('#walkStatus').textContent = 'Waiting for a GPS fix. Go outside or to a window.'; speak('Walk test. Waiting for GPS.');
   walk.watch = navigator.geolocation.watchPosition(pos => {
     const c = pos.coords, now = performance.now(); if (!walk.origin) { walk.origin = { lat: c.latitude, lon: c.longitude }; speak('GPS working. Accuracy ' + Math.round(c.accuracy || 0) + ' metres. Walk.'); }
-    const p = toENU(c.latitude, c.longitude, walk.origin), last = walk.pts[walk.pts.length - 1]; walk.acc = c.accuracy || null;
+    const p = toENU(c.latitude, c.longitude, walk.origin), last = walk.pts[walk.pts.length - 1]; walk.acc = c.accuracy || null; if (c.accuracy) walk.accs.push(c.accuracy);
     if (!last || Math.hypot(p[0] - last[0], p[1] - last[1]) >= Math.max(1.5, (c.accuracy || 0) * .3)) { if (last) walk.dist += Math.hypot(p[0] - last[0], p[1] - last[1]); walk.pts.push(p); }   // small jitter while standing still is not distance
     walk.times.push(now); while (walk.times.length > 2 && now - walk.times[0] > 6000) walk.times.shift(); const rate = walk.times.length > 1 ? (walk.times.length - 1) / ((now - walk.times[0]) / 1000) : 0;
     $('#walkDist').textContent = Math.round(walk.dist); $('#walkAcc').textContent = Math.round(c.accuracy || 0); $('#walkRate').textContent = rate.toFixed(1);
@@ -1741,6 +1763,7 @@ function walkStart() {          // a local test of the GPS the coach will use: t
 function walkStop(quiet) {
   if (walk.watch != null) navigator.geolocation.clearWatch(walk.watch); walk.watch = null; walk.on = false; keepAwake(false); $('#walkBtn').textContent = 'Start walk test';
   if (quiet) return; const secs = Math.max(1, (performance.now() - walk.t0) / 1000), n = walk.times.length;
+  if (walk.accs.length >= 5) { const a = walk.accs.slice().sort((x, y) => x - y), med = a[a.length >> 1], rate = +(walk.accs.length / secs).toFixed(1); store.set('wm.gpsq', { acc: +med.toFixed(1), rate, at: Date.now() }); lockInfo(); }   // remembered: the coach quotes it before you go out
   const msg = walk.pts.length ? 'Walked about ' + Math.round(walk.dist) + ' m in ' + Math.round(secs) + ' s, ' + walk.pts.length + ' points, last accuracy ' + Math.round(walk.acc || 0) + ' m. ' + (walk.acc && walk.acc <= 15 ? 'That is good enough for the coach.' : 'The coach wants 15 m or better: try it outside with clear sky.') : 'No fix came. Try again outside.';
   $('#walkStatus').textContent = msg; speak(walk.pts.length ? 'Walk test done. ' + Math.round(walk.dist) + ' metres, accuracy ' + Math.round(walk.acc || 0) : 'No GPS fix');
 }
@@ -1830,7 +1853,17 @@ $('#pkHide').addEventListener('click', () => pocketShow(false));
 (() => { const b = $('#pkStop'); let t = null; const arm = e => { e.preventDefault(); b.classList.add('holding'); b.textContent = 'Keep holding'; clearTimeout(t); t = setTimeout(() => { b.classList.remove('holding'); b.textContent = 'Hold to stop'; liveStop(); }, 1800); }, disarm = () => { clearTimeout(t); b.classList.remove('holding'); b.textContent = 'Hold to stop'; };
   b.addEventListener('pointerdown', arm); ['pointerup', 'pointercancel', 'pointerleave'].forEach(ev => b.addEventListener(ev, disarm)); })();
 $('#driverName').value = store.get('wm.driver', ''); $('#driverName').addEventListener('change', e => store.set('wm.driver', e.target.value.trim()));
-$('#debriefBody').addEventListener('click', e => { if (e.target.id === 'teamClear') { team.laps = []; store.del('wm.team'); renderDebrief(); toast('Team table cleared.'); } });
+$('#debriefBody').addEventListener('click', e => {
+  if (e.target.id === 'teamClear') { team.laps = []; store.del('wm.team'); renderDebrief(); toast('Team table cleared.'); }
+  else if (e.target.id === 'officialAdd') { const rows = parseOfficial($('#officialPaste').value); if (!rows.length) { toast('No lap times found. A line needs a name and a time like 1:05.23.'); return; } rows.forEach(r => { const i = official.rows.findIndex(x => x.d.toLowerCase() === r.d.toLowerCase()); if (i >= 0) official.rows[i] = r; else official.rows.push(r); }); store.set('wm.official', official.rows); renderDebrief(); toast(rows.length + ' official time' + (rows.length === 1 ? '' : 's') + ' added.'); }
+  else if (e.target.id === 'officialClear') { official.rows = []; store.del('wm.official'); renderDebrief(); }
+  else if (e.target.id === 'teamExport') { saveFile('whilton-team.json', JSON.stringify({ laps: team.laps, official: official.rows, exported: Date.now() })); }
+});
+$('#debriefBody').addEventListener('change', e => {
+  if (e.target.id !== 'teamImport') return; const f = e.target.files && e.target.files[0]; if (!f) return; const rd = new FileReader();
+  rd.onload = () => { try { const j = JSON.parse(String(rd.result || '')); let added = 0; (j.laps || []).forEach(l => { if (!team.laps.some(x => x.d === l.d && x.at === l.at && x.ms === l.ms)) { team.laps.push(l); added++; } }); (j.official || []).forEach(r => { if (!official.rows.some(x => x.d.toLowerCase() === r.d.toLowerCase())) official.rows.push(r); }); team.laps.sort((a, b) => a.at - b.at); store.set('wm.team', team.laps); store.set('wm.official', official.rows); renderDebrief(); toast(added + ' laps merged in.'); } catch (err) { toast('That is not a team file from this app.'); } };
+  rd.readAsText(f); e.target.value = '';
+});
 $('#mindBtn').addEventListener('click', () => { const b = $('#mindBox'); b.hidden = !b.hidden; if (!b.hidden) { $('#quizBox').hidden = true; if (sim.on) simStop(); if (reader.on) readStop(); } });
 $('#mindTap').addEventListener('click', mindTap);
 $('#quizBtn').addEventListener('click', () => { const b = $('#quizBox'); b.hidden = !b.hidden; if (!b.hidden) { $('#mindBox').hidden = true; quizAsk(); } });
@@ -1864,7 +1897,7 @@ bindNum('#setWordLead', 'wordLead'); bindNum('#setToneLead', 'toneLead'); bindNu
 $('#setMode').value = set.mode; $('#setMode').addEventListener('change', e => { set.mode = e.target.value; saveSettings(); });
 
 renderLegend(); refreshAll(); lockInfo(); renderDebrief(); walkDraw(); setTab(st.tab);
-window.__wm = { loop, loopFit, loopStart, loopStop, modelAgreement, guideOffset, pocketShow, walk, walkStart, walkStop, renderStart, D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, MK, modelLine, M, refTimes, mindTap, mind, quizAsk, quizAnswer, quiz, virtualStart, team, teamLog, teamTable, live, speechLag, speechLags, SHORT, setRec: r => { rec = r; }, getRec: () => rec };
+window.__wm = { parseOfficial, official, gpsQuality, loop, loopFit, loopStart, loopStop, modelAgreement, guideOffset, pocketShow, walk, walkStart, walkStop, renderStart, D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, MK, modelLine, M, refTimes, mindTap, mind, quizAsk, quizAnswer, quiz, virtualStart, team, teamLog, teamTable, live, speechLag, speechLags, SHORT, setRec: r => { rec = r; }, getRec: () => rec };
 })();
 </script>
 </body>
