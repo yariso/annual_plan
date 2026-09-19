@@ -27,7 +27,8 @@ python3 build/build.py              # embeds data/model.json in dist/index.html
 
 ## What it does
 - Before the race: the Map, Corners and Plan tabs give the line, the pedal plan, the brake marker and a kerb verdict for every corner, plus a session plan, what to bring and ask at the briefing, the flags, the hire-kart facts and what was checked against which source. On the Coach tab, Read me the lap speaks the whole lap corner by corner for the queue.
-- During the race: tones and words in the earpiece for every lift and brake, the lap time and gap to best after each lap, one coaching point per lap, and GPS ready, lost and back announcements.
+- During the race: tones and words in the earpiece for every lift and brake, a chirp a second before each brake word, the lap time and gap to best after each lap, one coaching point per lap on a focus corner that is held until it improves and then confirmed, and GPS ready, lost and back announcements. From the second lap the calls are timed from your own last lap through each stretch, and a corner where your braking keeps landing late gets its call moved earlier.
+- After the session: every lap corner by corner with your best marked, the model's time through each corner alongside, and the least consistent corner named.
 
 ## Share with team mates
 Host `dist/index.html` and send the link. Everything runs in the browser and nothing is sent anywhere. Each phone keeps its own map lock, recordings and settings.

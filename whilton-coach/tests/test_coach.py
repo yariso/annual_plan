@@ -28,6 +28,24 @@ FIT = """
   return { ms: Math.round(ms), detected: k.key, rotDeg: +(((k.th * 180 / Math.PI) % 360 + 360) % 360).toFixed(1), rms: +k.rms.toFixed(2), cover: +k.cover.toFixed(2), laps: W.lapE.laps.map(l => +(l.ms / 1000).toFixed(2)) };
 }
 """
+
+RUNX = """
+(cfg) => {
+  const W = window.__wm; Object.assign(W.st, { layout: cfg.layout || 'intl', chic: true, wet: false, profile: 'novice' });
+  Object.assign(W.set, { mode: 'words', sayFlat: true, sayLift: true, sayBrake: true, coachSay: true, lapSay: false, prepCue: true, autoLead: cfg.autoLead !== false, wordLead: 1.6 });
+  window.speechSynthesis && (window.speechSynthesis.speak = () => {});
+  W.sim.rate = cfg.rate; W.sim.bad = !!cfg.bad; W.sim.late = !!cfg.late; W.sim.rot = 0; W.lapReset(W.simT());
+  const n = W.LY().centre.length, perLap = [], cur = { words: 0, brakes: 0, cues: 0 }, brakeAt = {}; let now = 1000, tot = { brakes: 0, cues: 0 };
+  W.lapE.onWord = (t, l) => { if (l > 0) { cur.words++; if (l >= 3) { cur.brakes++; tot.brakes++; } } };
+  W.lapE.onCue = k => { cur.cues++; tot.cues++; };
+  W.lapE.onLap = lap => { perLap.push(Object.assign({ n: lap.n, s: +(lap.ms / 1000).toFixed(2), focus: lap.focus, said: lap.said, tip: lap.tip, prof: !!W.lapE.prof, adj: Object.assign({}, W.lapE.leadAdj) }, cur)); cur.words = 0; cur.brakes = 0; cur.cues = 0; };
+  W.sim.pos = n - 18; W.sim.v = 17; W.sim.fixAcc = 1e9; W.sim.tickAcc = 0;
+  const dt = 0.02; for (let s = 0; s < cfg.seconds / dt; s++) { now += dt * 1000; if (cfg.badUntil && W.sim.bad && (now - 1000) / 1000 > cfg.badUntil) W.sim.bad = false; W.simStep(dt, now, true); }
+  W.renderDebrief(); const html = document.querySelector('#debriefBody').innerHTML; W.sim.late = false; W.sim.bad = false;
+  return { laps: perLap, tot, leadAdj: W.lapE.leadAdj, rows: (html.match(/<tr>/g) || []).length, modelRow: /<td>Model<\/td>/.test(html), spread: /Least consistent/.test(html), moved: /moved earlier/.test(html) };
+}
+"""
+
 with sync_playwright() as p:
     b = p.chromium.launch(); pg = b.new_page(viewport={'width': 390, 'height': 844}); errs = []
     pg.on('pageerror', lambda e: errs.append(str(e)))
@@ -51,4 +69,18 @@ with sync_playwright() as p:
       W.sim.pos = n - 18; W.sim.v = 17; W.sim.fixAcc = 1e9; W.sim.tickAcc = 0; const dt = 0.02; for (let s = 0; s < 150 / dt; s++) { now += dt * 1000; W.simStep(dt, now, true); }
       const r = { words: words.length, laps: W.lapE.laps.map(l => +(l.ms / 1000).toFixed(2)) }; Object.assign(W.st, { profile: 'novice' }); return r; }""", {})
     print('MODEL profile lap through the engine:', r)
+
+    # phone-first additions: last-lap profile, one chirp per brake word, learned lead for a late braker, focus corner with confirmation, session table
+    r = pg.evaluate(RUNX, dict(layout='intl', rate=1, seconds=230)); print('PROFILE 1Hz:', [(l['n'], l['s'], l['prof'], l['brakes'], l['cues']) for l in r['laps']], 'totals', r['tot'])
+    assert len(r['laps']) >= 2 and all(l['prof'] for l in r['laps'][1:]), 'speed profile missing after lap one'
+    assert abs(r['tot']['brakes'] - r['tot']['cues']) <= 1, 'chirps should match brake words'
+    r = pg.evaluate(RUNX, dict(layout='intl', rate=10, seconds=300, late=True)); print('LATE BRAKER 10Hz: adj per lap', [(l['n'], l['s'], {k: v for k, v in l['adj'].items() if v}) for l in r['laps']], 'moved note', r['moved'])
+    assert len(r['laps']) >= 4 and any(v > 0 for v in r['leadAdj'].values()), 'a late braker should get earlier calls after three laps'
+    r0 = pg.evaluate(RUNX, dict(layout='intl', rate=10, seconds=300, late=True, autoLead=False)); assert not any(r0['leadAdj'].values()), 'auto lead off must not adjust'
+    r = pg.evaluate(RUNX, dict(layout='nat', rate=10, seconds=330, bad=True, badUntil=125)); print('FOCUS nat 10Hz:'); [print('   ', l['n'], l['s'], 'focus', l['focus'], '|', l['tip']) for l in r['laps']]
+    assert any(l['focus'] for l in r['laps']), 'no focus corner chosen'
+    assert any(l['said'] and 'found' in l['said'] for l in r['laps']), 'no confirmation after the driver improved'
+    print('SESSION TABLE rows', r['rows'], 'model row', r['modelRow'], 'spread', r['spread'])
+    assert r['rows'] >= len(r['laps']) + 2 and r['spread'], 'session table incomplete'
+    if m != 'no model': assert r['modelRow'], 'model row missing'
     print('errors', errs); b.close()
