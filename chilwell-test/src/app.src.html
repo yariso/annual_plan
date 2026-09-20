@@ -136,7 +136,7 @@ th{font:600 14px/1.2 var(--display);color:var(--muted)}
 
 /* diagrams */
 .diag{background:var(--field);border:1px solid var(--rule);border-radius:10px;margin:10px 0;overflow:hidden}
-.diag svg{display:block;width:100%;height:auto}
+.diag svg{display:block;width:100%;max-width:560px;height:auto;margin:0 auto}
 .diag .cap{font-size:13px;color:var(--muted);padding:0 10px 8px}
 .steps{display:flex;gap:6px;align-items:center;padding:8px 10px;flex-wrap:wrap}
 .steps .btn.small{min-width:44px}
@@ -315,6 +315,7 @@ nav.tabs svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1
       <button type="button" class="btn danger" id="mockStop">Finish and mark</button>
       <button type="button" class="btn small" id="mockUndo">Undo last</button>
     </div>
+    <div class="chips" id="sheetFilter" role="group" aria-label="Which items to show"></div>
     <div class="sheet" id="mockSheet"></div>
   </div>
   <div id="mockResult"></div>
@@ -879,7 +880,7 @@ const st = {
   plan: store.get(K.plan, { date: '', time: '', name: '' }),
   checks: store.get(K.checks, {}),
   layers: { junctions: true, routes: true, hazards: true, spots: true },
-  road: 'all', fault: 'all',
+  road: 'all', fault: 'all', sheet: 'common',
   sel: null, placing: null,
   pos: store.get(K.pos, {})
 };
@@ -1316,13 +1317,21 @@ function mockVerdict(marks) {
   const pass = t.s === 0 && t.x === 0 && t.d <= lim;
   return { pass, t, lim };
 }
+function renderSheetFilter() {
+  const groups = (D.faults && D.faults.groups) || [];
+  const opts = [{ id: 'common', name: 'The usual ones' }, { id: 'all', name: 'Everything' }].concat(groups);
+  $('#sheetFilter').innerHTML = opts.map(o => '<button type="button" class="chip" data-sheet="' + esc(o.id) + '" aria-pressed="' + (st.sheet === o.id ? 'true' : 'false') + '">' + esc(o.name) + '</button>').join('');
+}
 function renderMockSheet() {
   const groups = (D.faults && D.faults.groups) || [];
-  const items = mockItems();
+  const items = mockItems().filter(f => st.sheet === 'all' ? true : st.sheet === 'common' ? f.common : f.group === st.sheet);
   const byGroup = {};
   items.forEach(i => { (byGroup[i.group] = byGroup[i.group] || []).push(i); });
   const order = groups.length ? groups : Object.keys(byGroup).map(g => ({ id: g, name: g }));
-  $('#mockSheet').innerHTML = order.filter(g => byGroup[g.id]).map(g =>
+  const marked = new Set(mock.marks.map(m => m.id));
+  mockItems().forEach(f => { if (marked.has(f.id) && !byGroup[f.group]) byGroup[f.group] = []; });
+  mockItems().forEach(f => { if (marked.has(f.id) && byGroup[f.group] && byGroup[f.group].indexOf(f) < 0) byGroup[f.group].push(f); });
+  $('#mockSheet').innerHTML = order.filter(g => byGroup[g.id] && byGroup[g.id].length).map(g =>
     '<h4>' + esc(g.name) + '</h4>' + byGroup[g.id].map(f => {
       const cd = mockCount(f.id, 'd'), cs = mockCount(f.id, 's'), cx = mockCount(f.id, 'x');
       const cls = cs || cx ? 'frow serious' : cd ? 'frow hit' : 'frow';
@@ -1332,7 +1341,8 @@ function renderMockSheet() {
         '<button type="button" data-mark="' + esc(f.id) + '" data-k="s" aria-label="Serious fault, ' + esc(f.short || f.name) + '"><i data-n>' + (cs || '') + '</i><b>serious</b></button>' +
         '<button type="button" data-mark="' + esc(f.id) + '" data-k="x" aria-label="Dangerous fault, ' + esc(f.short || f.name) + '"><i data-n>' + (cx || '') + '</i><b>danger</b></button>' +
         (f.sheet ? '<span class="fs">' + esc(f.sheet) + '</span>' : '') + '</div>';
-    }).join('')).join('');
+    }).join('')).join('') +
+    (st.sheet === 'common' ? '<p class="small muted">These are the items that come up most. Anything already marked stays on the list. Tap Everything for the rest of the sheet.</p>' : '');
 }
 function mmss(ms) { const s = Math.max(0, Math.round(ms / 1000)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
 function renderTally() {
@@ -1349,7 +1359,7 @@ function mockStart() {
   mock.on = true; mock.t0 = performance.now(); mock.marks = []; mock.route = [];
   mock.driver = ($('#mockDriver').value || '').trim();
   $('#mockSetup').hidden = true; $('#mockRun').hidden = false; $('#mockResult').innerHTML = '';
-  renderMockSheet(); renderTally();
+  renderSheetFilter(); renderMockSheet(); renderTally();
   clearInterval(mock.timer); mock.timer = setInterval(renderTally, 1000);
   if (mock.gpsOn && navigator.geolocation) {
     try {
@@ -1593,7 +1603,7 @@ function openFault(id) {
   }, 60);
 }
 document.addEventListener('click', e => {
-  const t = e.target.closest('[data-tab],[data-go],[data-layer],[data-road],[data-fault-group],[data-fault],[data-mapto],[data-roadto],[data-mark],[data-qshow],[data-qmark],[data-qspeak],[data-qstop],[data-mstep],[data-hist],[data-setgps],[data-setmap],[data-clearpos],[data-placeok],[data-placecancel]');
+  const t = e.target.closest('[data-tab],[data-go],[data-layer],[data-road],[data-fault-group],[data-sheet],[data-fault],[data-mapto],[data-roadto],[data-mark],[data-qshow],[data-qmark],[data-qspeak],[data-qstop],[data-mstep],[data-hist],[data-setgps],[data-setmap],[data-clearpos],[data-placeok],[data-placecancel]');
   if (!t) return;
   const d = t.dataset;
   if (d.tab) setTab(d.tab);
@@ -1601,6 +1611,7 @@ document.addEventListener('click', e => {
   else if (d.layer) { st.layers[d.layer] = !st.layers[d.layer]; t.setAttribute('aria-pressed', String(st.layers[d.layer])); refreshMap(); }
   else if (d.road) { st.road = d.road; renderRoads(); }
   else if (d.faultGroup) { st.fault = d.faultGroup; renderFaults(); }
+  else if (d.sheet) { st.sheet = d.sheet; renderSheetFilter(); renderMockSheet(); }
   else if (d.fault) openFault(d.fault);
   else if (d.mapto) { setTab('map'); setTimeout(() => { const j = jById(d.mapto); if (j && map) { const p = jPos(j); map.lat = p.lat; map.lon = p.lon; map.z = Math.max(map.z, 16); mapCard(j.id); } }, 60); }
   else if (d.roadto) { st.road = 'all'; renderRoads(); setTab('roads'); setTimeout(() => { const det = $('[data-jid="' + d.roadto + '"]'); if (det) { det.open = true; fillJunctionBody(det); det.scrollIntoView({ block: 'center', behavior: 'smooth' }); } }, 60); }

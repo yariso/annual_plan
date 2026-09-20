@@ -212,6 +212,22 @@ def run(pw):
     page.wait_for_timeout(200)
     rows = page.locator('#mockSheet .frow')
     check('the sheet is built', rows.count() > 0, '%d rows' % rows.count())
+    common = rows.count()
+    page.click('[data-sheet="all"]')
+    page.wait_for_timeout(180)
+    everything = page.locator('#mockSheet .frow').count()
+    check('the sheet can show everything', everything > common, '%d common, %d everything' % (common, everything))
+    outside = [f['id'] for f in data('faults.json')['items'] if f.get('mock') is not False and not f.get('common')]
+    if outside:
+        page.locator('[data-frow="%s"] button[data-k="d"]' % outside[0]).click()
+        page.wait_for_timeout(150)
+        page.click('[data-sheet="common"]')
+        page.wait_for_timeout(200)
+        check('an item marked outside the usual list stays on it',
+              page.locator('[data-frow="%s"]' % outside[0]).count() == 1, outside[0])
+        page.click('#mockUndo')
+        page.wait_for_timeout(150)
+    rows = page.locator('#mockSheet .frow')
     first_d = rows.first.locator('button[data-k="d"]')
     for _ in range(3):
         first_d.click()
@@ -257,7 +273,7 @@ def run(pw):
     rows = page.evaluate("document.querySelectorAll('#printArea tbody tr').length")
     check('the paper sheet has a row per item', rows >= len([f for f in data('faults.json')['items'] if f.get('mock') is not False]),
           '%d rows' % rows)
-    saved = page.evaluate("() => { let out = null; const old = URL.createObjectURL; URL.createObjectURL = b => { out = b.size; return 'blob:x'; }; document.querySelector('#mockSave').click(); URL.createObjectURL = old; return out; }")
+    saved = page.evaluate("() => { let out = null; const old = URL.createObjectURL; URL.createObjectURL = b => { out = b.size; return 'data:text/plain,saved'; }; document.querySelector('#mockSave').click(); URL.createObjectURL = old; return out; }")
     check('the save file is produced', bool(saved and saved > 50), str(saved))
 
     print('\nthe mocks survive a reload')

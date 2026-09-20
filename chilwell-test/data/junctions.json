@@ -42,7 +42,12 @@
     ]
    },
    "diagramCap": "A schematic of emerging right from a side road onto a main road, not a survey of this junction. One unofficial source describes traffic lights at the test centre and that could not be confirmed, so the layout on the ground is what counts.",
-   "links": [],
+   "links": [
+    "junctions-observation",
+    "junctions-approach",
+    "junctions-turning-right",
+    "moveoff-safely"
+   ],
    "sources": [
     "[Driving Lessons with Martin (unofficial, page not opened)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/)",
     "[Logicor, Eldon Business Park, the landlord's own description](https://www.logicor.eu/en/uk/properties/nottinghamshire-eldon-business-park-nottingham/nottinghamshire-eldon-road-trading-estate-nottingham)",
@@ -73,7 +78,12 @@
     "Sitting in a bad finish rather than pulling forward and correcting it. Correcting is allowed; a poor position is marked.",
     "Practising in the centre's own car park while tests are running."
    ],
-   "links": [],
+   "links": [
+    "man-bayreverse",
+    "man-bayforward",
+    "control-steering",
+    "awareness"
+   ],
    "sources": [
     "[Driving Lessons with Martin (unofficial, page not opened)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/)",
     "[Exam Routes, test centre car parks (unofficial)](https://examroutes.co.uk/27239/driving-test-centre-car-parks-2026/)",
@@ -104,7 +114,13 @@
     "Carrying a faster road's speed into the shops, or holding a shopping street speed once the road opens out.",
     "Signalling and moving at the same moment, with the mirror check somewhere in between."
    ],
-   "links": [],
+   "links": [
+    "use-of-speed",
+    "clearance",
+    "crossings",
+    "signs-traffic-lights",
+    "positioning-normal"
+   ],
    "sources": [
     "[Logicor, Eldon Business Park, the landlord's own description](https://www.logicor.eu/en/uk/properties/nottinghamshire-eldon-business-park-nottingham/nottinghamshire-eldon-road-trading-estate-nottingham)",
     "[DVSA top 10 driving test faults, webinar slides](https://despatch.blog.gov.uk/wp-content/uploads/sites/131/2024/12/top-10-driving-test-faults-2024-webinar-slides.pdf)",
@@ -134,7 +150,12 @@
     "Speeding up once through the entrance because the main road pressure has gone.",
     "Cutting the corner into the entrance and squaring up afterwards."
    ],
-   "links": [],
+   "links": [
+    "junctions-turning-right",
+    "judgement-crossing",
+    "crossings",
+    "awareness"
+   ],
    "sources": [
     "[getoccupi, Chilwell Retail Park (unofficial, page not opened)](https://getoccupi.com/malls/chilwell-retail-park)",
     "[Logicor, Eldon Business Park](https://www.logicor.eu/en/uk/properties/nottinghamshire-eldon-business-park-nottingham/nottinghamshire-eldon-road-trading-estate-nottingham)",
@@ -165,7 +186,12 @@
     "Braking on the main carriageway for the exit.",
     "Driving to the sat nav's number rather than the sign."
    ],
-   "links": [],
+   "links": [
+    "positioning-lane",
+    "mirrors-direction",
+    "use-of-speed",
+    "progress-speed"
+   ],
    "sources": [
     "[RouteBuddy, Chilwell driving test routes (unofficial, page not opened)](https://routebuddy.co.uk/chilwell-driving-test-routes/)",
     "[DVSA top 10 driving test faults, webinar slides](https://despatch.blog.gov.uk/wp-content/uploads/sites/131/2024/12/top-10-driving-test-faults-2024-webinar-slides.pdf)",
@@ -226,7 +252,13 @@
     ]
    },
    "diagramCap": "A schematic of the exits, not a survey. It shows arriving from the B6003 and taking the third exit onto the A52 towards Nottingham. The bearings are approximate, the inner slip road and the signals on the island are not drawn, and the lane markings on the ground are what count.",
-   "links": [],
+   "links": [
+    "junctions-approach",
+    "positioning-lane",
+    "signs-road-markings",
+    "signs-traffic-lights",
+    "mirrors-direction"
+   ],
    "sources": [
     "[h2g2 on the A52 and Bardills Island (unofficial, page not opened)](https://h2g2.com/edited_entry/A425927)",
     "[Wikipedia, list of road junctions in the United Kingdom: B](https://en.wikipedia.org/wiki/List_of_road_junctions_in_the_United_Kingdom:_B)",
@@ -259,7 +291,12 @@
     "Hesitating at the end of a slip road.",
     "Reacting late to a junction because the road felt like a motorway."
    ],
-   "links": [],
+   "links": [
+    "use-of-speed",
+    "positioning-lane",
+    "following-distance",
+    "mirrors-speed"
+   ],
    "sources": [
     "[DVSA Despatch, adjustments to the driving test, November 2025](https://despatch.blog.gov.uk/2025/11/19/making-adjustments-to-the-driving-test/)",
     "[Intensive Lessons, Nottingham Chilwell (unofficial, page not opened)](https://intensivelessons.co.uk/Practical-Test-Centres/Nottinghamshire/Nottingham-Chilwell)",
@@ -291,7 +328,12 @@
     "Taking a gap on the right without looking at what is already on the island coming round.",
     "Refusing three safe gaps in a row."
    ],
-   "links": [],
+   "links": [
+    "junctions-approach",
+    "junctions-observation",
+    "positioning-lane",
+    "signs-road-markings"
+   ],
    "sources": [
     "[Driving Lessons with Martin (unofficial, page not opened)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/)",
     "[DVSA Despatch, top 10 faults webinar recap](https://despatch.blog.gov.uk/2024/12/13/explaining-more-about-the-top-10-driving-test-faults-our-webinar-recap/)",
@@ -320,7 +362,12 @@
     "Changing lane on the roundabout to correct a wrong lane choice.",
     "Stopping at a clear entry because of the size of the place."
    ],
-   "links": [],
+   "links": [
+    "positioning-lane",
+    "signs-traffic-signs",
+    "junctions-approach",
+    "progress-speed"
+   ],
    "sources": [
     "[Driving Lessons with Martin (unofficial, page not opened)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/)",
     "(reasoned)"
@@ -356,7 +403,12 @@
     "stopLabel": "stop line"
    },
    "diagramCap": "A schematic of tram tracks crossing the line of the road at a shallow angle, not a drawing of any particular junction on this corridor. Where the tram runs along the road instead of across it, the rails sit in your lane rather than cutting across it.",
-   "links": [],
+   "links": [
+    "positioning-normal",
+    "signs-road-markings",
+    "awareness",
+    "judgement-meeting"
+   ],
    "sources": [
     "[Wikipedia, Inham Road tram stop (page not opened)](https://en.wikipedia.org/wiki/Inham_Road_tram_stop)",
     "[Wikipedia, Eskdale Drive tram stop (page not opened)](https://en.wikipedia.org/wiki/Eskdale_Drive_tram_stop)",
@@ -388,7 +440,13 @@
     "Passing a stopped bus with no room for somebody stepping out in front of it.",
     "Stopping at a green light because the street is busy."
    ],
-   "links": [],
+   "links": [
+    "clearance",
+    "crossings",
+    "progress-hesitation",
+    "judgement-meeting",
+    "use-of-speed"
+   ],
    "sources": [
     "[RouteBuddy, Nottingham Chilwell driving test routes (unofficial, page not opened)](https://routebuddy.co.uk/nottingham-chilwell-driving-test-routes/)",
     "[learnerdriving, progress and undue hesitation (unofficial)](https://www.learnerdriving.com/driving-test/marking/progress.htm)",
@@ -419,7 +477,12 @@
     "Getting into the left lane of a one way street for a right turn.",
     "Assuming 30 in a town centre without looking for a 20 sign."
    ],
-   "links": [],
+   "links": [
+    "signs-traffic-signs",
+    "signs-road-markings",
+    "positioning-lane",
+    "awareness"
+   ],
    "sources": [
     "[Driving Lessons with Martin (unofficial, page not opened)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/)",
     "(reasoned)"
@@ -448,7 +511,11 @@
     "Moving off with a mirror check and no shoulder check.",
     "Rushing the stop because the examiner asked for it thirty seconds ago."
    ],
-   "links": [],
+   "links": [
+    "junctions-observation",
+    "signs-traffic-lights",
+    "crossings"
+   ],
    "sources": [
     "[l2pcoventry, the test report explained (unofficial)](https://l2pcoventry.com/test-report-dl25)",
     "(reasoned)"
@@ -477,7 +544,12 @@
     "Waving an oncoming driver through instead of making your own decision.",
     "Practising a reverse outside the same house every week until somebody complains."
    ],
-   "links": [],
+   "links": [
+    "clearance",
+    "judgement-meeting",
+    "progress-hesitation",
+    "positioning-normal"
+   ],
    "sources": [
     "[Wikipedia, Attenborough railway station (page not opened)](https://en.wikipedia.org/wiki/Attenborough_railway_station)",
     "[Logicor, Eldon Business Park](https://www.logicor.eu/en/uk/properties/nottinghamshire-eldon-business-park-nottingham/nottinghamshire-eldon-road-trading-estate-nottingham)",
@@ -508,7 +580,12 @@
     "Braking hard because a car emerged from a side road you never looked into.",
     "Treating an estate street as safe because it is quiet."
    ],
-   "links": [],
+   "links": [
+    "judgement-meeting",
+    "clearance",
+    "moveoff-safely",
+    "stops-position"
+   ],
    "sources": [
     "[Wikipedia, Inham Road tram stop (page not opened)](https://en.wikipedia.org/wiki/Inham_Road_tram_stop)",
     "(reasoned)"
@@ -537,7 +614,11 @@
     "Stalling and then rushing the restart without looking round again.",
     "Doing the observation, then finding the bite, then going, by which time the observation is old."
    ],
-   "links": [],
+   "links": [
+    "moveoff-control",
+    "control-clutch",
+    "moveoff-safely"
+   ],
    "sources": [
     "[DT1, the car driving test](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/1-car-driving-test)",
     "(reasoned)"

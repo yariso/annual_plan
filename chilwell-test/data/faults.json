@@ -1,56 +1,1263 @@
 {
- "intro": "STUB",
+ "intro": "Every line the examiner can mark, in roughly the order the test unfolds. The wording here is a reading of DVSA's published guidance and of the examiners' own guide, DT1, together with instructor accounts of the DL25 form. It is not a copy of the form and none of it is DVSA material. Nobody working on this app could open the sample DL25, so the box numbers come from three instructor sites that agree with each other from 11 to 27, not from the form itself, and the manoeuvre boxes carry no number because the sources disagree about those. Treat a number as a label, not as a fact. The same list builds the mock sheet on the Mock tab, minus the two items a passenger cannot honestly mark from the passenger seat.",
  "groups": [
   {
+   "id": "before",
+   "name": "Before you drive"
+  },
+  {
    "id": "control",
-   "name": "Control"
+   "name": "Control of the car"
+  },
+  {
+   "id": "moving",
+   "name": "Moving off and stopping"
+  },
+  {
+   "id": "mirrors",
+   "name": "Mirrors and signals"
+  },
+  {
+   "id": "speed",
+   "name": "Speed and progress"
   },
   {
    "id": "junctions",
-   "name": "Junctions"
+   "name": "Junctions and roundabouts"
+  },
+  {
+   "id": "position",
+   "name": "Positioning and judgement"
+  },
+  {
+   "id": "signs",
+   "name": "Signs, signals and crossings"
+  },
+  {
+   "id": "awareness",
+   "name": "Awareness and planning"
+  },
+  {
+   "id": "manoeuvres",
+   "name": "The manoeuvres and the controlled stop"
   }
  ],
  "items": [
   {
-   "id": "move-off-safely",
-   "group": "control",
-   "no": "5",
-   "name": "Move off: safely",
-   "short": "Move off safely",
-   "sheet": "Move off / safely",
-   "looking": "STUB",
-   "serious": "STUB",
+   "id": "eyesight",
+   "group": "before",
+   "name": "The eyesight check",
+   "short": "Eyesight",
+   "sheet": "Eyesight test. The words \"Eyesight test\" are confirmed as a printed field on the form, from the indexed text of the PDF that nobody could open.",
+   "looking": "Whether you meet the legal eyesight standard for driving. The distance is 20 metres for a current style number plate and 20.5 metres for an old style one, and you are never asked to read a plate closer than 20 metres. It is pass or fail on its own, and nothing later in the test can make up for it.",
+   "serious": "There is no driving fault version of this line. DT1 tells examiners that if you fail to read the third plate, and the examiner is \"satisfied beyond doubt of their inability to comply with the eyesight requirement\", you are told you have not reached the required standard, you have not passed, and \"the remainder of the test will not be carried out\".",
    "do": [
-    "STUB"
+    "Wear your glasses or contact lenses if you need them to drive, and keep them on for the rest of the test.",
+    "Ask the examiner which car they mean rather than guessing at the wrong one.",
+    "Read the registration out, or write it down. The option to write it down is on the examiner's own prompt card.",
+    "If you misread the first plate the examiner tries a second, and may measure the distance with a tape before trying a third."
    ],
    "mistakes": [
-    "STUB"
+    "Guessing at a plate instead of asking which car.",
+    "Leaving glasses at home or in another car.",
+    "Finding out on the day that your eyesight has changed. See an optician first if there is any doubt."
    ],
-   "local": "STUB",
+   "local": "It happens in the test centre's own car park at Eldon Business Park, before you get into the car, so the plate may be on a car parked along the estate road rather than in the seven marked bays (reasoned).",
+   "mock": false,
+   "sources": [
+    "[DT1, general technical matters](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/6-general-technical-matters)",
+    "[GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test)",
+    "[DVSA driving test prompt cards](https://assets.publishing.service.gov.uk/media/624d5879d3bf7f32b5aa072b/driving-test-prompt-cards.pdf)"
+   ]
+  },
+  {
+   "id": "vehicle-checks",
+   "group": "before",
+   "name": "The vehicle safety questions",
+   "short": "Safety questions",
+   "sheet": "Vehicle checks. One box covering both questions.",
+   "looking": "Whether you know the routine safety checks on the car you have brought, and whether you can work a safety control on the move without losing the road. One tell me question before you drive, one show me question while you are driving. Getting one or both wrong costs a single driving fault, not one each.",
+   "serious": "This box cannot cost you more than one driving fault. What you do while you answer the show me question can. GOV.UK says plainly that you will fail if your driving becomes dangerous or potentially dangerous while you answer it, and that is marked under the ordinary driving items rather than here.",
+   "do": [
+    "Learn the bonnet release, the dipstick and the coolant and brake fluid reservoirs in the car you are testing in, not in a different one.",
+    "Answer a tell me question by describing the check. You only open the bonnet for the three questions that say so.",
+    "When the show me question comes, take the words \"when it is safe to do so\" at face value. A straight, quiet stretch, not a junction or a roundabout approach.",
+    "Find the switch by feel, in one movement, with your eyes on the road."
+   ],
+   "mistakes": [
+    "Learning the answers for a different car from the one on test.",
+    "Doing the show me task the second it is asked, whatever the road is doing.",
+    "Looking down for several seconds hunting for a switch, which turns a one fault question into a driving fault somewhere else."
+   ],
+   "mock": false,
+   "sources": [
+    "[GOV.UK, car show me tell me questions](https://www.gov.uk/government/publications/car-show-me-tell-me-vehicle-safety-questions/car-show-me-tell-me-vehicle-safety-questions)",
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)",
+    "[Rated Driving, driving test results](https://www.rateddriving.com/learner-driver/driving-test-results/) (unofficial)"
+   ]
+  },
+  {
+   "id": "precautions",
+   "group": "before",
+   "no": "11",
+   "name": "Precautions before starting the engine",
+   "short": "Precautions",
+   "sheet": "Precautions",
+   "looking": "Whether you set the car up before you move. Doors shut, seat and head restraint set, mirrors adjusted, seat belt on, handbrake on, gearbox in neutral. It is a short item and it is usually marked once, at the start.",
+   "serious": "Almost always a driving fault if it is marked at all. It moves if the car is started in gear and lurches forward, because that is a loss of control and it is potentially dangerous (reasoned).",
+   "do": [
+    "Check the handbrake is on and the gear lever is in neutral before you turn the key.",
+    "Set the seat so you can press the clutch flat with a bend left in your knee.",
+    "Set the interior mirror and both door mirrors from where you are actually sitting.",
+    "Seat belt on, and check the doors are properly shut."
+   ],
+   "mistakes": [
+    "Starting the engine in gear.",
+    "Adjusting a mirror ten minutes later on the move, because it was wrong from the start.",
+    "Rushing this because the examiner is sitting there. Nobody is timing it."
+   ],
+   "local": "Take the time in the centre car park. A mirror you set badly on Eldon Road costs you for the next forty minutes.",
    "mock": true,
    "sources": [
+    "[Book Learn Pass, marking sheet](https://www.booklearnpass.co.uk/driving-test/marking-sheet/) (unofficial)",
     "(reasoned)"
    ]
   },
   {
-   "id": "junctions-observation",
-   "group": "junctions",
-   "no": "16",
-   "name": "Junctions: observation",
-   "short": "Junction obs",
-   "sheet": "Junctions / observation",
-   "looking": "STUB",
-   "serious": "STUB",
+   "id": "control-steering",
+   "group": "control",
+   "no": "12",
+   "name": "Control: steering",
+   "short": "Steering",
+   "sheet": "Control / steering",
+   "looking": "Whether the car goes where you intend, smoothly, with both hands in charge and no sudden movements. It is one of the faults DVSA names in its published top ten, as not having proper control of the steering.",
+   "serious": "Wandering a little within your lane is a driving fault. Mounting a kerb, crossing into another lane, or steering so late that you have to snatch at the wheel is where it turns serious, because a car that leaves its lane is potentially dangerous (reasoned). DVSA took questions on both control of steering and mounting the kerb at its November 2024 instructor webinar, which is a fair sign of where the line gets argued.",
    "do": [
-    "STUB"
+    "Both hands on the wheel except when you are changing gear.",
+    "Feed the wheel through your hands rather than crossing them over, and start the movement early so it can be small.",
+    "Look where you want the car to go. The car follows your eyes.",
+    "On a left turn, wait until you can see down the road you are entering before you start turning in."
    ],
    "mistakes": [
-    "STUB"
+    "Clipping the kerb on a tight left turn, which is marked here as steering rather than under junctions.",
+    "Steering one handed with the other hand resting on the gear lever.",
+    "Correcting a drift with a sharp pull rather than easing back."
    ],
-   "local": "STUB",
+   "local": "Beeston High Road and the parked up residential streets off the A6005 are where this shows. Steering round something at low speed with a kerb close by is exactly how a wheel gets clipped (reasoned, from the description of those roads in the research).",
    "mock": true,
    "sources": [
+    "[Ready to Pass, faults and results](https://readytopass.campaign.gov.uk/driving-test/driving-test-marking-faults-results/)",
+    "[DVSA, top 10 faults webinar recap](https://despatch.blog.gov.uk/2024/12/13/explaining-more-about-the-top-10-driving-test-faults-our-webinar-recap/)",
+    "[Nolan School of Motoring, test report explained](https://nolanschoolofmotoring.co.uk/practical-test/driving-test-report-explained/) (unofficial)"
+   ],
+   "common": true
+  },
+  {
+   "id": "control-clutch",
+   "group": "control",
+   "no": "12",
+   "name": "Control: clutch",
+   "short": "Clutch",
+   "sheet": "Control / clutch",
+   "looking": "Whether you can move away, change gear and come to a stop without stalling, without riding the clutch and without coasting along with it held down.",
+   "serious": "One stall in a safe place, dealt with calmly, is a driving fault. A stall that leaves you sitting across a junction, in the mouth of a roundabout or in the path of traffic is where it moves, because of where the car has stopped rather than because it stopped (reasoned).",
+   "do": [
+    "If you stall: handbrake on, gear into neutral, restart, then look all round again before you move. The recovery is marked as much as the stall.",
+    "Find the biting point before you release the handbrake on anything uphill.",
+    "Clutch down only in the last moment before you stop, so the car is never coasting up to a junction.",
+    "On the angle start from behind a parked car, hold the clutch steady and steer out only once you can see past."
+   ],
+   "mistakes": [
+    "Panicking after a stall and trying to move again without a fresh look.",
+    "Coasting to junctions with the clutch down, which takes your control of the speed away.",
+    "Resting a foot on the clutch between gear changes."
+   ],
+   "local": "Every test here begins with a cold move off in the centre car park and then an emergence onto the A6005. That first minute is where the stall people remember happens (reasoned).",
+   "mock": true,
+   "sources": [
+    "[Nolan School of Motoring, test report explained](https://nolanschoolofmotoring.co.uk/practical-test/driving-test-report-explained/) (unofficial)",
     "(reasoned)"
+   ]
+  },
+  {
+   "id": "control-gears",
+   "group": "control",
+   "no": "12",
+   "name": "Control: gears",
+   "short": "Gears",
+   "sheet": "Control / gears",
+   "looking": "Whether the gear suits the road and the speed, and whether you can change gear without looking down at the lever.",
+   "serious": "A wrong gear on its own is a driving fault. It becomes serious if it leaves you unable to finish something you have started, for example pulling out of a junction in third and crawling across in front of traffic (reasoned).",
+   "do": [
+    "Brake to the speed you need first, then take the gear that suits it.",
+    "Keep your eyes on the road through the gear change. Practise it until you can.",
+    "Second gear for most turns off a main road, third or higher once you are straight and moving.",
+    "Block change down where it helps, for example fifth to third, rather than working through every gear."
+   ],
+   "mistakes": [
+    "Looking down at the lever, which is marked here and often under steering as well.",
+    "Sitting in too high a gear on a slow road so the engine labours.",
+    "Changing gear halfway round a corner instead of before it."
+   ],
+   "local": "The A6005 changes character along its length, from the dual carriageway section towards Long Eaton to a shopping street in Beeston. Be in the gear the new road needs before you are on it.",
+   "mock": true,
+   "sources": [
+    "[Nolan School of Motoring, test report explained](https://nolanschoolofmotoring.co.uk/practical-test/driving-test-report-explained/) (unofficial)",
+    "[RouteBuddy, Chilwell test routes](https://routebuddy.co.uk/chilwell-driving-test-routes/) (unofficial)"
+   ]
+  },
+  {
+   "id": "control-pedals",
+   "group": "control",
+   "no": "12",
+   "name": "Control: accelerator, footbrake and parking brake",
+   "short": "Pedals, handbrake",
+   "sheet": "Control / accelerator, footbrake, parking brake",
+   "looking": "Three sub boxes with one idea behind them: smooth and progressive. Gentle on the gas rather than revving, braking early and lightly rather than late and hard, and using the parking brake to hold the car rather than to stop it.",
+   "serious": "Braking so hard or so late that the car behind has to react, or arriving at a hazard with the brakes still on hard, is where smoothness becomes potentially dangerous. Rolling back into the car behind on a hill start is the parking brake version (both reasoned).",
+   "do": [
+    "Brake in one smooth application: firmest at the start, easing off as the car settles to a stop.",
+    "Put the parking brake on whenever you will be stopped for more than a moment, and at every hold on a slope.",
+    "Cover the brake as soon as you can see a reason to slow, rather than waiting for the reason to arrive.",
+    "Squeeze the gas on when you pull out of a junction. Wheelspin is marked here."
+   ],
+   "mistakes": [
+    "Braking late because the hazard was spotted late, which is usually marked twice, here and under awareness and planning.",
+    "Using the handbrake to slow the car.",
+    "Sitting at every red light on the footbrake with the lights in the mirror of the car behind."
+   ],
+   "local": "The signals along the A6005 corridor change while you are approaching them. Reading the far side of the junction early is what keeps the braking gentle (reasoned).",
+   "mock": true,
+   "sources": [
+    "[Nolan School of Motoring, test report explained](https://nolanschoolofmotoring.co.uk/practical-test/driving-test-report-explained/) (unofficial)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "ancillary",
+   "group": "control",
+   "no": "27",
+   "name": "Ancillary controls",
+   "short": "Ancillary",
+   "sheet": "Ancillary controls",
+   "looking": "Whether you can work the controls and switches that bear on safety, the demisters, wipers, lights and heater, while keeping the car where it should be. The assessment is as much about what the car does while you reach for the switch as about finding the switch.",
+   "serious": "Fumbling for a switch is a driving fault. Drifting out of your lane, or looking down for several seconds while you do it, is where it turns serious (reasoned).",
+   "do": [
+    "Learn the stalks and switches in the test car before the day, by feel.",
+    "Clear a misted screen when you notice it, not when you can no longer see.",
+    "Wipers on when it starts to rain, before the screen gets bad.",
+    "Pick the moment: straight road, nothing close, then one movement."
+   ],
+   "mistakes": [
+    "Hunting for a control on the move in a car you have not driven much.",
+    "Leaving a screen misted because stopping to sort it feels like a fault. It is not.",
+    "Turning the heater or the radio up and down while the road is busy."
+   ],
+   "local": "If it is raining on the way to the test, set the wipers and the demister before you leave the car park, not on the A6005 (reasoned).",
+   "mock": true,
+   "sources": [
+    "[L2P Coventry, the DL25 report](https://l2pcoventry.com/test-report-dl25) (unofficial)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "moveoff-safely",
+   "group": "moving",
+   "no": "13",
+   "name": "Move off: safely",
+   "short": "Move off safely",
+   "sheet": "Move off / safely",
+   "looking": "Whether you look all round before the car moves, including over your shoulder into the blind spot, and whether you signal when a signal would help somebody. Not moving off safely is named in DVSA's published top ten. It is marked every time you pull away, so there are several chances to collect it in one test.",
+   "serious": "Missing the blind spot check with nothing coming is a driving fault. Missing it when a cyclist, a car or a pedestrian has to change what they were doing is serious. DT1's test is whether the act was potentially dangerous, not whether anything actually happened.",
+   "do": [
+    "Mirrors first: interior, then the right door mirror.",
+    "Look over your right shoulder into the blind spot, properly, so the movement is visible from the passenger seat.",
+    "Signal only if there is somebody to signal to.",
+    "Look again in the direction you are going, just before the wheels move, because the road has had time to change.",
+    "Go briskly once it is clear, rather than edging out in stages."
+   ],
+   "mistakes": [
+    "Looking round early, then waiting, then moving on the old look.",
+    "A blind spot check that is only a flick of the eyes, which the examiner cannot see and so cannot credit.",
+    "Signalling out of habit with nobody there, which gets marked under signals instead.",
+    "Forgetting the check entirely on the second and third stops because the first one went well."
+   ],
+   "local": "You will be asked to pull up and move off about three times, and DT1 requires one of them to be an angle start from behind a parked car, plus a hill start wherever the area allows one. The flat ground here is near the Trent at Attenborough, Beeston Rylands and the business park, and the ground rises north and west towards Bramcote and Stapleford (unverified), so that is the likelier place for the hill start.",
+   "mock": true,
+   "sources": [
+    "[Ready to Pass, faults and results](https://readytopass.campaign.gov.uk/driving-test/driving-test-marking-faults-results/)",
+    "[DT1, the car driving test](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/1-car-driving-test)",
+    "[Nolan School of Motoring, test report explained](https://nolanschoolofmotoring.co.uk/practical-test/driving-test-report-explained/) (unofficial)"
+   ],
+   "common": true
+  },
+  {
+   "id": "moveoff-control",
+   "group": "moving",
+   "no": "13",
+   "name": "Move off: under control",
+   "short": "Move off control",
+   "sheet": "Move off / under control",
+   "looking": "Whether the car moves away smoothly, without stalling, labouring, rolling back or lurching, and whether you straighten up and settle into your position quickly.",
+   "serious": "Rolling back far enough to reach the car behind, or pulling away in a series of jerks into a gap in traffic so that somebody has to slow for you (reasoned).",
+   "do": [
+    "Set the gas, find the bite, hold it, then release the handbrake.",
+    "On a hill, wait until you can feel the car straining against the handbrake before you let it off.",
+    "On the angle start, keep the clutch still and steer out only as far as you need to clear the parked car.",
+    "Straighten up and get to a normal road speed without dawdling."
+   ],
+   "mistakes": [
+    "Releasing the handbrake before the clutch is at the biting point, so the car rolls.",
+    "Too much gas out of nerves, so the car jumps.",
+    "Staying out wide after an angle start instead of coming back to a normal position."
+   ],
+   "local": "The angle start is the one that catches people, because you have to hold the clutch steady while steering. Practise it on the estate roads around Eldon Business Park, which are wide and quiet outside working hours (reasoned).",
+   "mock": true,
+   "sources": [
+    "[Nolan School of Motoring, test report explained](https://nolanschoolofmotoring.co.uk/practical-test/driving-test-report-explained/) (unofficial)",
+    "[DT1, the car driving test](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/1-car-driving-test)"
+   ],
+   "common": true
+  },
+  {
+   "id": "stops-position",
+   "group": "moving",
+   "no": "25",
+   "name": "Position and normal stops",
+   "short": "Normal stops",
+   "sheet": "Position / normal stops",
+   "looking": "Where you choose to stop, and how you bring the car to the kerb. Three words cover it: safe, legal and convenient. When the examiner says to pull up where it is safe, your judgement about where that is is the thing being marked.",
+   "serious": "Stopping opposite a parked car so the road is blocked, on the zigzags at a crossing, across a driveway, on a bend or at a junction. The zigzag case breaks the law as well, and DT1 makes a breach of the law serious on its own.",
+   "do": [
+    "Mirrors, then signal in good time, then slow early rather than braking at the spot.",
+    "Pick somewhere with a clear run in: no corner, no junction, no crossing, no dropped kerb.",
+    "Stop reasonably close to the kerb and parallel with it.",
+    "Handbrake on, neutral, signal off.",
+    "Driving another hundred metres to a better place is the right answer, not a fault."
+   ],
+   "mistakes": [
+    "Taking the first gap without looking at what is around it.",
+    "Stopping so far from the kerb that the car sticks out into the road.",
+    "Braking hard once you spot the place, which gets marked under control as well.",
+    "Leaving the signal on afterwards, which tells the traffic behind you are about to move."
+   ],
+   "local": "Beeston High Road is a poor place to stop and a likely place to be asked: bus lanes, bus stops, cyclists and pedestrians crossing between shops. The quieter residential streets off the A6005 at Chilwell and Attenborough are where a good stop is easy to find.",
+   "mock": true,
+   "sources": [
+    "[L2P Coventry, the DL25 report](https://l2pcoventry.com/test-report-dl25) (unofficial)",
+    "[DT1, guide to assessment and marking](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/annex-6-guide-to-assessment-and-marking)",
+    "[RouteBuddy, Nottingham Chilwell routes](https://routebuddy.co.uk/nottingham-chilwell-driving-test-routes/) (unofficial)"
+   ],
+   "common": true
+  },
+  {
+   "id": "mirrors-signalling",
+   "group": "mirrors",
+   "no": "14",
+   "name": "Use of mirrors: before signalling",
+   "short": "Mirror, signal",
+   "sheet": "Use of mirrors, M/C rear observation / signalling. The motorcycle wording is printed because the same form serves motorcycle tests.",
+   "looking": "Whether the mirror check comes before the signal, not at the same time as it and not after it. The point of looking first is that what you see decides whether the signal is worth giving and when.",
+   "serious": "On its own this is normally a driving fault. It becomes serious when the signal that followed the missed check misleads somebody, for example signalling left in front of a cyclist you never saw (reasoned).",
+   "do": [
+    "Mirror, signal, manoeuvre, in that order, every time.",
+    "Interior mirror, then the door mirror on the side you are about to move towards.",
+    "Give the check enough head movement that it is visible from outside your own head.",
+    "If you have waited between the check and the signal, check again."
+   ],
+   "mistakes": [
+    "Indicator and mirror in the same movement, which is really no check at all.",
+    "Checking the interior mirror only, and never the door mirror on the side you are turning.",
+    "Signalling first and looking afterwards to see whether it was a good idea."
+   ],
+   "mock": true,
+   "sources": [
+    "[Book Learn Pass, marking sheet](https://www.booklearnpass.co.uk/driving-test/marking-sheet/) (unofficial)",
+    "(reasoned)"
+   ],
+   "common": true
+  },
+  {
+   "id": "mirrors-direction",
+   "group": "mirrors",
+   "no": "14",
+   "name": "Use of mirrors: before changing direction",
+   "short": "Mirror, direction",
+   "sheet": "Use of mirrors, M/C rear observation / change direction",
+   "looking": "The second most recorded fault in the country, every year. Before the car moves sideways at all, turning, changing lane, moving round a parked car, pulling out, the mirrors have to tell you what is behind and alongside you. The examiner cannot credit a check that did not happen, and cannot see one that is only eye movement.",
+   "serious": "A late check is a driving fault. A missing check before a move that affects somebody behind is serious. This is also the item most often upgraded by repetition. DT1 says a candidate who \"habitually commits a driving fault in one aspect of driving throughout the test cannot be regarded as competent to pass the test\", and that \"the repeated fault can then be assessed as potentially dangerous\". You use the mirrors dozens of times in thirty five minutes, so a habit shows.",
+   "do": [
+    "Mirror, signal, manoeuvre. Make it automatic so it survives nerves.",
+    "Interior mirror first, then the door mirror on the side you are moving towards.",
+    "Move your head, so the check is visible.",
+    "Add a blind spot check over your shoulder before moving out round a parked car or changing lane, where a cyclist or a motorcycle could be alongside.",
+    "Check again after a wait. What was behind you thirty seconds ago is not what is behind you now."
+   ],
+   "mistakes": [
+    "Checking on the straight and then not again before the move.",
+    "Moving out round a parked car as if it were part of going straight on. It is a change of direction.",
+    "Checking the mirror but not reading it, so a car that was there does not register."
+   ],
+   "local": "Beeston High Road gives you cyclists, bus stops and cars pulling in and out between the shops, so you change direction constantly without thinking of it as a manoeuvre. Every move round a stopped bus is a change of direction.",
+   "mock": true,
+   "sources": [
+    "[DT1, guide to assessment and marking](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/annex-6-guide-to-assessment-and-marking)",
+    "[GOV.UK, top 10 reasons for failing](https://www.gov.uk/government/publications/top-10-reasons-for-failing-the-driving-test/top-10-reasons-for-failing-the-driving-test-in-great-britain)",
+    "[passrates.uk, fault categories](https://passrates.uk/guide/practical-test-fault-categories) (unofficial, for the claim that this has ranked second every year)",
+    "[RouteBuddy, Nottingham Chilwell routes](https://routebuddy.co.uk/nottingham-chilwell-driving-test-routes/) (unofficial)"
+   ],
+   "common": true
+  },
+  {
+   "id": "mirrors-speed",
+   "group": "mirrors",
+   "no": "14",
+   "name": "Use of mirrors: before changing speed",
+   "short": "Mirror, speed",
+   "sheet": "Use of mirrors, M/C rear observation / change speed",
+   "looking": "Whether you know what is behind you, and how close it is, before you slow down or speed up. Braking is a message to the driver behind, and you are expected to have looked before you send it.",
+   "serious": "Braking firmly with a vehicle close behind and no check beforehand, so that they have to brake hard, is the serious version (reasoned).",
+   "do": [
+    "Check the interior mirror as soon as you see a reason to slow, before you lift off.",
+    "If somebody is close behind, brake earlier and more gently.",
+    "Check again before you accelerate back up to speed after a hazard.",
+    "Look before you slow for a parking space, a turning or a queue, not as you do it."
+   ],
+   "mistakes": [
+    "Slowing first and checking the mirror afterwards.",
+    "Not looking before easing off for a green light that might change.",
+    "Braking for a hazard ahead without any idea what is behind."
+   ],
+   "local": "The run of signal controlled junctions along the A6005 corridor is where this one is marked, because you slow for lights repeatedly and some of them change as you approach.",
+   "mock": true,
+   "sources": [
+    "[Book Learn Pass, marking sheet](https://www.booklearnpass.co.uk/driving-test/marking-sheet/) (unofficial)",
+    "(reasoned)"
+   ],
+   "common": true
+  },
+  {
+   "id": "signals-necessary",
+   "group": "mirrors",
+   "no": "15",
+   "name": "Signals: given where they are needed",
+   "short": "Signal needed",
+   "sheet": "Signals / necessary",
+   "looking": "Whether you tell other people what you are about to do when there is somebody to tell. A signal nobody can benefit from is not required. A signal that misleads is worse than none at all.",
+   "serious": "A missing signal that another driver, rider or pedestrian needed, and acted on the lack of, is serious. So is a signal left running that invites somebody to pull out in front of you (both reasoned, from the potential danger test in DT1).",
+   "do": [
+    "Ask who the signal is for. If the answer is nobody, you do not need it, but giving one costs nothing when in doubt.",
+    "Signal to pedestrians waiting to cross as well as to drivers.",
+    "Cancel it yourself if the self cancel does not, especially after a gentle turn or a roundabout exit.",
+    "Never signal to say thank you. The signals mean one thing each."
+   ],
+   "mistakes": [
+    "Leaving the indicator on after a turn, which is the most common signal fault there is.",
+    "Signalling right to go round a parked car, which reads as a right turn.",
+    "Waving people out or flashing headlights as an invitation."
+   ],
+   "mock": true,
+   "sources": [
+    "[Do Drive, test report explained](https://dodrive.uk/driving-test-report-explained/) (unofficial)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "signals-correct",
+   "group": "mirrors",
+   "no": "15",
+   "name": "Signals: correct, and properly timed",
+   "short": "Signal timing",
+   "sheet": "Signals / correctly, timed",
+   "looking": "Two sub boxes with one idea: the right signal at the right moment. Early enough to be useful, late enough that nobody reads it as meaning the turning before the one you want.",
+   "serious": "A signal that sends somebody the wrong way, for example a left signal that brings a car out of the side road you are passing, is serious if they have to take action (reasoned).",
+   "do": [
+    "Signal after the mirror check and before you start to slow for the turn.",
+    "If there is a side road before your turning, wait until you are past it.",
+    "At a roundabout, signal left as you pass the exit before the one you want.",
+    "Check the indicator has cancelled after the turn."
+   ],
+   "mistakes": [
+    "Signalling so early that it points at the wrong junction.",
+    "Signalling as you turn the wheel, which is too late to help anybody.",
+    "Wrong indicator entirely under pressure, most often at a roundabout."
+   ],
+   "local": "The A6005 through Chilwell has side turnings close together, so an early signal can bring somebody out of the wrong one in front of you (reasoned).",
+   "mock": true,
+   "sources": [
+    "[Do Drive, test report explained](https://dodrive.uk/driving-test-report-explained/) (unofficial)",
+    "(reasoned)"
+   ],
+   "common": true
+  },
+  {
+   "id": "use-of-speed",
+   "group": "speed",
+   "no": "18",
+   "name": "Use of speed",
+   "short": "Speed",
+   "sheet": "Use of speed",
+   "looking": "Whether your speed suits the road, the traffic and the conditions, and whether you approach hazards at a speed you can deal with them at. DVSA's published top ten has this at rank 10, described as not driving at a safe and reasonable speed, including driving over the speed limit and not adjusting speed to road conditions.",
+   "serious": "Exceeding the limit is a breach of the law, and DT1 defines a serious fault as one that \"is potentially dangerous or entails a breach of the law\", so speeding is available as a serious fault on that limb alone with nobody endangered. A small drift over, corrected at once, is widely reported to be marked as a driving fault in practice, but no DVSA source says so, so do not plan around it (unverified).",
+   "do": [
+    "Read the signs, and read the street. Street lighting usually means 30 mph unless signs say otherwise, and repeater signs tell you when a lit road is something else (reasoned).",
+    "Glance at the speedometer on every new road, and again after every junction.",
+    "In the independent driving section, drive to the road signs and not to the sat nav. The examiner tells you the sat nav speeds may not be accurate.",
+    "Get the speed off before the hazard, not in it."
+   ],
+   "mistakes": [
+    "Carrying the speed of a fast road into the slower one that follows it.",
+    "Watching the sat nav's speed limit rather than the signs.",
+    "Creeping over the limit downhill without noticing."
+   ],
+   "local": "The A6005 changes character along its length, from the dual carriageway section towards Long Eaton to shops in Beeston, and the transitions are where speed faults cluster. No speed limit anywhere in this app has been confirmed against a council source, so read the signs on the day rather than trusting a number you memorised.",
+   "mock": true,
+   "sources": [
+    "[DVSA, top 10 faults webinar slides](https://despatch.blog.gov.uk/wp-content/uploads/sites/131/2024/12/top-10-driving-test-faults-2024-webinar-slides.pdf)",
+    "[DT1, guide to assessment and marking](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/annex-6-guide-to-assessment-and-marking)",
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)",
+    "[L2P Coventry, the DL25 report](https://l2pcoventry.com/test-report-dl25) (unofficial)"
+   ],
+   "common": true
+  },
+  {
+   "id": "following-distance",
+   "group": "speed",
+   "no": "19",
+   "name": "Following distance",
+   "short": "Following",
+   "sheet": "Following distance",
+   "looking": "Whether you leave enough room to stop in, and whether you can stop within the distance you can see to be clear. In a queue it is also whether you have left yourself room to get out if you need to.",
+   "serious": "Following so close that an ordinary brake application by the car in front would need emergency braking from you (reasoned).",
+   "do": [
+    "Two seconds on a dry road, doubled in the wet. Pick a sign and count.",
+    "In a queue, stop where you can see the rear tyres of the car in front touching the road.",
+    "If somebody closes up behind you, leave more room in front rather than going faster.",
+    "Drop further back behind a bus, a lorry or a cyclist, where you cannot see past."
+   ],
+   "mistakes": [
+    "Closing up in slow traffic until there is no gap left.",
+    "Following a bus closely on a road where it will stop.",
+    "Speeding up because the car behind is close."
+   ],
+   "local": "The A6005 queues at peak times, and the approaches to Bardills roundabout are recorded in a traffic engineering study as carrying queues in the hundreds of vehicles in the morning and evening peaks. Queues are where this is marked.",
+   "mock": true,
+   "sources": [
+    "[L2P Coventry, the DL25 report](https://l2pcoventry.com/test-report-dl25) (unofficial)",
+    "[JCT Consultancy, Bardills paper](https://www.jctconsultancy.co.uk/Home/docs/jctSymp_bardillsCuttingCorners.pdf) (cited by search, page not opened)"
+   ]
+  },
+  {
+   "id": "progress-speed",
+   "group": "speed",
+   "no": "20",
+   "name": "Progress: appropriate speed",
+   "short": "Progress speed",
+   "sheet": "Progress / appropriate speed",
+   "looking": "Whether you get on with it. Driving well below a safe and reasonable speed for the road holds other people up, and it is marked here, in its own box, separately from use of speed. Slow is not automatically safe.",
+   "serious": "Crawling on a clear road so that following traffic has to take action, or doing it all test, moves this towards a serious fault on both limbs: the potential danger, and the habitual repetition rule in DT1 (reasoned).",
+   "do": [
+    "Drive at the limit when the road and the traffic allow it.",
+    "Build back up to speed promptly after a hazard rather than trickling away from it.",
+    "If a queue has formed behind you on a clear road, you are the hazard.",
+    "Treat the limit as a target, not as a ceiling to stay well under."
+   ],
+   "mistakes": [
+    "Driving the whole test at 25 out of nerves.",
+    "Slowing for a hazard that has already passed.",
+    "Accelerating so gently after a junction that the road behind backs up."
+   ],
+   "local": "On the clear stretches of the A6005 this is a real risk, because a nervous candidate holds a town speed onto a faster road (reasoned).",
+   "mock": true,
+   "sources": [
+    "[LearnerDriving, progress](https://www.learnerdriving.com/driving-test/marking/progress.htm) (unofficial)",
+    "[DT1, guide to assessment and marking](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/annex-6-guide-to-assessment-and-marking)"
+   ],
+   "common": true
+  },
+  {
+   "id": "progress-hesitation",
+   "group": "speed",
+   "no": "20",
+   "name": "Progress: undue hesitation",
+   "short": "Hesitation",
+   "sheet": "Progress / undue hesitation",
+   "looking": "Whether you take a gap that was plainly safe. Waiting at a junction while safe gaps come and go is marked here, and it is the answer to the question of whether you can fail for being too careful. You can.",
+   "serious": "One over cautious wait at an awkward junction is a driving fault. Refusing gap after gap, so that traffic behind is stuck or has to go round you, is where it moves (reasoned).",
+   "do": [
+    "Get the car ready before the gap comes: right gear, clutch at the bite, handbrake set if you need it.",
+    "Look at the gap rather than at the car behind you.",
+    "Decide early. A decision made at the line is a decision made too late.",
+    "At an open give way where you can see it is clear, keep rolling rather than stopping."
+   ],
+   "mistakes": [
+    "Stopping at a give way that was clear, then having to start the decision again.",
+    "Letting two or three safe gaps pass while getting ready.",
+    "Freezing at a roundabout because a car is approaching on the far side of it."
+   ],
+   "local": "The multi lane roundabouts named for this area, Bramcote Island, Bardills and the M1 Junction 25 roundabout, punish a driver who will not take a gap, because the traffic around you is moving and expects you to go.",
+   "mock": true,
+   "sources": [
+    "[LearnerDriving, progress](https://www.learnerdriving.com/driving-test/marking/progress.htm) (unofficial)",
+    "[Driving Lessons with Martin, Chilwell test centre](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/) (unofficial)"
+   ],
+   "common": true
+  },
+  {
+   "id": "junctions-approach",
+   "group": "junctions",
+   "no": "21",
+   "name": "Junctions: approach speed",
+   "short": "Junction speed",
+   "sheet": "Junctions (including roundabouts) / approach speed",
+   "looking": "Whether you arrive at the junction at a speed that lets you look, decide and act. Too fast and the observation becomes a glance. Too slow and you end up in the progress box instead.",
+   "serious": "Arriving so fast that you have to brake hard, or that you cannot stop before the line, is potentially dangerous (reasoned).",
+   "do": [
+    "Slow on the brakes first, then take the gear. Do not do both together.",
+    "Aim to arrive able to go if it is clear, rather than stopping every time out of habit.",
+    "Have the speed off before the give way lines, not on them.",
+    "On a roundabout approach, settle the lane and the speed before the lane markings start."
+   ],
+   "mistakes": [
+    "Braking and changing gear at the same time, so neither is done properly.",
+    "Arriving too fast at a closed junction where you cannot see.",
+    "Stopping dead at every junction, including the ones that are obviously clear."
+   ],
+   "local": "Bardills roundabout gains a third lane on the approach and has a set of traffic lights on the roundabout itself. That is lane choice, signals and speed at once, and all of it has to be settled before you get there.",
+   "mock": true,
+   "sources": [
+    "[Driving Pro, junctions assessment criteria](https://driving-pro.com/assessment-criteria-junctions/) (unofficial)",
+    "[h2g2, Bardills Island](https://h2g2.com/edited_entry/A425927) (unofficial)"
+   ],
+   "common": true
+  },
+  {
+   "id": "junctions-observation",
+   "group": "junctions",
+   "no": "21",
+   "name": "Junctions: observation",
+   "short": "Junction obs",
+   "sheet": "Junctions (including roundabouts) / observation",
+   "looking": "The single most recorded fault in the country, every year, for as far back as the comparable data runs. The examiner is watching whether your looking actually informs your decision: whether you looked, whether you looked at the right moment, and whether you were still looking as the car moved. DVSA named creeping out when turning right at a junction, and blind spot checks at roundabouts, as topics at its November 2024 instructor webinar, which is the specific behaviour behind a lot of it.",
+   "serious": "Emerging without effective observation is serious whether or not anything was coming, because DT1's test is potential danger and not outcome. This is also the box where repetition bites hardest: four marks here is a very different test from four marks spread across four boxes, and DT1 allows a repeated fault to be assessed as potentially dangerous.",
+   "do": [
+    "Look right, then left, then right again before the wheels move.",
+    "Take the last look in the direction the danger is coming from, and keep looking as you go.",
+    "If you have been waiting more than a couple of seconds, look again. The road has changed.",
+    "At a closed junction, creep forward far enough to see, then stop and look properly from the new position.",
+    "At a roundabout, look right for traffic and ahead for where that traffic is going, and check your left before you move across to an exit."
+   ],
+   "mistakes": [
+    "Looking early, waiting, then pulling out on a look that is ten seconds old.",
+    "Looking once, in one direction only.",
+    "Creeping out while still looking right, so the car is moving before the decision is made.",
+    "Watching the traffic and missing the pedestrians crossing the road you are turning into."
+   ],
+   "local": "Every route out of the centre starts by emerging from the business park onto the A6005, and instructors describe this test area as heavy on roundabouts, junctions and crossroads with little country road nearby. You will emerge dozens of times in one test here, so one weak habit gets marked again and again.",
+   "mock": true,
+   "sources": [
+    "[DT1, guide to assessment and marking](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/annex-6-guide-to-assessment-and-marking)",
+    "[DVSA, top 10 faults webinar recap](https://despatch.blog.gov.uk/2024/12/13/explaining-more-about-the-top-10-driving-test-faults-our-webinar-recap/)",
+    "[passrates.uk, fault categories](https://passrates.uk/guide/practical-test-fault-categories) (unofficial, for the claim that this has ranked first every year)",
+    "[NG Pass Driving Academy, Chilwell route guide](https://ngpassdrivingacademy.co.uk/chilwell-driving-test-route-a-complete-guide-for-learners/) (unofficial)"
+   ],
+   "common": true
+  },
+  {
+   "id": "junctions-turning-right",
+   "group": "junctions",
+   "no": "21",
+   "name": "Junctions: turning right",
+   "short": "Turning right",
+   "sheet": "Junctions (including roundabouts) / turning right",
+   "looking": "Where you put the car before and during a right turn. Incorrect positioning when turning right at junctions is named in DVSA's published top ten. The position wanted is as close to the centre of the road as is safe, so that traffic can pass on your left where the road is wide enough and so that you can see past whatever is waiting opposite.",
+   "serious": "Turning across the path of an oncoming vehicle that has to brake or swerve. That is the classic serious fault at a junction, and it is usually marked alongside observation or judgement. Sitting over the centre line into the oncoming lane while you wait is the positioning version (reasoned).",
+   "do": [
+    "Mirror, signal, then move towards the centre of the road in good time.",
+    "Wait with the wheels straight, so a shunt from behind cannot push you into oncoming traffic.",
+    "Wait until you can see that the gap is a gap, rather than until the oncoming car looks slow.",
+    "Look into the road you are turning into before you commit. Somebody may already be crossing it.",
+    "Turn into the correct side of the new road and straighten up promptly."
+   ],
+   "mistakes": [
+    "Waiting with the wheels already turned right.",
+    "Positioning late, so the turn starts from the left of the lane.",
+    "Going on a gap that closes because you did not account for the car's speed.",
+    "Stopping halfway across the junction once committed."
+   ],
+   "local": "Turning right out of a side road onto the A6005 is the hardest thing this area asks of a learner, because you are crossing one stream of traffic and joining another on a busy road.",
+   "mock": true,
+   "sources": [
+    "[Ready to Pass, faults and results](https://readytopass.campaign.gov.uk/driving-test/driving-test-marking-faults-results/)",
+    "[Driving Pro, junctions assessment criteria](https://driving-pro.com/assessment-criteria-junctions/) (unofficial)",
+    "(reasoned)"
+   ],
+   "common": true
+  },
+  {
+   "id": "junctions-turning-left",
+   "group": "junctions",
+   "no": "21",
+   "name": "Junctions: turning left",
+   "short": "Turning left",
+   "sheet": "Junctions (including roundabouts) / turning left",
+   "looking": "Whether you keep reasonably to the left so you do not swing out and invite somebody up your inside, and whether you make the turn without clipping the kerb or ending up on the wrong side of the road you are entering.",
+   "serious": "Swinging out to the right before a left turn so that an overtaking vehicle or a motorcyclist has to react. Mounting the kerb where somebody is standing (both reasoned).",
+   "do": [
+    "Mirror, signal, and check the left door mirror for a cyclist coming up beside you.",
+    "Hold your normal position. Do not swing out to make the turn easier.",
+    "Slow enough before the corner that you can turn on the gas rather than on the brakes.",
+    "Wait until you can see into the road you are entering before you turn the wheel."
+   ],
+   "mistakes": [
+    "Swinging right first, which is the single most common left turn fault.",
+    "Clipping the kerb, which is marked under steering as well.",
+    "Turning in too early and cutting across the mouth of the junction.",
+    "Missing a cyclist who has come up the left hand side while you waited."
+   ],
+   "local": "Cyclists along the A6005 corridor and through Beeston make that left mirror check real rather than a routine. A green left filter arrow is permission to go left if the way is clear, not a reason to skip the check: traffic lights with left filter arrows are named by a local instructor as a feature of this test area.",
+   "mock": true,
+   "sources": [
+    "[Driving Pro, junctions assessment criteria](https://driving-pro.com/assessment-criteria-junctions/) (unofficial)",
+    "[Driving Lessons with Martin, Chilwell test centre](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/) (unofficial)"
+   ],
+   "common": true
+  },
+  {
+   "id": "junctions-cutting",
+   "group": "junctions",
+   "no": "21",
+   "name": "Junctions: cutting corners",
+   "short": "Cutting corners",
+   "sheet": "Junctions (including roundabouts) / cutting corners",
+   "looking": "Whether you cut across the corner when turning right, taking a line that puts the car briefly on the wrong side of the road you are entering. It has its own sub box because it is common and because it puts you where oncoming traffic expects to be.",
+   "serious": "Cutting the corner so that you meet an emerging vehicle head on, or force it to stop or swerve, is serious (reasoned).",
+   "do": [
+    "Drive to the middle of the junction before you start turning the wheel.",
+    "Look into the new road early, so you can see what you are cutting across.",
+    "Keep the nose of the car on your own side of the centre line of the road you are entering.",
+    "If a vehicle is waiting to come out, give it the room it needs to see past you."
+   ],
+   "mistakes": [
+    "Turning the wheel as soon as the junction appears, rather than at the middle of it.",
+    "Cutting in behind a queue on the far side of the junction.",
+    "Cutting across the painted island or hatching in the middle of a wide junction."
+   ],
+   "local": "It shows most on right turns off the A6005 into side roads, where a queue on the other side of the junction tempts you to cut in behind it (reasoned).",
+   "mock": true,
+   "sources": [
+    "[Driving Pro, junctions assessment criteria](https://driving-pro.com/assessment-criteria-junctions/) (unofficial)",
+    "(reasoned)"
+   ],
+   "common": true
+  },
+  {
+   "id": "positioning-normal",
+   "group": "position",
+   "no": "23",
+   "name": "Positioning: normal driving",
+   "short": "Position",
+   "sheet": "Positioning / normal driving",
+   "looking": "Where the car sits when nothing in particular is happening. DVSA's rank 9 fault is poor positioning during normal driving, and its own bullet names driving too close to the kerb or the centre line, and unnecessary right hand lane use on dual carriageways.",
+   "serious": "Sitting so far out that oncoming traffic has to move over, or so close to the kerb that you strike it or frighten a pedestrian (reasoned).",
+   "do": [
+    "Normal position is the left hand lane, about a metre from the kerb where there is room.",
+    "On a dual carriageway, come back to the left lane once you have passed something.",
+    "Move out early and smoothly for a parked car, then come back in. Do not weave in and out of every gap.",
+    "Where there are tram rails in the road, position for the rails and give the tram its space."
+   ],
+   "mistakes": [
+    "Hugging the kerb, which leaves nowhere to go if a door opens.",
+    "Drifting towards the centre line on a road with parked cars on the left.",
+    "Staying in the right hand lane of a dual carriageway after overtaking."
+   ],
+   "local": "Two local versions. The dual carriageway section of the A6005 towards Long Eaton, where you must return to the left after passing. And the roads shared with the tram, where the correct position is set by the rails and by tram priority rather than by instinct.",
+   "mock": true,
+   "sources": [
+    "[DVSA, top 10 faults webinar slides](https://despatch.blog.gov.uk/wp-content/uploads/sites/131/2024/12/top-10-driving-test-faults-2024-webinar-slides.pdf)",
+    "[LearnerDriving, positioning](https://www.learnerdriving.com/driving-test/marking/positioning) (unofficial)",
+    "[RouteBuddy, Chilwell test routes](https://routebuddy.co.uk/chilwell-driving-test-routes/) (unofficial)"
+   ],
+   "common": true
+  },
+  {
+   "id": "positioning-lane",
+   "group": "position",
+   "no": "23",
+   "name": "Positioning: lane discipline",
+   "short": "Lane discipline",
+   "sheet": "Positioning / lane discipline",
+   "looking": "Whether you pick the right lane early, keep to the middle of it, and leave it only after a check. Straddling lanes, or drifting between them on a roundabout, is marked here.",
+   "serious": "Straddling a lane on a roundabout so that a vehicle alongside has to react, or changing lane into somebody (reasoned).",
+   "do": [
+    "Read the road markings and the direction signs before the lane gains appear, not at the line.",
+    "Choose the lane on the approach and stay in it.",
+    "Follow the painted lanes round the roundabout where they are marked on the island.",
+    "If you end up in the wrong lane, stay in it, go where it takes you and come back round. Do not cut across."
+   ],
+   "mistakes": [
+    "Changing lane on the roundabout because the exit arrived sooner than expected.",
+    "Sitting between two lanes so that nobody knows which one you want.",
+    "Taking the left lane and then going right round the island, or the reverse."
+   ],
+   "local": "This is the local item. Bramcote Island, Bardills and the M1 Junction 25 roundabout are all multi lane, and Bardills also gains a third lane on the approach and has a set of traffic lights on the roundabout itself. The examiner names the exit for you, so the work is the lane, not the direction.",
+   "mock": true,
+   "sources": [
+    "[LearnerDriving, positioning](https://www.learnerdriving.com/driving-test/marking/positioning) (unofficial)",
+    "[Driving Lessons with Martin, Chilwell test centre](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/) (unofficial)",
+    "[h2g2, Bardills Island](https://h2g2.com/edited_entry/A425927) (unofficial)",
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)"
+   ],
+   "common": true
+  },
+  {
+   "id": "clearance",
+   "group": "position",
+   "no": "16",
+   "name": "Clearance to obstructions",
+   "short": "Clearance",
+   "sheet": "Clearance / obstructions. The heading \"Clearance\" is confirmed from the form's own indexed text.",
+   "looking": "How much room you leave when you pass a parked car, roadworks, a skip, a cyclist or a pedestrian in the road. A door's width is the usual measure for a parked car, and more for a cyclist.",
+   "serious": "Passing close enough that an opening door would be struck, or squeezing past a cyclist so that they have to move or wobble (reasoned).",
+   "do": [
+    "Mirror, then move out early and in one movement, not at the last moment.",
+    "Leave a door's width past parked cars, and slow down instead if there is not room for it.",
+    "Look through the windows of parked cars for somebody about to get out.",
+    "Give a cyclist as much room as you would give a car."
+   ],
+   "mistakes": [
+    "Holding the same line and clipping past with inches to spare.",
+    "Moving out without checking what is behind or alongside.",
+    "Passing a parked car at full speed because there was no oncoming traffic."
+   ],
+   "local": "Beeston High Road and the parked up residential estates off the A6005 are where this is decided: parked cars on both sides, bus stops and cyclists. Where the road narrows to one usable lane it stops being clearance and becomes meeting traffic, the next item along.",
+   "mock": true,
+   "sources": [
+    "[GOV.UK, driving test marking sheet](https://www.gov.uk/government/publications/driving-test-marking-sheet)",
+    "[RouteBuddy, Nottingham Chilwell routes](https://routebuddy.co.uk/nottingham-chilwell-driving-test-routes/) (unofficial)"
+   ],
+   "common": true
+  },
+  {
+   "id": "judgement-overtaking",
+   "group": "position",
+   "no": "22",
+   "name": "Judgement: overtaking",
+   "short": "Overtaking",
+   "sheet": "Judgement / overtaking",
+   "looking": "Whether you pass only when you can see it is clear and there is room, and whether you get back in afterwards. On an urban test this mostly means cyclists and stopped vehicles rather than open road overtaking.",
+   "serious": "Starting to overtake when you cannot see the road ahead is clear, or pulling back in so close that you cut somebody up (reasoned).",
+   "do": [
+    "Decide whether you need to pass at all. Following a cyclist for ten seconds is not a fault.",
+    "Mirror, blind spot check, signal if it helps, then go past without hesitating in the wrong place.",
+    "Wait for a place where you can give proper room, not at a pinch point or a parked car.",
+    "Return to your normal position once you can see the whole vehicle you passed in the interior mirror."
+   ],
+   "mistakes": [
+    "Passing a cyclist just before a pinch point or a traffic island.",
+    "Sitting alongside a vehicle rather than getting past it.",
+    "Overtaking on the approach to a junction or a crossing."
+   ],
+   "local": "Cyclists on the A6005 and through Beeston are the overtakes you will actually do. Hold back and wait for room instead of squeezing past at an island.",
+   "mock": true,
+   "sources": [
+    "[Driving Pro, junctions assessment criteria](https://driving-pro.com/assessment-criteria-junctions/) (unofficial)",
+    "[RouteBuddy, Nottingham Chilwell routes](https://routebuddy.co.uk/nottingham-chilwell-driving-test-routes/) (unofficial)"
+   ]
+  },
+  {
+   "id": "judgement-meeting",
+   "group": "position",
+   "no": "22",
+   "name": "Judgement: meeting traffic",
+   "short": "Meeting",
+   "sheet": "Judgement / meeting",
+   "looking": "Who goes first when the road is narrowed by parked cars or an obstruction, and whether you wait somewhere the other driver can actually get through.",
+   "serious": "Driving into a gap that is not yours so that the oncoming driver has to stop, swerve or reverse (reasoned).",
+   "do": [
+    "If the obstruction is on your side of the road, the give way is yours.",
+    "Hold back at a gap between the parked cars, not nose to nose with the oncoming car.",
+    "Make your decision visible by slowing early.",
+    "If the other driver clearly waves you through and it is safe, go. Standing on ceremony is hesitation."
+   ],
+   "mistakes": [
+    "Committing to the gap and then meeting somebody in it.",
+    "Stopping in a place with no room for the other car to pass.",
+    "Refusing a clear priority that is yours, which is marked as hesitation instead."
+   ],
+   "local": "The residential streets off the A6005, with cars parked both sides, are where the meeting judgement is tested here.",
+   "mock": true,
+   "sources": [
+    "[Driving Pro, junctions assessment criteria](https://driving-pro.com/assessment-criteria-junctions/) (unofficial)",
+    "(reasoned)"
+   ],
+   "common": true
+  },
+  {
+   "id": "judgement-crossing",
+   "group": "position",
+   "no": "22",
+   "name": "Judgement: crossing traffic",
+   "short": "Crossing",
+   "sheet": "Judgement / crossing",
+   "looking": "Whether the gap you take when you cross somebody else's path is genuinely big enough. It covers turning right across oncoming traffic and crossing a main road from a side road.",
+   "serious": "Making an approaching driver brake, swerve or change what they were doing. This is behind a large share of fails, and it is often marked together with junctions observation (reasoned).",
+   "do": [
+    "Judge the gap by how long it will take you to clear the road, not by how far away the car looks.",
+    "If you are not sure, wait. If you are sure, go without pausing halfway.",
+    "Allow for the car you cannot see behind the one you can.",
+    "Be ready in gear before the gap arrives, so that going does not take three seconds of setting up."
+   ],
+   "mistakes": [
+    "Going on a gap that would have worked if the car had been ready.",
+    "Stopping halfway across a main road.",
+    "Taking a gap in the near lane without checking the far lane."
+   ],
+   "local": "Turning right out of a side road onto the A6005, or right off it into one, is exactly this, and both are likely to come up more than once.",
+   "mock": true,
+   "sources": [
+    "[Driving Pro, junctions assessment criteria](https://driving-pro.com/assessment-criteria-junctions/) (unofficial)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "signs-traffic-signs",
+   "group": "signs",
+   "no": "17",
+   "name": "Response to signs and signals: traffic signs",
+   "short": "Traffic signs",
+   "sheet": "Response to signs and signals / traffic signs",
+   "looking": "Whether you see the sign, understand it and act on it in time. In the independent driving section you may be following signs rather than a sat nav, so reading them is the task as well as the marking.",
+   "serious": "Driving past a no entry sign, ignoring a give way or a stop sign, or entering a one way street the wrong way is a breach of the law, and DT1 makes a breach of the law serious on its own.",
+   "do": [
+    "Look up and read the signs early, especially on the approach to a junction.",
+    "At a stop sign, stop completely, behind the line, every time.",
+    "Treat a warning sign as an instruction to plan, not as decoration.",
+    "If you miss a turning while following signs, carry on safely. A wrong turn is not a fault. What you do next can be."
+   ],
+   "mistakes": [
+    "Rolling through a stop sign.",
+    "Missing a no entry on a one way street while concentrating on a sat nav.",
+    "Reading the sign and reacting to it too late to do anything smoothly."
+   ],
+   "local": "This area has one way roads and no entry roads according to a local instructor, and the independent driving here is made harder by destinations that sound alike: Beeston, Bramcote, Stapleford, Sandiacre, Toton, Long Eaton. Read the whole sign before choosing.",
+   "mock": true,
+   "sources": [
+    "[LearnerDriving, response to signs and signals](https://www.learnerdriving.com/driving-test/marking/responce) (unofficial)",
+    "[DT1, guide to assessment and marking](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/annex-6-guide-to-assessment-and-marking)",
+    "[Driving Lessons with Martin, Chilwell test centre](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/) (unofficial)"
+   ],
+   "common": true
+  },
+  {
+   "id": "signs-road-markings",
+   "group": "signs",
+   "no": "17",
+   "name": "Response to signs and signals: road markings",
+   "short": "Road markings",
+   "sheet": "Response to signs and signals / road markings",
+   "looking": "Whether you read the paint. DVSA's rank 8 fault is not responding correctly to road markings, and its own bullet names not following direction arrows, straddling lanes, crossing double white lines and ignoring box junctions.",
+   "serious": "Several of those break the law in themselves, so they are available as serious faults with nobody endangered: crossing a solid white line, entering a box junction when your exit is not clear, and ignoring a mandatory arrow (reasoned, from the breach of law limb in DT1).",
+   "do": [
+    "Read the surface of the road early, while you can still change lane without forcing anybody.",
+    "If there is an arrow painted in your lane, that is where the lane goes.",
+    "Do not enter a box junction unless your exit is clear, with the one exception of waiting to turn right when only oncoming traffic is stopping you.",
+    "Bus lane markings and the hours on the sign go together. A lane that is in operation is not yours."
+   ],
+   "mistakes": [
+    "Straddling the lane markings on a roundabout.",
+    "Crossing a solid white line to pass a slow vehicle.",
+    "Stopping in the yellow box because the queue ahead looked like it would move."
+   ],
+   "local": "Bus lanes on Beeston High Road, left filter arrows at traffic lights and the lane markings on the big roundabouts are the local versions. Nobody working on this app could establish where the Beeston bus lanes run or what hours they operate (unverified), so read the sign at the entry to the lane.",
+   "mock": true,
+   "sources": [
+    "[DVSA, top 10 faults webinar slides](https://despatch.blog.gov.uk/wp-content/uploads/sites/131/2024/12/top-10-driving-test-faults-2024-webinar-slides.pdf)",
+    "[DT1, guide to assessment and marking](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/annex-6-guide-to-assessment-and-marking)",
+    "[RouteBuddy, Nottingham Chilwell routes](https://routebuddy.co.uk/nottingham-chilwell-driving-test-routes/) (unofficial)"
+   ],
+   "common": true
+  },
+  {
+   "id": "signs-traffic-lights",
+   "group": "signs",
+   "no": "17",
+   "name": "Response to signs and signals: traffic lights",
+   "short": "Traffic lights",
+   "sheet": "Response to signs and signals / traffic lights",
+   "looking": "Whether you respond to the light and to the junction behind it. Not responding appropriately to traffic lights is named in DVSA's published top ten. The risk is rarely running a red. It is moving on green without checking the junction is clear, stopping past the line, or sitting at a green filter.",
+   "serious": "Crossing on red is a breach of the law and serious on that limb alone. So is moving on green into a junction that is still blocked, if somebody has to take action (reasoned).",
+   "do": [
+    "Green means go if the way is clear. Look into the junction before you move.",
+    "Stop behind the line, not on it or over it.",
+    "If the light changes as you approach and you can stop safely, stop. If stopping would mean braking hard with somebody close behind, carry on.",
+    "A green left filter arrow means you may go left when the main signal is red, if the way is clear. Sitting at one holds everybody up.",
+    "Keep out of the box unless you can clear it."
+   ],
+   "mistakes": [
+    "Creeping forward at a red light.",
+    "Setting off on green without looking right at a junction where somebody is still coming through.",
+    "Panicking on amber and braking hard.",
+    "Waiting at a green filter arrow for the main light to change."
+   ],
+   "local": "The A6005 corridor is a run of signal controlled junctions, a local instructor names traffic lights with left filter arrows as a feature of this test area, and Bardills roundabout has a set of lights on the roundabout itself, which is not where a learner expects to find them.",
+   "mock": true,
+   "sources": [
+    "[Ready to Pass, faults and results](https://readytopass.campaign.gov.uk/driving-test/driving-test-marking-faults-results/)",
+    "[LearnerDriving, response to signs and signals](https://www.learnerdriving.com/driving-test/marking/responce) (unofficial)",
+    "[Driving Lessons with Martin, Chilwell test centre](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/) (unofficial)",
+    "[h2g2, Bardills Island](https://h2g2.com/edited_entry/A425927) (unofficial)"
+   ],
+   "common": true
+  },
+  {
+   "id": "signs-controllers",
+   "group": "signs",
+   "no": "17",
+   "name": "Response to signs and signals: traffic controllers and other road users",
+   "short": "Controllers",
+   "sheet": "Response to signs and signals / traffic controllers, other road users",
+   "looking": "Two sub boxes that come up rarely and matter when they do. A police officer, a school crossing patrol or a stop and go board at roadworks has to be obeyed like a signal. The other box is about reading the signals other drivers, riders and cyclists give, and about not acting on one blindly.",
+   "serious": "Driving past a stop board or a school crossing patrol showing the stop sign is a breach of the law and serious on that limb alone (reasoned).",
+   "do": [
+    "Obey a person directing traffic even where it contradicts the lights or the markings.",
+    "At temporary lights or a stop and go board, wait until you are clearly signalled on.",
+    "Watch what other drivers do, not only what they signal. An indicator is a statement of intent, not a guarantee.",
+    "Check for yourself before acting on somebody else's wave."
+   ],
+   "mistakes": [
+    "Pulling out because a driver flashed their lights, without checking the lane they cannot see.",
+    "Moving at temporary lights because the car in front did.",
+    "Treating a cyclist's arm signal as a promise rather than as information."
+   ],
+   "local": "Roadworks are likely somewhere on this route. There is a National Highways improvement programme on the A52 Nottingham junctions, and the Chetwynd Barracks site at Chilwell is under redevelopment, and both of those bring temporary lights and stop and go boards.",
+   "mock": true,
+   "sources": [
+    "[LearnerDriving, response to signs and signals](https://www.learnerdriving.com/driving-test/marking/responce) (unofficial)",
+    "[National Highways, A52 Nottingham junctions](https://nationalhighways.co.uk/our-roads/east-midlands/a52-nottingham-junctions/) (cited by search, page not opened)",
+    "[Broxtowe Borough Council, Toton and Chilwell neighbourhood plan](https://www.broxtowe.gov.uk/media/9603/chetwynd-the-toton-and-chilwell-neighbourhood-plan.pdf) (cited by search, page not opened)"
+   ]
+  },
+  {
+   "id": "crossings",
+   "group": "signs",
+   "no": "24",
+   "name": "Pedestrian crossings",
+   "short": "Crossings",
+   "sheet": "Pedestrian crossings",
+   "looking": "Whether you recognise the type of crossing, approach it at a speed that lets you stop, and give way when you should. The types named in the guidance are zebra, pelican, puffin, toucan, pegasus and the school crossing patrol.",
+   "serious": "Failing to give way to a pedestrian who has stepped onto a zebra crossing is both a breach of the law and potentially dangerous, so it is serious on either limb. Stopping or overtaking on the zigzags is the other law breach here.",
+   "do": [
+    "Look at the pavement on both sides as you approach, not only at the crossing itself.",
+    "Slow early, so that stopping is a decision rather than an emergency.",
+    "Do not wave anybody across. Let them decide when to go.",
+    "At a pelican's flashing amber, give way to anybody still on the crossing, then go when it is clear.",
+    "Never stop or park on the zigzags."
+   ],
+   "mistakes": [
+    "Arriving too fast because the crossing was empty from a distance.",
+    "Missing somebody waiting at the kerb because you were watching the traffic.",
+    "Moving off at a pelican while somebody is still walking.",
+    "Overtaking a car that has stopped for a crossing."
+   ],
+   "local": "Beeston High Road is the place for this: shops on both sides, pedestrians crossing between them, and signal controlled junctions close together.",
+   "mock": true,
+   "sources": [
+    "[L2P Coventry, the DL25 report](https://l2pcoventry.com/test-report-dl25) (unofficial)",
+    "[DT1, guide to assessment and marking](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/annex-6-guide-to-assessment-and-marking)",
+    "[RouteBuddy, Nottingham Chilwell routes](https://routebuddy.co.uk/nottingham-chilwell-driving-test-routes/) (unofficial)"
+   ],
+   "common": true
+  },
+  {
+   "id": "awareness",
+   "group": "awareness",
+   "no": "26",
+   "name": "Awareness and planning",
+   "short": "Awareness",
+   "sheet": "Awareness and planning",
+   "looking": "Whether you read the road far enough ahead that nothing needs a sudden response, and whether you judge what other people are about to do. The published description is about anticipating road and traffic conditions and acting in good time rather than reacting at the last moment. It is the least mechanical item on the sheet and the hardest to practise.",
+   "serious": "Arriving at a hazard later than ideal and having to brake firmly is a driving fault. Failing to anticipate something obvious, so that somebody else has to take avoiding action, is serious (reasoned).",
+   "do": [
+    "Look at the far end of the road, not at the bonnet.",
+    "Ask what each thing you can see might do next: a bus at a stop, an indicator on a parked car, a child near the kerb.",
+    "Ease off early when the picture ahead is unclear, so you never have to stop hard.",
+    "Plan for the tram. It has priority and it goes where the rails go."
+   ],
+   "mistakes": [
+    "Reacting to the car in front rather than to what the car in front can see.",
+    "Being surprised by a bus that has been indicating to pull out for ten seconds.",
+    "Watching the sat nav instead of the road during independent driving."
+   ],
+   "local": "Trams, cyclists and pedestrians in a shopping street are the local version. NET Line 1 runs along this corridor with stops at Bramcote Lane, Eskdale Drive, Inham Road and Toton Lane, and trams run between four and eight times an hour depending on the day and time, so meeting one is likely. Around a tram: it has priority, keep off any reserved section marked off from the road, and take extra care where rails cross the road at a shallow angle because they are slippery when wet (the Highway Code rules on trams are quoted from memory in the research, so treat the detail as unverified and read the signs).",
+   "mock": true,
+   "sources": [
+    "[LearnerDriving, awareness and planning](https://www.learnerdriving.com/driving-test/marking/planning.htm) (unofficial)",
+    "[Wikipedia, Inham Road tram stop](https://en.wikipedia.org/wiki/Inham_Road_tram_stop) (cited by search, page not opened)",
+    "[Driving Lessons with Martin, Chilwell test centre](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/) (unofficial)"
+   ],
+   "common": true
+  },
+  {
+   "id": "eco",
+   "group": "awareness",
+   "name": "Eco safe driving",
+   "short": "Eco driving",
+   "sheet": "Eco safe driving / control, planning. It sits outside the numbered run of competencies, in its own box with two sub boxes.",
+   "looking": "Smooth gear choice, gentle acceleration and braking, and planning far enough ahead that you do not need heavy braking or high revs. The published description is about driving in an environmentally friendly manner, planning well ahead, choosing appropriate gears and avoiding heavy braking and over revving.",
+   "serious": "Instructor sites say eco marks are recorded as feedback and cannot fail a test, and nobody working on this app could confirm that on a DVSA page, so treat it as unverified. What is certain is that the driving which earns an eco mark, heavy braking, over revving and late planning, is also marked in boxes that can fail you: control, use of speed, and awareness and planning (reasoned). Fix it for those reasons. Note that in this app's mock test an eco mark counts towards the tally like any other driving fault, which may be stricter than the real test.",
+   "do": [
+    "Look far enough ahead to take your foot off the gas instead of braking.",
+    "Get into a higher gear once the car is moving, rather than holding a low one.",
+    "Accelerate steadily to the speed you want, then hold it.",
+    "Keep the car rolling towards a red light rather than racing up and stopping hard."
+   ],
+   "mistakes": [
+    "Revving hard in a low gear between two sets of lights fifty metres apart.",
+    "Braking late for every hazard.",
+    "Staying in second along a clear 30 mph road."
+   ],
+   "local": "Stop start driving along the A6005 between the lights is where gear choice and planning show up (reasoned).",
+   "mock": true,
+   "sources": [
+    "[LearnerDriving, eco safe driving](https://www.learnerdriving.com/driving-test/marking/eco-safe-driving.htm) (unofficial, and the claim that eco marks cannot fail a test is unverified)",
+    "[L2P Coventry, the DL25 report](https://l2pcoventry.com/test-report-dl25) (unofficial)"
+   ]
+  },
+  {
+   "id": "man-bayreverse",
+   "group": "manoeuvres",
+   "name": "Reverse into a parking bay",
+   "short": "Bay reverse",
+   "sheet": "Reverse park (car park). The manoeuvre boxes are numbered somewhere in the first ten lines of the form, but the sources disagree about which number is which, so none is printed here.",
+   "looking": "Control, observation and accuracy. Whether the car goes where you want it slowly, whether you keep looking all round while it is moving, and whether you finish inside the bay.",
+   "serious": "Finishing with a wheel or the body of the car outside the lines, mounting a kerb, or reversing without effective observation. Observation is the limb that most often turns a tidy manoeuvre into a fail, because you can see your own accuracy and you cannot see your own looking.",
+   "do": [
+    "Take in the whole car park first: which bays are free, what is moving, who is walking.",
+    "Set up wide enough that the turn is not a scrape.",
+    "Look over both shoulders and out of the back window before the car moves, and keep looking while it moves.",
+    "Stop if anybody appears, and start again when they have gone.",
+    "Pull forward and try again if you need to. A correction is not a fault in itself. Sitting in a bad position is."
+   ],
+   "mistakes": [
+    "Watching only the mirrors, so the observation is never visible.",
+    "Steering too late and running out of room.",
+    "Finishing on a line and leaving it there rather than correcting."
+   ],
+   "local": "The reverse bay park is only set in a test centre car park. Chilwell's has seven bays: five facing you as you drive in, and two more on the left contained by a kerb, so those two need to be accurate. The bays are not equal widths, the widest being about ten per cent wider than the narrowest. It most often comes at the end of the test, when you are back at the centre (unofficial, from local instructor accounts).",
+   "mock": true,
+   "sources": [
+    "[GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test)",
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)",
+    "[Driving Lessons with Martin, Chilwell test centre](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/) (unofficial)"
+   ]
+  },
+  {
+   "id": "man-bayforward",
+   "group": "manoeuvres",
+   "name": "Drive forward into a bay, then reverse out",
+   "short": "Bay forward",
+   "sheet": "Forward park (car park). No number is printed here, because the sources disagree about the numbering of the manoeuvre boxes.",
+   "looking": "The same three things, with the hard half at the end. Driving in is straightforward. Reversing out into a car park where cars and people are moving is where the marks are.",
+   "serious": "Reversing out without effective observation, or making another driver or a pedestrian change what they were doing.",
+   "do": [
+    "Drive in slowly and straight, and stop with the whole car inside the bay.",
+    "Before reversing out, look all round from where you are sitting, including behind you.",
+    "Reverse back a little, then pause and look again once you can see past the cars either side.",
+    "Straighten up early so you leave the bay under control, not in an arc."
+   ],
+   "mistakes": [
+    "Reversing straight out on one look.",
+    "Relying on a reversing camera and never turning round.",
+    "Clipping the car in the next bay while swinging the front out."
+   ],
+   "local": "This one can be set in any car park, so it could be at the centre or at a car park on the route. Chilwell Retail Park sits on Barton Lane just off the A6005 next to the business park (reasoned as to whether an examiner uses it: no source names a car park other than the centre's own).",
+   "mock": true,
+   "sources": [
+    "[GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test)",
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)"
+   ]
+  },
+  {
+   "id": "man-parallel",
+   "group": "manoeuvres",
+   "name": "Parallel park at the side of the road",
+   "short": "Parallel park",
+   "sheet": "Reverse park (road). No number is printed here, because the sources disagree about the numbering of the manoeuvre boxes.",
+   "looking": "Control and observation while you reverse into a real gap on a real street, finishing reasonably close to and parallel with the kerb, within about two car lengths. The examiner's wording asks you to try to complete it within about two car lengths.",
+   "serious": "Hitting the kerb hard or mounting it, finishing a long way out from the kerb, or reversing while traffic is waiting and you have not looked. DVSA publishes no distance from the kerb, so it is the examiner's judgement of whether the car is parked safely and reasonably (reasoned).",
+   "do": [
+    "Check the road behind before you stop alongside the car you are parking behind.",
+    "Look all round, and especially over your left shoulder, before the car moves backwards.",
+    "Reverse slowly and steer quickly. Speed on the clutch, not on the wheel.",
+    "Keep looking round through the whole manoeuvre, not just at the start.",
+    "If a car comes up behind, stop and wait rather than rushing the end of it."
+   ],
+   "mistakes": [
+    "Watching only the kerb in the left mirror, so the rest of the road is unseen.",
+    "Rushing when somebody waits behind.",
+    "Finishing at an angle with the back wheel against the kerb."
+   ],
+   "local": "It needs a run of parked cars on a reasonably quiet street, which means the residential roads off the A6005 at Chilwell and Beeston (reasoned). DVSA does not publish test routes, so no street in this app is known to be used.",
+   "mock": true,
+   "sources": [
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)",
+    "[GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "man-rightpull",
+   "group": "manoeuvres",
+   "name": "Pull up on the right, reverse, and rejoin",
+   "short": "Right pull up",
+   "sheet": "The box for pulling up on the right sits in the manoeuvre block. Neither its printed wording nor its number is settled across the sources, so neither is printed here.",
+   "looking": "Three separate pieces of driving in one exercise: crossing to the right hand side of the road safely, reversing straight for about two car lengths close to the kerb, and rejoining on the correct side with full observation.",
+   "serious": "Crossing into the path of an oncoming vehicle, reversing without proper observation, or pulling out again without checking both ways.",
+   "do": [
+    "Mirrors, signal right, and cross only when the road is clear in both directions.",
+    "Stop reasonably close to the right hand kerb, with a clear view behind.",
+    "Reverse about two car lengths, looking mainly over your left shoulder through the back window.",
+    "Before you go, look all round, including over your right shoulder at the traffic you are about to join.",
+    "Move across to the left side of the road and settle into your normal position promptly."
+   ],
+   "mistakes": [
+    "Reversing while looking in the mirrors only.",
+    "Stopping opposite a junction or a parked car so the road is blocked.",
+    "Pulling out without looking for traffic coming from behind on the other side of the road."
+   ],
+   "local": "It needs a straight, quiet road wide enough that stopping on the right does not block it. The estate roads on Eldon Business Park and the residential streets off the A6005 fit that description (reasoned).",
+   "mock": true,
+   "sources": [
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)",
+    "[GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test)"
+   ]
+  },
+  {
+   "id": "controlled-stop",
+   "group": "manoeuvres",
+   "name": "The controlled stop, the emergency stop",
+   "short": "Emergency stop",
+   "sheet": "Controlled stop. It sits in the pre drive and manoeuvre block of the form, whose numbering the sources do not agree on, so no number is printed here.",
+   "looking": "How quickly you stop, how straight, and whether you keep control of the car. Since 24 November 2025 it is set in about one test in seven rather than one in three, and it is only ever asked after you have pulled up normally, so you are told it is coming and shown the hand signal first.",
+   "serious": "Reacting so slowly that the stop is not an emergency stop, losing control or skidding out of line, or moving off afterwards without looking properly.",
+   "do": [
+    "Do not check the mirror before you brake. The examiner has already checked behind for you, and the delay is the thing being measured.",
+    "Both hands on the wheel, no signal.",
+    "Brake firmly and progressively, and keep the car straight.",
+    "Clutch down just before the car stops, so the engine keeps running.",
+    "Handbrake on, neutral, then a full look all round, including the blind spots, before you move off again."
+   ],
+   "mistakes": [
+    "Checking the mirror first, which costs the distance the exercise is measuring.",
+    "Braking and steering at the same time.",
+    "Stalling at the end and then moving off flustered without observation."
+   ],
+   "mock": true,
+   "sources": [
+    "[DVSA Despatch, adjustments to the driving test](https://despatch.blog.gov.uk/2025/11/19/making-adjustments-to-the-driving-test/)",
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)",
+    "[DVSA driving test prompt cards](https://assets.publishing.service.gov.uk/media/624d5879d3bf7f32b5aa072b/driving-test-prompt-cards.pdf)"
    ]
   }
  ]
