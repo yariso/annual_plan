@@ -90,12 +90,17 @@ and the default on load:
 ## Known limits (be honest about these in any UI text)
 - Nothing here is DVSA material. It is a reading of DVSA's published rules and of local
   knowledge, and the examiner's decision on the day is the only one that counts.
-- The research behind the content was done in a sandbox where the page fetching tool was
-  blocked by the network policy for every domain, so it rests on web search results and
-  the summaries returned with them rather than on pages opened and read. docs/validation.md
-  says which claims that affects. Anything that matters should be checked against GOV.UK.
-- DVSA stopped publishing test routes in 2010. No route in this app is official. The
-  corridors on the map are drawn as straight lines between junctions, not as roads.
+- The research behind the content was done in a sandbox with two limits. The page fetching
+  tool was blocked by the network policy for every domain, GOV.UK included, so no page
+  behind any URL in this app was opened and read. And the session's budget of 200 web
+  searches ran out after six of the sixteen planned research passes, so everything written
+  after that point rests on what those six had gathered or on the writer's own knowledge.
+  docs/validation.md has the claim by claim record and says which tier each part sits in.
+  Anything that matters should be checked against GOV.UK.
+- DVSA does not publish test routes. No route in this app is official, and no route detail
+  for this centre was found at all. The year the practice stopped is often given as 2010,
+  but no source for that was found, so the app does not state a year. The corridors on the
+  map are drawn as straight lines between junctions, not as roads.
 - Coordinates are mostly derived from postcodes and from reading a map, not surveyed. Each
   one carries its precision and the app shows it.
 - Pass rate figures come from sites that republish DVSA's tables, not from the tables
@@ -106,11 +111,15 @@ and the default on load:
   during a mock) is from memory and needs a hand test on an iPhone and an Android phone.
 
 ## Backlog, in priority order
-1. Open the primary sources on a machine without the egress restriction and settle every
-   line in docs/validation.md marked "search result only": the DVSA DT1 wording, the DL25
-   item list, the Chilwell pass rate from DRT122A, and the test centre's opening hours.
-2. Survey the junctions properly: drive or walk each one with a phone, correct the
-   coordinates, and replace the approximate ones.
+1. Open the primary sources on a machine with normal network access and settle the table
+   in docs/validation.md: the DT1 wordings character by character, the DL25 item list and
+   its box numbers from the published PDF, the Chilwell pass rate from DRT122A, the top ten
+   faults at ranks three to seven, the seventh show me question, and the test centre's
+   opening hours and parking.
+2. Survey the junctions: every coordinate in the app was placed from knowledge of the
+   area, so drive or walk each one and use the app's own "set it from where I am" button,
+   then export the corrections and fold them back into data/junctions.json as sourced
+   positions. Confirm the speed limits from the signs while you are there.
 3. Record a real practice drive with the mock sheet running and check that the fault pins
    land where the fault happened, allowing for the lag between the fault and the tap.
 4. Add the examiner's wording for each manoeuvre from a recent test, rather than from

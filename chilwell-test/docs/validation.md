@@ -73,6 +73,47 @@ OpenStreetMap, so tile loading and the fallback message were reasoned rather tha
 observed; the geolocation paths, because there is no receiver; speech, because there is no
 voice; and printing, because there is no printer. All four need a hand test on a phone.
 
+## What was checked, and against what
+
+| Claim | Status | Sources |
+|---|---|---|
+| Centre name Nottingham (Chilwell), Unit 24 Eldon Business Park, Eldon Road, NG9 6DZ | Agreed by every listing found, none opened | PassMeFast, drivingtest.co.uk, Intensive Lessons, Driving Lessons with Martin, getdriving.co.uk |
+| Spelled Chilwell, one l in the middle | Agreed | Every source; the user's "Chillwell" will not match the booking service |
+| Not on Chetwynd Business Park | Derived | No source places the centre there. Chetwynd is the barracks (Wikipedia, Broxtowe BC) and a road with an MOT garage on it |
+| Not on Cator Lane | Contradicted and dropped | One driving school page says Cator Lane against every other source; treated as wrong |
+| Next to EvoEnergy, Sheetfabs and NK Motors, off the A6005 by Chilwell Retail Park | Single local source, plus the landlord's own description | Driving Lessons with Martin; Logicor property listing |
+| Seven bays in the car park, five opposite the entrance and two kerbed on the left, unequal widths | Single local source, unofficial | Driving Lessons with Martin |
+| Whether candidates or instructors may park on site | Sources disagree | One says marked bays are available, another says no parking facilities but Eldon Road is permitted. App gives the cautious reading |
+| Waiting room, seating, whether it opens for early or weekend tests | Not found | Searched; no source describes it |
+| Opening hours Monday to Friday 8am to 4pm | Single aggregator, unverified | driving-test-centre.com |
+| The order of the test, start to finish | Agreed | GOV.UK "what happens during your test", DT1 sections 1 and 14 |
+| Three changes on 24 November 2025: stops 4 to 3, emergency stop 1 in 3 to 1 in 7, independent driving flexible and up to the whole test | Confirmed | DVSA Despatch, 19 November 2025 |
+| Pass rule: no serious or dangerous faults, 15 or fewer driving faults | Agreed | Ready to Pass, GOV.UK understanding your result |
+| A serious fault is potentially dangerous "or entails a breach of the law" | DT1 only, not on the public pages | DT1 annex 6 |
+| A repeated driving fault in one item can be assessed as potentially dangerous | DT1 only | DT1 annex 6 |
+| No published number of repeats that triggers it | Searched and not found | Examiner judgement |
+| Eyesight at 20 m (current plate) and 20.5 m (old), three attempts, never closer than 20 m | Agreed | GOV.UK, DT1 section 6 |
+| The examiner's wordings quoted through the app | Single source, through a search summary | DT1 section 14, test wordings. Not read on the page, so treat as close paraphrase |
+| Fourteen tell me questions with DVSA's answers | Agreed | GOV.UK show me tell me, DT1 annex 1 |
+| Six show me questions | Agreed | DT1 section 13 |
+| A seventh show me question about the side window | Unverified | Widely reported, wording not confirmed on a GOV.UK page |
+| Marking sheet items 11 to 27 and their sub boxes | Three instructor sites agree | Unofficial: Nolan, BookLearnPass, L2P Coventry |
+| Box numbers for the manoeuvre items | Sources disagree, so the app omits them | Andrew Buckler against others |
+| How many competencies there are | Reported as 24, 27 and 28; app says about 27 | Three unofficial sources |
+| Top ten faults, ranks 1, 2, 8, 9 and 10 | Established | DVSA webinar slides for 8 to 10; passrates.uk for 1 and 2 |
+| Top ten faults, ranks 3 to 7 | Not established, so no full ordered list is printed | The GOV.UK top ten page could not be opened |
+| Eco safe driving marks cannot fail a test | Unverified | Instructor sites say so; no DVSA page found |
+| Pass rate about 44 per cent (2024 to 2025) and about 49.9 per cent (2025 to 2026) | Republished figures, table not read | passrates.uk, The Driving Instructor Directory, bookdrivingtest.uk. Centre data is DRT122A, not DRT0201 |
+| Test fees 62 pounds weekday, 75 pounds evening and weekend | Search result, and they change | GOV.UK driving test cost, via search |
+| Sat nav is a TomTom Start 52 | Introduced by DVSA in 2017, no 2026 confirmation | DVSA Despatch 2017; secondary sources since |
+| Local road features: Bramcote Island, Bardills, M1 J25 roundabout, A6005 dual carriageway, Beeston High Road, tram shared roads, filter arrows | Mostly one instructor's page, unofficial | Driving Lessons with Martin, RouteBuddy, NGPass, Intensive Lessons |
+| Speed limits on any local road | Not one confirmed | No council or mapping source could be opened. The app does not print bare limits as fact |
+| Test routes | DVSA does not publish them; no route detail found for this centre at all | The year the practice stopped, often given as 2010, came from this project's own brief and has no source behind it, so the app does not state a year |
+| Every coordinate in the app | Placed from knowledge, not surveyed and not sourced | The coordinate research pass never ran. Each one is marked approximate and the reader can correct it |
+| The taught method for each manoeuvre | Reasoned, standard instructor practice | DVSA publishes what is assessed, not a method |
+| What helps with test nerves | The evidence pass never ran; no studies are cited | The app says what is broadly supported and does not name a paper |
+| Phone behaviour: location needing https, permissions, the screen locking during a mock | From memory, unverified | Could not be tested in this sandbox |
+
 ## Claim by claim
 
 The per topic records live in `research/`, each with its own Sources and Not found
@@ -163,7 +204,8 @@ the card. Where that field says "approximate", the marker is somewhere on the ri
 junction, not on a surveyed point.
 
 The route corridors drawn on the map are straight lines between junctions. They are not
-roads and the app says so. DVSA has not published test routes since 2010.
+roads and the app says so. DVSA does not publish test routes, and no route detail for this
+centre was found. The year the practice stopped is unverified, so the app does not give one.
 
 ## The diagrams
 

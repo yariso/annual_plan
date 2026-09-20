@@ -1,84 +1,545 @@
 {
- "intro": "STUB",
+ "intro": "These are the roads a test from Eldon Road has to use, and the places on them where marks are won and lost. It is not a route. DVSA does not publish test routes, nobody outside DVSA knows where yours will go, and the examiner picks it on the day.\n\nThe local detail behind these cards comes from driving school pages, a landlord's description of the business park, a road enthusiast's account of Bardills and ordinary knowledge of the area. None of those pages could be opened while this app was written, so all of it is second hand, and none of it is DVSA material. Speed limits are the clearest case: not one limit around Chilwell was confirmed against a council or mapping source, so these cards describe the kind of road rather than print a number. The signs on the road always win.\n\nNo coordinate here was surveyed. Every pin is approximate, some will be tens of metres out, and each card has a button to move its pin to where the place really is.",
  "items": [
+  {
+   "id": "eldon-exit",
+   "name": "Leaving Eldon Road for the A6005",
+   "short": "Eldon Road exit",
+   "kind": "junction",
+   "lat": 52.9115,
+   "lon": -1.2458,
+   "precision": "approximate",
+   "where": "Eldon Road where it meets the A6005 Nottingham Road",
+   "speed": "main A road, limit not confirmed",
+   "why": "This is the first thing you do after the eyesight check and the last thing before you park, so it is on every test twice. You are cold, the examiner is still marking the move off, and you are joining the busiest road of the test.",
+   "drive": "Take the estate road first. Keep the speed down past the parked vans and the unit entrances, get the car settled, and be in the right gear well before the line.\n\nRead the junction before you look for a gap. A local instructor's page describes routes leaving \"from the traffic lights at the test centre\", which suggests this junction is signal controlled rather than a give way [(Driving Lessons with Martin, unofficial)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/). That page could not be opened, so treat it as unconfirmed (unverified) and drive whatever is actually there: lights, a give way, or a filter lane.\n\nTurning left, look right for traffic and left for anybody on the pavement about to step off, then build up to the speed of the traffic rather than dawdling out. Turning right is the harder one. Position to the right of your lane if the markings allow it, look right, then left, then right again, and take a gap you do not have to hurry into. A car waiting behind you is not a reason to go.",
+   "watch": [
+    "The precautions and the move off in the car park. Marking starts before you leave the bay.",
+    "Observation before you emerge, and specifically whether you looked again in the second before the wheels moved.",
+    "Whether you got up to the speed of the main road once you had joined, instead of holding up what was already on it."
+   ],
+   "mistakes": [
+    "Creeping out with your eyes fixed on the gap to the right and nothing going left. DVSA ran a webinar question on exactly this [(DVSA Despatch, top 10 faults recap)](https://despatch.blog.gov.uk/2024/12/13/explaining-more-about-the-top-10-driving-test-faults-our-webinar-recap/).",
+    "Taking a gap that was there when you first looked and gone by the time you moved.",
+    "Joining and then sitting well under the speed of the traffic because the nerves are up.",
+    "Coming back at the end and relaxing at this junction because you can see the building."
+   ],
+   "diagram": {
+    "type": "junction",
+    "shape": "tjoin",
+    "turn": "right",
+    "labels": [
+     {
+      "x": 40,
+      "y": 50,
+      "t": "A6005"
+     },
+     {
+      "x": 180,
+      "y": 285,
+      "t": "Eldon Road"
+     }
+    ]
+   },
+   "diagramCap": "A schematic of emerging right from a side road onto a main road, not a survey of this junction. One unofficial source describes traffic lights at the test centre and that could not be confirmed, so the layout on the ground is what counts.",
+   "links": [],
+   "sources": [
+    "[Driving Lessons with Martin (unofficial, page not opened)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/)",
+    "[Logicor, Eldon Business Park, the landlord's own description](https://www.logicor.eu/en/uk/properties/nottinghamshire-eldon-business-park-nottingham/nottinghamshire-eldon-road-trading-estate-nottingham)",
+    "[DVSA Despatch, top 10 faults webinar recap](https://despatch.blog.gov.uk/2024/12/13/explaining-more-about-the-top-10-driving-test-faults-our-webinar-recap/)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "eldon-estate",
+   "name": "The business park streets and the centre car park",
+   "short": "Business park",
+   "kind": "road",
+   "lat": 52.909,
+   "lon": -1.2452,
+   "precision": "approximate",
+   "where": "Eldon Road and the estate roads around the test centre",
+   "speed": "estate roads, limit not confirmed",
+   "why": "Wide kerbs, long straights and light traffic outside working hours, a minute from the door. This is also the only place a reverse bay park can be set, because that manoeuvre is normally only asked for in a test centre car park [(Exam Routes, unofficial)](https://examroutes.co.uk/27239/driving-test-centre-car-parks-2026/).",
+   "drive": "The car park itself is small. Instructor accounts describe seven marked bays: five facing the entrance on the right as you drive in, and two on the left set perpendicular to the other five and contained by a kerb, which leaves very little room for error. The bays are not equal widths, the widest being close to ten per cent wider than the narrowest [(Driving Lessons with Martin, unofficial)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/). If you have only ever reversed into a supermarket bay, this car park will feel tight.\n\nPractise here out of test hours and do not obstruct DVSA cars. The estate roads themselves suit a pull up on the right, an angle start from behind a parked van and a parallel park, because they are straight and wide enough that stopping on the right does not block anybody. No source names a street a Chilwell examiner actually uses, so treat all of that as the kind of place rather than the place (reasoned).\n\nDuring the working day the estate has lorries reversing, vans stopped on the kerb and cars coming out of unit entrances. Look for reversing lights and for a driver sitting in a parked cab.",
+   "watch": [
+    "Where you choose to stop when the examiner leaves it to you: safe, legal and convenient, close to the kerb, not across a unit entrance.",
+    "Control on the bay park, meaning the clutch, the steering and whether you keep it straight, and observation all round while the car is moving.",
+    "Accuracy. You are asked to finish within a bay, and the kerbed pair will not forgive a late correction."
+   ],
+   "mistakes": [
+    "Only ever practising in a wide supermarket bay and meeting a narrow kerbed one on the day.",
+    "Reversing with the head fixed on one mirror instead of looking all round as the car moves.",
+    "Sitting in a bad finish rather than pulling forward and correcting it. Correcting is allowed; a poor position is marked.",
+    "Practising in the centre's own car park while tests are running."
+   ],
+   "links": [],
+   "sources": [
+    "[Driving Lessons with Martin (unofficial, page not opened)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/)",
+    "[Exam Routes, test centre car parks (unofficial)](https://examroutes.co.uk/27239/driving-test-centre-car-parks-2026/)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "a6005-chilwell",
+   "name": "The A6005 through Chilwell",
+   "short": "A6005 Chilwell",
+   "kind": "road",
+   "lat": 52.9182,
+   "lon": -1.239,
+   "precision": "approximate",
+   "where": "Nottingham Road and High Road, between the test centre and Beeston",
+   "speed": "busy urban road with side turnings, parked cars and bus stops",
+   "why": "The spine of the whole test area. The business park's landlord describes the site as sitting on the A6005 Nottingham Road between Nottingham and Long Eaton [(Logicor)](https://www.logicor.eu/en/uk/properties/nottinghamshire-eldon-business-park-nottingham/nottinghamshire-eldon-road-trading-estate-nottingham), so almost any route starts and ends on this road.",
+   "drive": "Treat it as a long string of small decisions rather than a main road you settle into. There are side turnings on both sides, bus stops, parked cars outside the shops and repeated sets of lights, and the tram is on or beside the road along part of the corridor.\n\nHold a position about a metre out from parked cars where the width allows, and take that position early rather than swerving at the last car. Mirrors before you move out and mirrors again before you come back in. Look into each side turning as you pass it, because a car waiting to emerge is the thing that will move.\n\nAt the lights, read the queue rather than the green. Approaching a green that has been green a while, expect it to change. Stopping means stopping behind the line, not on it.\n\nThe road changes character along its length, from a busy shopping street to a dual carriageway further southwest. The transitions are where speed faults cluster, because it is easy to carry the speed of the last section into the next one (reasoned). Look for the signs at each change and for repeater signs after it.",
+   "watch": [
+    "Positioning in normal driving. DVSA names driving too close to the kerb or the centre line as part of its ninth most recorded fault [(DVSA top 10 faults slides)](https://despatch.blog.gov.uk/wp-content/uploads/sites/131/2024/12/top-10-driving-test-faults-2024-webinar-slides.pdf).",
+    "Mirrors before every change of direction and every change of speed, not with the signal but before it.",
+    "Clearance to parked cars, buses at stops and cyclists.",
+    "Anticipation at the lights, and whether you were still moving when you could have been."
+   ],
+   "mistakes": [
+    "Reading the road one car ahead instead of to the next junction.",
+    "Swinging out late around a stopped bus, so the car behind has to react.",
+    "Carrying a faster road's speed into the shops, or holding a shopping street speed once the road opens out.",
+    "Signalling and moving at the same moment, with the mirror check somewhere in between."
+   ],
+   "links": [],
+   "sources": [
+    "[Logicor, Eldon Business Park, the landlord's own description](https://www.logicor.eu/en/uk/properties/nottinghamshire-eldon-business-park-nottingham/nottinghamshire-eldon-road-trading-estate-nottingham)",
+    "[DVSA top 10 driving test faults, webinar slides](https://despatch.blog.gov.uk/wp-content/uploads/sites/131/2024/12/top-10-driving-test-faults-2024-webinar-slides.pdf)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "retail-park",
+   "name": "The turn into Chilwell Retail Park",
+   "short": "Retail park turn",
+   "kind": "junction",
+   "lat": 52.9128,
+   "lon": -1.2428,
+   "precision": "approximate",
+   "where": "Chilwell Retail Park, Barton Lane, just off the A6005",
+   "speed": "busy main road into a car park entrance",
+   "why": "Turning right across oncoming traffic into a car park entrance, then dealing with pedestrians, trolleys and cars reversing out, packs several separate judgements into fifty metres. It is also the nearest big car park to the test centre for practising a forward bay park.",
+   "drive": "Mirrors, signal in good time, then position towards the centre of the road without crossing into the oncoming lane. Stop with the wheels straight while you wait. If you are pushed from behind and the car is turned right, you are pointed at oncoming traffic.\n\nJudge the gap on the far side as well as the near side, and look for a pedestrian stepping off the kerb into the entrance you are turning into. Go when the whole turn is clear, not when the first half is.\n\nInside, walking pace. People step out between parked cars with bags in both hands, and cars reverse out of bays without looking. Chilwell Retail Park is on Barton Lane just off the A6005 and its occupiers include a supermarket foodhall, so it is busy at the times of day tests run [(getoccupi, unofficial)](https://getoccupi.com/malls/chilwell-retail-park). It is a private car park, so practising there is at the operator's discretion.",
+   "watch": [
+    "Judgement when crossing the path of oncoming traffic. Making an oncoming driver slow down or swerve is the classic serious fault at a right turn.",
+    "Position and wheel direction while you wait.",
+    "Observation for pedestrians at the entrance and in the car park."
+   ],
+   "mistakes": [
+    "Waiting with the wheels already turned right.",
+    "Going on a gap that is big enough only if nobody in it slows for you.",
+    "Speeding up once through the entrance because the main road pressure has gone.",
+    "Cutting the corner into the entrance and squaring up afterwards."
+   ],
+   "links": [],
+   "sources": [
+    "[getoccupi, Chilwell Retail Park (unofficial, page not opened)](https://getoccupi.com/malls/chilwell-retail-park)",
+    "[Logicor, Eldon Business Park](https://www.logicor.eu/en/uk/properties/nottinghamshire-eldon-business-park-nottingham/nottinghamshire-eldon-road-trading-estate-nottingham)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "byepass",
+   "name": "A6005 Bye Pass Road",
+   "short": "Bye Pass Road",
+   "kind": "road",
+   "lat": 52.906,
+   "lon": -1.27,
+   "precision": "approximate",
+   "where": "The A6005 southwest of Chilwell, towards Long Eaton",
+   "speed": "dual carriageway, limit not confirmed",
+   "why": "One route site describes Bye Pass Road as a major route connecting Beeston and Long Eaton with dual carriageway driving and merging [(RouteBuddy, unofficial)](https://routebuddy.co.uk/chilwell-driving-test-routes/). It is the nearest fast road to the centre, and the one place close by where joining and lane discipline get properly tested.",
+   "drive": "Joining is the part that goes wrong. Build up speed on the slip road so that you arrive at the speed of the traffic already there, take a mirror check and then a shoulder check into the blind spot, and merge into a gap rather than stopping at the end of the slip and hoping.\n\nOnce on, the left lane is your lane. Move right only to overtake, and move back left once you are clear and can see the vehicle you passed in your mirror. DVSA names unnecessary right hand lane use on dual carriageways in its own bullet for poor positioning [(DVSA top 10 faults slides)](https://despatch.blog.gov.uk/wp-content/uploads/sites/131/2024/12/top-10-driving-test-faults-2024-webinar-slides.pdf).\n\nLeaving, get the mirrors and the signal in early, and do the slowing on the slip road rather than on the carriageway. If the sat nav is running, remember that the speed it shows can be wrong. You are marked against the signs.",
+   "watch": [
+    "Use of speed, in both directions. Too slow on a fast road is marked as well as too fast.",
+    "Positioning and lane discipline.",
+    "Mirrors and blind spot before every lane change, and whether the signal came after the check.",
+    "Planning, which here means reading the exit you need early instead of at the sign."
+   ],
+   "mistakes": [
+    "Arriving at the end of the slip road at 30 and expecting the traffic to make room.",
+    "Sitting in the right lane after an overtake because it feels safer.",
+    "Braking on the main carriageway for the exit.",
+    "Driving to the sat nav's number rather than the sign."
+   ],
+   "links": [],
+   "sources": [
+    "[RouteBuddy, Chilwell driving test routes (unofficial, page not opened)](https://routebuddy.co.uk/chilwell-driving-test-routes/)",
+    "[DVSA top 10 driving test faults, webinar slides](https://despatch.blog.gov.uk/wp-content/uploads/sites/131/2024/12/top-10-driving-test-faults-2024-webinar-slides.pdf)",
+    "(reasoned)"
+   ]
+  },
   {
    "id": "bardills",
    "name": "Bardills roundabout",
    "short": "Bardills",
    "kind": "roundabout",
-   "lat": 52.9165,
-   "lon": -1.2455,
+   "lat": 52.9145,
+   "lon": -1.2845,
    "precision": "approximate",
-   "where": "A52 at Swiney Way",
-   "speed": "40 mph",
-   "why": "STUB",
-   "drive": "STUB",
+   "where": "A52 Brian Clough Way at the B6003, for Stapleford, Toton and Long Eaton",
+   "speed": "dual carriageway approach, limit not confirmed",
+   "why": "Three demands arrive at once: a third lane that appears on the approach, an inner slip road through the middle of the island, and a set of traffic lights on the roundabout itself [(h2g2, unofficial)](https://h2g2.com/edited_entry/A425927). That combination is where lane discipline and road marking faults come from.",
+   "drive": "Read the signs and the painted arrows as early as you can see them, and pick your lane before the extra lane appears. Once the third lane opens up, a late change of mind is a lane change in traffic.\n\nMirror, signal, then a look into the blind spot on that side before you move across. Slow enough on the approach that you could go if it is clear, and looking right early enough that you know whether it is.\n\nOn the island, hold your lane. There are traffic lights on the roundabout, so be ready to stop where a learner does not expect a stop line. There is also an inner slip road through the middle linking A52 traffic from the Derby direction to the B6003 for Toton and Long Eaton, which means vehicles appear from a direction you are not watching.\n\nThe examiner names the exit number out loud, so you are not guessing which one. Signal left after the exit before yours, and if the exit has two lanes, leave in the one your lane feeds into.\n\nThree of the four approaches queue badly in the peaks, with queues recorded in the hundreds of vehicles on the A52 eastbound and on Stapleford Lane [(JCT Consultancy)](https://www.jctconsultancy.co.uk/Home/docs/jctSymp_bardillsCuttingCorners.pdf). If your test is at rush hour, practise it at rush hour. National Highways also runs an A52 junctions improvement programme on this corridor [(National Highways)](https://nationalhighways.co.uk/our-roads/east-midlands/a52-nottingham-junctions/), so expect the layout to differ from any description, including this one.",
    "watch": [
-    "STUB"
+    "Lane choice on approach, and whether you stayed in it all the way round.",
+    "Observation on approach and a blind spot check before any move across a lane.",
+    "Response to road markings, meaning the direction arrows painted on the road.",
+    "Response to the signals on the island itself."
    ],
    "mistakes": [
-    "STUB"
+    "Reading the arrow late, so the lane change happens on the roundabout.",
+    "Straddling two lanes round the island, so a vehicle alongside has to react.",
+    "Treating the signals on the roundabout as not applying once you are on it.",
+    "Signalling left too early, so the driver waiting at the exit before yours pulls out."
    ],
    "diagram": {
     "type": "roundabout",
-    "title": "STUB",
-    "enter": 180,
-    "leave": 270,
+    "title": "Bardills, arriving from the B6003",
+    "enter": 175,
+    "leave": 85,
     "exits": [
      {
-      "b": 0,
-      "label": "A52 east",
-      "lanes": 2
-     },
-     {
-      "b": 90,
-      "label": "Nottingham Road"
-     },
-     {
-      "b": 180,
-      "label": "Swiney Way",
+      "b": 175,
+      "label": "B6003|Toton, Long Eaton",
+      "lanes": 2,
       "n": "you come in here"
      },
      {
-      "b": 270,
-      "label": "A52 west"
+      "b": 265,
+      "label": "A52 west|Derby, M1 J25",
+      "lanes": 2
+     },
+     {
+      "b": 355,
+      "label": "Stapleford",
+      "lanes": 1
+     },
+     {
+      "b": 85,
+      "label": "A52 east|Nottingham",
+      "lanes": 2
      }
     ]
    },
-   "diagramCap": "STUB",
-   "links": [
-    "junctions-observation"
-   ],
+   "diagramCap": "A schematic of the exits, not a survey. It shows arriving from the B6003 and taking the third exit onto the A52 towards Nottingham. The bearings are approximate, the inner slip road and the signals on the island are not drawn, and the lane markings on the ground are what count.",
+   "links": [],
    "sources": [
+    "[h2g2 on the A52 and Bardills Island (unofficial, page not opened)](https://h2g2.com/edited_entry/A425927)",
+    "[Wikipedia, list of road junctions in the United Kingdom: B](https://en.wikipedia.org/wiki/List_of_road_junctions_in_the_United_Kingdom:_B)",
+    "[JCT Consultancy, Cutting Corners at Bardills](https://www.jctconsultancy.co.uk/Home/docs/jctSymp_bardillsCuttingCorners.pdf)",
+    "[National Highways, A52 Nottingham junctions](https://nationalhighways.co.uk/our-roads/east-midlands/a52-nottingham-junctions/)",
     "(reasoned)"
    ]
   },
   {
-   "id": "tram",
-   "name": "High Road tram crossing",
-   "short": "Tram",
-   "kind": "tram",
-   "lat": 52.9195,
-   "lon": -1.2205,
+   "id": "a52",
+   "name": "The A52 Brian Clough Way",
+   "short": "A52",
+   "kind": "road",
+   "lat": 52.9215,
+   "lon": -1.268,
    "precision": "approximate",
-   "where": "High Road",
-   "speed": "30 mph",
-   "why": "STUB",
-   "drive": "STUB",
+   "where": "The dual carriageway north and west of Chilwell, between the M1 and Nottingham",
+   "speed": "dual carriageway, limit not confirmed and it may change along its length",
+   "why": "The fastest road you are likely to meet from this centre. From 24 November 2025 DVSA gave examiners room to build routes reaching more high speed roads where the location allows [(DVSA Despatch)](https://despatch.blog.gov.uk/2025/11/19/making-adjustments-to-the-driving-test/), and near Chilwell that means this road and the A6005 dual carriageway rather than country lanes.",
+   "drive": "Whether a Chilwell test actually drives the A52 carriageway, as opposed to using its roundabouts, is not settled. One source calls the test primarily urban for lack of country roads nearby [(Intensive Lessons, unofficial)](https://intensivelessons.co.uk/Practical-Test-Centres/Nottinghamshire/Nottingham-Chilwell), while another names three A52 roundabouts as test area features. Practise it either way.\n\nThe limit here is the single number this app most wants and does not have. It was not confirmed against any source, and stretches of the A52 in this area are recalled as having carried lower limits than the national 70 at various times (unverified). Read the signs on the day and the repeaters after every junction, and do not take the figure from the sat nav.\n\nOtherwise it is ordinary dual carriageway driving: join at the speed of the traffic, left lane unless overtaking, mirrors and a blind spot check before every move right or left, and the deceleration done on the slip road.",
    "watch": [
-    "STUB"
+    "Use of speed against the signs, in both directions.",
+    "Positioning and lane discipline.",
+    "Mirrors before every lane change, and a blind spot check to go with them.",
+    "Planning, meaning the lane you need chosen early rather than at the sign."
    ],
    "mistakes": [
-    "STUB"
+    "Driving to the sat nav's limit. The signs are what you are marked against.",
+    "Hanging in the right lane.",
+    "Hesitating at the end of a slip road.",
+    "Reacting late to a junction because the road felt like a motorway."
+   ],
+   "links": [],
+   "sources": [
+    "[DVSA Despatch, adjustments to the driving test, November 2025](https://despatch.blog.gov.uk/2025/11/19/making-adjustments-to-the-driving-test/)",
+    "[Intensive Lessons, Nottingham Chilwell (unofficial, page not opened)](https://intensivelessons.co.uk/Practical-Test-Centres/Nottinghamshire/Nottingham-Chilwell)",
+    "[National Highways, A52 Nottingham junctions](https://nationalhighways.co.uk/our-roads/east-midlands/a52-nottingham-junctions/)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "bramcote-island",
+   "name": "Bramcote Island",
+   "short": "Bramcote Island",
+   "kind": "roundabout",
+   "lat": 52.9305,
+   "lon": -1.25,
+   "precision": "approximate",
+   "where": "On the A52 at Bramcote (unverified)",
+   "speed": "dual carriageway approach, limit not confirmed",
+   "why": "Named by a local instructor as one of the three multiple lane roundabouts of the test area, alongside Bardills and the M1 Junction 25 roundabout [(Driving Lessons with Martin, unofficial)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/). No source describes its layout, so this card teaches the method and leaves the picture out.",
+   "drive": "Nothing in the research says how many exits this island has, which arms lead where, or how the lanes are marked, and a wrong diagram would be worse than none. Go and look at it before the test.\n\nThe method for any large multi lane roundabout is the same. Start reading the direction sign at the distance you can first make it out, and match it against the arrows painted on the road, because on a big island the paint is the instruction and the sign is only the summary. Mirror, signal, then position, in that order, and get the position settled before the lane markings start.\n\nApproach slowly enough that going is still an option if it is clear. Look right early, but also look at the vehicle level with you, because on a wide approach two cars arrive at the line together. Before any move across a lane, check the blind spot on that side. DVSA ran a webinar question on blind spot checks at roundabouts, which says something about how often this is marked [(DVSA Despatch)](https://despatch.blog.gov.uk/2024/12/13/explaining-more-about-the-top-10-driving-test-faults-our-webinar-recap/).\n\nHold your lane all the way round. Signal left after the exit before yours, and leave in the lane your lane feeds into.",
+   "watch": [
+    "Lane discipline round the island.",
+    "Observation on approach, including the vehicle beside you rather than only the one on your right.",
+    "Timing of the left signal on the way out.",
+    "Progress, because sitting at a clear roundabout is marked too."
+   ],
+   "mistakes": [
+    "Arriving with the lane still undecided.",
+    "Drifting wide onto the exit and clipping the lane alongside.",
+    "Taking a gap on the right without looking at what is already on the island coming round.",
+    "Refusing three safe gaps in a row."
+   ],
+   "links": [],
+   "sources": [
+    "[Driving Lessons with Martin (unofficial, page not opened)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/)",
+    "[DVSA Despatch, top 10 faults webinar recap](https://despatch.blog.gov.uk/2024/12/13/explaining-more-about-the-top-10-driving-test-faults-our-webinar-recap/)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "m1-j25",
+   "name": "The roundabout at M1 Junction 25",
+   "short": "M1 J25",
+   "kind": "roundabout",
+   "lat": 52.9012,
+   "lon": -1.3075,
+   "precision": "approximate",
+   "where": "Where the A52 meets the M1 near Sandiacre",
+   "speed": "motorway junction roundabout, limit not confirmed",
+   "why": "The third of the multi lane roundabouts a local instructor names for this test area [(Driving Lessons with Martin, unofficial)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/). Traffic arrives off motorway slip roads at speed and a lot of it is heavy goods.",
+   "drive": "First, the thing that worries people: the roundabout can be driven on a learner test, the motorway cannot. You will not be taken onto the M1 on a practical test.\n\nWhether a test from Chilwell actually reaches this junction inside about thirty five minutes of driving is not established (unverified), and no source gives a driving time from Eldon Road. It is worth driving anyway, because it is the hardest roundabout in the area.\n\nLane from the signs, early. Expect vehicles joining from the motorway slips still carrying speed, and expect lorries that need more than one lane to get round. Do not sit alongside a lorry on the island and do not pass one on its left near an exit. Leave more space than feels necessary, and if you end up in the wrong lane, take the exit that lane leads to and sort it out afterwards.",
+   "watch": [
+    "Lane choice and lane discipline.",
+    "Observation on approach, with traffic arriving from the slip roads as well as from the island.",
+    "Use of speed, because the approaches are faster than the roundabouts closer to the centre."
+   ],
+   "mistakes": [
+    "Sitting in a lorry's blind spot on the island.",
+    "Changing lane on the roundabout to correct a wrong lane choice.",
+    "Stopping at a clear entry because of the size of the place."
+   ],
+   "links": [],
+   "sources": [
+    "[Driving Lessons with Martin (unofficial, page not opened)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "tram-corridor",
+   "name": "The tram where it meets the road",
+   "short": "The tram",
+   "kind": "tram",
+   "lat": 52.92,
+   "lon": -1.236,
+   "precision": "approximate",
+   "where": "NET Line 1 along the Chilwell, Beeston and Toton corridor",
+   "speed": "urban road shared with trams, limit not confirmed",
+   "why": "The tram is the one feature of this test area that a candidate from outside Nottingham has never driven with. Where rails are in your lane, your road position is set by the rails and by tram priority rather than by what feels natural, which is why local sources list roads shared with tram lines among the area's awkward features [(Driving Lessons with Martin, unofficial)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/).",
+   "drive": "Nottingham Express Transit Line 1 serves this corridor, with stops including Eskdale Drive, Inham Road, Bramcote Lane and the Toton Lane terminus, and trams run between four and eight times an hour depending on the day and the time [(Wikipedia, Inham Road tram stop, page not opened)](https://en.wikipedia.org/wiki/Inham_Road_tram_stop). Exactly where the tram runs on the street, where it runs on its own track and where it crosses a road a test would use could not be established (unverified), so drive the corridor and look.\n\nThe rules are national and they are worth knowing before you meet them. Trams have priority. Do not drive on a section reserved for trams, which is marked by white lines, by yellow dotted lines or by a different road surface. Take extra care where the track crosses the line of the road at a shallow angle, and cross rails as close to a right angle as you can, because rails are slippery when wet and steer a tyre for you. Tram signals are white bar signals and do not look like ordinary traffic lights, so learn them before the day. Never stop where you would block a tram, including in a queue. Watch for passengers walking to and from a stop where there is no separate platform.\n\nThese are the Highway Code's rules on trams. The rule numbers are not quoted here because they could not be checked against [GOV.UK](https://www.gov.uk/guidance/the-highway-code) while this was written.",
+   "watch": [
+    "Positioning during normal driving where the rails are in the road.",
+    "Response to signs and signals, including tram signals, which are marked under the same item as traffic lights.",
+    "Awareness of pedestrians around tram stops."
+   ],
+   "mistakes": [
+    "Steering across the rails at a shallow angle, especially in the wet.",
+    "Driving along a section reserved for trams because it looks like a clear lane.",
+    "Treating a white bar signal as though it did not apply.",
+    "Stopping in a queue across the tracks."
    ],
    "diagram": {
     "type": "tram",
-    "angle": -20,
+    "angle": -22,
     "label": "tram tracks",
     "stopLabel": "stop line"
    },
+   "diagramCap": "A schematic of tram tracks crossing the line of the road at a shallow angle, not a drawing of any particular junction on this corridor. Where the tram runs along the road instead of across it, the rails sit in your lane rather than cutting across it.",
    "links": [],
    "sources": [
+    "[Wikipedia, Inham Road tram stop (page not opened)](https://en.wikipedia.org/wiki/Inham_Road_tram_stop)",
+    "[Wikipedia, Eskdale Drive tram stop (page not opened)](https://en.wikipedia.org/wiki/Eskdale_Drive_tram_stop)",
+    "[Driving Lessons with Martin (unofficial, page not opened)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "beeston-highroad",
+   "name": "Beeston High Road and its bus lanes",
+   "short": "Beeston High Road",
+   "kind": "hazard",
+   "lat": 52.9278,
+   "lon": -1.2145,
+   "precision": "approximate",
+   "where": "The shopping street through Beeston town centre",
+   "speed": "town centre shopping street, limit not confirmed",
+   "why": "One route site calls this one of the busiest sections of the area, with bus lanes, bus stops, cyclists, pedestrians crossing between shops and frequent signal controlled junctions [(RouteBuddy, unofficial)](https://routebuddy.co.uk/nottingham-chilwell-driving-test-routes/). Everything happens at once, slowly, and both hesitating and pushing on are marked.",
+   "drive": "Bus lanes first, because they cut both ways. A bus lane that is in operation must not be entered by a car, and the hours are on the sign at the entry to the lane. Outside those hours the lane may be used, and sitting in a queue beside an empty lane that is not in operation is marked as a failure to make progress. Read the sign at the mouth of the lane, every time. Where the bus lanes on and around Beeston High Road are, which way they run and what hours they keep could not be established (unverified), so the sign on the day is all you have.\n\nWhere a bus is at a stop, decide early. Either hold back behind it, or go round with a full mirror check, a look for a pedestrian stepping out in front of it, and enough room that you are not hoping. Do not start the manoeuvre and change your mind level with the back of the bus.\n\nLook for feet under parked cars, and for the shopper who steps out between two of them. Cover the brake rather than braking. At the crossings, slow early enough that somebody waiting can tell you have seen them.\n\nAnd keep moving when the road is clear. Undue hesitation is its own marking item, and a busy shopping street is where a nervous candidate collects it.",
+   "watch": [
+    "Clearance to obstructions, meaning parked cars, buses and cyclists.",
+    "Pedestrian crossings, and whether your approach speed showed you had seen them.",
+    "Use of speed and progress, judged in both directions.",
+    "Response to road markings and to the bus lane signs."
+   ],
+   "mistakes": [
+    "Driving into a bus lane that is in operation. That is a marking sheet fault and a traffic offence.",
+    "Refusing a bus lane that is not in operation and holding up the traffic behind.",
+    "Passing a stopped bus with no room for somebody stepping out in front of it.",
+    "Stopping at a green light because the street is busy."
+   ],
+   "links": [],
+   "sources": [
+    "[RouteBuddy, Nottingham Chilwell driving test routes (unofficial, page not opened)](https://routebuddy.co.uk/nottingham-chilwell-driving-test-routes/)",
+    "[learnerdriving, progress and undue hesitation (unofficial)](https://www.learnerdriving.com/driving-test/marking/progress.htm)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "beeston-oneway",
+   "name": "One way streets, no entry and filter arrows",
+   "short": "One way and filters",
+   "kind": "hazard",
+   "lat": 52.9272,
+   "lon": -1.217,
+   "precision": "approximate",
+   "where": "Beeston town centre and the streets around it",
+   "speed": "town centre streets, limit not confirmed and may be 20",
+   "why": "A local instructor lists one way roads, no entry roads and traffic lights with left filter arrows among the area's awkward features, and names no locations for any of them [(Driving Lessons with Martin, unofficial)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/). So there is nothing here to memorise, only signs to read.",
+   "drive": "No source in the research names which Beeston streets are one way or where the no entry points are, and street names recalled without a source are exactly the kind of thing that is wrong when it matters. Do not learn a list. Read the sign at the mouth of every side street before you commit to it.\n\nA blue circle with a white arrow means one way. A red circle with a white bar means no entry, and it means it whatever the sat nav says. In a one way street you may use either lane and you position by the exit you want, so the right hand lane is the correct place to be for a right turn, which feels wrong the first time.\n\nA green left filter arrow lets you go left while the main signal is still red, but only if the way is clear. Sitting at a green filter holds up everybody behind you and is marked as hesitation. Taking it without looking at the crossing is worse. Look at the pavement and the crossing, then go.\n\nOn limits: Beeston town centre and the streets near schools are the places most likely to be 20 mph, and not one 20 mph street in this area could be confirmed (unverified). Look for the terminal sign and for the repeaters, and remember that street lighting means 30 unless a sign says otherwise.",
+   "watch": [
+    "Response to signs and road markings.",
+    "Positioning and lane discipline in a one way street.",
+    "Response to traffic lights, including filter arrows.",
+    "Use of speed against whatever limit the signs give."
+   ],
+   "mistakes": [
+    "Sitting at a green left filter arrow waiting for the main light.",
+    "Taking the filter without checking the pedestrian crossing.",
+    "Getting into the left lane of a one way street for a right turn.",
+    "Assuming 30 in a town centre without looking for a 20 sign."
+   ],
+   "links": [],
+   "sources": [
+    "[Driving Lessons with Martin (unofficial, page not opened)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "queens-station",
+   "name": "Queens Road and Station Road, Beeston",
+   "short": "Queens and Station Road",
+   "kind": "road",
+   "lat": 52.923,
+   "lon": -1.2175,
+   "precision": "approximate",
+   "where": "The roads around Beeston railway station, south of the town centre",
+   "speed": "urban road with a station approach",
+   "why": "A railway station brings taxis, cars stopping to drop somebody off, buses and people crossing the road looking at a phone. A road with an obvious reason to stop is also a good place for the examiner to ask you to pull up where it is safe.",
+   "drive": "The street layout around here could not be checked, and there is a Queens Road West and a Queens Road East elsewhere in Beeston and Chilwell that are different roads from the A6005 Queens Road, so the names are easy to confuse (unverified). Drive it and look rather than trusting a name.\n\nWhen the examiner says to pull up on the left at a safe place, the choice is the thing being marked. Safe, legal and convenient [(l2pcoventry, unofficial)](https://l2pcoventry.com/test-report-dl25). Not across a dropped kerb or a driveway, not opposite a parked car on a narrow road, not on the zigzags at a crossing, not in a bus stop, not in a taxi rank or a loading bay, not on a corner. Driving another hundred metres to a better place is the right answer and costs nothing.\n\nThen the move off. Mirrors, blind spot over the shoulder, and a signal only if somebody would be helped by it. A car door opening ahead of you or a taxi pulling out without looking is the local risk.",
+   "watch": [
+    "Position in normal stops: close to the kerb, parallel to it, and somewhere sensible.",
+    "Moving off safely, which means the blind spot as well as the mirrors.",
+    "Awareness of pedestrians walking out between stopped cars."
+   ],
+   "mistakes": [
+    "Stopping in the first gap rather than the right gap.",
+    "Stopping legally but so far from the kerb that the car sits in the lane.",
+    "Moving off with a mirror check and no shoulder check.",
+    "Rushing the stop because the examiner asked for it thirty seconds ago."
+   ],
+   "links": [],
+   "sources": [
+    "[l2pcoventry, the test report explained (unofficial)](https://l2pcoventry.com/test-report-dl25)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "attenborough",
+   "name": "Attenborough and the lanes to the reserve",
+   "short": "Attenborough",
+   "kind": "road",
+   "lat": 52.9105,
+   "lon": -1.234,
+   "precision": "approximate",
+   "where": "Attenborough village, south of the A6005, towards the station and the nature reserve",
+   "speed": "narrow residential lanes, limit not confirmed",
+   "why": "Narrow residential roads close to the test centre that do not lead anywhere much, so the traffic is light and the parked cars are heavy. Attenborough station is about 1.1 km from the Eldon Road postcode [(postcode data, via the research notes)](https://en.wikipedia.org/wiki/Attenborough_railway_station), and the nature reserve is close by [(Logicor)](https://www.logicor.eu/en/uk/properties/nottinghamshire-eldon-business-park-nottingham/nottinghamshire-eldon-road-trading-estate-nottingham).",
+   "drive": "This is meeting traffic country. Where parked cars narrow the road to one line, decide early whose space it is. If the obstruction is on your side, the oncoming driver has priority and you hold back in a gap with room to let them through. If it is on their side, do not assume they know that, and be ready to stop.\n\nHold back where you can see, not tight behind the last parked car where you cannot. Pull in far enough that a car can actually pass, and go when it is clear rather than waving anybody through.\n\nNear the reserve there are walkers, dogs and people opening boot doors into the road. Driveways come straight out onto the carriageway. Keep the speed where you can stop in the distance you can see.\n\nNo source names a street where a Chilwell examiner sets a manoeuvre, and DVSA does not publish routes, so treat quiet roads like these as the kind of place a reverse or a pull up on the right could be set, not as the place (reasoned). If you practise here, vary the street and do not block anybody's drive.",
+   "watch": [
+    "Judgement when meeting traffic, and whether you gave way when the space was not yours.",
+    "Clearance to parked cars and to anything coming out of a driveway.",
+    "Progress, because stopping dead when there was room is marked."
+   ],
+   "mistakes": [
+    "Pushing into a gap that was the other driver's.",
+    "Stopping too far out, so nothing can get past.",
+    "Waving an oncoming driver through instead of making your own decision.",
+    "Practising a reverse outside the same house every week until somebody complains."
+   ],
+   "links": [],
+   "sources": [
+    "[Wikipedia, Attenborough railway station (page not opened)](https://en.wikipedia.org/wiki/Attenborough_railway_station)",
+    "[Logicor, Eldon Business Park](https://www.logicor.eu/en/uk/properties/nottinghamshire-eldon-business-park-nottingham/nottinghamshire-eldon-road-trading-estate-nottingham)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "inham-nook",
+   "name": "Inham Nook and the streets off Inham Road",
+   "short": "Inham Nook",
+   "kind": "road",
+   "lat": 52.924,
+   "lon": -1.244,
+   "precision": "approximate",
+   "where": "The residential estate north of the High Road corridor at Chilwell",
+   "speed": "residential streets, limit not confirmed",
+   "why": "Parked cars on both sides, frequent junctions and short sight lines. Clearance, meeting traffic and forward planning are decided on streets like these rather than on the main road.",
+   "drive": "Plan the whole length of the street rather than the next car. Work out which gap is yours, get to a sensible speed before you reach it, and hold in the gap rather than arriving at it and then deciding.\n\nA metre from a parked car where the width allows. Look for feet underneath cars, for a mirror folded in, for exhaust smoke, for somebody in a driver's seat. At every side turning, look in as you pass, because a car nosing out is the one that will move.\n\nInham Road has a tram stop on Nottingham Express Transit Line 1 [(Wikipedia, page not opened)](https://en.wikipedia.org/wiki/Inham_Road_tram_stop), so the tram is somewhere near here. Whether it runs along Inham Road, crosses it, or passes on its own track beside it could not be established (unverified). Look for rails and for tram signals as you come down towards the main road.",
+   "watch": [
+    "Clearance to obstructions.",
+    "Judgement when meeting oncoming traffic in a single running width.",
+    "Awareness and planning, meaning whether you saw it coming or reacted to it.",
+    "Observation at the many small junctions."
+   ],
+   "mistakes": [
+    "Squeezing past with inches to spare rather than waiting five seconds.",
+    "Staying too close to the parked line so a door would catch you.",
+    "Braking hard because a car emerged from a side road you never looked into.",
+    "Treating an estate street as safe because it is quiet."
+   ],
+   "links": [],
+   "sources": [
+    "[Wikipedia, Inham Road tram stop (page not opened)](https://en.wikipedia.org/wiki/Inham_Road_tram_stop)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "hill-start",
+   "name": "The hill start, north and west towards Bramcote",
+   "short": "Hill start",
+   "kind": "hazard",
+   "lat": 52.9275,
+   "lon": -1.2555,
+   "precision": "approximate",
+   "where": "The side streets on the higher ground around Bramcote and Stapleford (unverified)",
+   "speed": "residential side streets, limit not confirmed",
+   "why": "DVSA requires the test to include an angle start, a start from behind a parked car and, wherever the area allows it, a hill start, and adds an ordinary stop instead where there is nowhere suitable [(DT1, the car driving test)](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/1-car-driving-test). Chilwell, Beeston and Attenborough sit on flat ground near the Trent, and the ground rises towards Bramcote and Stapleford (unverified), so a hill start will be found there if it is found at all.",
+   "drive": "No source in the research names a street, so this is about the skill rather than the place. Find any street with a noticeable slope and practise until you can do it without thinking.\n\nUphill: handbrake on, clutch to the bite so the front of the car lifts slightly, a little more gas than on the flat, then the full observation, mirrors and over the shoulder, and release the handbrake as the car takes its own weight. If it rolls back, you went too early on the handbrake or too shallow on the bite.\n\nDownhill: first or second gear depending on how steep it is, foot brake holding the car, full observation, then release the brake and let the car roll before you take up the clutch. Steering first, gas second.\n\nThe angle start from behind a parked car is the same drill plus a blind spot problem: the parked car is hiding what is coming, so the look over your right shoulder matters more than the mirror, and you may need to creep forward to see before you commit.",
+   "watch": [
+    "Moving off under control, meaning no stall, no rolling back and no labouring the engine.",
+    "Moving off safely, meaning the blind spot as well as the mirrors.",
+    "Whether a signal was needed at all, and whether it went on before the observation or after it."
+   ],
+   "mistakes": [
+    "Dropping the handbrake before the bite is there.",
+    "Too much gas, so the car leaps out.",
+    "Stalling and then rushing the restart without looking round again.",
+    "Doing the observation, then finding the bite, then going, by which time the observation is old."
+   ],
+   "links": [],
+   "sources": [
+    "[DT1, the car driving test](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/1-car-driving-test)",
     "(reasoned)"
    ]
   }

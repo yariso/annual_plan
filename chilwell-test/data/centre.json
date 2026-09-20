@@ -1,10 +1,15 @@
 {
  "name": "Nottingham (Chilwell) driving test centre",
  "short": "Test centre",
- "address": ["Unit 24, Eldon Business Park", "Eldon Road", "Chilwell, Beeston", "Nottingham NG9 6DZ"],
+ "address": [
+  "Unit 24, Eldon Business Park",
+  "Eldon Road",
+  "Chilwell, Beeston",
+  "Nottingham NG9 6DZ"
+ ],
  "postcode": "NG9 6DZ",
- "lat": 52.9067,
- "lon": -1.2442,
+ "lat": 52.909,
+ "lon": -1.2452,
  "precision": "approximate",
  "intro": "It is spelled Chilwell, with one l in the middle. DVSA lists it as **Nottingham (Chilwell)**, and that is the string to look for in the booking service.\n\nThe centre is a unit on Eldon Business Park, off Eldon Road, just off the A6005 Nottingham Road next to Chilwell Retail Park. Instructors describe it as sitting next to EvoEnergy, Sheetfabs and NK Motors, on an access road shared with the other businesses, leading to a small car park outside the door.\n\nIt is **not** on Chetwynd Business Park. Chetwynd is the name of the barracks in Chilwell and of a separate road with an MOT garage on it, and it is an easy mistake to make on test morning. One driving school page puts the centre on Cator Lane, which contradicts every other source and is wrong. Put the postcode in, then look for the unit and the neighbours rather than trusting the pin.",
  "arrival": [
@@ -15,13 +20,34 @@
   "Then out to the car park for the eyesight check, and away."
  ],
  "facts": [
-  {"k": "Getting there", "v": "Off the A6005 Nottingham Road, about five minutes from the middle of Chilwell and twenty from the middle of Nottingham. The A52 is about five minutes away."},
-  {"k": "The postcode", "v": "NG9 6DZ lands you on the business park, not at the door. The park has many units, so look for Unit 24 and the neighbouring firms."},
-  {"k": "Parking", "v": "There are seven marked bays at the centre: five opposite the entrance on the right as you drive in, and two on the left, perpendicular to the others and bounded by a kerb (unofficial, from a local instructor). Aggregator listings contradict each other on whether candidates may park there, so plan for Eldon Road or the retail park."},
-  {"k": "The car park and the bay park", "v": "Reverse bay parking is normally only set in a test centre car park, so this is where it will happen if it happens. The bays are not all the same width, the widest being about a tenth wider than the narrowest, so a method learned in a wide supermarket bay may not fit (unofficial)."},
-  {"k": "Opening hours", "v": "One listing gives Monday to Friday, 8am to 4pm (unverified). Whether this centre runs evening or Saturday tests was not established. Your booking confirmation is the authority."},
-  {"k": "Other centres nearby", "v": "Nottingham (Colwick), NG4 2JU, near the city, and Watnall, NG16 1JF, to the north west. Beeston and Clifton both closed in 2016, which is when this centre opened. Derby (Alvaston) is about twelve miles away."},
-  {"k": "The waiting time", "v": "One source gave a median wait of 7.7 weeks at this centre in August 2026 against 11.1 weeks across Great Britain in July 2026 (unverified). Waits move constantly, so check the booking service."}
+  {
+   "k": "Getting there",
+   "v": "Off the A6005 Nottingham Road, about five minutes from the middle of Chilwell and twenty from the middle of Nottingham. The A52 is about five minutes away."
+  },
+  {
+   "k": "The postcode",
+   "v": "NG9 6DZ lands you on the business park, not at the door. The park has many units, so look for Unit 24 and the neighbouring firms."
+  },
+  {
+   "k": "Parking",
+   "v": "There are seven marked bays at the centre: five opposite the entrance on the right as you drive in, and two on the left, perpendicular to the others and bounded by a kerb (unofficial, from a local instructor). Aggregator listings contradict each other on whether candidates may park there, so plan for Eldon Road or the retail park."
+  },
+  {
+   "k": "The car park and the bay park",
+   "v": "Reverse bay parking is normally only set in a test centre car park, so this is where it will happen if it happens. The bays are not all the same width, the widest being about a tenth wider than the narrowest, so a method learned in a wide supermarket bay may not fit (unofficial)."
+  },
+  {
+   "k": "Opening hours",
+   "v": "One listing gives Monday to Friday, 8am to 4pm (unverified). Whether this centre runs evening or Saturday tests was not established. Your booking confirmation is the authority."
+  },
+  {
+   "k": "Other centres nearby",
+   "v": "Nottingham (Colwick), NG4 2JU, near the city, and Watnall, NG16 1JF, to the north west. Beeston and Clifton both closed in 2016, which is when this centre opened. Derby (Alvaston) is about twelve miles away."
+  },
+  {
+   "k": "The waiting time",
+   "v": "One source gave a median wait of 7.7 weeks at this centre in August 2026 against 11.1 weeks across Great Britain in July 2026 (unverified). Waits move constantly, so check the booking service."
+  }
  ],
  "sources": [
   "[PassMeFast test centre page](https://www.passmefast.co.uk/test-centres/practical/nottinghamshire/nottingham-chilwell)",

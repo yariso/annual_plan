@@ -62,7 +62,13 @@ run if it finds an em dash or an en dash, which is the house style here.
 
 `docs/validation.md` records where every part of the content came from and what could not
 be checked. The short version: this is a reading of DVSA's published rules plus local
-knowledge, it is not DVSA material, no test route in it is official because DVSA stopped
-publishing routes in 2010, and the research behind it was done in a sandbox where pages
-could not be opened directly, so it rests on web search results rather than on primary
-pages read end to end. Check anything that matters against GOV.UK.
+knowledge, it is not DVSA material, and no test route in it is official, because DVSA does
+not publish them and no route detail for this centre was found at all.
+
+The research behind it ran in a sandbox with two limits. Pages could not be opened: the
+network policy blocked every domain tried, GOV.UK included, so the content rests on web
+search results and the summaries returned with them rather than on primary pages read end
+to end. And the session's web search budget ran out after six of the sixteen planned
+research passes, so the rest, including every coordinate and all the local road detail,
+rests on knowledge rather than sources and is labelled as such in the app. Check anything
+that matters against GOV.UK.
