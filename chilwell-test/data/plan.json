@@ -1,29 +1,203 @@
 {
- "strap": "STUB strap",
- "mapIntro": "STUB",
- "mapAbout": "STUB",
- "roadsIntro": "STUB",
- "faultsIntro": "STUB",
- "qIntro": "STUB",
- "mockIntro": "STUB",
- "practiceEmpty": "STUB",
+ "strap": "The roads round Eldon Road, what the examiner marks line by line, and a mock test somebody can run from the passenger seat. For a car practical test at Nottingham (Chilwell).",
+ "mapIntro": "The test centre, the junctions worth knowing before the day, places to practise, and four directions a test can go. Tap any marker to read its card.",
+ "mapAbout": "This is a map of the area round the test centre. It is not a test route. DVSA does not publish test routes, and no turn by turn route for this centre was found anywhere while this app was written.\n\nThe map images are tiles from **OpenStreetMap**, fetched over the network as you pan and zoom, so the map needs a signal. Everything else in this app works once the page has loaded. If the tiles do not arrive, the markers and the lines still draw on a blank background and the map says so.\n\nThe markers are placed from coordinates, and almost every one of those coordinates is **approximate**. They were worked out from a postcode or read off a map by eye, not surveyed. Each card prints its own precision, so check it. Read a pin as \"about here\" and trust the road name over the dot.\n\nThe coloured lines are **corridors, not roads**. Each one is drawn straight from one junction to the next, so it cuts corners, crosses fields and ignores the one way system. It shows roughly which way a test can go, taken from unofficial local sources, not the route it will take. Do not follow a corridor as though it were a road.",
+ "roadsIntro": "Every junction, road and hazard a test from Eldon Road is likely to use, with how to drive it and what the examiner is watching there. It is not a route: nobody outside DVSA knows where yours will go.",
+ "faultsIntro": "Every line the examiner can mark, grouped roughly in the order a test unfolds. Each one says what is being assessed, where the line between a driving fault and a serious one sits, and where it bites on the roads round Chilwell.",
+ "qIntro": "Two safety questions, one at the car before you drive and one on the move. The quiz remembers which ones keep catching you out and asks those first.",
+ "mockIntro": "The marking sheet turned into buttons. **The person in the passenger seat holds the phone and taps the faults as they happen. Never the driver.** Tapping a phone while driving is not practice, it is a danger and an offence.\n\nThis is a practice aid built from DVSA's published rules. It is not a DVSA test, the sheet is not the DL25, and whoever marks it is not an examiner. The verdict it gives you is the real pass rule applied to what was tapped, nothing more.",
+ "practiceEmpty": "Nothing here yet. Run a mock test and this fills with the lines that cost you marks, worst first, built from your last four mocks.",
  "journey": [
   {
    "n": "1",
-   "name": "Before the day",
-   "lede": "STUB",
-   "body": "STUB",
+   "name": "Learn what is actually being marked",
+   "lede": "The pass mark is not a feeling about how it went. It is a fixed list of lines, a fixed limit, and one rule that ends the test whatever else you did. Learn that first and every hour of practice after it has somewhere to go.",
+   "body": "The rule: **no serious fault, no dangerous fault, and no more than 15 driving faults**. A sixteenth driving fault fails on its own [GOV.UK, understanding your driving test result](https://www.gov.uk/guidance/understanding-your-driving-test-result/car-driving-test).\n\nIn practice almost nobody fails by collecting sixteen small faults. The common way to fail is one serious fault in forty minutes of otherwise decent driving (reasoned). No published split of fails by cause could be found, so that is a reading of the rule, not a statistic.\n\nTwo faults lead the national list every year: **observation at junctions** first, **mirrors when changing direction** second [passrates.uk, practical test fault categories](https://passrates.uk/guide/practical-test-fault-categories) (unofficial, page not opened). Ranks eight, nine and ten are known from DVSA's own webinar slides: not responding correctly to road markings, poor positioning during normal driving, and not driving at a safe and reasonable speed [DVSA webinar slides, top 10 driving test faults](https://despatch.blog.gov.uk/wp-content/uploads/sites/131/2024/12/top-10-driving-test-faults-2024-webinar-slides.pdf). Ranks three to seven could not be established, so this app does not list them.\n\nNothing in this app is DVSA material. It is a reading of DVSA's published rules and of local knowledge, and the examiner's decision on the day is the only one that counts.",
    "checks": [
-    "STUB check"
+    "Read the three fault types on the Test tab and be able to say, without looking, what turns a driving fault into a serious one.",
+    "Say the limit out loud: no serious or dangerous fault, and fifteen driving faults at most.",
+    "Read every line of the marking sheet once, slowly, in one sitting.",
+    "Pick the five lines you are least sure about and tell whoever teaches you that those are what you want to work on.",
+    "Learn what observation at junctions means to an examiner, because it is the fault marked most often nationally.",
+    "Read the page on where all of this comes from, so you know which parts are checked and which are not."
    ],
    "do": [
     {
-     "t": "The roads",
+     "t": "How it is marked",
+     "go": "test"
+    },
+    {
+     "t": "Where all of this comes from",
+     "go": "start#panel-sources"
+    }
+   ],
+   "sources": [
+    "[GOV.UK, understanding your driving test result](https://www.gov.uk/guidance/understanding-your-driving-test-result/car-driving-test)",
+    "[passrates.uk, practical test fault categories](https://passrates.uk/guide/practical-test-fault-categories)",
+    "[DVSA webinar slides, top 10 driving test faults](https://despatch.blog.gov.uk/wp-content/uploads/sites/131/2024/12/top-10-driving-test-faults-2024-webinar-slides.pdf)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "n": "2",
+   "name": "Drive the roads round the centre",
+   "lede": "Every test from Eldon Road starts and ends on the same short stretch of the A6005. Drive that, and the roundabouts behind it, until none of it is interesting.",
+   "body": "The centre sits on Eldon Business Park, just off the **A6005 Nottingham Road**, next to Chilwell Retail Park [Logicor, the landlord's description of Eldon Business Park](https://www.logicor.eu/en/uk/properties/nottinghamshire-eldon-business-park-nottingham/nottinghamshire-eldon-road-trading-estate-nottingham). So the first classified road on your test, and the last, is almost certainly the A6005 (reasoned from that address).\n\nA local instructor describes routes dividing at the traffic lights by the centre: one way towards Long Eaton, Breaston, Toton, Stapleford, Sandiacre and Risley, the other towards Attenborough, Beeston, Bramcote, Dunkirk, Lenton and Wollaton [Driving Lessons with Martin, on the Chilwell centre](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/) (unofficial, page not opened). The same page names the hard features of the area as Bramcote Island, Bardills roundabout and the M1 Junction 25 roundabout, plus roads shared with tram lines, one way roads, no entry roads and traffic lights with left filter arrows. That is one instructor's account, not a consensus, and it carries no date.\n\nWhat every source does agree on is the general shape: the driving is **urban, heavy on roundabouts and junctions, with little country road nearby** [NGPass Driving Academy, Chilwell route guide](https://ngpassdrivingacademy.co.uk/chilwell-driving-test-route-a-complete-guide-for-learners/) (unofficial, page not opened). So practise road types, not sequences. There is no route to memorise and memorising one would not help.\n\nSpeed limits are the weak point in everything written about these roads. Not one limit on any road here was confirmed against a council or mapping source, so the app does not state limits as fact (unverified). Read the signs, and fall back on the rule that street lighting means 30 mph unless a sign says otherwise.",
+   "checks": [
+    "Pull out of Eldon Road onto the A6005 and come back in again, turning both left and right, until the emergence is automatic.",
+    "Drive the A6005 north east through Chilwell into Beeston, and south west towards Toton and Long Eaton, on separate lessons.",
+    "Take Bardills roundabout and Bramcote Island at least twice each, in ordinary daytime traffic.",
+    "Drive a stretch where the tram meets the road, and a one way street with a no entry, so neither is new on the day.",
+    "Do one drive at the same time of day and on the same weekday as your test, so you meet the same traffic.",
+    "On each new road, say the limit out loud and then check yourself against the next sign you pass."
+   ],
+   "do": [
+    {
+     "t": "The area on a map",
+     "go": "map"
+    },
+    {
+     "t": "The roads and junctions",
      "go": "roads"
     }
    ],
    "sources": [
+    "[Logicor, the landlord's description of Eldon Business Park](https://www.logicor.eu/en/uk/properties/nottinghamshire-eldon-business-park-nottingham/nottinghamshire-eldon-road-trading-estate-nottingham)",
+    "[Driving Lessons with Martin, on the Chilwell centre](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/)",
+    "[NGPass Driving Academy, Chilwell route guide](https://ngpassdrivingacademy.co.uk/chilwell-driving-test-route-a-complete-guide-for-learners/)",
+    "(reasoned)",
+    "None of the unofficial pages above was opened while this app was written. Each one came back in a search result."
+   ]
+  },
+  {
+   "n": "3",
+   "name": "Practise the manoeuvres and the questions",
+   "lede": "One reversing exercise is set and the examiner chooses which. The two safety questions are worth one driving fault between them, so the thing to practise there is the timing, not the answer.",
+   "body": "Four exercises are in the pool: reverse into a parking bay and drive out, drive forward into a bay and reverse out, parallel park at the side of the road, and pull up on the right then reverse about two car lengths and rejoin [GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test). Reversing into a bay is only ever set in a test centre car park. Driving forward into one can happen in any car park.\n\nThis centre has its own car park, which makes a bay park likely here [NGPass Driving Academy, Chilwell route guide](https://ngpassdrivingacademy.co.uk/chilwell-driving-test-route-a-complete-guide-for-learners/) (unofficial, page not opened). A local instructor describes seven bays: five opposite the entrance on the right as you drive in, and two on the left, set at an angle to the others and bounded by a kerb, with the widest bay almost a tenth wider than the narrowest [Driving Lessons with Martin, on the Chilwell centre](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/) (unofficial, page not opened). If that is right, a method learned in a wide supermarket bay may not fit here (reasoned). Practise in a tight bay, and do not practise in the centre's own car park while tests are running.\n\nThe emergency stop is asked in about one test in seven, down from one in three on 24 November 2025 [DVSA Despatch, making adjustments to the driving test](https://despatch.blog.gov.uk/2025/11/19/making-adjustments-to-the-driving-test/). It is never a surprise. You pull up normally first, you are told it is coming, and the hand signal is demonstrated before you move off again [DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings).\n\nOn the show me question, the words \"when it is safe to do so\" hand you the timing. Wait for a straight, clear stretch, keep your eyes on the road and work the control by feel. Doing it at a junction, while looking down, turns a one mark question into a possible serious fault [GOV.UK, car show me tell me questions](https://www.gov.uk/government/publications/car-show-me-tell-me-vehicle-safety-questions/car-show-me-tell-me-vehicle-safety-questions).",
+   "checks": [
+    "Reverse into a bay narrow enough to be uncomfortable, not a wide supermarket bay.",
+    "Drive forward into a bay and reverse out of it, because the examiner picks and it might be that one.",
+    "Parallel park behind a real parked car on a real street, not around a cone.",
+    "Pull up on the right, reverse about two car lengths and rejoin, at least three times.",
+    "Do an emergency stop with nothing behind you, so the pedal pressure and the noise are not new.",
+    "Get every tell me question right twice in a row, including finding the bonnet release in the car you will test in.",
+    "Do a show me question on the move without looking down and without slowing for it."
+   ],
+   "do": [
+    {
+     "t": "The manoeuvres",
+     "go": "skills#man-bayreverse"
+    },
+    {
+     "t": "Show me, tell me",
+     "go": "skills#qIntro"
+    }
+   ],
+   "sources": [
+    "[GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test)",
+    "[GOV.UK, car show me tell me questions](https://www.gov.uk/government/publications/car-show-me-tell-me-vehicle-safety-questions/car-show-me-tell-me-vehicle-safety-questions)",
+    "[DVSA Despatch, making adjustments to the driving test](https://despatch.blog.gov.uk/2025/11/19/making-adjustments-to-the-driving-test/)",
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)",
+    "[Driving Lessons with Martin, on the Chilwell centre](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/)",
+    "[NGPass Driving Academy, Chilwell route guide](https://ngpassdrivingacademy.co.uk/chilwell-driving-test-route-a-complete-guide-for-learners/)",
     "(reasoned)"
+   ]
+  },
+  {
+   "n": "4",
+   "name": "Mock test yourself properly",
+   "lede": "A mock is only worth the fuel if it is marked like the real thing. One person drives, one person marks, and nobody says a word about the driving until the end.",
+   "body": "How to run one. The person in the passenger seat holds the phone and taps a fault against the line the moment it happens, not from memory afterwards. Drive for about thirty five to forty minutes, which is the length of the real drive, on the roads a test would use. Put a manoeuvre in it and about three pull ups and move offs, one of them from behind a parked car. Then read the verdict against the real limits.\n\nThe silence is the point. An examiner will not prompt you, will not tell you the limit and will not remind you about the mirror. A mock where somebody coaches from the passenger seat measures the coach, not the driver (reasoned).\n\nDo three or four and look for what repeats rather than what was worst. Repetition is what changes the grade: DVSA's guidance to examiners says a candidate who habitually commits a driving fault in one aspect of driving throughout the test cannot be regarded as competent, and that the repeated fault can then be assessed as potentially dangerous [DT1, annex 6, guide to assessment and marking](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/annex-6-guide-to-assessment-and-marking). No published number says how many repeats does it. It is the examiner's judgement.\n\nIf you allow location, the app pins each fault where the car was when it was tapped, which is usually a second or two after the fault itself. Use the pins to find the junction, not to argue about the metre.",
+   "checks": [
+    "Agree before you set off that nobody speaks about the driving until the end.",
+    "Run it for about thirty five to forty minutes, on roads a test could actually use.",
+    "Include one manoeuvre, and about three pull ups and move offs, one from behind a parked car.",
+    "Mark it as it happens. A sheet filled in afterwards is a conversation, not a mock.",
+    "Read the result against the real rule: any serious or dangerous fault is a fail, and so is a sixteenth driving fault.",
+    "Do at least three mocks, on different roads and on different days.",
+    "Work first on the fault that turns up in every one of them."
+   ],
+   "do": [
+    {
+     "t": "Run a mock test",
+     "go": "mock"
+    },
+    {
+     "t": "Every line of the sheet",
+     "go": "test"
+    }
+   ],
+   "sources": [
+    "[DT1, annex 6, guide to assessment and marking](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/annex-6-guide-to-assessment-and-marking)",
+    "[GOV.UK, understanding your driving test result](https://www.gov.uk/guidance/understanding-your-driving-test-result/car-driving-test)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "n": "5",
+   "name": "The week before",
+   "lede": "Nothing new goes in this week. It is for the paperwork, the car, the eyesight, and the two or three things your mocks keep showing.",
+   "body": "**The licence.** Your UK photocard driving licence is the one document that has to be in your hand. Without it the test does not run and the fee is gone. You do not need the theory test certificate, and you do not need a replacement if you have lost it, because the examiner checks the pass on the system [GOV.UK, what to take](https://www.gov.uk/driving-test/what-to-take).\n\n**The car.** L plates front and back and not blocking the view, a mirror fitted for the examiner, no warning lights lit on the dashboard, working headlights, brake lights and indicators, legal tyres, and seat belts that work [Ready to Pass, what to take](https://readytopass.campaign.gov.uk/driving-test/what-to-take/). If it is your own car rather than the instructor's, check the insurance covers a driving test. DVSA's campaign reports 2,281 tests cancelled in July 2026 for an unsuitable car, a forgotten licence or a late arrival. Treat the exact figure as (unverified), but the lesson holds: most wasted tests are lost before any driving.\n\n**The eyesight.** You read a number plate at 20 metres, about five car lengths [GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test). Pace it out in a car park this week, wearing whatever you will wear on the day. If you have any doubt at all, see an optician now rather than finding out in the test centre car park.\n\n**The journey in.** Drive to Eldon Business Park once this week, at the time of day your test is booked, and park where you intend to park. Arriving somewhere for the first time on test morning is an avoidable cost (reasoned).",
+   "checks": [
+    "Find your photocard licence and put it where you will not have to search for it.",
+    "Check the car: L plates front and back, examiner's mirror fitted, no warning lights on the dash, lights and indicators working, tyres legal.",
+    "If it is your own car, check that the insurance covers a driving test.",
+    "Read a number plate at about five car lengths, wearing whatever glasses or lenses you will wear on the day.",
+    "Find the test centre's own phone number at the bottom of your booking confirmation email. It is the number for bad weather.",
+    "Drive to Eldon Business Park once, at the time of day your test is booked.",
+    "Pick the two faults your mocks keep showing and spend the last lessons on those alone."
+   ],
+   "do": [
+    {
+     "t": "The car and the documents",
+     "go": "start#panel-car"
+    },
+    {
+     "t": "Nerves: what actually helps",
+     "go": "start#panel-nerves"
+    }
+   ],
+   "sources": [
+    "[GOV.UK, what to take](https://www.gov.uk/driving-test/what-to-take)",
+    "[Ready to Pass, what to take](https://readytopass.campaign.gov.uk/driving-test/what-to-take/)",
+    "[GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "n": "6",
+   "name": "On the day",
+   "lede": "Be parked about fifteen minutes before the appointment. Early enough to find the unit, get your breath and use the toilet. Not so early that you sit in the car rehearsing.",
+   "body": "**When to arrive.** GOV.UK tells you to be there five minutes before your appointment, and warns that arriving late means the test is cancelled and the fee is lost [GOV.UK, what to take](https://www.gov.uk/driving-test/what-to-take). DVSA tells examiners to allow at least five minutes of grace, and more at their discretion where it will not spoil the tests that follow [DVSA guidance on late candidates](https://www.gov.uk/government/publications/candidates-arriving-late-for-a-driving-test/information-and-guidance-given-to-examiners-when-candidates-are-late-for-a-driving-test). That grace is the examiner's to give, not yours to plan around (reasoned). Fifteen minutes early is the sensible number.\n\n**Finding it.** The postcode **NG9 6DZ** lands you on Eldon Business Park, not at the door. The park has many units, so look for **Unit 24** and for the neighbouring firms, reported as EvoEnergy, Sheetfabs and NK Motors [PassMeFast test centre page](https://www.passmefast.co.uk/test-centres/practical/nottinghamshire/nottingham-chilwell) (unofficial, page not opened). The access road off Eldon Road is shared with other businesses and leads to a small car park outside the building [Driving Lessons with Martin, on the Chilwell centre](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/) (unofficial, page not opened).\n\n**Do not drive to Chetwynd.** Chetwynd is a Chilwell name that belongs to other places: Chetwynd Barracks, and Chetwynd Road, which has an MOT garage on it. Neither is the test centre. **The test centre is on Eldon Road.** One driving school page puts the centre on Cator Lane, which contradicts every other source and is wrong.\n\n**Parking.** Sources disagree about whether you may leave a car in the bays on site, so do not count on it. Eldon Road is described as a place you can park, and Chilwell Retail Park is next door [PassMeFast test centre page](https://www.passmefast.co.uk/test-centres/practical/nottinghamshire/nottingham-chilwell).\n\n**Then what happens.** The examiner comes out and asks for you by name, checks your licence photograph and your signature, and asks you to read, confirm and sign an insurance and residency declaration. You are asked whether your instructor or accompanying driver sits in, and which email address the report should go to. Then the eyesight check in the car park, one tell me question at the car, and away [DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings).\n\n**Two things worth carrying with you.** If you do not hear a direction, ask: DVSA tells examiners to answer a request to repeat or confirm a direction in a friendly way, and that it is not a prompt against you [DT1, the car driving test](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/1-car-driving-test). And a wrong turn is not a fault in itself. The examiner will help you back onto the route, and only a fault you make while going wrong gets marked [Ready to Pass, following routes](https://readytopass.campaign.gov.uk/driving-skills/following-routes/).",
+   "checks": [
+    "Bring your photocard licence. Nothing else gets you out of that car park without it.",
+    "Bring your glasses or contact lenses if you need them to read a plate at 20 metres, and wear them for the whole test.",
+    "Put Eldon Road, NG9 6DZ in the sat nav, then find Unit 24 by eye. Look for the neighbouring firms rather than trusting the pin.",
+    "Do not drive to Chetwynd Road or to the barracks. The centre is on Eldon Road.",
+    "Plan for parking on Eldon Road or at the retail park, in case the bays on site are not for you.",
+    "Arrive about fifteen minutes early, and use the toilet before the examiner comes out.",
+    "If your instructor booked the test, say at the start which email address you want the report sent to.",
+    "Eat something beforehand. The appointment runs about an hour once the checks and the debrief are counted."
+   ],
+   "do": [
+    {
+     "t": "Find it on the map",
+     "go": "map"
+    },
+    {
+     "t": "The test, in order",
+     "go": "test"
+    }
+   ],
+   "sources": [
+    "[GOV.UK, what to take](https://www.gov.uk/driving-test/what-to-take)",
+    "[DVSA guidance on late candidates](https://www.gov.uk/government/publications/candidates-arriving-late-for-a-driving-test/information-and-guidance-given-to-examiners-when-candidates-are-late-for-a-driving-test)",
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)",
+    "[DT1, the car driving test](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/1-car-driving-test)",
+    "[Ready to Pass, following routes](https://readytopass.campaign.gov.uk/driving-skills/following-routes/)",
+    "[PassMeFast test centre page](https://www.passmefast.co.uk/test-centres/practical/nottinghamshire/nottingham-chilwell)",
+    "[Driving Lessons with Martin, on the Chilwell centre](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/)",
+    "None of the unofficial pages above was opened while this app was written. Each one came back in a search result."
    ]
   }
  ]
