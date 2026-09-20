@@ -4,17 +4,33 @@
   "lede": "You book, change and cancel the test yourself on GOV.UK. The fee is reported as £62 on a weekday and £75 in the evening, at a weekend or on a bank holiday. It is the one part of the test you can lose without driving a yard.",
   "body": "Bookings go through [GOV.UK, book your driving test](https://www.gov.uk/book-driving-test). Aggregator sites report the service as open 6am to 11:40pm every day (unverified). The test centre itself cannot take a booking, change one or cancel one over the phone. DVSA does all of that [(PassMeFast, test centre phone numbers)](https://www.passmefast.co.uk/resources/get-test-ready/practical-test/driving-test-centre-phone-numbers).\n\nThe centre to search for is **Nottingham (Chilwell)**, with the locality in brackets, the way DVSA writes it. The spelling \"Chillwell\", with two l's, will not match.\n\nThree booking rules changed during 2026 and they decide what you can do if you want to move the appointment. From 8 April 2026 you are solely responsible for booking and managing your own practical test, and booking firms, instructors and cancellation finder apps may no longer book on your behalf. Since 31 March 2026 a booking can be changed twice, after which it has to be cancelled and rebooked. From 9 June 2026 a test can only be moved to one of your three nearest test centres. All three come from one unofficial report of a DVSA bulletin that could not be opened when this app was written [(Carwow)](https://www.carwow.co.uk/news/10823/dvsa-driving-test-booking-changes-2026), so check them before you act on them.",
   "table": {
-   "head": ["What", "Fee", "When it applies"],
+   "head": [
+    "What",
+    "Fee",
+    "When it applies"
+   ],
    "rows": [
-    ["Car practical test, weekday", "£62", "Monday to Friday, daytime"],
-    ["Car practical test, evening, weekend or bank holiday", "£75", "A weekday test starting after 16:30 is classed as an evening test (unverified)"],
-    ["Theory test", "£23", "Booked separately, and it has to be passed before you can book the practical"]
+    [
+     "Car practical test, weekday",
+     "£62",
+     "Monday to Friday, daytime"
+    ],
+    [
+     "Car practical test, evening, weekend or bank holiday",
+     "£75",
+     "A weekday test starting after 16:30 is classed as an evening test (unverified)"
+    ],
+    [
+     "Theory test",
+     "£23",
+     "Booked separately, and it has to be passed before you can book the practical"
+    ]
    ],
    "note": "Figures reported by fee sites in September 2026, not read off GOV.UK, which could not be opened. The £62 weekday fee is reported as unchanged since 2009. Check the current fee on [GOV.UK, driving test cost](https://www.gov.uk/driving-test-cost) before you pay."
   },
   "points": [
    "Book the test yourself, from your own account, and put the confirmation email somewhere you can find on the morning. The test centre's own phone number, for bad weather, is at the bottom of that email.",
-   "Book it for a time you drive well at. If every lesson you have had is at four in the afternoon, an 8:10 slot is a change of conditions, not just a change of clock.",
+   "Book it for a time you drive well at. If every lesson you have had is at four in the afternoon, an 8:10 slot is a change of conditions, not only a change of clock.",
    "The fee is the same wherever you sit in the queue, so there is nothing to gain by taking a slot you are not ready for.",
    "A test taken in an automatic gives an automatic only licence (unverified). If you are going to drive a manual, test in a manual."
   ],
@@ -26,7 +42,7 @@
      "Saturdays count as working days for this, so a week of notice is shorter than it sounds (unverified).",
      "Not enough notice, or not turning up, and the fee is gone. You pay again for the next test.",
      "Since 31 March 2026 you get two changes before the booking has to be cancelled and rebooked, so do not spend them lightly (reported by Carwow, not confirmed on GOV.UK).",
-     "If you are ill on the day, ring DVSA rather than simply not going. The fee is probably lost either way, but the appointment is then freed for somebody else."
+     "If you are ill on the day, ring DVSA rather than not turning up. The fee is probably lost either way, but the appointment is then freed for somebody else."
     ]
    },
    {
@@ -105,6 +121,15 @@
    {
     "name": "Bad weather",
     "body": "DVSA cancels tests when conditions make them unsafe, usually ice, snow, fog or flooding. The decision is made locally and often early in the morning, so the centre may not know the night before.\n\nCheck before you set off, and ring the test centre's own number rather than the national line. Every centre has a direct number, given to candidates for exactly this, and it is at the bottom of your booking confirmation email. The numbers show an 020 code but connect to the local centre [(DVSA bulletin on test centre numbers)](https://content.govdelivery.com/accounts/UKDVSA/bulletins/3859e9e). If DVSA cancels the test you are given a new date and you do not pay again [(GOV.UK, test cancelled because of bad weather)](https://www.gov.uk/driving-test/test-cancelled-bad-weather).\n\nIf the test is not cancelled, it goes ahead in whatever weather there is. Wet, dark and windy are normal test conditions. Practise in them."
+   },
+   {
+    "name": "If you are testing in an automatic",
+    "body": "The test is the same test. The same items are marked, the same manoeuvres are set and the same limit applies. What changes is that the clutch and the gears come off the sheet, so two of the things that catch people out are simply not there, and the control marks fall on the brake, the accelerator and the steering instead.\n\nThe licence is what changes. Pass in an automatic and the licence you get covers automatics only. Pass in a manual and it covers both. If you might want to drive a manual later, that is the decision, not the test (unverified: this is the long standing rule, and the GOV.UK page saying so could not be opened).\n\nMost of this app reads the same either way. Where a step says clutch, read it as easing off the brake and on to the accelerator: the hill start, the move off, the manoeuvres at walking pace. Creep is easier in an automatic and stalling is not a risk, which means the two faults to watch are going too quickly in car parks and at junctions, and resting your left foot on the brake.",
+    "points": [
+     "Keep your left foot off the pedals entirely. Two footed driving is a control fault waiting to happen (reasoned).",
+     "Use the brake to hold the car on a hill, or the handbrake if the car has no hold function. Creeping forward against the brake at a junction is not control.",
+     "Put the car in park, handbrake on, before you switch off at the end."
+    ]
    }
   ],
   "warn": "If you have a disability, a health condition or a learning difficulty, tell DVSA when you book rather than on the day. Adjustments have to be recorded against the booking, and some of them, such as allocating two test periods, cannot be arranged at the counter [(GOV.UK)](https://www.gov.uk/driving-test/disability-health-condition-or-learning-difficulty).",
@@ -129,7 +154,7 @@
      "Do at least one mock that goes badly and carry on to the end of it. The skill you are practising is recovering from a mistake with thirty minutes still to drive.",
      "Drive the roads round the centre at the time of day your test is booked for, in the traffic your test will be in.",
      "Practise the parts you avoid. Almost everybody has one: the bay park, the right turn across traffic, the roundabout with two lanes. Avoidance is what turns into panic.",
-     "Stop taking lessons the day before is not a rule. Do whatever leaves you steady."
+     "Stopping lessons the day before is not a rule, and neither is cramming one in. Do whatever leaves you steady."
     ]
    },
    {
@@ -155,8 +180,8 @@
     "name": "The ten minutes before",
     "points": [
      "Put the phone away. Nothing arriving on it in the next hour will help you.",
-     "Slow your breathing out rather than in: a longer breath out than in, for a minute or two. It is simple, it is free, and it is what instructors tell people. No evidence for it was available to this app (unverified).",
-     "Have one sentence ready for the moment it goes wrong, and say it to yourself in advance. \"That is one fault, I have fifteen\" is a better sentence than \"that is it, I have failed\".",
+     "Slow your breathing out rather than in: a longer breath out than in, for a minute or two. It costs nothing and it is what instructors tell people to do. No evidence for it was available to this app (unverified).",
+     "Have one sentence ready for the moment it goes wrong, and say it to yourself in advance. \"That is one fault, I have fourteen left\" is a better sentence than \"that is it, I have failed\".",
      "Remember that a mistake does not end the test. GOV.UK says plainly that you can carry on if you make a mistake, and it might not affect your result [(GOV.UK)](https://www.gov.uk/driving-test/what-happens-during-test).",
      "If you do not hear a direction, ask. DVSA tells examiners to answer a request to repeat or confirm a direction in a friendly, positive way, and asking is not marked against you [(DT1)](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/1-car-driving-test)."
     ]
@@ -168,7 +193,7 @@
      "Trick questions and deliberate traps. The guidance examiners work to tells them to help you settle, to give directions in plenty of time and to name the exit at a roundabout.",
      "That driving slowly is the safe option. It is not. Undue hesitation is a marked item in its own right, and so is failing to make normal progress. Driving well under a safe speed for the road is a fault, not caution (reasoned, from the marking items).",
      "That a particular time of day or a particular examiner decides it. Nothing in the research supports it, and it is not something you can act on anyway (reasoned).",
-     "That failing means you are a bad driver. Nationally, about half of all tests end in a pass, and the second attempt pass rate is about the same as the first [(passrates.uk)](https://passrates.uk/guide/driving-test-second-attempt-pass-rate)."
+     "That failing means you are a bad driver. Nationally, about half of all tests end in a pass, and the second attempt rate is about the same as the first [(passrates.uk)](https://passrates.uk/guide/driving-test-second-attempt-pass-rate)."
     ]
    },
    {
@@ -221,7 +246,7 @@
    },
    {
     "name": "If you did not pass",
-    "body": "The next test has to be at least ten working days away [(GOV.UK, faults and result)](https://www.gov.uk/driving-test/driving-test-faults-result). That is a floor, not a recommendation. Book it once you and your instructor know what needs work, not from the car park in a temper.\n\nYou drive home as a learner. The provisional licence rules still apply, so you need a supervising driver, L plates and insurance that covers learner driving (reasoned, from the provisional rules rather than from a page that was opened).\n\nFor what it is worth: nationally, second attempt pass rates are about the same as first attempt pass rates, roughly 49 per cent, and they stay about level for the third and fourth attempts before falling away [(passrates.uk)](https://passrates.uk/guide/driving-test-second-attempt-pass-rate). Failing once tells you very little about next time."
+    "body": "The next test has to be at least ten working days away [(GOV.UK, faults and result)](https://www.gov.uk/driving-test/driving-test-faults-result). That is a floor, not a recommendation. Book it once you and your instructor know what needs work, not from the car park in a temper.\n\nYou drive home as a learner. The provisional licence rules still apply, so you need a supervising driver, L plates and insurance that covers learner driving (reasoned, from the provisional rules rather than from a page that was opened).\n\nFor what it is worth: nationally, second attempt pass rates are about the same as first attempt pass rates, about the same as the first, a little under half, and they stay about level for the third and fourth attempts before falling away [(passrates.uk)](https://passrates.uk/guide/driving-test-second-attempt-pass-rate). Failing once tells you very little about next time."
    },
    {
     "name": "Reading the fault sheet",
@@ -254,10 +279,25 @@
   "lede": "Chilwell was a hard centre in 2024 to 2025 and is close to the national average now. Neither of those facts tells you much about your test.",
   "body": "The figures below did not come from DVSA. They came from commercial sites that republish DVSA's tables, because the tables themselves could not be opened when this app was written. Where sites disagreed, the disagreement is shown rather than hidden.",
   "table": {
-   "head": ["Year", "Nottingham (Chilwell)", "Great Britain", "Tests at Chilwell"],
+   "head": [
+    "Year",
+    "Nottingham (Chilwell)",
+    "Great Britain",
+    "Tests at Chilwell"
+   ],
    "rows": [
-    ["April 2024 to March 2025", "About 44 per cent", "48.7 per cent", "About 6,200"],
-    ["April 2025 to March 2026", "49.89 per cent", "About 50.0 to 50.1 per cent", "9,415"]
+    [
+     "April 2024 to March 2025",
+     "About 44 per cent",
+     "48.7 per cent",
+     "About 6,200"
+    ],
+    [
+     "April 2025 to March 2026",
+     "49.89 per cent",
+     "About 50.0 to 50.1 per cent",
+     "9,415"
+    ]
    ],
    "note": "Chilwell 2024 to 2025 is reported as 43.9, 44.0 and 44.2 per cent by three different sites, so \"about 44\" is the honest version [(drivingtestroutes.com)](https://www.drivingtestroutes.com/driving-test-routes-in-nottingham-chilwell/) [(passdrivingtest.co.uk)](https://passdrivingtest.co.uk/nottingham-chilwell-driving-test-centre/NThiLSpF). Chilwell 2025 to 2026 is given as 49.89 per cent on 9,415 tests by one site and 49.9 per cent by another [(The Driving Instructor Directory)](https://www.thedrivinginstructordirectory.co.uk/driving-test-centres/nottingham-chilwell) [(bookdrivingtest.uk)](https://bookdrivingtest.uk/test-centres/). The national figures are from [passrates.uk](https://passrates.uk/guide/driving-test-pass-rate-2024-2025)."
   },
@@ -271,7 +311,7 @@
   "blocks": [
    {
     "name": "Two different national averages",
-    "body": "Sites quote national averages that are not the same number and are not measuring the same thing.\n\n48.7 per cent is the real national rate for 2024 to 2025: every pass in Great Britain divided by every test, 893,609 out of 1,836,558 [(passrates.uk)](https://passrates.uk/guide/driving-test-pass-rate-2024-2025). That is the figure a centre's own rate is comparable with.\n\n52.2 per cent is the unweighted mean of individual centre rates, where a centre doing a few hundred tests a year counts the same as one doing twelve thousand [(audrive.net)](https://audrive.net/en/uk/pass-rates). It is not a national pass rate.\n\n50.2 per cent is used as a \"national average\" by at least one site alongside a 2024 to 2025 centre figure, which is how that site gets Chilwell to 6.0 points below average. Against the right comparator it was about 4.5 points below (reasoned)."
+    "body": "Sites quote national averages that are not the same number and are not measuring the same thing.\n\n48.7 per cent is the real national rate for 2024 to 2025: every pass in Great Britain divided by every test, 893,609 out of 1,836,558 [(passrates.uk)](https://passrates.uk/guide/driving-test-pass-rate-2024-2025). That is the figure a centre's own rate is comparable with.\n\n52.2 per cent is the unweighted mean of individual centre rates, where a centre doing a few hundred tests a year counts the same as one doing twelve thousand [(audrive.net)](https://audrive.net/en/uk/pass-rates). It is not a national pass rate.\n\n50.2 per cent is used as a \"national average\" by at least one site alongside a 2024 to 2025 centre figure, which is how that site gets Chilwell to six points below average. Against the test weighted national figure the gap was nearer four and a half points, and both numbers rest on a Chilwell figure that three sites give three ways (reasoned)."
    },
    {
     "name": "How much to trust the jump",
@@ -279,8 +319,8 @@
    },
    {
     "name": "What a centre's pass rate tells you about your test",
-    "body": "Very little. A pass rate is the average of thousands of tests taken by thousands of different people with different amounts of practice. Your result comes from your driving on one morning, marked against fifteen driving faults and no serious ones.\n\nThe things that actually move your odds are the ones you control: hours behind the wheel, private practice on these roads, whether you have driven them in this traffic at this time of day, and whether you are going because you are ready or because the slot came up (reasoned).\n\nIf you fail, the national picture says your chances next time are about the same, not worse, and that roughly nine in ten people who keep going pass within three attempts [(PassMeFast)](https://www.passmefast.co.uk/resources/get-test-ready/practical-test/average-attempts-driving-test)."
-  }
+    "body": "Very little. A pass rate is the average of thousands of tests taken by thousands of different people with different amounts of practice. Your result comes from your driving on one morning, marked against fifteen driving faults and no serious ones.\n\nThe things that actually move your odds are the ones you control: hours behind the wheel, private practice on these roads, whether you have driven them in this traffic at this time of day, and whether you are going because you are ready or because the slot came up (reasoned).\n\nIf you fail, the national picture says your chances next time are about the same, not worse, and that most people who keep going pass within three attempts (reasoned, from the per attempt rates; no source gives a figure for it) [(PassMeFast)](https://www.passmefast.co.uk/resources/get-test-ready/practical-test/average-attempts-driving-test)."
+   }
   ],
   "warn": "None of these numbers came from DVSA's own tables. Every one was republished by a commercial site and not one of those pages could be opened when this app was written. The centre level table is DRT122A on GOV.UK, and anyone who wants the real figure should open it there.",
   "sources": [

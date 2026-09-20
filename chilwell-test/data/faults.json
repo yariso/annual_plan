@@ -121,7 +121,8 @@
    "sources": [
     "[Book Learn Pass, marking sheet](https://www.booklearnpass.co.uk/driving-test/marking-sheet/) (unofficial)",
     "(reasoned)"
-   ]
+   ],
+   "common": true
   },
   {
    "id": "control-steering",
@@ -177,7 +178,8 @@
    "sources": [
     "[Nolan School of Motoring, test report explained](https://nolanschoolofmotoring.co.uk/practical-test/driving-test-report-explained/) (unofficial)",
     "(reasoned)"
-   ]
+   ],
+   "common": true
   },
   {
    "id": "control-gears",
@@ -540,7 +542,7 @@
     "Following a bus closely on a road where it will stop.",
     "Speeding up because the car behind is close."
    ],
-   "local": "The A6005 queues at peak times, and the approaches to Bardills roundabout are recorded in a traffic engineering study as carrying queues in the hundreds of vehicles in the morning and evening peaks. Queues are where this is marked.",
+   "local": "The A6005 queues at peak times, and the approaches to Bardills roundabout are reported in an undated traffic engineering paper as carrying queues in the hundreds of vehicles in the peaks (cited by search, page not opened). Queues are where this is marked.",
    "mock": true,
    "sources": [
     "[L2P Coventry, the DL25 report](https://l2pcoventry.com/test-report-dl25) (unofficial)",
@@ -560,7 +562,7 @@
     "Drive at the limit when the road and the traffic allow it.",
     "Build back up to speed promptly after a hazard rather than trickling away from it.",
     "If a queue has formed behind you on a clear road, you are the hazard.",
-    "Treat the limit as a target, not as a ceiling to stay well under."
+    "The limit is the most the law allows, never a target. What is marked is failing to use the road when it is safe to, not sitting under a number."
    ],
    "mistakes": [
     "Driving the whole test at 25 out of nerves.",
@@ -823,7 +825,7 @@
     "Mirror, then move out early and in one movement, not at the last moment.",
     "Leave a door's width past parked cars, and slow down instead if there is not room for it.",
     "Look through the windows of parked cars for somebody about to get out.",
-    "Give a cyclist as much room as you would give a car."
+    "Give a cyclist far more room than a parked car. The Highway Code asks for at least 1.5 metres at speeds up to 30 mph, and more above that: if you cannot leave it, wait behind (reasoned, from the Highway Code's overtaking rules, which could not be opened to check the rule number)."
    ],
    "mistakes": [
     "Holding the same line and clipping past with inches to spare.",
@@ -878,7 +880,7 @@
     "If the obstruction is on your side of the road, the give way is yours.",
     "Hold back at a gap between the parked cars, not nose to nose with the oncoming car.",
     "Make your decision visible by slowing early.",
-    "If the other driver clearly waves you through and it is safe, go. Standing on ceremony is hesitation."
+    "If the other driver waves you through, make your own check first and then go if it is genuinely clear. Their wave is not an all clear, and it is not a reason to sit there either: hesitating once the road is plainly yours is marked too."
    ],
    "mistakes": [
     "Committing to the gap and then meeting somebody in it.",
@@ -1105,7 +1107,7 @@
    "short": "Eco driving",
    "sheet": "Eco safe driving / control, planning. It sits outside the numbered run of competencies, in its own box with two sub boxes.",
    "looking": "Smooth gear choice, gentle acceleration and braking, and planning far enough ahead that you do not need heavy braking or high revs. The published description is about driving in an environmentally friendly manner, planning well ahead, choosing appropriate gears and avoiding heavy braking and over revving.",
-   "serious": "Instructor sites say eco marks are recorded as feedback and cannot fail a test, and nobody working on this app could confirm that on a DVSA page, so treat it as unverified. What is certain is that the driving which earns an eco mark, heavy braking, over revving and late planning, is also marked in boxes that can fail you: control, use of speed, and awareness and planning (reasoned). Fix it for those reasons. Note that in this app's mock test an eco mark counts towards the tally like any other driving fault, which may be stricter than the real test.",
+   "serious": "Nothing here fails a test on its own, as far as anyone could establish. Instructor sources say eco marks are recorded for feedback only, and no DVSA page confirming that could be opened (unverified). The mock test in this app leaves eco off the sheet for that reason, so its verdict is the pass rule and nothing else.",
    "do": [
     "Look far enough ahead to take your foot off the gas instead of braking.",
     "Get into a higher gear once the car is moving, rather than holding a low one.",
@@ -1118,7 +1120,7 @@
     "Staying in second along a clear 30 mph road."
    ],
    "local": "Stop start driving along the A6005 between the lights is where gear choice and planning show up (reasoned).",
-   "mock": true,
+   "mock": false,
    "sources": [
     "[LearnerDriving, eco safe driving](https://www.learnerdriving.com/driving-test/marking/eco-safe-driving.htm) (unofficial, and the claim that eco marks cannot fail a test is unverified)",
     "[L2P Coventry, the DL25 report](https://l2pcoventry.com/test-report-dl25) (unofficial)"
@@ -1144,13 +1146,14 @@
     "Steering too late and running out of room.",
     "Finishing on a line and leaving it there rather than correcting."
    ],
-   "local": "The reverse bay park is only set in a test centre car park. Chilwell's has seven bays: five facing you as you drive in, and two more on the left contained by a kerb, so those two need to be accurate. The bays are not equal widths, the widest being about ten per cent wider than the narrowest. It most often comes at the end of the test, when you are back at the centre (unofficial, from local instructor accounts).",
+   "local": "The reverse bay park is only set in a test centre car park. Chilwell's has seven bays: five facing you as you drive in, and two more on the left contained by a kerb, so those two need to be accurate. The bays are not equal widths, the widest being about a tenth wider than the narrowest. It most often comes at the end of the test, when you are back at the centre (unofficial, from local instructor accounts).",
    "mock": true,
    "sources": [
     "[GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test)",
     "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)",
     "[Driving Lessons with Martin, Chilwell test centre](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/) (unofficial)"
-   ]
+   ],
+   "common": true
   },
   {
    "id": "man-bayforward",
@@ -1176,7 +1179,8 @@
    "sources": [
     "[GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test)",
     "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)"
-   ]
+   ],
+   "common": true
   },
   {
    "id": "man-parallel",
@@ -1190,7 +1194,7 @@
     "Check the road behind before you stop alongside the car you are parking behind.",
     "Look all round, and especially over your left shoulder, before the car moves backwards.",
     "Reverse slowly and steer quickly. Speed on the clutch, not on the wheel.",
-    "Keep looking round through the whole manoeuvre, not just at the start.",
+    "Keep looking round through the whole manoeuvre, not only at the start.",
     "If a car comes up behind, stop and wait rather than rushing the end of it."
    ],
    "mistakes": [
@@ -1204,7 +1208,8 @@
     "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)",
     "[GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test)",
     "(reasoned)"
-   ]
+   ],
+   "common": true
   },
   {
    "id": "man-rightpull",
@@ -1231,7 +1236,8 @@
    "sources": [
     "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)",
     "[GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test)"
-   ]
+   ],
+   "common": true
   },
   {
    "id": "controlled-stop",
@@ -1258,7 +1264,8 @@
     "[DVSA Despatch, adjustments to the driving test](https://despatch.blog.gov.uk/2025/11/19/making-adjustments-to-the-driving-test/)",
     "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)",
     "[DVSA driving test prompt cards](https://assets.publishing.service.gov.uk/media/624d5879d3bf7f32b5aa072b/driving-test-prompt-cards.pdf)"
-   ]
+   ],
+   "common": true
   }
  ]
 }

@@ -77,13 +77,21 @@ to read at arm's length in a moving car.
      "mistakes": ["what goes wrong"],
      "local": "where on the roads round Chilwell this one bites",
      "mock": true,
+     "common": true,
      "sources": ["..."]}
   ]
 }
 ```
 
-`mock: false` removes an item from the mock test sheet (use it for items that
-cannot be marked from the passenger seat).
+`mock: false` removes an item from the mock test sheet, for the items that cannot be
+marked from the passenger seat (the eyesight check, the vehicle safety questions) or
+that cannot fail a test (eco safe driving).
+
+`common: true` puts the item on the shorter list the Mock tab opens with, "The usual
+ones". Forty items is too many to find one in while the car is moving, so that list
+should hold the items that actually come up: the top faults, the everyday ones, and
+the manoeuvres. Everything else is one chip away, and anything already marked stays on
+the list whichever chip is showing.
 
 ## data/manoeuvres.json
 
