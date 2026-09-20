@@ -222,6 +222,24 @@ with sync_playwright() as p:
     # with motion off, the engine runs exactly as before: no motion brake points, no lead moves at 1 Hz
     r = pg.evaluate(MOTION, dict(rate=1, secs=200, motion=False, e1=0.7, e2=1.9, e3=-0.4)); assert r['lockAt'] is None and all(len(l['imu']) == 0 for l in r['laps']) and not r['leadAdj'], 'motion off still changed the engine'
 
+    # a 25 Hz source with Doppler speed jitter (a box or a lap timer's log): brake points hold to within a few metres of the clean trace, no lead moves for a driver on the plan, and a late braker is still calibrated
+    HIRATE = """(cfg) => { const W = window.__wm; Object.assign(W.st, { layout: 'intl', chic: true, wet: false, profile: 'novice' }); Object.assign(W.set, { mode: 'words', sayFlat: true, sayLift: true, sayBrake: true, coachSay: true, lapSay: false, prepCue: true, autoLead: true, wordLead: 1.6, motion: false, gpsDelay: 0.3 });
+      window.speechSynthesis.speak = () => {}; W.sim.rate = cfg.rate; W.sim.bad = false; W.sim.late = !!cfg.late; W.sim.crawl = false; W.sim.rot = 0; W.sim.spdNoise = cfg.noise || 0; W.sim.imu = null; W.motion.on = false; W.lapReset(W.simT());
+      const n = W.LY().centre.length, laps = []; let now = 1000; W.lapE.onLap = lap => laps.push({ n: lap.n, tips: lap.tips.map(t => t.tip), bo: Object.fromEntries(Object.keys(lap.m).filter(k => lap.m[k].brakeOn != null).map(k => [k, +lap.m[k].brakeOn.toFixed(1)])) });
+      W.sim.pos = n - 18; W.sim.v = 17; W.sim.fixAcc = 1e9; W.sim.tickAcc = 0; const dt = 0.02;
+      for (let i = 0; i < cfg.secs / dt; i++) { now += dt * 1000; W.simStep(dt, now, true); }
+      W.sim.spdNoise = 0; return { laps, leadAdj: W.lapE.leadAdj, rate: +W.lapE.rate.toFixed(1) }; }"""
+    clean = pg.evaluate(HIRATE, dict(rate=25, secs=210)); noisy = pg.evaluate(HIRATE, dict(rate=25, secs=210, noise=0.3))
+    brakeCorners = ['christmas', 'ashby', 'chapmans', 'boot', 'chicane']; gaps = {}
+    for k in brakeCorners:
+        a = [l['bo'][k] for l in clean['laps'][1:] if k in l['bo']]; b2 = [l['bo'][k] for l in noisy['laps'][1:] if k in l['bo']]
+        assert a and b2, 'brake point missing at 25 Hz: ' + k; gaps[k] = round(abs(sum(a) / len(a) - sum(b2) / len(b2)) * 2, 1)
+    print('HIRATE 25Hz: rate', noisy['rate'], 'noisy vs clean brake point gap, m', gaps, 'leadAdj', noisy['leadAdj'], 'tips', [l['tips'] for l in noisy['laps']])
+    assert noisy['rate'] >= 20 and max(gaps.values()) < 4, 'speed jitter moved the 25 Hz brake points: ' + str(gaps)
+    assert all(v == 0 for v in noisy['leadAdj'].values()) and not any(('brake later' in t) for l in noisy['laps'] for t in l['tips']), 'jitter at 25 Hz read as early braking'
+    late = pg.evaluate(HIRATE, dict(rate=25, secs=350, noise=0.3, late=True)); print('HIRATE 25Hz late braker: leadAdj', late['leadAdj'])
+    assert len([k for k, v in late['leadAdj'].items() if v >= 10]) >= 3, 'a late braker at a noisy 25 Hz was not calibrated'
+
     # the team's shared brain against a mocked project: signed in, laps merged, a live lap posted, the Team level learned in the right direction
     pg.route('https://team.supabase.co/**', cloud_mock)
     pg.evaluate("() => { localStorage.setItem('wm.cloud', JSON.stringify({ url: 'https://team.supabase.co', anon: 'anonkey-anonkey-anonkey-anonkey' })); localStorage.setItem('wm.cloudsess', JSON.stringify({ access_token: 'tok', refresh_token: 'ref', expires_at: Math.floor(Date.now() / 1000) + 3600, email: null })); localStorage.removeItem('wm.team'); }")

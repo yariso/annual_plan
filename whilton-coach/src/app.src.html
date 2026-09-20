@@ -1308,7 +1308,7 @@ function lapFix(f) {          // f: { t (ms), lat, lon, spd (m/s or null), acc }
     const ds = mod(hit.i - E.s + E.n / 2, E.n) - E.n / 2, dt = (f.t - E.tFix) / 1000;
     if (dt > 0 && (v == null || isNaN(v))) v = Math.max(0, ds * E.L.step / dt);
     if (motion.on && v != null && !isNaN(v)) motionLearn(E.v, v, E.tFix, f.t);          // the sensor's mean push over the same second, signed by the speed change, is how it learns which way is forward
-    if (dt > .02 && dt < 1.6) E.acc = Math.max(-8, Math.min(5, ((v || 0) - E.v) / dt)) * .7; else E.acc = 0;
+    if (dt > .02 && dt < 1.6) { let v0 = E.v, t0 = E.tFix; if ((E.rate || 0) > 5) for (let j = E.samples.length - 1; j >= 0 && E.samples.length - j < 40; j--) { if (f.t - E.samples[j].t >= 250) { v0 = E.samples[j].v; t0 = E.samples[j].t; break; } } E.acc = Math.max(-8, Math.min(5, ((v || 0) - v0) / Math.max(dt, (f.t - t0) / 1000))) * .7; } else E.acc = 0;   // at a box's 10 to 25 Hz the change is taken over a quarter of a second, so speed jitter between neighbouring fixes is not read as braking
     const before = E.cum; E.cum += ds;
     const k = Math.floor(E.cum / E.n); if (k > Math.floor(before / E.n) && ds > 0 && prev && (v || 0) > 8 * (E.gate || 1)) {        // crossed the start line at speed (a pit-lane pass does not count)
       const tc = prev.t + (k * E.n - before) / ds * (f.t - prev.t), gapped = dt > 5;                             // a crossing inside a GPS gap cannot be timed
@@ -1416,7 +1416,8 @@ function lapMetrics(startCum) {
   cardList().forEach(([key]) => {
     const w = cornerWindow(key); if (!w) return; const c0 = startCum + w.c0, c1 = startCum + w.c1;
     const t0 = tAt(c0), t1 = tAt(c1); if (t0 == null || t1 == null) return;
-    const W = S.filter(p => p.c >= c0 - 1 && p.c <= c1 + 1); if (W.length < 2) return;
+    let W = S.filter(p => p.c >= c0 - 1 && p.c <= c1 + 1); if (W.length < 2) return;
+    if (W.length > 3 && (W[W.length - 1].t - W[0].t) / (W.length - 1) < 200) W = W.map((p, j) => { let n = 0, sum = 0; for (let k = j; k >= 0 && p.t - W[k].t <= 125; k--) { sum += W[k].v; n++; } for (let k = j + 1; k < W.length && W[k].t - p.t <= 125; k++) { sum += W[k].v; n++; } return { t: p.t, c: p.c, v: sum / n }; }).filter(function (p, j, A) { if (j === 0 || j === A.length - 1 || p.t - this.t >= 100) { this.t = p.t; return true; } return false; }, { t: -1e9 });   // a 10 to 25 Hz trace is smoothed over a quarter of a second and thinned to ten samples a second before the scan, so Doppler jitter does not plant a brake point on a straight
     let vMin = 1e9, cMin = c0, brakeOn = null, decel = 0, first = null, plateau = 0, pj = 0; W.forEach((p, j) => { if (p.v < vMin) { vMin = p.v; cMin = p.c; } if (j) { const q = W[j - 1], d = (q.v - p.v) / Math.max(.05, (p.t - q.t) / 1000); decel = Math.max(decel, d); if (first == null) { if (q.v >= plateau) { plateau = q.v; pj = j - 1; } if (d > 1.6) first = j; } } });
     if (first != null) { for (let j = pj + 1; j <= first; j++) { const p = W[j]; if (p.v < plateau - .5) { brakeOn = Math.max(c0, p.c - (plateau * plateau - p.v * p.v) / (2 * Math.max(decel, 1.6) * L.step)); break; } } if (brakeOn == null) brakeOn = (W[first - 1].c + W[first].c) / 2; }   // the onset is where the speed left its plateau: back-projected from the first fix below it along the hardest braking seen, so it does not read late at one fix a second whichever fix phase the lap had
     let thr = null; for (const p of W) if (p.c > cMin && p.v > vMin + 1) { thr = p.c; break; }
@@ -1482,7 +1483,7 @@ function finishLap(tc, endCum) {
   else if (E.laps.length > 1 && lap === E.best) tip = say = 'Best lap. Same again.';
   lap.tip = tip; lap.say = say; const lg = lagMs(); lap.spins = (E.mEvents || []).filter(e => e.k === 's' && e.t + lg >= E.lapStartT && e.t + lg <= tc).length;
   E.mEvents = (E.mEvents || []).filter(e => e.t + lg > tc - 3000);
-  if (live.on) teamLog(lap);
+  if (live.on || E.logAs) teamLog(lap);
   // the lap time, then how it compares: "71.5, best" or "71.9, 0.4 off"; both are said at the next quiet moment so no brake word cuts them off
   const g = prevBest ? (ms - E.best.ms) / 1000 : 0, gap = !prevBest ? '' : E.best === lap ? ', best' : g < .05 ? ', equal best' : ', ' + g.toFixed(1) + ' off';
   E.queue = []; E.said = {};
@@ -1648,7 +1649,7 @@ function simStep(dt, now, quiet) {
   const here = at(sim.pos); sim.fixAcc += dt; (sim.ring = sim.ring || []).push({ t: now, pos: sim.pos, v: sim.v }); while (sim.ring.length && now - sim.ring[0].t > 2000) sim.ring.shift();
   if (sim.fixAcc >= 1 / sim.rate) {
     sim.fixAcc = 0; const ring = sim.ring || [], past = ring.length ? ring.reduce((b, r) => (now - r.t >= set.gpsDelay * 1000 ? r : b), ring[0]) : { pos: sim.pos, v: sim.v }, old = at(past.pos), noise = sim.rate === 1 ? 3 : .6, T = simT(), w = m2w(T, old.x, old.y);       // the receiver reports where you were a moment ago, and the speed from that same moment
-    const ll = toLL(w[0] + (Math.random() - .5) * 2 * noise, w[1] + (Math.random() - .5) * 2 * noise, SIM_ORIGIN); lapFix({ t: now, lat: ll[0], lon: ll[1], spd: past.v, acc: noise * 2 });
+    const ll = toLL(w[0] + (Math.random() - .5) * 2 * noise, w[1] + (Math.random() - .5) * 2 * noise, SIM_ORIGIN); lapFix({ t: now, lat: ll[0], lon: ll[1], spd: past.v + (sim.spdNoise ? (Math.random() - .5) * 2 * sim.spdNoise : 0), acc: noise * 2 });
   }
   sim.tickAcc += dt;
   if (sim.tickAcc >= .1) { sim.tickAcc = 0; const s = lapTick(now); if (!quiet) { $('#simSpd').textContent = Math.round(sim.v * MPH); $('#simLap').textContent = lapE.lapStartT != null ? fmtLap(now - lapE.lapStartT) : '0:00.0'; pedalShow('#simPedal', s ? +lvS[mod(Math.floor(s.cum + s.v * set.toneLead / ds), n)] : 1); } }
@@ -1808,7 +1809,7 @@ function motionEvent(e, tSim) {
 }
 function hor(v) { const g = motion.g, gn = Math.hypot(g[0], g[1], g[2]) || 9.81, u = [g[0] / gn, g[1] / gn, g[2] / gn], d = v[0] * u[0] + v[1] * u[1] + v[2] * u[2]; return { u, h: [v[0] - d * u[0], v[1] - d * u[1], v[2] - d * u[2]] }; }
 function motionAxis(s) {   // every sample in a corner: the push the phone feels is sideways, and GPS speed times the gyro's turn rate says how hard and which way. Left and right corners both teach the same axis
-  const M = motion, E = lapE, v = E.T ? E.v : 0, w = v * s.yaw * RAD; if (v < 4 || Math.abs(w) < 1.5) return;
+  const M = motion, E = lapE, v = E.T ? E.v : 0, w = v * s.yaw * RAD; if (v < 4 || Math.abs(w) < 1.5 || Math.abs(s.yaw) > 120) return;   // over 120 degrees a second is a spin or a knock, not a corner: it must not teach the axis
   const mag = Math.hypot(s.h[0], s.h[1], s.h[2]); if (mag < .8) return;
   M.S = M.S || [0, 0, 0]; M.Sw += Math.abs(w) * mag * .05; for (let i = 0; i < 3; i++) M.S[i] += w * s.h[i] * .05;
   if (M.Sw > 600) { M.Sw *= .5; for (let i = 0; i < 3; i++) M.S[i] *= .5; }   // forgets slowly, so a phone that shifts in the pocket is relearned
@@ -2022,10 +2023,10 @@ function liveStop(keepMsg) {
   renderDebrief();
 }
 // run a saved recording (or a lap timer's CSV) through the same engine, silently, to get lap times and coaching
-function replay(R) {
+function replay(R, logAs) {   // logAs: a driver's name to log the laps under, as a live stint would (a box's file or a lap timer's export after a stint)
   if (sim.on) simStop(); if (live.on) liveStop();
   let k = store.get('wm.lock', null); const fresh = tryLock(R, false); if (fresh) k = fresh; if (!k) { toast('Could not fit this recording to the track map.'); return false; }
-  useLock(k); lapE.quiet = true; const t0 = R[0][0]; R.forEach(r => lapFix({ t: r[0] - t0, lat: r[1], lon: r[2], spd: r[3], acc: r[5] })); lapE.quiet = false; renderDebrief(); lockInfo();
+  useLock(k); lapE.quiet = true; lapE.logAs = logAs || null; const t0 = R[0][0]; R.forEach(r => lapFix({ t: r[0] - t0, lat: r[1], lon: r[2], spd: r[3], acc: r[5] })); lapE.quiet = false; lapE.logAs = null; renderDebrief(); lockInfo();
   toast(lapE.laps.length + ' laps found in the recording.'); return true;
 }
 function parseCsv(text) {
@@ -2122,7 +2123,7 @@ $('#replayBtn').addEventListener('click', () => { if (live.on) liveStop(); if (!
 $('#saveCsv').addEventListener('click', () => { if (!rec.length) { toast('Nothing recorded yet.'); return; } saveFile('whilton-session.csv', 'time_ms,latitude,longitude,speed_mps,heading_deg,accuracy_m,fix_age_s\n' + rec.map(r => r.map(v => v == null ? '' : v).join(',')).join('\n')); });
 $('#loadFile').addEventListener('change', e => {
   const f = e.target.files && e.target.files[0]; if (!f) return; const rd = new FileReader();
-  rd.onload = () => { const r = parseCsv(String(rd.result || '')); if (r) { rec = r; store.set('wm.rec', rec); replay(rec); } else toast('Could not read that file. It needs latitude, longitude and time columns, and the times must change from row to row.'); };
+  rd.onload = () => { const r = parseCsv(String(rd.result || '')); if (r) { rec = r; store.set('wm.rec', rec); replay(rec, ($('#driverName').value || '').trim()); } else toast('Could not read that file. It needs latitude, longitude and time columns, and the times must change from row to row.'); };
   rd.readAsText(f); e.target.value = '';
 });
 const bindNum = (id, key) => { const i = $(id); i.value = set[key]; i.addEventListener('change', () => { const v = parseFloat(i.value); if (isFinite(v)) { set[key] = v; saveSettings(); } }); };

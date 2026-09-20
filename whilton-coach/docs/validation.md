@@ -56,6 +56,10 @@ What this check cannot do: it reads the guides through search excerpts, so a sen
 
 docs/model-vs-guide.md compares the physics model with the guide at every corner: the pedal class, the brake point against the painted zone, and the side of the track at the approach, the apex and past the exit. On the calibrated model 32 of 96 readings agree on all three counts. The recurring differences: the model brakes at Crook where every guide says flat or a lift (the traced Crook is probably tighter than the real one, which a GPS survey will settle), it lifts at Inkermans where the guide says flat, and the guide's drawn line returns to the middle after an exit sooner than a kart running out to the edge. Every corner card carries its own line of this comparison.
 
+## The race plan and the 25 Hz box, September 2026
+
+A second research pass (five reports each) fed docs/not-last.md and docs/diy-box.md: the event's own pages, UK coaches and venues, the motor learning literature through Consensus and PubMed, WebKit source for the phone's sensors, and the parts market for a home-built receiver. The independent claim-by-claim verification pass planned for both ran out of session budget after the research phase, so each note lists its claims as unverified where only one or two sources were read, and the event facts (format, layout, start, pit rules, earpieces) are to be confirmed at the briefing. Two things the pass changed in the app: the motion sensor's brake timing (which the sensor literature supports for a phone in an unknown orientation, with about 71 to 97 per cent event accuracy in road studies) and the coaching delivery (the point three seconds after the lap time, the self-estimate question in the debrief, imagery guidance), which rest on small, replicated effects rather than large ones.
+
 ## Links
 - https://bukc.co.uk/circuits/whilton-mill-national/
 - https://bukc.co.uk/circuits/whilton-mill-international/
