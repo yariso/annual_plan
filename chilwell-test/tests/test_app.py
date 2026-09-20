@@ -380,6 +380,43 @@ def content_checks():
     noans = [q['id'] for q in qs if len(q.get('a', '')) < 25]
     check('every question has an answer', not noans, ', '.join(noans[:4]))
 
+    print('\nthe diagrams and the links hold together')
+    bad = []
+    for j in data('junctions.json')['items']:
+        d = j.get('diagram')
+        if not d:
+            continue
+        if d.get('type') == 'roundabout':
+            bs = [e.get('b') for e in d.get('exits', [])]
+            for b in bs:
+                if not isinstance(b, (int, float)) or not 0 <= b < 360:
+                    bad.append((j['id'], 'bearing', b))
+            for k in ('enter', 'leave'):
+                if d.get(k) is not None and d[k] not in bs:
+                    bad.append((j['id'], k + ' is not one of the exits', d[k]))
+        elif d.get('type') == 'junction':
+            if d.get('shape') not in ('tjoin', 'crossroads', None):
+                bad.append((j['id'], 'shape', d.get('shape')))
+            if d.get('turn') not in ('left', 'right', 'ahead', None):
+                bad.append((j['id'], 'turn', d.get('turn')))
+        elif d.get('type') != 'tram':
+            bad.append((j['id'], 'unknown diagram type', d.get('type')))
+    check('every diagram is one the app can draw', not bad, str(bad[:3]))
+
+    links = re.compile(r'\[[^\]]*\]\((?!https?://)[^)]*\)')
+    offenders = []
+    for name in os.listdir(os.path.join(ROOT, 'data')):
+        with open(os.path.join(ROOT, 'data', name), encoding='utf-8') as fh:
+            body = fh.read()
+        for m in links.finditer(body):
+            offenders.append(name + ': ' + m.group(0)[:40])
+    check('every markdown link has a url behind it', not offenders, '; '.join(offenders[:3]))
+
+    gos = [x.get('go') for j in data('plan.json')['journey'] for x in (j.get('do') or []) if x.get('go')]
+    tabs = {'start', 'map', 'roads', 'test', 'skills', 'mock'}
+    wrong = [g for g in gos if g.split('#')[0] not in tabs]
+    check('every jump button names a real tab', not wrong, ', '.join(wrong))
+
     print('\nnothing is left half written')
     blob = ''
     for name in os.listdir(os.path.join(ROOT, 'data')):
