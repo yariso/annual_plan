@@ -6,24 +6,40 @@ estimate as measured, and say plainly when something could not be confirmed.
 
 ## How the content was gathered
 
-The content was written from sixteen research notes in `research/`, one per topic, each
-produced by a separate pass over the web and each carrying its own sources and its own
-"Not found" list. Sixteen further passes, ten of them adversarial checks of single facts
-and one a completeness critique, were run over the same material.
+Sixteen research passes were planned, one per topic, each writing a sourced note into
+`research/` with its own "Not found" list. Eight were written. The other eight, and the
+adversarial fact checks that were to follow them, never ran, for the reason below.
 
-### The limitation that shapes everything here
+### The two limits that shape everything here
 
-The research ran inside a sandbox whose egress policy blocked the page fetching tool for
-every domain tried, GOV.UK included. A direct request to `https://www.gov.uk/` returned a
-403 from the proxy. Web search still worked, and search returns both result listings and a
-short summary of each page, so the research rests on those summaries rather than on pages
-opened and read end to end.
+**Pages could not be opened.** The sandbox's egress policy blocked the page fetching tool
+for every domain tried, GOV.UK included. A direct request to `https://www.gov.uk/`
+returned a 403 from the proxy. So no page behind any URL in this app was opened and read.
+
+**Web search ran out.** The session has a budget of 200 web searches and the first six
+research passes used all of them. Everything written after that point, in the research
+notes and in the app, rests either on what those six passes had already gathered or on the
+writer's own knowledge, and the notes say which at the top of each file.
+
+So the app has three tiers of content, and it tries to keep them visibly apart:
+
+1. Gathered while search worked, from several sources agreeing: the test structure, the
+   marking rules, the fault definitions, the test centre's address, the pass rates, the
+   safety questions. Every one of these carries a URL that a search engine returned as its
+   source, and none of those pages was opened.
+2. Reasoned from tier one: how the rules play out, what to do about them, what a fault
+   costs you.
+3. Knowledge, with no source behind it: the local roads, the coordinates, the taught
+   method for each manoeuvre, the general advice. These carry (reasoned) or (unverified)
+   in the app, and the honesty panel on the Start tab lists them.
 
 What that means in practice:
 
 - A claim marked in the notes as "cited by search, page not opened" has a real URL behind
   it, and that URL was returned by a search engine as the source of the wording, but no
   one in this process read the page.
+- A note written after the search budget ran out says so in its first paragraph. Treat any
+  claim in those notes that is not attached to a URL as knowledge, not as fact.
 - Wording presented as a quotation came through a search summary. It is probably right and
   may be paraphrased.
 - Numbers that several independent sources agree on are treated as solid. Numbers that
@@ -31,8 +47,8 @@ What that means in practice:
   one the app shows.
 - Nothing in the app should be treated as DVSA material. GOV.UK is the authority.
 
-The first item in the project backlog is to open the primary sources on a machine without
-this restriction and settle every line below marked "search result only".
+The first item in the project backlog is to open the primary sources on a machine with
+normal network access and settle every line below.
 
 ## How the app itself was checked
 
@@ -64,7 +80,80 @@ sections. The app's own honesty list is in `data/sources.json` and is shown to t
 on the Start tab under "Where all of this comes from". The most important unresolved items
 are collected here.
 
-<!-- filled in from the research once the content files are written -->
+### What is solid
+
+These came through while web search was still working, from several sources agreeing, and
+they are the backbone of the app.
+
+- The test centre is Nottingham (Chilwell), Unit 24 Eldon Business Park, Eldon Road,
+  NG9 6DZ, just off the A6005 Nottingham Road next to Chilwell Retail Park. Several
+  independent driving school and test centre listings give the same address. The spelling
+  is Chilwell with one l in the middle. It is not on Chetwynd Business Park: Chetwynd is
+  the barracks and a separate road in Chilwell, and one driving school page that puts the
+  centre on Cator Lane contradicts every other source and is wrong.
+- The shape of the test, its order and the examiner's wordings, from GOV.UK and from DT1,
+  the examiners' own guide.
+- Three changes took effect at every test centre on 24 November 2025: stops cut from four
+  to three, the emergency stop cut from one test in three to one in seven, and the
+  independent driving section allowed to use a sat nav, signs or both and to run for the
+  whole test. Anything written before that date is out of date on all three.
+- The pass rule: no serious or dangerous faults, and fifteen or fewer driving faults.
+- The three fault definitions, in DVSA's public wording and in DT1's tighter wording,
+  which adds "or entails a breach of the law" to the definition of a serious fault.
+- That a repeated driving fault in one item can be assessed as a serious fault, which is
+  in DT1 and is not on the public pages.
+- The eyesight check at 20 metres for a current plate and 20.5 metres for an old one, the
+  three attempts, and that a candidate is never asked to read one closer than 20 metres.
+- The fourteen tell me questions and six of the show me questions, with DVSA's answers.
+
+### What is not solid, and what the app does about it
+
+- **The pass rate.** Reported as about 44 per cent for 2024 to 2025 and about 49.9 per cent
+  for 2025 to 2026, on figures republished by driving sites rather than read from DVSA's
+  own table. The table reference also changed: the centre level data is DRT122A, not the
+  DRT0201 the brief assumed. The app gives both years, says where the numbers came from,
+  and says that a centre's rate says very little about one person.
+- **The marking sheet box numbers.** Sources agree on the competency numbers 11 to 27 but
+  contradict each other on the numbers for the manoeuvre boxes. The app prints the numbers
+  only where the sources agreed, and leaves them out otherwise.
+- **How many competencies there are.** Reported as 24, 27 and 28 by different sources,
+  probably because they count the manoeuvre, eyesight, eco and spare boxes differently.
+  The app says about twenty seven.
+- **The seventh show me question.** Widely reported as opening and closing the side window,
+  but the wording could not be confirmed on a GOV.UK page. The app includes it and marks it
+  unverified.
+- **The top ten faults.** Ranks one and two (junction observation, and mirrors when
+  changing direction) and ranks eight, nine and ten are established. Ranks three to seven
+  are not, so the app does not print a full ordered list.
+- **The test centre's car park, waiting room, toilets and opening hours.** Everything known
+  comes from driving school pages and aggregator listings, and they contradict each other
+  on whether candidates can park on site. The app gives the cautious reading: do not count
+  on parking a second car there.
+- **The sat nav model.** The TomTom Start 52 is what DVSA introduced and what secondary
+  sources still report, with no 2026 confirmation found. The app says "usually a TomTom
+  Start 52" rather than stating it.
+- **Eco safe driving.** Instructor sites say eco marks cannot fail a test. No DVSA page
+  confirming it was found, so the app says so.
+- **The local roads.** Not one speed limit was confirmed against a council or mapping
+  source. The app does not print bare speed limits as fact, and where it names one it is
+  marked unverified.
+- **The test routes.** No published route for this centre exists. Four unofficial
+  publishers make route shaped claims, and they agree only that the routes are urban and
+  heavy on roundabouts. The features they name (Bramcote Island, Bardills roundabout, the
+  M1 Junction 25 roundabout, the A6005 dual carriageway, Beeston High Road, roads shared
+  with trams, one way streets, filter arrows) mostly come from a single instructor's page.
+  The app says all of this plainly and gives the roads any route has to use instead.
+- **The coordinates.** None are surveyed and none are sourced. The web search budget ran
+  out before a coordinate pass could run, so every position in the app was placed from
+  knowledge of the area and is marked approximate. The app gives the reader two ways to
+  correct each one: stand at the junction and take the position from the phone, or drag
+  the map under a crosshair.
+- **The nerves section.** The research pass on the evidence never ran, so the app describes
+  what is broadly supported without citing studies. It does not name an author, a year or a
+  journal, because inventing a citation would be worse than having none.
+- **Booking, fees and waiting times.** The fees given (62 pounds on a weekday, 75 pounds in
+  the evening or at a weekend) came from a search result and change. The app tells the
+  reader to check the current figure on GOV.UK.
 
 ## The local roads
 

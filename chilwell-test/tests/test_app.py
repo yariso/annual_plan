@@ -248,6 +248,18 @@ def run(pw):
     check('the history lists the mocks', page.locator('#histBody tbody tr').count() >= 3,
           '%d rows' % page.locator('#histBody tbody tr').count())
 
+    print('\nthe paper sheet and the save file')
+    page.evaluate("() => { const old = window.print; window.print = () => {}; document.querySelector('#mockPrint').click(); window.print = old; }")
+    page.wait_for_timeout(200)
+    pa = page.inner_text('#printArea')
+    check('the paper sheet is built', len(pa) > 200, '%d characters' % len(pa))
+    check('the paper sheet says it is not a DVSA form', 'not a DVSA form' in pa)
+    rows = page.evaluate("document.querySelectorAll('#printArea tbody tr').length")
+    check('the paper sheet has a row per item', rows >= len([f for f in data('faults.json')['items'] if f.get('mock') is not False]),
+          '%d rows' % rows)
+    saved = page.evaluate("() => { let out = null; const old = URL.createObjectURL; URL.createObjectURL = b => { out = b.size; return 'blob:x'; }; document.querySelector('#mockSave').click(); URL.createObjectURL = old; return out; }")
+    check('the save file is produced', bool(saved and saved > 50), str(saved))
+
     print('\nthe mocks survive a reload')
     page.reload()
     page.wait_for_timeout(500)

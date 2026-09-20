@@ -212,7 +212,7 @@ nav.tabs svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1
 </header>
 <main>
 
-<section class="tab" id="tab-start">
+<section class="tab" id="tab-start" role="tabpanel" aria-labelledby="tabbtn-start">
   <div class="note" id="countBox">
     <div class="row" style="margin:0 0 6px">
       <label class="fld" style="flex:1 1 150px">Test date<input type="date" id="tDate"></label>
@@ -238,7 +238,7 @@ nav.tabs svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1
   <details class="panel" id="panel-sources"><summary>Where all of this comes from, and what is not verified</summary><div id="srcBody"></div></details>
 </section>
 
-<section class="tab" id="tab-map" hidden>
+<section class="tab" id="tab-map" role="tabpanel" aria-labelledby="tabbtn-map" hidden>
   <h2>The area</h2>
   <p class="small muted" id="mapIntro"></p>
   <div id="mapbox">
@@ -261,7 +261,7 @@ nav.tabs svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1
   <details class="panel"><summary>What this map is, and what it is not</summary><div id="mapAbout"></div></details>
 </section>
 
-<section class="tab" id="tab-roads" hidden>
+<section class="tab" id="tab-roads" role="tabpanel" aria-labelledby="tabbtn-roads" hidden>
   <h2>The roads and junctions</h2>
   <p class="lede" id="roadsIntro"></p>
   <div class="chips" id="roadFilter" role="group" aria-label="Filter"></div>
@@ -269,7 +269,7 @@ nav.tabs svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1
   <details class="panel"><summary>Routes: what is known and what is not</summary><div id="routesBody"></div></details>
 </section>
 
-<section class="tab" id="tab-test" hidden>
+<section class="tab" id="tab-test" role="tabpanel" aria-labelledby="tabbtn-test" hidden>
   <h2>The test, in order</h2>
   <div id="testOrder"></div>
   <h2>How it is marked</h2>
@@ -280,7 +280,7 @@ nav.tabs svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1
   <div id="faultList"></div>
 </section>
 
-<section class="tab" id="tab-skills" hidden>
+<section class="tab" id="tab-skills" role="tabpanel" aria-labelledby="tabbtn-skills" hidden>
   <h2>Manoeuvres</h2>
   <p class="lede" id="manIntro"></p>
   <div id="manList"></div>
@@ -294,7 +294,7 @@ nav.tabs svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1
   <div id="qList"></div>
 </section>
 
-<section class="tab" id="tab-mock" hidden>
+<section class="tab" id="tab-mock" role="tabpanel" aria-labelledby="tabbtn-mock" hidden>
   <h2>Mock test</h2>
   <p class="lede" id="mockIntro"></p>
   <div id="mockSetup">
@@ -331,12 +331,12 @@ nav.tabs svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1
 </div>
 
 <nav class="tabs" role="tablist" aria-label="Sections">
-  <button type="button" role="tab" data-tab="start" aria-selected="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4l14 8-14 8z"/></svg>Start</button>
-  <button type="button" role="tab" data-tab="map" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/></svg>Map</button>
-  <button type="button" role="tab" data-tab="roads" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 21L9 3M17 21l-2-18"/><path d="M12 5v3M12 11v3M12 17v3"/></svg>Roads</button>
-  <button type="button" role="tab" data-tab="test" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10a2 2 0 0 1 2 2v16H5V5a2 2 0 0 1 2-2z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>Test</button>
-  <button type="button" role="tab" data-tab="skills" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg>Skills</button>
-  <button type="button" role="tab" data-tab="mock" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11l2 2 4-5"/><rect x="4" y="3" width="16" height="18" rx="2"/></svg>Mock</button>
+  <button type="button" role="tab" id="tabbtn-start" aria-controls="tab-start" data-tab="start" aria-selected="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4l14 8-14 8z"/></svg>Start</button>
+  <button type="button" role="tab" id="tabbtn-map" aria-controls="tab-map" data-tab="map" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/></svg>Map</button>
+  <button type="button" role="tab" id="tabbtn-roads" aria-controls="tab-roads" data-tab="roads" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 21L9 3M17 21l-2-18"/><path d="M12 5v3M12 11v3M12 17v3"/></svg>Roads</button>
+  <button type="button" role="tab" id="tabbtn-test" aria-controls="tab-test" data-tab="test" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10a2 2 0 0 1 2 2v16H5V5a2 2 0 0 1 2-2z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>Test</button>
+  <button type="button" role="tab" id="tabbtn-skills" aria-controls="tab-skills" data-tab="skills" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg>Skills</button>
+  <button type="button" role="tab" id="tabbtn-mock" aria-controls="tab-mock" data-tab="mock" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11l2 2 4-5"/><rect x="4" y="3" width="16" height="18" rx="2"/></svg>Mock</button>
 </nav>
 <div id="toast" hidden></div>
 <div id="printArea"></div>
@@ -965,7 +965,8 @@ function renderCentre() {
     (c.arrival && c.arrival.length ? '<h4>When you get there</h4>' + olist(c.arrival) : '') +
     (facts ? '<dl class="facts">' + facts + '</dl>' : '') +
     '<div class="row"><button type="button" class="btn small" data-go="map">Show it on the map</button>' +
-    (c.lat ? '<a class="btn small" style="text-decoration:none;display:inline-flex;align-items:center" target="_blank" rel="noopener" href="https://www.openstreetmap.org/?mlat=' + c.lat + '&mlon=' + c.lon + '#map=17/' + c.lat + '/' + c.lon + '">Open in a map app</a>' : '') + '</div>' +
+    (c.postcode ? '<a class="btn small" style="text-decoration:none;display:inline-flex;align-items:center" target="_blank" rel="noopener" href="https://www.openstreetmap.org/search?query=' + encodeURIComponent((c.address ? c.address.join(', ') : '') || c.postcode) + '">Look up the address in a map</a>' : '') + '</div>' +
+    (c.precision === 'approximate' ? '<p class="small muted" style="margin:6px 0 0">The pin on the map is approximate. Nothing in this app was surveyed. Use the postcode and the unit number, and check the address on your booking confirmation.</p>' : '') +
     srcLine(c.sources) + '</div>';
 }
 
@@ -1455,7 +1456,7 @@ function renderMockMap(rec) {
   if (!rec) { const h = store.get(K.mocks, []); if (h.length) return renderMockMap(h[0]); }
   if (!rec) { box.innerHTML = ''; $('#mockMapNote').textContent = 'Run a mock test with location allowed and every fault is pinned where it happened.'; return; }
   if (!marks.length && !(rec.route || []).length) { box.innerHTML = ''; $('#mockMapNote').textContent = 'That mock has no positions saved, so there is nothing to pin. Allow location before you start and the faults land on the map.'; return; }
-  $('#mockMapNote').textContent = marks.length + ' fault' + (marks.length === 1 ? '' : 's') + ' pinned from the last mock. Tap a pin to see what it was.';
+  $('#mockMapNote').textContent = marks.length + ' fault' + (marks.length === 1 ? '' : 's') + ' pinned from the last mock, where the car was when the mark went down. Tap a pin to see what it was. Faults at the same spot are fanned out a few metres so you can reach them.';
   box.innerHTML = '<div id="mockbox" style="position:relative;height:52vh;min-height:300px;background:var(--field);border:1px solid var(--rule);border-radius:12px;overflow:hidden;touch-action:none"><div class="tiles" style="position:absolute;inset:0"></div><svg style="position:absolute;inset:0;width:100%;height:100%"></svg><div class="attrib">Map data © OpenStreetMap contributors</div></div><div id="mockPinCard"></div>';
   const bx = $('#mockbox');
   $$('#mockbox .tiles img').forEach(i => i.remove());
@@ -1471,9 +1472,20 @@ function renderMockMap(rec) {
     }
   });
   mockMap.lines = (rec.route || []).length > 1 ? [{ points: rec.route, colour: '#1558B0', w: 4, op: .5 }] : [];
+  /* several faults at one junction land on one another, so fan them out a few
+     metres. The pin then shows where it happened, give or take a car length. */
+  const placed = [];
   mockMap.pts = marks.map((m, i) => {
     const f = faultById(m.id);
-    return { id: 'mk:' + i, lat: m.lat, lon: m.lon, name: (f ? (f.short || f.name) : m.id), colour: FK[m.k].pin, glyph: m.k === 'd' ? '' : m.k === 's' ? 'S' : 'X' };
+    const p = { id: 'mk:' + i, lat: m.lat, lon: m.lon, name: (f ? (f.short || f.name) : m.id), colour: FK[m.k].pin, glyph: m.k === 'd' ? '' : m.k === 's' ? 'S' : 'X' };
+    const n = placed.filter(q => metres(q, p) < 14).length;
+    if (n) {
+      const a = n * 2.4, r = 7 + n * 2;
+      p.lat += r * Math.cos(a) / 111320;
+      p.lon += r * Math.sin(a) / (111320 * Math.cos(p.lat * Math.PI / 180));
+    }
+    placed.push({ lat: p.lat, lon: p.lon });
+    return p;
   });
   mockMap.render();
   const pts = mockMap.pts.concat((rec.route || []).map(p => ({ lat: p[0], lon: p[1] })));
