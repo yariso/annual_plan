@@ -1,15 +1,673 @@
 {
- "intro": "STUB",
+ "intro": "This app was written inside a sandbox with two limits on it, and both of them change how much weight you should put on what you read here. The first: the tool that opens a web page was blocked by the network policy for every address tried, GOV.UK included. Not one page behind not one link in this app was opened and read. What you are reading rests on web search results and the summaries returned with them. The URLs are real and a search engine returned them as the source of the wording, but nobody in the process checked a single word against the page itself. Two mirrored copies of old GOV.UK statistics pages hosted on Amazon S3, and one code repository, were the only pages anyone actually opened.\n\nThe second: the session had a budget of two hundred web searches and the first six research passes spent all of them. Those six were the test centre itself, the pass rates, the structure of the test, the marking sheet, the common faults, and part of the examiner guidance, and they are the best sourced parts of this app. Everything written after that, which includes all of the local road detail, the routes, the coordinates, the manoeuvre method and the advice, rests either on what those six had already gathered or on the writer's own knowledge. Where a claim is knowledge rather than a source, the app says **(unverified)**. Where it is an inference drawn from something sourced, it says **(reasoned)**. Where neither word appears, there is a link, and that link came from a search engine.\n\nNothing here is DVSA material. This is a reading of DVSA's published rules plus local knowledge, written for one person taking one test at one centre. [GOV.UK](https://www.gov.uk/driving-test) is the authority on the test and the examiner's decision on the day is the only one that counts. Anything that matters to you, the fee, the rules your car has to meet, the eyesight standard, what to bring, how long you must wait before a retest, should be checked on GOV.UK before you rely on it. The examiner's words quoted throughout this app came through search summaries, so read them as the sense of what is said rather than as a script.",
  "limits": [
-  "STUB"
+  "The pass rates. Not one figure in this app came from DVSA's own table. Every one was republished by a commercial site, and for 2024 to 2025 six different sites gave Chilwell anything from 41.9 to 48.9 per cent.",
+  "The jump at Chilwell from about 44 per cent to about 49.9 per cent in one year is much larger than the national move over the same period. It may be real, or a site may have mislabelled which year its data covers. No table could be opened to settle it, so the app shows both years rather than one headline number.",
+  "The test centre's pass rate by gender, and its figures for any year before 2024, were not found at all. The centre level data lives in DVSA's table DRT122A, which nobody opened.",
+  "The eyesight distance. The app gives 20 metres for a current style plate and 20.5 metres for an old style one, which is what GOV.UK and the examiners' guide were both reported as saying. One research pass found 20, 20.5 and 21 metres quoted across different sources. If it matters to you, check gov.uk/driving-eyesight-rules.",
+  "The marking sheet box numbers. Three instructor sites agree on the numbers for items 11 to 27 and contradict each other on the numbers for the manoeuvre boxes, so the app prints numbers only where they agreed and leaves the manoeuvre numbers out. The official DL25 PDF was never opened.",
+  "How many items are on the sheet. Reported as 24, 28 and 27 by different sources, so the app says about twenty seven.",
+  "The examiner's wordings. Every one of them reached this app through a search engine's summary of DVSA's DT1 test wordings page. Treat them as close paraphrase.",
+  "The test centre's parking. One listing says there are marked bays available on site, another says there are no parking facilities and that parking is permitted on Eldon Road outside. The app takes the cautious reading. Where an instructor or accompanying driver should leave a second car was never established.",
+  "The waiting room. No source found describes a waiting room at this centre, how many seats it has, whether it is staffed, or whether it is open for a test before 8am or at a weekend. Be ready to wait in the car.",
+  "The seven bays in the car park, their uneven widths and the kerb behind the two on the left all come from one local instructor's page, which nobody opened. No photograph or aerial view was available to check them.",
+  "The opening hours. One aggregator gives Monday to Friday, 8am to 4pm. Nothing corroborates it, and whether this centre runs evening or Saturday tests was never established. Your booking confirmation is the authority.",
+  "The coordinates. Every position on the map, the test centre included, was placed from knowledge of the area rather than surveyed or taken from a source. Each one says approximate on its card, and not one says sourced, because not one is.",
+  "The routes. DVSA does not publish test routes, and no route detail for this centre was found at all. The corridors drawn on the map are straight lines between junctions, not roads, and they show where unofficial local sources say tests tend to go.",
+  "The year DVSA stopped publishing routes is usually given as 2010. No source for that year was found, so the app does not state one.",
+  "The local speed limits. Not one limit on not one road in this app was confirmed against a council, a traffic regulation order or a mapping source. The app does not print a bare limit as fact. Read the signs on the day and fall back on the rule that street lighting means 30 mph unless signs say otherwise.",
+  "The A52 limit between M1 Junction 25 and Bramcote is the single number this app most wants and does not have.",
+  "The 20 mph streets. Not one could be confirmed anywhere in the test area, including around the schools and in Beeston town centre where they are most likely to be.",
+  "The bus lanes on and around Beeston High Road. Where they start and end, which way they run and what hours they keep could not be established. The sign at the mouth of the lane is all you have.",
+  "The traffic lights at the test centre. One instructor's page implies that where the business park meets the A6005 is signal controlled rather than a give way. Nothing confirms it and nobody has stood there.",
+  "The tram. Where it runs on the street, where it runs on its own track, and every point where it crosses a road a test would use could not be established.",
+  "Bramcote Island. No source describes its layout, its exits, its lane markings or whether it has signals. The Bardills description in this app comes from a road enthusiast site, not from a survey.",
+  "Whether a test from Chilwell actually drives the A52 carriageway, or reaches the M1 Junction 25 roundabout inside the drive, is not established, and no source gives a driving time from Eldon Road.",
+  "Where the parallel park and the pull up on the right are set at this centre. No source names a street, so the app names none.",
+  "Where the independent driving section goes from this centre, and which destination is used when it is run on traffic signs. Nothing was found on either.",
+  "The top ten faults. Ranks one, two, eight, nine and ten are established. Ranks three to seven are not, so the app prints no full ordered list, and no count or percentage for any single fault was found for any year.",
+  "Whether DVSA's published top ten ranks faults recorded or causes of failure was not established. The app describes them as what examiners write down most often.",
+  "There is no breakdown of faults by test centre, for Chilwell or anywhere else. DVSA's centre level tables are all pass rate tables. Anybody offering you a Chilwell fault league table has made it up.",
+  "The seventh show me question, about opening and closing the side window. Widely listed, but its wording could not be confirmed on a GOV.UK page.",
+  "Eco safe driving marks cannot fail a test, according to instructor sites. No DVSA page saying so was found.",
+  "There is no published number for how many repeats of the same driving fault turn it into a serious one. It is examiner judgement, and any app that gives you a number is inventing a rule.",
+  "The sat nav. The TomTom Start 52 is the device DVSA introduced in 2017 and the one secondary sources still report. No confirmation from 2025 or 2026 was found.",
+  "The fees, 62 pounds on a weekday and 75 pounds in the evening, at a weekend or on a bank holiday, came from search results and they change. So did the refund notice period, where one source says three working days and another ten.",
+  "The waiting time at this centre. One site says 7.7 weeks and another 11.6 weeks, on different dates and probably measuring different things. The booking service on the day is the only real answer.",
+  "The nerves section. The research pass on the evidence never ran, so nothing in it cites a study, a trial or a review, and none is named. Read it as instructor practice, not as evidence.",
+  "The method taught for each manoeuvre is standard instructor practice, not DVSA material. DVSA publishes what is assessed, not how to do it, and no tolerance for distance from the kerb or from a bay line was found.",
+  "The app's own phone behaviour, meaning location, permission prompts and the screen locking during a mock test, was never tested on a real phone."
  ],
  "list": [
   {
    "n": 1,
-   "name": "STUB",
-   "url": "https://www.gov.uk/",
-   "use": "STUB",
+   "name": "GOV.UK, what happens during your driving test",
+   "url": "https://www.gov.uk/driving-test/what-happens-during-test",
+   "use": "The order of the test, the drive lasting around 35 minutes, the eyesight distances, the manoeuvre list, independent driving of 20 to 35 minutes, the examiner supplying the sat nav, that a wrong turning is not a fault, and that the test is only stopped early for danger.",
    "kind": "official"
+  },
+  {
+   "n": 2,
+   "name": "GOV.UK, what to take to your driving test",
+   "url": "https://www.gov.uk/driving-test/what-to-take",
+   "use": "Arrive five minutes before the appointment, the photocard licence, the theory test checked by the examiner rather than brought as a certificate, and the test cancelled with the fee lost if you are late or short of documents.",
+   "kind": "official"
+  },
+  {
+   "n": 3,
+   "name": "GOV.UK, driving test faults and your result",
+   "url": "https://www.gov.uk/driving-test/driving-test-faults-result",
+   "use": "The three fault types in plain words, the examiner telling you what faults you made, the pass certificate and the provisional licence handover, the ten working days before another test, and the narrow grounds for an appeal.",
+   "kind": "official"
+  },
+  {
+   "n": 4,
+   "name": "GOV.UK, understanding your driving test result",
+   "url": "https://www.gov.uk/guidance/understanding-your-driving-test-result/car-driving-test",
+   "use": "The pass rule of no more than fifteen driving faults with none serious or dangerous, the sixteenth failing on its own, and the examiner took action marking.",
+   "kind": "official"
+  },
+  {
+   "n": 5,
+   "name": "GOV.UK, car show me tell me vehicle safety questions",
+   "url": "https://www.gov.uk/government/publications/car-show-me-tell-me-vehicle-safety-questions/car-show-me-tell-me-vehicle-safety-questions",
+   "use": "One tell me question before driving and one show me on the move, that getting one or both wrong is a single driving fault, several full question and answer pairs, and that dangerous driving while answering the show me fails the test.",
+   "kind": "official"
+  },
+  {
+   "n": 6,
+   "name": "DVSA DT1, test wordings (section 14)",
+   "url": "https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings",
+   "use": "Almost every sentence this app puts in the examiner's mouth: the declaration, the accompanying driver question, the safety questions, the opening directions, the roundabout exit wording, the normal stops, all four manoeuvres, independent driving on sat nav and on signs, the emergency stop, the pass and fail results and the debrief question.",
+   "kind": "official"
+  },
+  {
+   "n": 7,
+   "name": "DVSA DT1, the car driving test (section 1)",
+   "url": "https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/1-car-driving-test",
+   "use": "Examiner conduct and the instruction to reassure a nervous candidate, the identity and signature checks, the angle start and hill start requirements, that asking for a direction to be repeated is not a prompt, and when a test is stopped for public safety.",
+   "kind": "official"
+  },
+  {
+   "n": 8,
+   "name": "DVSA DT1, annex 6, guide to assessment and marking",
+   "url": "https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/annex-6-guide-to-assessment-and-marking",
+   "use": "The examiners' own definitions of the three fault types, including the clause the public pages leave out, that a serious fault is one that is potentially dangerous or entails a breach of the law, and the rule that a habitual driving fault can be assessed as potentially dangerous.",
+   "kind": "official"
+  },
+  {
+   "n": 9,
+   "name": "DVSA DT1, general technical matters (section 6)",
+   "url": "https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/6-general-technical-matters",
+   "use": "The eyesight check in full: the character height, good daylight, glasses or lenses, the second plate, the tape measurement, the third plate, what happens if it is misread, and that a plate is never read at less than 20 metres.",
+   "kind": "official"
+  },
+  {
+   "n": 10,
+   "name": "DVSA DT1, vehicle safety check questions (section 13)",
+   "url": "https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/13-vehicle-safety-check-questions",
+   "use": "The wording of the show me questions and how the two safety questions are framed.",
+   "kind": "official"
+  },
+  {
+   "n": 11,
+   "name": "DVSA DT1, annex 1, safety check questions for cars",
+   "url": "https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/annex-1-safety-check-questions-cars",
+   "use": "The tell me questions not on the public page, with DVSA's own answers: indicators, brake lights, power assisted steering, fog lights, main beam, engine oil, coolant and brake fluid.",
+   "kind": "official"
+  },
+  {
+   "n": 12,
+   "name": "DVSA DT1, the practical driving test and extended test for cars (section 01)",
+   "url": "https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/01-the-practical-driving-test-and-extended-test-for-cars",
+   "use": "The test measured from signing the declaration to switching the engine off, given as 38 to 40 minutes. Two versions of DT1 section 1 are in circulation and nobody established which is current, or whether this figure was updated after November 2025.",
+   "kind": "official"
+  },
+  {
+   "n": 13,
+   "name": "DVSA DT1, the examiner's guide, contents",
+   "url": "https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1",
+   "use": "The landing page for the examiners' operational manual, which is where all of the DT1 material in this app comes from.",
+   "kind": "official"
+  },
+  {
+   "n": 14,
+   "name": "DVSA Despatch, making adjustments to the driving test, 19 November 2025",
+   "url": "https://despatch.blog.gov.uk/2025/11/19/making-adjustments-to-the-driving-test/",
+   "use": "The three changes made permanent at every centre on 24 November 2025: stops cut from four to three, the emergency stop cut from one test in three to one in seven, and independent driving allowed to use a sat nav, signs or both and to run for the whole test. Anything you read that is older than this date may be wrong on all three.",
+   "kind": "official"
+  },
+  {
+   "n": 15,
+   "name": "GOV.UK, rules for observing driving tests",
+   "url": "https://www.gov.uk/guidance/rules-for-observing-driving-tests",
+   "use": "Who may sit in: usually the instructor but it can be a relative or friend, aged sixteen or over, taking no part in the test, normally one person, and where they should sit.",
+   "kind": "official"
+  },
+  {
+   "n": 16,
+   "name": "GOV.UK, candidates arriving late for a driving test",
+   "url": "https://www.gov.uk/government/publications/candidates-arriving-late-for-a-driving-test/information-and-guidance-given-to-examiners-when-candidates-are-late-for-a-driving-test",
+   "use": "That examiners must allow at least five minutes of grace, and may allow more at their discretion if it does not spoil the tests that follow.",
+   "kind": "official"
+  },
+  {
+   "n": 17,
+   "name": "GOV.UK, driving test marking sheet (the DL25)",
+   "url": "https://www.gov.uk/government/publications/driving-test-marking-sheet",
+   "use": "That examiners now record the test on a tablet and use the paper form only if the tablet fails, and that DVSA publishes the sheet for instructors running mock tests. The sheet in the Mock tab of this app is built from what is known of it.",
+   "kind": "official"
+  },
+  {
+   "n": 18,
+   "name": "DVSA, the DL25 driving test report, sample form",
+   "url": "https://assets.publishing.service.gov.uk/media/62a7437cd3bf7f03667c667a/dl25-driving-test-report.pdf",
+   "use": "Never opened. Only its text as indexed by a search engine was ever seen, which confirmed the header fields vehicle reg, instructor reg number and eyesight test, the S and D columns and the Clearance heading. Opening this PDF would settle the box numbers this app leaves out.",
+   "kind": "official"
+  },
+  {
+   "n": 19,
+   "name": "GOV.UK, carry out mock driving tests for your pupils",
+   "url": "https://www.gov.uk/guidance/carry-out-mock-driving-tests-for-your-pupils",
+   "use": "The forty minute shape of a mock test and the statement that DVSA's own guidance gives worked examples of driving, serious and dangerous faults.",
+   "kind": "official"
+  },
+  {
+   "n": 20,
+   "name": "GOV.UK, top 10 reasons for failing the driving test in Great Britain",
+   "url": "https://www.gov.uk/government/publications/top-10-reasons-for-failing-the-driving-test/top-10-reasons-for-failing-the-driving-test-in-great-britain",
+   "use": "Cited as the place DVSA publishes the list. Blocked every time it was tried, so this app prints only the ranks that could be established elsewhere and no counts or percentages at all.",
+   "kind": "official"
+  },
+  {
+   "n": 21,
+   "name": "DVSA, top 10 driving test faults, 2024 webinar slides",
+   "url": "https://despatch.blog.gov.uk/wp-content/uploads/sites/131/2024/12/top-10-driving-test-faults-2024-webinar-slides.pdf",
+   "use": "Ranks eight, nine and ten with DVSA's own explanatory bullets: road markings, positioning during normal driving, and safe and reasonable speed. The highest value document nobody in this project could open.",
+   "kind": "official"
+  },
+  {
+   "n": 22,
+   "name": "DVSA Despatch, explaining more about the top 10 driving test faults",
+   "url": "https://despatch.blog.gov.uk/2024/12/13/explaining-more-about-the-top-10-driving-test-faults-our-webinar-recap/",
+   "use": "The November 2024 instructor webinar and the topics its questions covered: repeatedly making the same driving fault, mounting the kerb, control of steering, creeping out when turning right, and blind spot checks at roundabouts.",
+   "kind": "official"
+  },
+  {
+   "n": 23,
+   "name": "DVSA, driving test prompt cards",
+   "url": "https://assets.publishing.service.gov.uk/media/624d5879d3bf7f32b5aa072b/driving-test-prompt-cards.pdf",
+   "use": "The eyesight wording including the option to write the registration down, and the rule that the emergency stop is only ever set after a normal stop, so the car is already stationary when you are told about it.",
+   "kind": "official"
+  },
+  {
+   "n": 24,
+   "name": "Ready to Pass, driving test marking, faults and results",
+   "url": "https://readytopass.campaign.gov.uk/driving-test/driving-test-marking-faults-results/",
+   "use": "DVSA's public wording of the three fault types and of the pass rule, and several of the top ten fault names. DVSA's own campaign site, so this is a primary source.",
+   "kind": "official"
+  },
+  {
+   "n": 25,
+   "name": "Ready to Pass, taking your instructor on your test",
+   "url": "https://readytopass.campaign.gov.uk/driving-test/taking-your-instructor-on-your-test/",
+   "use": "That DVSA encourages you to take your instructor, that the examiner has a short time to explain your mistakes, and that the result email says what the faults were but not where on the route they happened.",
+   "kind": "official"
+  },
+  {
+   "n": 26,
+   "name": "Ready to Pass, what to take",
+   "url": "https://readytopass.campaign.gov.uk/driving-test/what-to-take/",
+   "use": "The condition the car has to be in: L plates, a mirror for the examiner, no warning lights, working lights and indicators, legal tyres, working belts. Also the July 2026 cancellation figure, which the app marks unverified because two overlapping numbers came from the same summary.",
+   "kind": "official"
+  },
+  {
+   "n": 27,
+   "name": "Ready to Pass, following routes",
+   "url": "https://readytopass.campaign.gov.uk/driving-skills/following-routes/",
+   "use": "That independent driving is not a test of how you follow directions, that going off route is not in itself a fault, and that deciding when to ask for confirmation is part of driving independently.",
+   "kind": "official"
+  },
+  {
+   "n": 28,
+   "name": "Ready to Pass, driving test myths",
+   "url": "https://readytopass.campaign.gov.uk/driving-test/driving-test-myths",
+   "use": "DVSA saying plainly that examiners are not given quotas, and that the only number that decides a pass or a fail is the number of faults.",
+   "kind": "official"
+  },
+  {
+   "n": 29,
+   "name": "DVSA Despatch, improving the driving test experience for candidates",
+   "url": "https://despatch.blog.gov.uk/2019/10/14/improving-the-driving-test-experience-for-candidates/",
+   "use": "That the examiner asks at the start which email address the report should go to, which matters if your instructor made the booking, and that the licence is issued automatically where appropriate.",
+   "kind": "official"
+  },
+  {
+   "n": 30,
+   "name": "GOV.UK, driving test changes 4 December 2017",
+   "url": "https://www.gov.uk/government/news/driving-test-changes-4-december-2017",
+   "use": "The removal of the turn in the road and of reversing around a corner, and the arrival of the bay parks and the pull up on the right, which is why old books describe manoeuvres you will not be asked to do.",
+   "kind": "official"
+  },
+  {
+   "n": 31,
+   "name": "GOV.UK, book your driving test",
+   "url": "https://www.gov.uk/book-driving-test",
+   "use": "The booking service itself. The test centre cannot take, change or cancel a booking, and since April 2026 you book and manage your own test.",
+   "kind": "official"
+  },
+  {
+   "n": 32,
+   "name": "GOV.UK, driving test cost",
+   "url": "https://www.gov.uk/driving-test-cost",
+   "use": "The fee, reported as 62 pounds on a weekday and 75 pounds in the evening, at a weekend or on a bank holiday. Fees change, so check this page rather than this app.",
+   "kind": "official"
+  },
+  {
+   "n": 33,
+   "name": "GOV.UK, find a driving test centre",
+   "url": "https://www.gov.uk/find-driving-test-centre",
+   "use": "The official record of this centre, which would settle the name, the address, the facilities and the opening hours. It was blocked in this session, so every one of those in this app comes from a third party listing.",
+   "kind": "official"
+  },
+  {
+   "n": 34,
+   "name": "GOV.UK, using your own car for the test",
+   "url": "https://www.gov.uk/driving-test/using-your-own-car",
+   "use": "That most people use the instructor's car, and that a car brought to the test has to meet the rules.",
+   "kind": "official"
+  },
+  {
+   "n": 35,
+   "name": "GOV.UK, apply for your full driving licence",
+   "url": "https://www.gov.uk/apply-for-your-full-driving-licence",
+   "use": "What happens after a pass: DVLA usually sends the full licence, the pass certificate proves it in the meantime, and you can drive alone as soon as you are insured to.",
+   "kind": "official"
+  },
+  {
+   "n": 36,
+   "name": "GOV.UK, new drivers and the six point rule",
+   "url": "https://www.gov.uk/driving-disqualifications/new-drivers",
+   "use": "That a licence is revoked if you collect six penalty points within two years of passing, which is the rule behind the warning in the section on what happens afterwards.",
+   "kind": "official"
+  },
+  {
+   "n": 37,
+   "name": "GOV.UK, Pass Plus",
+   "url": "https://www.gov.uk/pass-plus",
+   "use": "The scheme of further training after a pass, named in the section on what to do next.",
+   "kind": "official"
+  },
+  {
+   "n": 38,
+   "name": "GOV.UK, The Highway Code",
+   "url": "https://www.gov.uk/guidance/the-highway-code",
+   "use": "The rules behind everything this app says about trams, bus lanes, filter arrows, speed limits and crossings. The rule numbers quoted anywhere in this app came from memory and should be checked here.",
+   "kind": "official"
+  },
+  {
+   "n": 39,
+   "name": "GOV.UK, driving test cancelled because of bad weather",
+   "url": "https://www.gov.uk/driving-test/test-cancelled-bad-weather",
+   "use": "What happens when a test cannot go ahead, including DVSA cancelling for reasons such as an unwell examiner, and having to pay again if the problem is with you or the car.",
+   "kind": "official"
+  },
+  {
+   "n": 40,
+   "name": "GOV.UK, disability, health condition or learning difficulty",
+   "url": "https://www.gov.uk/driving-test/disability-health-condition-or-learning-difficulty",
+   "use": "Telling DVSA when you book, the adjustments available, and the arrangements for deaf candidates including a British Sign Language interpreter.",
+   "kind": "official"
+  },
+  {
+   "n": 41,
+   "name": "DVSA bulletin, new telephone numbers for driving test centres",
+   "url": "https://content.govdelivery.com/accounts/UKDVSA/bulletins/3859e9e",
+   "use": "That each test centre has a direct number, that it shows an 020 code but reaches the local centre, that it is for bad weather on the day, and that it is at the bottom of your booking confirmation email. No published number for this centre was found anywhere.",
+   "kind": "official"
+  },
+  {
+   "n": 42,
+   "name": "National Highways, A52 Nottingham junctions",
+   "url": "https://nationalhighways.co.uk/our-roads/east-midlands/a52-nottingham-junctions/",
+   "use": "That there is an improvement programme on this corridor, which is why the app warns that the A52 junction layouts may differ from any description of them.",
+   "kind": "official"
+  },
+  {
+   "n": 43,
+   "name": "Broxtowe Borough Council, Chetwynd, the Toton and Chilwell neighbourhood plan",
+   "url": "https://www.broxtowe.gov.uk/media/9603/chetwynd-the-toton-and-chilwell-neighbourhood-plan.pdf",
+   "use": "The redevelopment of the Chetwynd Barracks site, which means roadworks and changed layouts in that part of Chilwell, and which confirms that Chetwynd is the barracks rather than a business park.",
+   "kind": "official"
+  },
+  {
+   "n": 44,
+   "name": "Driving Lessons with Martin, the Chilwell test centre",
+   "url": "https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/",
+   "use": "By far the richest single source on this centre, written by a local approved driving instructor: the seven bays and their uneven widths, the kerb behind the two on the left, the neighbouring firms, the Village Hotel landmark, the traffic lights at the centre and the two directions routes take from them, and the named hard features of the area. Undated, unofficial, and the page was never opened, so most of the local detail in this app rests on one person's account.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 45,
+   "name": "PassMeFast, Nottingham (Chilwell) test centre",
+   "url": "https://www.passmefast.co.uk/test-centres/practical/nottinghamshire/nottingham-chilwell",
+   "use": "The address, the neighbouring businesses, the toilets, and the claim that there are no parking facilities but that parking is permitted on Eldon Road. That last point contradicts another listing, which is why the app tells you not to count on parking.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 46,
+   "name": "Logicor, Eldon Business Park and Eldon Road Trading Estate",
+   "url": "https://www.logicor.eu/en/uk/properties/nottinghamshire-eldon-business-park-nottingham/nottinghamshire-eldon-road-trading-estate-nottingham",
+   "use": "The landlord's own description of the estate: on the A6005 Nottingham Road between Nottingham and Long Eaton, next to Chilwell Retail Park, close to Attenborough Nature Reserve, with access to M1 Junction 25. Unofficial, but it is the owner describing its own site.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 47,
+   "name": "RouteBuddy, Chilwell driving test routes",
+   "url": "https://routebuddy.co.uk/chilwell-driving-test-routes/",
+   "use": "That the A6005 Bye Pass Road between Beeston and Long Eaton gives dual carriageway driving and merging. One undated page, nobody else confirms it.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 48,
+   "name": "RouteBuddy, Nottingham Chilwell driving test routes",
+   "url": "https://routebuddy.co.uk/nottingham-chilwell-driving-test-routes/",
+   "use": "That Beeston High Road is one of the busiest sections of the area, with bus lanes, bus stops, cyclists, pedestrians crossing between shops and frequent signal controlled junctions.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 49,
+   "name": "NGPass Driving Academy, Chilwell route guide",
+   "url": "https://ngpassdrivingacademy.co.uk/chilwell-driving-test-route-a-complete-guide-for-learners/",
+   "use": "That routes are mainly urban with little country road, heavy on roundabouts and junctions, and that the bay park is likely at the start or the end in the centre's own car park. The same page was reported as placing the centre on Cator Lane, which every other source contradicts, so treat anything from it with care.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 50,
+   "name": "Intensive Lessons, Nottingham (Chilwell)",
+   "url": "https://intensivelessons.co.uk/Practical-Test-Centres/Nottinghamshire/Nottingham-Chilwell",
+   "use": "That the test from here is primarily urban for want of country roads nearby, and that the centre handles car and instructor tests.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 51,
+   "name": "h2g2, the A52 from M1 Junction 25 into Nottingham",
+   "url": "https://h2g2.com/edited_entry/A425927",
+   "use": "The only description anyone found of Bardills: an inner slip road linking A52 Derby traffic to the B6003 for Toton and Long Eaton, a third lane appearing on the approach, and a set of traffic lights on the roundabout itself. A road enthusiast site, undated.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 52,
+   "name": "Wikipedia, list of road junctions in the United Kingdom, B",
+   "url": "https://en.wikipedia.org/wiki/List_of_road_junctions_in_the_United_Kingdom:_B",
+   "use": "That Bardills roundabout joins the A52 Brian Clough Way to the B6003 at Stapleford. This contradicts an earlier draft of this app's own data, which had it at Swiney Way.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 53,
+   "name": "Wikipedia, Inham Road tram stop",
+   "url": "https://en.wikipedia.org/wiki/Inham_Road_tram_stop",
+   "use": "The Nottingham Express Transit Line 1 stops through this corridor, that phase two opened on 25 August 2015, and tram frequencies of four to eight an hour. It does not establish where the tram meets a road a test would use.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 54,
+   "name": "Wikipedia, Eskdale Drive tram stop",
+   "url": "https://en.wikipedia.org/wiki/Eskdale_Drive_tram_stop",
+   "use": "The order of the tram stops along the Chilwell and Toton corridor, which is where the candidate road names for the tram sections came from.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 55,
+   "name": "Wikipedia, Attenborough railway station",
+   "url": "https://en.wikipedia.org/wiki/Attenborough_railway_station",
+   "use": "The station on the Nottingham to Derby line, about a kilometre from the test centre postcode, which is the nearest station if somebody is coming by train.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 56,
+   "name": "The Driving Instructor Directory, Nottingham (Chilwell)",
+   "url": "https://www.thedrivinginstructordirectory.co.uk/driving-test-centres/nottingham-chilwell",
+   "use": "The 2025 to 2026 figures: 49.89 per cent across 9,415 tests, 49.22 per cent across 4,888 first attempts, 126 of those first timers passing with no driving faults, January 2026 as the best month at 56.41 per cent, and a median wait of 7.7 weeks. All of it a republication of DVSA data, not DVSA data.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 57,
+   "name": "bookdrivingtest.uk, test centres",
+   "url": "https://bookdrivingtest.uk/test-centres/",
+   "use": "An independent second site giving Chilwell 49.9 per cent, which is the only corroboration this app has for the current pass rate. It also gives an 11.6 week wait, against another site's 7.7 weeks.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 58,
+   "name": "DrivingTestRoutes, Nottingham (Chilwell)",
+   "url": "https://www.drivingtestroutes.com/driving-test-routes-in-nottingham-chilwell/",
+   "use": "Chilwell at 44.2 per cent for 2024 to 2025 and a rank of 226 out of 270 centres, compared against a national average of 50.2 per cent which is not the right comparator.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 59,
+   "name": "passdrivingtest.co.uk, Nottingham (Chilwell)",
+   "url": "https://passdrivingtest.co.uk/nottingham-chilwell-driving-test-centre/NThiLSpF",
+   "use": "Chilwell at 43.90 per cent against a UK wide 48.70 per cent, which is the third site giving the same year at about 44 per cent.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 60,
+   "name": "passrates.uk, driving test pass rate 2024 to 2025",
+   "url": "https://passrates.uk/guide/driving-test-pass-rate-2024-2025",
+   "use": "The national figures for 2024 to 2025: 48.7 per cent from 1,836,558 tests, 893,609 passes and 942,949 fails. The three numbers are consistent with each other, which is a reason to trust them.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 61,
+   "name": "passrates.uk, second attempt pass rate",
+   "url": "https://passrates.uk/guide/driving-test-second-attempt-pass-rate",
+   "use": "Pass rate by attempt number, which is the most useful set of figures in this app: the second attempt is about the same as the first, and the rate only falls away from the fifth attempt onwards.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 62,
+   "name": "passrates.uk, practical test fault categories",
+   "url": "https://passrates.uk/guide/practical-test-fault-categories",
+   "use": "The fifteen fault rule restated, the habitual fault escalation restated, that junction observation has been the top recorded fault and mirrors on changing direction the second every year, and the claim that DVSA publishes the top ten as a rank order only with no counts and no per centre breakdown.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 63,
+   "name": "passrates.uk, driving test wait times 2026",
+   "url": "https://passrates.uk/guide/driving-test-wait-times-2026",
+   "use": "The Great Britain median wait, and that DVSA only shows about twenty four weeks of forward bookings, so a centre with a longer structural wait shows nothing at all until a slot drops into the window.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 64,
+   "name": "audrive.net, UK pass rates",
+   "url": "https://audrive.net/en/uk/pass-rates",
+   "use": "The explanation of why sites quote different national averages: an unweighted mean of centre rates counts a tiny rural centre the same as a busy city one, so it is not a national pass rate.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 65,
+   "name": "Auto Express, UK driving test pass rates explained",
+   "url": "https://www.autoexpress.co.uk/car-news/first-cars/91405/uk-driving-test-pass-rates-explained/easiest-and-hardest-places-pass-your-driving-test",
+   "use": "The spread between the highest and lowest centres nationally, and the reported pattern that rural centres pass more people because traffic, complicated junctions, multi lane roads and heavy signage all add difficulty.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 66,
+   "name": "PassMeFast, average attempts to pass the driving test",
+   "url": "https://www.passmefast.co.uk/resources/get-test-ready/practical-test/average-attempts-driving-test",
+   "use": "That roughly nine in ten people who keep taking the test pass within three attempts, and the much quoted 2014 study figure of 42.6 hours of instruction plus 15.7 hours of private practice, which is over a decade old.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 67,
+   "name": "joe.co.uk, driving test waiting times",
+   "url": "https://www.joe.co.uk/news/driving-test-waiting-times-20-weeks-dvsa-figures-546740",
+   "use": "National waiting times reported as still over twenty weeks, which does not sit easily with the lower medians other sites quote. The app shows the disagreement rather than picking one.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 68,
+   "name": "Exam Routes, DVSA seven week waiting target",
+   "url": "https://examroutes.co.uk/27371/dvsa-seven-week-waiting-target-2026-analysis/",
+   "use": "That only about four in ten learners get a test within seven weeks, against DVSA's seven week target.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 69,
+   "name": "Exam Routes, driving test centre car parks in 2026",
+   "url": "https://examroutes.co.uk/27239/driving-test-centre-car-parks-2026/",
+   "use": "That reverse bay parking is normally only set in a test centre car park while forward bay parking can be set in any car park, which is why the bay park at this centre is likely to be in its own seven bays.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 70,
+   "name": "Nolan School of Motoring, the driving test report explained",
+   "url": "https://nolanschoolofmotoring.co.uk/practical-test/driving-test-report-explained/",
+   "use": "The six control sub boxes described one by one, and the split between moving off safely, which is the blind spot, and moving off under control, which is the stall. One of three instructor sites that agree on the item numbers 11 to 27.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 71,
+   "name": "BookLearnPass, the driving test marking sheet",
+   "url": "https://www.booklearnpass.co.uk/driving-test/marking-sheet/",
+   "use": "The precautions, move off and use of mirrors items and their wording. The second of the three agreeing sites. It also gives an older pre 2017 numbering for the manoeuvre boxes, which is part of why the app prints no manoeuvre numbers.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 72,
+   "name": "L2P Coventry, the DL25 test report",
+   "url": "https://l2pcoventry.com/test-report-dl25",
+   "use": "Use of speed, following distance, pedestrian crossings, position and normal stops, ancillary controls and eco safe driving, and the insurance and residency declaration at the top of the form. The third of the three agreeing sites.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 73,
+   "name": "Driving Pro, assessment criteria for junctions",
+   "url": "https://driving-pro.com/assessment-criteria-junctions/",
+   "use": "The five junction sub boxes and the three judgement sub boxes, and the positioning rule for turning right and turning left. The junctions item is the most important one in this app and this is the best description of it anyone found.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 74,
+   "name": "LearnerDriving, the marking items",
+   "url": "https://www.learnerdriving.com/driving-test/marking/responce",
+   "use": "Response to signs and signals and its five sub boxes, and companion pages for positioning, progress and undue hesitation, awareness and planning, and eco safe driving. The claim that eco marks are feedback only and cannot fail a test comes from here and from nowhere official.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 75,
+   "name": "DoDrive, the driving test report explained",
+   "url": "https://dodrive.uk/driving-test-report-explained/",
+   "use": "The three signals sub boxes, the header fields on the form, and the note that the Highway Code item is used only for categories with no separate theory test, so not on a car test.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 76,
+   "name": "Rated Driving, driving test results",
+   "url": "https://www.rateddriving.com/learner-driver/driving-test-results/",
+   "use": "The fullest description anyone found of the examiner took action box, marked V for a verbal intervention and P for a physical one, and of what you are given at the end. No DVSA page confirming any of it was found.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 77,
+   "name": "Carwow, DVSA driving test booking changes 2026",
+   "url": "https://www.carwow.co.uk/news/10823/dvsa-driving-test-booking-changes-2026",
+   "use": "The 2026 booking rules: two changes before a booking must be cancelled and rebooked, learners booking and managing their own tests, and a test only movable to one of your three nearest centres. The underlying DVSA bulletin could not be opened, so check these on GOV.UK.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 78,
+   "name": "drivingtestcost.com, fees",
+   "url": "https://drivingtestcost.com/fees",
+   "use": "The fee figures, and a claim that a full refund needs ten or more full working days of notice. Another site says three working days. The two cannot both be right and neither could be checked.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 79,
+   "name": "drivebot.co.uk, Nottingham (Chilwell)",
+   "url": "https://drivebot.co.uk/test-centres/nottingham-chilwell",
+   "use": "Another republished pass rate for this centre, and the competing claim that you should reschedule at least three working days ahead to avoid losing the fee.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 80,
+   "name": "PassMeFast, driving test centre phone numbers",
+   "url": "https://www.passmefast.co.uk/resources/get-test-ready/practical-test/driving-test-centre-phone-numbers",
+   "use": "That a test centre cannot take a booking, change one or cancel one, which is worth knowing before you try to ring this one.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 81,
+   "name": "Select Drive, what to bring to your driving test",
+   "url": "https://www.selectdrivedrivingschool.co.uk/what-to-bring-to-your-driving-test/",
+   "use": "The condition the car has to be in, restated by a driving school. The authority for this is the GOV.UK and Ready to Pass pages above.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 82,
+   "name": "Occupi, Chilwell Retail Park",
+   "url": "https://getoccupi.com/malls/chilwell-retail-park",
+   "use": "That Chilwell Retail Park is on Barton Lane just off the A6005, and who its occupiers are. Useful because it is next door to the test centre and is the obvious place to leave a second car or to practise a forward bay park, at the operator's discretion.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 83,
+   "name": "Tesco store locator, Nottingham Toton Extra",
+   "url": "https://www.tesco.com/store-locator/nottingham/swiney-way-toton",
+   "use": "That the large Tesco on Swiney Way in Toton exists and where it is, which is the other big car park within reach of the centre.",
+   "kind": "unofficial"
+  },
+  {
+   "n": 84,
+   "name": "JCT Consultancy, Cutting Corners at Bardills",
+   "url": "https://www.jctconsultancy.co.uk/Home/docs/jctSymp_bardillsCuttingCorners.pdf",
+   "use": "A traffic engineering conference paper recording queues in excess of 300 and 200 vehicles on the A52 eastbound and Stapleford Lane approaches to Bardills at peak times. The figures were undated in what was seen of them, so treat them as a description of the kind of queue the junction produces rather than as today's numbers.",
+   "kind": "research"
+  },
+  {
+   "n": 85,
+   "name": "Mirror of the GOV.UK driving test statistics (DRT) page",
+   "url": "https://s3.amazonaws.com/thegovernmentsays-files/content/165/1658944.html",
+   "use": "One of only two web pages anyone in this project actually opened and read. It gave the DRT table references and their titles, and confirmed that DRT0201 is a Great Britain table with no test centre breakdown. It is a mirror of a page last updated in 2020, so it predates the 2025 change of table references.",
+   "kind": "research"
+  },
+  {
+   "n": 86,
+   "name": "Mirror of the GOV.UK car driving test data by test centre page",
+   "url": "https://s3.amazonaws.com/thegovernmentsays-files/content/169/1692795.html",
+   "use": "The other page anyone opened. It gave the test centre level table references, all of which are pass rate tables and none of which is about faults, and the historic caveat that this data is not classed as an official statistic.",
+   "kind": "research"
+  },
+  {
+   "n": 87,
+   "name": "GOV.UK, driving test statistics (DRT)",
+   "url": "https://www.gov.uk/government/statistical-data-sets/driving-test-statistics-drt",
+   "use": "Where the real numbers live. The centre level car practical table is now DRT122A. Nobody opened it, which is why every pass rate in this app is second hand.",
+   "kind": "official"
+  },
+  {
+   "n": 88,
+   "name": "This app's own research notes",
+   "url": "",
+   "use": "Eight files in the research folder of this project, one per topic, each opening with what it could and could not reach and each ending with its own list of what was searched for and not found. They are where everything in this app came from, and they carry the caveats in more detail than a phone screen can.",
+   "kind": "research"
+  },
+  {
+   "n": 89,
+   "name": "This app's validation record",
+   "url": "",
+   "use": "A claim by claim table of what was checked against what, and what is not verified. It is the longer version of the list above.",
+   "kind": "research"
+  },
+  {
+   "n": 90,
+   "name": "Inference from the sources above",
+   "url": "",
+   "use": "Everything in this app marked (reasoned) is worked out from the sourced material rather than taken from a source: how the rules play out on these roads, what a fault is likely to cost you, where a hazard is likely to bite, and what to practise. It is argument, not evidence, and it is labelled so you can tell the difference.",
+   "kind": "reasoned"
   }
  ]
 }

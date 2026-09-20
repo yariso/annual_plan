@@ -52,6 +52,11 @@ and the default on load:
   marking item or question: add one to the data and it appears.
 - build/build.py: loads every data file, refuses em and en dashes, injects the lot into
   the source and writes dist/index.html. No other build step, no dependencies.
+- build/content-workflow.js: the workflow script that wrote data/faults.json,
+  junctions.json, routes.json, advice.json, plan.json and sources.json from the research
+  notes, one agent per file, with the house style and the honesty rules in its prompt.
+  Kept so the same thing can be done again for another test centre. The other data files
+  were written by hand.
 - tests/test_app.py: Playwright tests that drive the real page, plus content checks over
   the data files (ids unique, every junction has a position and says how precise it is,
   every manoeuvre has one note per diagram frame, nothing left half written). Playwright's
