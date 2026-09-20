@@ -49,6 +49,12 @@ WRITING RULES THAT MATTER HERE
 - Length: write as much as the reader needs and no more. A card the reader will read
   once at a junction should be tight. A reference section can be longer.
 
+THE STYLE TO MATCH
+${ROOT}/data/test.json and ${ROOT}/data/marking.json are already written, by hand, in the
+voice the whole app uses. Read data/test.json before you start and match it: the length of
+a paragraph, how sources are attached, how a disagreement between sources is handled, how
+an inference is labelled. Do not change either file.
+
 OUTPUT
 Write the file with the Write tool, as valid JSON, UTF-8, no trailing commas, no
 comments. Then check it parses: run
@@ -96,30 +102,6 @@ For each item:
 Also write "intro" for the tab: one short paragraph saying what this list is and that the wording is a reading of DVSA's published guidance rather than a copy of the form.
 
 Aim for 30 to 40 items. Make the top ten faults from the research unmistakably strong, because those are the ones that fail people.`,
-  },
-  {
-    file: 'test.json',
-    label: 'test',
-    reads: ['test-structure.md', 'marking-dl25.md', 'centre-facts.md'],
-    ask: `Write data/test.json: what happens in the test, in order, from arriving to being given the result.
-
-One step per thing that actually happens, ten to fourteen steps. Suggested run: arriving and waiting, the licence and the declaration, the question about the accompanying driver, the eyesight check, the tell me question, getting in and the first move off, the general driving section, the manoeuvre, the controlled stop when it is asked, the independent driving section with the sat nav, the show me question, the drive back and the last manoeuvre in the car park, the result and the debrief.
-
-For each step give: name, time (roughly when in the test), what (a paragraph or two), says (the examiner's actual wording where the research has it, quoted), watch (what is being assessed at that moment), tips (what to do about it), sources.
-
-Be exact about the numbers the reader will want: how long the test lasts, how long the independent driving section is, how often the controlled stop is asked, the eyesight distance and what happens if it is failed, which sat nav DVSA uses and what happens if you take a wrong turn. Where the research found sources disagreeing on a number (the eyesight distance is one), say so and give the safer figure.`,
-  },
-  {
-    file: 'marking.json',
-    label: 'marking',
-    reads: ['marking-dl25.md', 'dt1-guidance.md', 'common-faults.md'],
-    ask: `Write data/marking.json: how the test is marked.
-
-faultTypes: the three types, in DVSA's own words, with what each one means for the result and a real example of each from the research. Include the DT1 wording as well as the public wording where they differ, because DT1 adds "or entails a breach of the law" to the serious fault definition.
-limit: the number and a sentence on what it really means. Make the point from the research that the limit is a ceiling, not a licence: the same fault repeated in one box can be assessed as a serious fault however few marks are on the sheet.
-sheet: a couple of paragraphs on the form itself, that examiners now record on a tablet, that the paper DL25 is published for instructors doing mock tests, what the ETA box means (verbal and physical), and that each box takes many driving fault marks but only one serious and one dangerous.
-immediate: what ends a test there and then.
-notes: anything else short and useful, including what the result email does and does not tell you, and why having your instructor in the car for the debrief is worth it.`,
   },
   {
     file: 'manoeuvres.json',

@@ -76,7 +76,9 @@ label.fld{display:grid;gap:3px;font:600 14px/1.2 var(--display);color:var(--mute
 /* cards and panels */
 .card{background:var(--panel);border:1px solid var(--rule);border-left:8px solid var(--lv,var(--rule));border-radius:12px;padding:14px;margin:0 0 10px}
 .card .head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin-bottom:4px}
-.card .kind{color:var(--muted);font-size:14px;flex-basis:100%}
+.kind{color:var(--muted);font-size:14px;margin:0 0 7px}
+.card .kind{flex-basis:100%}
+details.acc .inner>.kind:first-child{margin-top:-2px}
 .card .do{font-size:17px;line-height:1.45;margin:8px 0 10px;max-width:62ch}
 details.panel{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:12px 14px;margin:0 0 10px}
 details.panel>summary{list-style:none;cursor:pointer;font:700 19px/1.2 var(--display);padding:2px 0}
@@ -492,7 +494,9 @@ function makeMap(box, opts) {
 
   /* overlay */
   m.render = () => {
+    if (!box.isConnected) return;
     const R = rect();
+    if (!R.w || !R.h) return;
     tiles();
     svg.setAttribute('viewBox', '0 0 ' + R.w + ' ' + R.h);
     while (svg.firstChild) svg.removeChild(svg.firstChild);
@@ -528,6 +532,17 @@ function makeMap(box, opts) {
       }
       g.appendChild(gg);
     });
+    /* a scale bar, so the map still means something when the tiles will not load */
+    const mpp = 156543.03392 * Math.cos(m.lat * Math.PI / 180) / Math.pow(2, m.z);
+    let want = mpp * 90, unit = 'm', nice = [50, 100, 200, 500, 1000, 2000].reduce((a, b) => Math.abs(b - want) < Math.abs(a - want) ? b : a, 50);
+    const px = nice / mpp;
+    const bx = R.w - px - 12, by = R.h - 14;
+    const sb = el('g', {});
+    sb.appendChild(el('path', { d: 'M' + bx + ' ' + (by - 5) + ' L' + bx + ' ' + by + ' L' + (bx + px) + ' ' + by + ' L' + (bx + px) + ' ' + (by - 5), fill: 'none', stroke: 'var(--ink)', 'stroke-width': 2, 'stroke-opacity': .75 }));
+    const st2 = el('text', { x: bx + px / 2, y: by - 7, 'text-anchor': 'middle', 'font-size': 11.5, fill: 'var(--ink)', stroke: 'var(--ground)', 'stroke-width': 3, 'paint-order': 'stroke', 'stroke-linejoin': 'round' });
+    st2.textContent = nice >= 1000 ? (nice / 1000) + ' km' : nice + ' ' + unit;
+    sb.appendChild(st2);
+    g.appendChild(sb);
     svg.appendChild(g);
   };
 
@@ -572,6 +587,12 @@ function makeMap(box, opts) {
     if (ptrs.size < 2) pinch0 = 0;
     if (!ptrs.size) last = null;
   }
+  box.addEventListener('keydown', e => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const g = e.target.closest && e.target.closest('g.mk');
+    if (!g || !m.onPick) return;
+    e.preventDefault(); m.onPick(g.dataset.id);
+  });
   box.addEventListener('pointerup', up);
   box.addEventListener('pointercancel', up);
   box.addEventListener('wheel', e => {
@@ -639,7 +660,7 @@ function diagRoundabout(spec) {
     const order = exits.filter(e => (((e.b - spec.enter) % 360) + 360) % 360 > 4)
       .sort((a, b) => ((((a.b - spec.enter) % 360) + 360) % 360) - ((((b.b - spec.enter) % 360) + 360) % 360));
     order.forEach((e, i) => {
-      const q = pt(e.b - 15, R + 21);
+      const q = pt(e.b - 19, R + 17);
       S.appendChild(el('circle', { cx: q.x, cy: q.y, r: 10, fill: 'var(--panel)', stroke: 'var(--muted)', 'stroke-width': 1.3 }));
       const t = el('text', { x: q.x, y: q.y + 4, 'text-anchor': 'middle', 'font-size': 12, fill: 'var(--muted)' });
       t.textContent = String(i + 1); S.appendChild(t);
@@ -662,7 +683,7 @@ function diagRoundabout(spec) {
     const px = cx + (OUT - 13) * dx, py = cy + (OUT - 13) * dy;
     const side = Math.abs(dx) >= .36;
     const anchor = side ? (dx > 0 ? 'end' : 'start') : 'middle';
-    const lift = side ? -13 : 0;
+    const lift = side ? -23 : 0;
     const lines = String(ex.label || '').split('|');
     lines.forEach((ln, i) => {
       const t = el('text', { x: px, y: lift + py + i * 13 + (dy > .5 ? 4 : dy < -.5 ? 0 : 4), 'text-anchor': anchor, 'font-size': 12.5, fill: 'var(--ink)', stroke: 'var(--field)', 'stroke-width': 3.2, 'paint-order': 'stroke', 'stroke-linejoin': 'round' });

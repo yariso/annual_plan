@@ -1,35 +1,44 @@
 {
- "intro": "STUB",
+ "intro": "The examiner records the test on a tablet. Every mark goes against one of about twenty seven items, and every mark is one of three kinds. Knowing which kind you are collecting matters more than counting them.",
  "faultTypes": [
   {
    "name": "Driving fault",
-   "what": "STUB",
-   "effect": "STUB",
-   "example": "STUB"
+   "what": "DVSA's public wording: \"A driving fault is not potentially dangerous, but if you keep making the same fault, it could become a serious fault.\" The examiners' own guide puts it as something that \"falls short of the standard of a safe and competent driver without being potentially dangerous\".",
+   "effect": "Up to fifteen of them and you still pass. Most people who pass have some.",
+   "example": "Stalling once at a junction when nothing was behind you, or a signal left on a few seconds too long."
   },
   {
    "name": "Serious fault",
-   "what": "STUB",
-   "effect": "STUB"
+   "what": "DVSA's public wording: \"A serious fault is something that has the potential to be dangerous.\" The examiners' guide adds a clause the public page leaves out: a serious fault is one that is potentially dangerous \"or entails a breach of the law\".",
+   "effect": "One is a fail, however well the rest of the test went.",
+   "example": "Pulling out of a junction without looking properly when nothing happened to be coming, or thirty five in a thirty."
   },
   {
    "name": "Dangerous fault",
-   "what": "STUB",
-   "effect": "STUB"
+   "what": "DVSA's public wording: \"A dangerous fault involves actual danger to you, the examiner, the public or property.\" It is marked whether or not the examiner had to do anything about it: not having to grab the wheel does not make it less dangerous.",
+   "effect": "One is a fail, and if the driving becomes a danger to others the examiner ends the test there.",
+   "example": "Emerging into the path of a car that has to brake for you."
   }
  ],
  "limit": {
   "number": 15,
-  "text": "STUB"
+  "text": "Fifteen or fewer driving faults and none serious or dangerous is a pass. The sixteenth driving fault fails the test on its own. But the limit is a ceiling, not a licence: the examiners' guide says a candidate who habitually commits the same driving fault throughout the test cannot be regarded as competent, and the repeated fault can then be assessed as potentially dangerous. Four marks spread across four different items is an ordinary pass. Four marks all in junction observation is on its way to a serious fault."
  },
- "sheet": "STUB",
+ "sheet": "The form is the DL25, the driving test report. Examiners now record it digitally on a tablet and only fall back to paper if the tablet fails. DVSA publishes the paper version so that instructors can use it for mock tests, which is where the sheet on the Mock tab of this app comes from.\n\nEach item on the sheet can take several driving fault marks but only one serious and one dangerous mark. There is also an ETA box, for examiner took action, marked V if the examiner had to speak to prevent something and P if they had to use the dual controls or the wheel. The ETA is a record of the intervention, not the fault: the fault itself is still marked in its own box.\n\nThe report is emailed to the address you gave at the start. It tells you how many faults you made and which items they were in. It does not tell you where on the route they happened, which is why it is worth having somebody with you who heard the debrief.",
  "immediate": [
-  "STUB"
+  "Failing the eyesight check. The test ends in the car park and no driving takes place.",
+  "A dangerous fault, or driving that becomes a danger to other road users. The examiner ends the test and directs you back.",
+  "Turning up without the right documents, in a car that does not meet the rules, or late enough that the examiner cannot take you out. The test is cancelled and the fee is lost."
  ],
  "notes": [
-  "STUB"
+  "Eco safe driving is marked as well, under control and planning. It is recorded as feedback. Several instructor sources say eco marks cannot fail a test, but that could not be confirmed on a DVSA page (unverified).",
+  "The single most recorded fault nationally, every year, is observation at junctions. Mirrors when changing direction is second. DVSA publishes the top ten as a rank order (source: [GOV.UK, top 10 reasons for failing](https://www.gov.uk/government/publications/top-10-reasons-for-failing-the-driving-test/top-10-reasons-for-failing-the-driving-test-in-great-britain)).",
+  "The mock test in this app applies the same two rules: any serious or dangerous fault is a fail, and more than fifteen driving faults is a fail. It is a practice aid built from DVSA's published material, not a DVSA form."
  ],
  "sources": [
-  "(reasoned)"
+  "[Ready to Pass, faults and results](https://readytopass.campaign.gov.uk/driving-test/driving-test-marking-faults-results/)",
+  "[DT1 annex 6, guide to assessment and marking](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/annex-6-guide-to-assessment-and-marking)",
+  "[GOV.UK, driving test marking sheet](https://www.gov.uk/government/publications/driving-test-marking-sheet)",
+  "[GOV.UK, understanding your driving test result](https://www.gov.uk/guidance/understanding-your-driving-test-result/car-driving-test)"
  ]
 }

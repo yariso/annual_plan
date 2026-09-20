@@ -1,24 +1,274 @@
 {
- "intro": "STUB",
+ "intro": "One appointment, about forty minutes from signing the declaration to switching the engine off, with roughly thirty five minutes of that spent driving. This is the order it happens in. Three things changed on 24 November 2025, so anything you read that is older than that may be wrong: there are now three stops rather than four, the emergency stop is asked in about one test in seven rather than one in three, and the independent driving section can use a sat nav, traffic signs or both, and can run for the whole test.",
  "steps": [
   {
-   "id": "eyes",
-   "name": "The eyesight check",
-   "time": "first minutes",
-   "what": "STUB",
-   "says": "Read that number plate.",
+   "id": "arrive",
+   "name": "Arriving and waiting",
+   "time": "before the appointment time",
+   "what": "Be at the centre with time to sit down, not with time to sit and stew. [GOV.UK](https://www.gov.uk/driving-test/what-to-take) says to arrive five minutes before your appointment and warns that a late arrival means the test is cancelled and the fee is lost.\n\nWhat the warning does not say is that examiners are told to allow at least five minutes of grace after the start time, and more at their discretion if it will not spoil the tests that follow [(DVSA guidance on late candidates)](https://www.gov.uk/government/publications/candidates-arriving-late-for-a-driving-test/information-and-guidance-given-to-examiners-when-candidates-are-late-for-a-driving-test). That grace is the examiner's to give, not yours to plan around (reasoned).\n\nThe examiner comes out and asks for you by name.",
+   "says": "your name, and a greeting",
    "watch": [
-    "STUB"
+    "Nothing yet. Nothing before the eyesight check is marked."
    ],
    "tips": [
-    "STUB"
+    "Aim to arrive about fifteen minutes early. Long enough to park, find the door and use the toilet. Not so long that you sit rehearsing.",
+    "DVSA tells examiners that a pleasant, outgoing approach matters because most candidates are more nervous than they are with their instructor, and that a candidate in difficulty should be offered a few words of reassurance [(DT1, the car driving test)](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/1-car-driving-test). Read the friendliness as what it is, not as a trap.",
+    "2,281 tests were cancelled in July 2026 for an unsuitable car, a forgotten licence or a late arrival, according to DVSA's Ready to Pass campaign. Treat the exact figure as (unverified), but the lesson holds: most wasted tests are lost before any driving happens."
    ],
    "sources": [
-    "(reasoned)"
+    "[GOV.UK, what to take](https://www.gov.uk/driving-test/what-to-take)",
+    "[DVSA guidance on late candidates](https://www.gov.uk/government/publications/candidates-arriving-late-for-a-driving-test/information-and-guidance-given-to-examiners-when-candidates-are-late-for-a-driving-test)",
+    "[DT1, the car driving test](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/1-car-driving-test)"
+   ]
+  },
+  {
+   "id": "documents",
+   "name": "Your licence, and the declaration you sign",
+   "time": "the first few minutes",
+   "what": "The examiner checks your photocard licence against your face and your signature, and checks that your theory test has been passed. You do not need to bring the theory test certificate, and you do not need a replacement if you have lost it [(GOV.UK)](https://www.gov.uk/driving-test/what-to-take).\n\nThen you read and sign an insurance and residency declaration. That signature is where the test effectively starts: DVSA measures the test from the signature to switching the engine off at the end [(DT1)](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/01-the-practical-driving-test-and-extended-test-for-cars).",
+   "says": "\"Read, confirm and sign this insurance and residency declaration.\"",
+   "watch": [
+    "That the car you have brought is insured for the test and that you live where your licence says."
+   ],
+   "tips": [
+    "Your photocard licence is the one document that must be in your hand. Without it the test does not run and the fee is gone.",
+    "The examiner asks which email address the report should go to. If your instructor booked the test, their address is the default, so say if you want it sent to yours [(DVSA Despatch, 2019)](https://despatch.blog.gov.uk/2019/10/14/improving-the-driving-test-experience-for-candidates/)."
+   ],
+   "sources": [
+    "[GOV.UK, what to take](https://www.gov.uk/driving-test/what-to-take)",
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)",
+    "[DVSA Despatch, improving the test experience](https://despatch.blog.gov.uk/2019/10/14/improving-the-driving-test-experience-for-candidates/)"
+   ]
+  },
+  {
+   "id": "sitin",
+   "name": "Whether your instructor sits in",
+   "time": "before you walk to the car",
+   "what": "The examiner offers you the choice. It is your decision, not your instructor's.\n\nThe rules: one person aged sixteen or over may come, usually the instructor but it can be a relative or a friend, and they take no part in the test. Two people may be allowed as a reasonable adjustment. DVSA suggests sitting behind you is usually least intrusive, but the real requirement is that they sit upright with the seat belt on [(rules for observing driving tests)](https://www.gov.uk/guidance/rules-for-observing-driving-tests).\n\nThere is a second, separate question at the end about whether they can hear the result. You can say yes to one and no to the other.",
+   "says": "\"Would you like your instructor or accompanying driver to accompany you on test?\"",
+   "watch": [
+    "Nothing. The observer is not marked and cannot help you."
+   ],
+   "tips": [
+    "Having your instructor in the car is worth it mainly for the debrief afterwards, because they hear exactly which faults were marked and where. DVSA's own Ready to Pass campaign encourages it [(Ready to Pass)](https://readytopass.campaign.gov.uk/driving-test/taking-your-instructor-on-your-test/).",
+    "If having somebody in the back would make you more nervous, say no. That is a legitimate answer."
+   ],
+   "sources": [
+    "[GOV.UK, rules for observing driving tests](https://www.gov.uk/guidance/rules-for-observing-driving-tests)",
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)",
+    "[Ready to Pass, taking your instructor](https://readytopass.campaign.gov.uk/driving-test/taking-your-instructor-on-your-test/)"
+   ]
+  },
+  {
+   "id": "eyesight",
+   "name": "The eyesight check",
+   "time": "in the car park, before any driving",
+   "what": "The examiner points at a parked car and you read its number plate. The distance is 20 metres for a current style plate and 20.5 metres for an old style one, and you are never asked to read one closer than 20 metres [(GOV.UK)](https://www.gov.uk/driving-test/what-happens-during-test) [(DT1, general technical matters)](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/6-general-technical-matters). Wear your glasses or lenses if you need them, and then wear them for the whole test.\n\nIf you cannot read the first plate the examiner tries a second and may take you a little closer. If there is still a problem the exact distance is measured with a tape and a third plate is tried. Only if that third plate is misread does the test end, and then no driving takes place at all.",
+   "says": "\"I'll point to a number plate. Please tell me the number plate number. Or you can write it down if you prefer.\"",
+   "watch": [
+    "Whether you meet the legal eyesight standard for driving. It is pass or fail, and nothing else in the test can make up for it."
+   ],
+   "tips": [
+    "You can write the registration down instead of saying it. That is in the examiner's own prompt card, and it is there for anyone who cannot say it clearly or who freezes.",
+    "Twenty metres is about five car lengths. Practise it in a car park before the day so you know what it looks like.",
+    "If you have any doubt at all about your eyesight, see an optician before the test rather than finding out here."
+   ],
+   "sources": [
+    "[GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test)",
+    "[DT1, general technical matters](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/6-general-technical-matters)",
+    "[DVSA driving test prompt cards](https://assets.publishing.service.gov.uk/media/624d5879d3bf7f32b5aa072b/driving-test-prompt-cards.pdf)"
+   ]
+  },
+  {
+   "id": "tellme",
+   "name": "The tell me question",
+   "time": "at the car, before you drive",
+   "what": "One spoken safety question. You explain how you would check something. You do not have to do it, except for the three questions that start \"open the bonnet\", where you do have to open the bonnet and point at the right thing.\n\nGetting one or both of the two vehicle safety questions wrong is a single driving fault, not one each [(GOV.UK, show me tell me)](https://www.gov.uk/government/publications/car-show-me-tell-me-vehicle-safety-questions/car-show-me-tell-me-vehicle-safety-questions).",
+   "says": "\"Now I should like to ask two questions relating to appropriate safety checks you should routinely make before starting a journey.\"",
+   "watch": [
+    "Whether you know the routine checks on the car you are driving."
+   ],
+   "tips": [
+    "Learn where the bonnet release is in the car you are testing in, and what the oil, coolant and brake fluid reservoirs look like in that car.",
+    "One wrong answer is one driving fault. It is not worth the panic it causes.",
+    "The Skills tab has every question with an answer, and a quiz that asks the ones you keep getting wrong first."
+   ],
+   "sources": [
+    "[GOV.UK, car show me tell me questions](https://www.gov.uk/government/publications/car-show-me-tell-me-vehicle-safety-questions/car-show-me-tell-me-vehicle-safety-questions)",
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)"
+   ]
+  },
+  {
+   "id": "moveoff",
+   "name": "Getting in, and the first move off",
+   "time": "about five minutes in",
+   "what": "You settle in, set your seat and mirrors, and the examiner explains how the directions will come.\n\nThe standing instruction is that you carry straight on unless a sign says otherwise, and that any turn will be given in plenty of time. At a roundabout the examiner names the exit for you.",
+   "says": "\"Throughout the drive continue ahead, unless traffic signs direct you otherwise. When I want you to turn left or right, I will tell you in plenty of time.\" At a roundabout: \"At the roundabout follow the road ahead, it is the second exit.\"",
+   "watch": [
+    "Precautions before starting: doors, seat, mirrors, seat belt, handbrake, neutral.",
+    "Moving off safely, which means the blind spot as well as the mirrors, and moving off under control, which means without stalling or rolling back."
+   ],
+   "tips": [
+    "Take the time to set the car up. Nobody is timing this part and a badly set mirror costs you for the next forty minutes.",
+    "The examiner naming the roundabout exit removes most of the guesswork around Chilwell, where the routes are full of roundabouts.",
+    "If you do not hear a direction, ask. DVSA tells examiners to answer a request to repeat or confirm a direction in a friendly, positive way, and that it is not a prompt against you because you asked for it [(DT1, the car driving test)](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/1-car-driving-test)."
+   ],
+   "sources": [
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)",
+    "[DT1, the car driving test](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/1-car-driving-test)"
+   ]
+  },
+  {
+   "id": "general",
+   "name": "The general driving, and the stops",
+   "time": "most of the drive",
+   "what": "Ordinary driving on ordinary roads, in whatever traffic the day gives you. Not motorways.\n\nAbout three times you will be asked to pull up and move off again, and at least one of those will be a harder start than the rest. DVSA requires the test to include an angle start, moving off from behind a parked car, and, wherever the area allows it, a hill start. If there is nowhere suitable to stop on a hill, another ordinary stop is added instead [(DT1)](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/1-car-driving-test). Four stops became three on 24 November 2025 [(DVSA Despatch)](https://despatch.blog.gov.uk/2025/11/19/making-adjustments-to-the-driving-test/).\n\nSometimes the examiner names the spot. Sometimes you are asked to pull up where it is safe, and then choosing the place is the thing being marked.",
+   "says": "\"Pull up on the left at a safe place, please.\" Or: \"Pull up on the left just before you get to the next parked car, please.\"",
+   "watch": [
+    "Where you choose to stop: safe, legal and convenient, close to the kerb, not on a corner, not opposite a parked car, not across a driveway.",
+    "Moving off again: mirrors, blind spot, a signal only if it would help somebody.",
+    "Everything else on the marking sheet, all the time."
+   ],
+   "tips": [
+    "When you are asked to pull up where it is safe, say nothing and do not rush. Driving a hundred metres further to a better spot is the right answer.",
+    "The angle start and the hill start are where clutch control shows. Practise both until you can do them without rolling back.",
+    "Around Chilwell the obvious hill start practice is the streets running off the A6005 towards Bramcote (reasoned)."
+   ],
+   "sources": [
+    "[GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test)",
+    "[DT1, the car driving test](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/1-car-driving-test)",
+    "[DVSA Despatch, adjustments to the driving test](https://despatch.blog.gov.uk/2025/11/19/making-adjustments-to-the-driving-test/)"
+   ]
+  },
+  {
+   "id": "showme",
+   "name": "The show me question",
+   "time": "while you are driving",
+   "what": "One safety task done on the move: the washers, the demister, the dipped headlights, the horn. The examiner always prefixes it with \"when it is safe to do so\", and that phrase is handing you the timing.\n\nGOV.UK says plainly that you will fail if your driving becomes dangerous or potentially dangerous while you answer it [(GOV.UK, show me tell me)](https://www.gov.uk/government/publications/car-show-me-tell-me-vehicle-safety-questions/car-show-me-tell-me-vehicle-safety-questions).",
+   "says": "\"When it is safe to do so, can you show me how you would demist the front windscreen.\"",
+   "watch": [
+    "Whether you can work the controls that matter to safety without losing the road.",
+    "Your driving while you do it, which is marked under the normal items, not under the question."
+   ],
+   "tips": [
+    "Wait. A straight, clear stretch is the moment. A junction, a roundabout approach or a line of parked cars is not.",
+    "Find the control by feel. Learn the stalks and switches in the test car before the day so you are not hunting for them.",
+    "Getting it wrong is one driving fault. Doing it at the wrong moment can be a serious one."
+   ],
+   "sources": [
+    "[GOV.UK, car show me tell me questions](https://www.gov.uk/government/publications/car-show-me-tell-me-vehicle-safety-questions/car-show-me-tell-me-vehicle-safety-questions)",
+    "[DT1, vehicle safety check questions](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/13-vehicle-safety-check-questions)"
+   ]
+  },
+  {
+   "id": "manoeuvre",
+   "name": "The manoeuvre",
+   "time": "once during the test",
+   "what": "One reversing exercise, chosen by the examiner from parallel parking at the side of the road, driving forward into a parking bay and reversing out, reversing into a parking bay and driving out, or pulling up on the right, reversing about two car lengths and rejoining the traffic [(GOV.UK)](https://www.gov.uk/driving-test/what-happens-during-test).\n\nReversing into a bay is only set in a test centre car park. Driving forward into a bay can be set in any car park. At Chilwell that means a bay park is most likely to come at the very end, back in the centre's own car park.",
+   "says": "For a reverse bay park: \"Would you pull forward either to the left or the right so that your wheels are straight, then reverse into a convenient parking bay. Finish within one of the bays.\"",
+   "watch": [
+    "Control: how you use the clutch, how straight you keep it, whether you touch the kerb.",
+    "Observation: whether you keep looking all round while the car is moving, not only at the start.",
+    "Accuracy: whether you finish where you were asked to finish."
+   ],
+   "tips": [
+    "You are allowed to correct yourself. Pulling forward and trying again is not a fault in itself; sitting in a bad position is.",
+    "Reference points belong to the car you are in. If you practise in one car and test in another, find the points again first.",
+    "The Skills tab steps through each manoeuvre frame by frame and marks where the observations go."
+   ],
+   "sources": [
+    "[GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test)",
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)"
+   ]
+  },
+  {
+   "id": "emergency",
+   "name": "The emergency stop, in about one test in seven",
+   "time": "if it is asked, after an ordinary stop",
+   "what": "The frequency dropped from one test in three to one in seven on 24 November 2025 [(DVSA Despatch)](https://despatch.blog.gov.uk/2025/11/19/making-adjustments-to-the-driving-test/), so six candidates in seven never do it.\n\nThere is no surprise in it. You are pulled up at the side of the road first, told it is coming, and shown the hand signal in advance. Then you drive on, and when the hand goes up and the examiner says \"stop\", you stop as quickly and safely as you can.",
+   "says": "First: \"Shortly I shall ask you to carry out an emergency stop.\" Then, with the signal demonstrated: \"When I give this signal, stop, I'd like you to stop as quickly and as safely as possible.\"",
+   "watch": [
+    "How quickly and how straight you stop, and whether you keep control.",
+    "Whether you look all round before moving off again."
+   ],
+   "tips": [
+    "Do not check the mirror before you brake. The examiner has already checked behind for you, and the delay is what is being tested against.",
+    "Both hands on the wheel, no signal, brake firmly and progressively, clutch down just before you stop so the engine stays running.",
+    "Then treat it like any move off: handbrake, all round, and go when it is clear."
+   ],
+   "sources": [
+    "[DVSA Despatch, adjustments to the driving test](https://despatch.blog.gov.uk/2025/11/19/making-adjustments-to-the-driving-test/)",
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)",
+    "[DVSA driving test prompt cards](https://assets.publishing.service.gov.uk/media/624d5879d3bf7f32b5aa072b/driving-test-prompt-cards.pdf)"
+   ]
+  },
+  {
+   "id": "independent",
+   "name": "The independent driving",
+   "time": "20 to 35 minutes",
+   "what": "You follow a sat nav, or traffic signs, or since November 2025 both, and it can now run for the whole test [(GOV.UK)](https://www.gov.uk/driving-test/what-happens-during-test) [(DVSA Despatch)](https://despatch.blog.gov.uk/2025/11/19/making-adjustments-to-the-driving-test/).\n\nThe examiner provides and sets up the sat nav. You cannot use your own. The device DVSA introduced for this was the TomTom Start 52, and it is still widely reported as the one in use, though no official 2026 confirmation was found (unverified).\n\nGoing the wrong way is not a fault. The examiner will not mark a wrong turning and will help you back on route. Only a fault made while going wrong is marked.",
+   "says": "\"Now I would like you to drive independently, following the directions from the sat nav until I tell you otherwise. Please don't rely on the speeds shown on the sat nav, as they may not be accurate. Drive on when you are ready.\"",
+   "watch": [
+    "That you make your own decisions rather than waiting to be told.",
+    "Your speed against the road signs, not against the sat nav.",
+    "Planning: reading the lane you need early rather than at the line."
+   ],
+   "tips": [
+    "The sat nav's speed limit can be wrong. The signs on the road are what you are marked against.",
+    "Asking the examiner to confirm a direction is not a prompt against you. DVSA tells examiners that a question you asked yourself is part of planning ahead, not a failure to cope [(DT1)](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/1-car-driving-test).",
+    "If you miss a turn, carry on safely. The route is not the test.",
+    "If you are following signs and one is hidden by a tree or a lorry, the examiner gives directions until the next one is visible."
+   ],
+   "sources": [
+    "[GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test)",
+    "[DVSA Despatch, adjustments to the driving test](https://despatch.blog.gov.uk/2025/11/19/making-adjustments-to-the-driving-test/)",
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)",
+    "[Ready to Pass, following routes](https://readytopass.campaign.gov.uk/driving-skills/following-routes/)"
+   ]
+  },
+  {
+   "id": "back",
+   "name": "Back to the test centre",
+   "time": "the last few minutes",
+   "what": "The examiner directs you back to Eldon Road and into the centre's car park, and the test is measured up to the moment the engine goes off.\n\nAt Chilwell the bay park is often the last thing you do, in that small car park, rather than an ordinary park (unofficial, from a Nottingham driving school's account of the centre).",
+   "says": "\"That's the end of the independent driving. I will direct you from now on.\"",
+   "watch": [
+    "The same marking as the rest of the test. Nothing relaxes because you can see the building.",
+    "The bay park, if that is where your manoeuvre falls."
+   ],
+   "tips": [
+    "The last two minutes cost people passes. Keep the mirrors going and keep the speed sensible right up to the handbrake.",
+    "Park, handbrake on, neutral, engine off, and wait. Do not get out."
+   ],
+   "sources": [
+    "[DT1, the practical driving test for cars](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/01-the-practical-driving-test-and-extended-test-for-cars)",
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)"
+   ]
+  },
+  {
+   "id": "result",
+   "name": "The result and the debrief",
+   "time": "in the car, at the end",
+   "what": "You are told in the car, not inside the building.\n\nOn a pass the examiner adds something for you to be aware of now that you will be driving alone. On a fail you are told why. Then you are asked whether your instructor or accompanying driver may hear the result and the debrief, and you can say no.\n\nThe report is filled in on a tablet and emailed to the address you gave at the start. It says what faults were marked and what they were about. It does not say where on the route they happened, which is the reason for having somebody with you who heard the debrief.",
+   "says": "On a pass: \"That's the end of the test and I'm pleased to say you've passed.\" On a fail: \"That's the end of the test and I'm sorry you haven't passed. To help you I'll explain why.\"",
+   "watch": [
+    "Nothing. It is over."
+   ],
+   "tips": [
+    "Listen rather than argue. The debrief is short and it is the most specific feedback you will ever get on your driving.",
+    "If you passed you can drive away on your own as soon as you are insured to do so, and DVLA sends the full licence out.",
+    "If you did not pass, the next test must be at least ten working days away. The Start tab has what to do with the fault sheet."
+   ],
+   "sources": [
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)",
+    "[GOV.UK, faults and result](https://www.gov.uk/driving-test/driving-test-faults-result)",
+    "[GOV.UK, understanding your driving test result](https://www.gov.uk/guidance/understanding-your-driving-test-result/car-driving-test)"
    ]
   }
  ],
  "sources": [
-  "(reasoned)"
+  "[GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test)",
+  "[DVSA DT1, the examiner's guide](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1)",
+  "[DVSA Despatch, adjustments to the driving test, November 2025](https://despatch.blog.gov.uk/2025/11/19/making-adjustments-to-the-driving-test/)"
  ]
 }

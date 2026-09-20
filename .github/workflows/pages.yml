@@ -1,10 +1,11 @@
-# Publishes whilton-coach/dist/index.html to GitHub Pages so phones can use GPS (Safari needs HTTPS).
+# Publishes the single-file apps to GitHub Pages so phones can use GPS and location (Safari needs HTTPS).
+# whilton-coach goes to the site root, chilwell-test to /chilwell/.
 # One-time setup: either add a PAGES_TOKEN secret (see below) or set Pages, Build and deployment, Source: GitHub Actions.
-name: Publish the Whilton coach to GitHub Pages
+name: Publish the apps to GitHub Pages
 on:
   push:
-    branches: [main, master, claude/pre-race-guide-support-rpr0k8]
-    paths: [whilton-coach/dist/**]
+    branches: [main, master, claude/pre-race-guide-support-rpr0k8, claude/chillwell-driving-test-app-b5hlnl]
+    paths: [whilton-coach/dist/**, chilwell-test/dist/**]
   workflow_dispatch:
     inputs:
       pages_token:
@@ -26,10 +27,11 @@ jobs:
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - name: Stage the single-file app
+      - name: Stage the single-file apps
         run: |
-          mkdir -p site
+          mkdir -p site/chilwell
           cp whilton-coach/dist/index.html site/index.html
+          cp chilwell-test/dist/index.html site/chilwell/index.html
       - name: Hide a one-off token from the log
         if: inputs.pages_token != ''
         run: echo "::add-mask::${{ inputs.pages_token }}"
