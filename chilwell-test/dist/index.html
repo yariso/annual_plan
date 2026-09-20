@@ -111,9 +111,9 @@ th{font:600 14px/1.2 var(--display);color:var(--muted)}
 /* map */
 #mapbox{position:relative;height:60vh;min-height:320px;background:var(--field);border:1px solid var(--rule);border-radius:12px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
 #mapbox.tall{height:78vh}
-#tiles{position:absolute;inset:0}
-#tiles img{position:absolute;display:block;image-rendering:auto}
-#tiles img.bad{opacity:0}
+.tiles{position:absolute;inset:0}
+.tiles img{position:absolute;display:block;image-rendering:auto;border:0}
+.tiles img.bad{opacity:0;visibility:hidden}
 #mapsvg{position:absolute;inset:0;width:100%;height:100%}
 #mapsvg text{font-family:var(--display);font-weight:600}
 .mapctl{position:absolute;right:8px;top:8px;display:grid;gap:6px;z-index:3}
@@ -248,7 +248,7 @@ nav.tabs svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1
   <h2>The area</h2>
   <p class="small muted" id="mapIntro"></p>
   <div id="mapbox">
-    <div id="tiles"></div>
+    <div id="tiles" class="tiles"></div>
     <svg id="mapsvg" aria-label="Map of the test centre area"></svg>
     <div class="mapctl">
       <button type="button" id="mZoomIn" aria-label="Zoom in">+</button>
@@ -531,9 +531,18 @@ function makeMap(box, opts) {
       g.appendChild(el('circle', { cx: p.x, cy: p.y, r: 7, fill: '#1558B0', stroke: '#fff', 'stroke-width': 2.5 }));
     }
     const showLabels = m.z >= 13.2;
+    const drawn = [];
     (m.pts || []).forEach(pt => {
       const p = m.screen(pt.lat, pt.lon);
       if (p.x < -60 || p.y < -60 || p.x > R.w + 60 || p.y > R.h + 60) return;
+      /* two marks at one junction would sit on top of each other, so fan them
+         out on the screen. The underlying position is not changed. */
+      if (m.fan) {
+        let n = drawn.filter(q => Math.hypot(q.x - p.x, q.y - p.y) < 20).length;
+        if (n) { const a = n * 2.2, r = 15 + n * 4; p.x += r * Math.sin(a); p.y -= r * Math.cos(a); }
+        drawn.push({ x: p.x, y: p.y });
+        pt.sx = p.x; pt.sy = p.y;
+      }
       const on = m.sel === pt.id, r = pt.r || (on ? 12 : 9);
       const gg = el('g', { class: 'mk', tabindex: '0', role: 'button', 'aria-label': pt.name });
       gg.dataset.id = pt.id;
@@ -1482,7 +1491,7 @@ function renderMockMap(rec) {
   if (!rec) { box.innerHTML = ''; $('#mockMapNote').textContent = 'Run a mock test with location allowed and every fault is pinned where it happened.'; return; }
   if (!marks.length && !(rec.route || []).length) { box.innerHTML = ''; $('#mockMapNote').textContent = 'That mock has no positions saved, so there is nothing to pin. Allow location before you start and the faults land on the map.'; return; }
   $('#mockMapNote').textContent = marks.length + ' fault' + (marks.length === 1 ? '' : 's') + ' pinned from the last mock, where the car was when the mark went down. Tap a pin to see what it was. Faults at the same spot are fanned out a few metres so you can reach them.';
-  box.innerHTML = '<div id="mockbox" style="position:relative;height:52vh;min-height:300px;background:var(--field);border:1px solid var(--rule);border-radius:12px;overflow:hidden;touch-action:none"><div class="tiles" style="position:absolute;inset:0"></div><svg style="position:absolute;inset:0;width:100%;height:100%"></svg><div class="attrib">Map data © OpenStreetMap contributors</div></div><div id="mockPinCard"></div>';
+  box.innerHTML = '<div id="mockbox" style="position:relative;height:52vh;min-height:300px;background:var(--field);border:1px solid var(--rule);border-radius:12px;overflow:hidden;touch-action:none"><div class="tiles"></div><svg style="position:absolute;inset:0;width:100%;height:100%"></svg><div class="attrib">Map data © OpenStreetMap contributors</div></div><div id="mockPinCard"></div>';
   const bx = $('#mockbox');
   $$('#mockbox .tiles img').forEach(i => i.remove());
   mockMap = makeMap(bx, {
@@ -1497,20 +1506,10 @@ function renderMockMap(rec) {
     }
   });
   mockMap.lines = (rec.route || []).length > 1 ? [{ points: rec.route, colour: '#1558B0', w: 4, op: .5 }] : [];
-  /* several faults at one junction land on one another, so fan them out a few
-     metres. The pin then shows where it happened, give or take a car length. */
-  const placed = [];
+  mockMap.fan = true;
   mockMap.pts = marks.map((m, i) => {
     const f = faultById(m.id);
-    const p = { id: 'mk:' + i, lat: m.lat, lon: m.lon, name: (f ? (f.short || f.name) : m.id), colour: FK[m.k].pin, glyph: m.k === 'd' ? '' : m.k === 's' ? 'S' : 'X' };
-    const n = placed.filter(q => metres(q, p) < 14).length;
-    if (n) {
-      const a = n * 2.4, r = 7 + n * 2;
-      p.lat += r * Math.cos(a) / 111320;
-      p.lon += r * Math.sin(a) / (111320 * Math.cos(p.lat * Math.PI / 180));
-    }
-    placed.push({ lat: p.lat, lon: p.lon });
-    return p;
+    return { id: 'mk:' + i, lat: m.lat, lon: m.lon, name: (f ? (f.short || f.name) : m.id), colour: FK[m.k].pin, glyph: m.k === 'd' ? '' : m.k === 's' ? 'S' : 'X' };
   });
   mockMap.render();
   const pts = mockMap.pts.concat((rec.route || []).map(p => ({ lat: p[0], lon: p[1] })));

@@ -289,6 +289,41 @@ def run(pw):
     saved = page.evaluate("() => { let out = null; const old = URL.createObjectURL; URL.createObjectURL = b => { out = b.size; return 'data:text/plain,saved'; }; document.querySelector('#mockSave').click(); URL.createObjectURL = old; return out; }")
     check('the save file is produced', bool(saved and saved > 50), str(saved))
 
+    print('\nthe faults land on the map where they happened')
+    centre = data('centre.json')
+    ids = [f['id'] for f in data('faults.json')['items'] if f.get('mock') is not False][:3]
+    rec = {
+        'when': '2026-09-19T10:00:00.000Z', 'driver': 'Sam', 'mins': 38,
+        'marks': [
+            {'id': ids[0], 'k': 'd', 't': 120000, 'lat': centre['lat'] + 0.002, 'lon': centre['lon'] + 0.002},
+            {'id': ids[0], 'k': 'd', 't': 130000, 'lat': centre['lat'] + 0.002, 'lon': centre['lon'] + 0.002},
+            {'id': ids[1], 'k': 's', 't': 400000, 'lat': centre['lat'] - 0.003, 'lon': centre['lon'] + 0.004},
+        ],
+        'route': [[centre['lat'], centre['lon']], [centre['lat'] + 0.002, centre['lon'] + 0.002],
+                  [centre['lat'] - 0.003, centre['lon'] + 0.004]],
+    }
+    page.evaluate("r => { const h = JSON.parse(localStorage.getItem('ct.mocks') || '[]'); h.unshift(r); localStorage.setItem('ct.mocks', JSON.stringify(h)); }", rec)
+    page.reload()
+    page.wait_for_timeout(500)
+    page.click('nav.tabs button[data-tab="mock"]')
+    page.wait_for_timeout(400)
+    pins = page.locator('#mockbox g.mk')
+    check('the faults are pinned on the map', pins.count() == 3, '%d pins' % pins.count())
+    check('the drive is drawn', page.locator('#mockbox path[stroke-linecap="round"]').count() >= 1)
+    note = page.inner_text('#mockMapNote')
+    check('the map says what the pins are', 'pinned' in note, note[:60])
+    if pins.count():
+        page.locator('#mockbox').scroll_into_view_if_needed()
+        page.wait_for_timeout(250)
+        pos = [page.evaluate("i => { const c = document.querySelectorAll('#mockbox g.mk circle:nth-of-type(2)')[i]; return [+c.getAttribute('cx'), +c.getAttribute('cy')]; }", i) for i in range(2)]
+        apart = ((pos[0][0] - pos[1][0]) ** 2 + (pos[0][1] - pos[1][1]) ** 2) ** 0.5
+        check('two faults at one spot are fanned apart', apart > 4, '%.1f px apart' % apart)
+        box = pins.first.locator('circle').last.bounding_box()
+        if box:
+            page.mouse.click(box['x'] + box['width'] / 2, box['y'] + box['height'] / 2)
+            page.wait_for_timeout(250)
+            check('tapping a pin says which fault it was', len(page.inner_text('#mockPinCard')) > 30)
+
     print('\nthe mocks survive a reload')
     page.reload()
     page.wait_for_timeout(500)
