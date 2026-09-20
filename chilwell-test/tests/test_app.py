@@ -102,7 +102,8 @@ def run(pw):
     check('dragging does not break the map', page.locator('#mapsvg').count() == 1 and not errors, '; '.join(errors[:2]))
     n = marks.count()
     if n:
-        box = marks.first.bounding_box()
+        # click the dot itself: the group's box includes the label, whose centre is off the marker
+        box = marks.first.locator('circle').last.bounding_box()
         if box:
             page.mouse.click(box['x'] + box['width'] / 2, box['y'] + box['height'] / 2)
             page.wait_for_timeout(200)
@@ -168,6 +169,18 @@ def run(pw):
         faults.first.locator('summary').click()
         page.wait_for_timeout(100)
         check('a marking item has detail', len(faults.first.inner_text()) > 80)
+    linked = [f['id'] for f in data('faults.json')['items']
+              if any(f['id'] in (j.get('links') or []) for j in data('junctions.json')['items'])]
+    if linked:
+        d = page.locator('#faultList details[id="fault-%s"]' % linked[0])
+        d.locator('summary').click()
+        page.wait_for_timeout(200)
+        check('a marking item says where to practise it', d.locator('[data-roadto]').count() > 0, linked[0])
+        d.locator('[data-roadto]').first.click()
+        page.wait_for_timeout(400)
+        check('that button opens the road card', page.locator('#tab-roads').is_visible())
+        page.click('nav.tabs button[data-tab="test"]')
+        page.wait_for_timeout(150)
 
     print('\nthe manoeuvre diagrams step through')
     page.click('nav.tabs button[data-tab="skills"]')

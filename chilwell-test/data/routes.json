@@ -1,45 +1,216 @@
 {
- "intro": "STUB",
- "official": "STUB",
+ "intro": "Nobody outside DVSA knows where your test will go. This page is what could and could not be found out about routes from Eldon Road, and what to do with it.\n\nThe short version: four unofficial publishers make route shaped claims about this centre, and they agree on one thing only, that the driving is urban, heavy on roundabouts and junctions, with little country road nearby. Every named feature beyond that comes from a single page. None of those pages could be opened while this app was written, none of them carries a date, and no turn by turn route for this centre was found anywhere.\n\nSo what follows is not a route. It is four directions a test can go, the roads in each of them, and places to go and practise.",
+ "official": "**No route in this app is official.** DVSA does not publish test routes, for this centre or for any other. No turn by turn route for Nottingham (Chilwell) was found at all while this was written: not on GOV.UK, not from a driving school, not from a route product.\n\n**The year.** The date the practice stopped is usually given as **2010**, and this project's own earlier notes say 2010, but no source for that year was found, so treat it as (unverified). The position now needs no date. There is no published route. A local instructor's page says the same thing in its own words, that DVSA test routes are updated from time to time and are not published [(Driving Lessons with Martin, unofficial, page not opened)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/). That is an instructor restating what instructors understand the position to be, not DVSA's own wording.\n\n**Routes change.** DVSA's account of the changes made on 24 November 2025 says one aim was to let examiners build routes that reach more high speed and higher risk roads where the location allows [(DVSA Despatch, 19 November 2025)](https://despatch.blog.gov.uk/2025/11/19/making-adjustments-to-the-driving-test/). Any route account older than that date also describes a test with four stops rather than three, and a different rule for independent driving.\n\n**Learning a route by rote is not how you pass.** The examiner chooses the route on the day and you are not told it in advance. Directions come as you go, in plenty of time, and at a roundabout the exit is named for you. DVSA's own campaign site makes the neighbouring point about independent driving, that it is not a test of how you follow directions [(Ready to Pass)](https://readytopass.campaign.gov.uk/driving-skills/following-routes/). A DVSA statement specifically about learning routes by heart is widely repeated, but the research behind this app could not find it or check its wording, so none is quoted here.\n\nEverything below is a corridor, not a route. The lines on the map are straight lines between points, not roads, and they show which way a direction lies rather than a sequence of turns.",
  "corridors": [
   {
-   "id": "a",
-   "name": "STUB corridor",
-   "note": "STUB",
+   "id": "southwest",
+   "name": "South west on the A6005, towards Toton and Long Eaton",
+   "note": "One local instructor's page says routes divide at the traffic lights by the test centre, and that this is the way towards Long Eaton, Breaston, Toton, Stapleford, Sandiacre and Risley [(Driving Lessons with Martin, unofficial, page not opened)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/). One undated page, nobody else confirms it (unverified).\n\nWhat this direction gives you to practise is speed. The A6005 Bye Pass Road is described as a major route between Beeston and Long Eaton, with dual carriageway driving and merging [(RouteBuddy, unofficial, page not opened)](https://routebuddy.co.uk/chilwell-driving-test-routes/), which makes it the fastest road you are likely to meet on a test from here. Drive it both ways. Marks go on lane discipline, on joining at the speed of the traffic already there, and on the two ends where the road changes character, because it is easy to carry dual carriageway speed into a town street and town street speed onto a dual carriageway (reasoned).\n\nBeyond it are Toton and Long Eaton: suburban roads and roundabouts, and the Toton Lane tram terminus and park and ride, which puts commuter traffic turning across you at the times of day tests are booked (reasoned).",
    "roads": [
-    "STUB"
+    "The business park access road off Eldon Road",
+    "Eldon Road",
+    "A6005 Nottingham Road, heading south west",
+    "A6005 Bye Pass Road, the dual carriageway section towards Long Eaton",
+    "Swiney Way and the roads through Toton (Swiney Way carries a large Tesco Extra; its wider route is unverified)",
+    "Toton Lane, towards the tram terminus and park and ride"
    ],
    "colour": "#1558B0",
    "points": [
-    [
-     52.9105,
-     -1.2265
-    ],
-    [
-     52.9165,
-     -1.2455
-    ]
+    [52.909, -1.2452],
+    [52.9115, -1.2458],
+    [52.906, -1.27],
+    [52.9, -1.273]
+   ]
+  },
+  {
+   "id": "northeast",
+   "name": "North east on the A6005, through Chilwell to Beeston",
+   "note": "The other half of the same instructor's list: from the lights at the centre the other way, towards Attenborough, Beeston, Bramcote, Dunkirk, Lenton and Wollaton [(Driving Lessons with Martin, unofficial, page not opened)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/). Same caveat (unverified).\n\nThis is the busy one, and the one most worth your time. Beeston High Road is described as one of the busiest sections of the test area, with bus lanes, bus stops, cyclists, pedestrians crossing between shops and frequent signal controlled junctions [(RouteBuddy, unofficial, page not opened)](https://routebuddy.co.uk/nottingham-chilwell-driving-test-routes/). The tram runs in this corridor too, and one way roads, no entry roads and traffic lights with left filter arrows are named as features of the test area with no locations given [(Driving Lessons with Martin, unofficial, page not opened)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/).\n\nDrive it for clearance to parked cars and bus stops, for reading a bus lane sign at speed, for repeated sets of lights, and for people who step out between shops. A bus lane in operation must not be entered, and the hours are on the sign at the entry to it, so read the sign rather than guessing either way (reasoned, from the Highway Code).\n\nThe names and the order of the streets along the A6005 through Beeston, Queens Road, Chilwell Road and High Road, come from knowledge of the area rather than from a source (unverified). Read the signs on the day.",
+   "roads": [
+    "Eldon Road",
+    "A6005 Nottingham Road and High Road through Chilwell",
+    "Chilwell Road (unverified as part of the A6005 sequence)",
+    "Queens Road and the streets around Beeston railway station",
+    "Beeston High Road and the town centre one way streets",
+    "A6005 University Boulevard, towards Dunkirk and the university"
+   ],
+   "colour": "#C25E00",
+   "points": [
+    [52.909, -1.2452],
+    [52.9115, -1.2458],
+    [52.9182, -1.239],
+    [52.923, -1.2175],
+    [52.9278, -1.2145]
+   ]
+  },
+  {
+   "id": "a52",
+   "name": "North west to the A52, Bramcote Island and Bardills",
+   "note": "Three multiple lane roundabouts are named as features of this test area: Bramcote Island, Bardills roundabout and the roundabout at M1 Junction 25 [(Driving Lessons with Martin, unofficial, page not opened)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/). Whether a test from Chilwell actually drives the A52 carriageway, as distinct from being near it, is not established (unverified), and another page describes the test as primarily urban for want of country roads nearby [(Intensive Lessons, unofficial, page not opened)](https://intensivelessons.co.uk/Practical-Test-Centres/Nottinghamshire/Nottingham-Chilwell). The two readings pull in different directions. Drive it anyway, because a roundabout you have never seen is worse than one you have.\n\nBardills is the hardest thing named for this area. It is described as a roundabout with an inner slip road in the middle, linking A52 traffic towards Derby to the B6003 for Toton and Long Eaton, with a third lane appearing on the approach and a set of traffic lights on the roundabout itself [(h2g2, unofficial, page not opened)](https://h2g2.com/edited_entry/A425927). Three of its four approaches queue badly at peak times [(JCT Consultancy, page not opened)](https://www.jctconsultancy.co.uk/Home/docs/jctSymp_bardillsCuttingCorners.pdf). Pick your lane before the extra lane appears, then hold it.\n\n**The motorway is not on your test.** The roundabout at M1 Junction 25 is an ordinary surface roundabout and can be driven. You will not be taken onto the M1 itself.\n\nNational Highways runs an improvement programme on the A52 Nottingham junctions, so a layout here may have changed or may be under works [(National Highways)](https://nationalhighways.co.uk/our-roads/east-midlands/a52-nottingham-junctions/).",
+   "roads": [
+    "A6005 Nottingham Road",
+    "The Chilwell and Bramcote roads up to the A52 (specific roads unverified)",
+    "Bramcote Island",
+    "A52 Brian Clough Way",
+    "Bardills roundabout",
+    "B6003 towards Stapleford and Toton",
+    "The roundabout at M1 Junction 25"
+   ],
+   "colour": "#0F7B6C",
+   "points": [
+    [52.9115, -1.2458],
+    [52.9305, -1.25],
+    [52.9215, -1.268],
+    [52.9145, -1.2845],
+    [52.9012, -1.3075]
+   ]
+  },
+  {
+   "id": "local",
+   "name": "The small roads close in, Attenborough and Inham Nook",
+   "note": "Every test also spends time on small roads, because that is where the manoeuvre goes, where an angle start and a hill start are set, and where you are asked to pull up and move off again. No source names a single street for a manoeuvre at Chilwell, so none is named here. This is the kind of road to go and find, not a prediction (reasoned).\n\nAttenborough sits south of the A6005, towards the railway station and the nature reserve. The roads down into the village are narrower and residential and do not lead anywhere much, so through traffic is light (unverified, from knowledge of the area). Inham Nook is a residential estate off Inham Road with parked cars on both sides, which is where meeting traffic, clearance to obstructions and holding back at a gap are decided (unverified, from knowledge of the area).\n\nThe business park roads around the centre are wide, kerbed and quiet outside working hours, which is what a pull up on the right needs (reasoned). Do not practise in the test centre's own car park while tests are running.",
+   "roads": [
+    "Eldon Road and the business park estate roads",
+    "Barton Lane and the Chilwell Retail Park access",
+    "The residential streets between the A6005 and the railway at Chilwell and Attenborough",
+    "Attenborough Lane and the village roads towards the station and the nature reserve (unverified)",
+    "Inham Road and the Inham Nook estate"
+   ],
+   "colour": "#9B1D8E",
+   "points": [
+    [52.909, -1.2452],
+    [52.9128, -1.2428],
+    [52.9105, -1.234],
+    [52.9182, -1.239],
+    [52.924, -1.244]
    ]
   }
  ],
  "spots": [
   {
+   "id": "centre-carpark",
+   "name": "The test centre car park",
+   "short": "Centre car park",
+   "kind": "Bay parking",
+   "lat": 52.909,
+   "lon": -1.2452,
+   "precision": "approximate",
+   "note": "Reverse bay parking is normally only set in a test centre car park, because that is where the marked bays are [(Exam Routes, unofficial, page not opened)](https://examroutes.co.uk/27239/driving-test-centre-car-parks-2026/). So if you get a reverse bay park it will almost certainly be here, and two driving schools say the bay park at Chilwell often comes at the start or the very end of the test [(NGPass, unofficial, page not opened)](https://ngpassdrivingacademy.co.uk/chilwell-driving-test-route-a-complete-guide-for-learners/).\n\nA local instructor describes seven bays: five opposite the entrance on the right as you drive in, and two on the left, perpendicular to the other five and bounded by a kerb. The bays are not all the same width, the widest about a tenth wider than the narrowest [(Driving Lessons with Martin, unofficial, page not opened)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/). A method learned in a wide supermarket bay may not fit in the narrow one.\n\nDo not practise here while tests are running. Look at the shape of it from the passenger seat when you arrive, and do your bay practice somewhere else.",
+   "sources": [
+    "[Driving Lessons with Martin, on the Chilwell centre](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/)",
+    "[NGPass Driving Academy, Chilwell route guide](https://ngpassdrivingacademy.co.uk/chilwell-driving-test-route-a-complete-guide-for-learners/)",
+    "[Exam Routes, test centre car parks](https://examroutes.co.uk/27239/driving-test-centre-car-parks-2026/)"
+   ]
+  },
+  {
    "id": "retail",
    "name": "Chilwell Retail Park",
-   "kind": "Practice spot",
+   "short": "Retail park",
+   "kind": "Bay parking, forward and reverse",
    "lat": 52.9128,
-   "lon": -1.2308,
+   "lon": -1.2428,
    "precision": "approximate",
-   "note": "STUB",
+   "note": "Next door to the business park, on Barton Lane just off the A6005 [(getoccupi, unofficial, page not opened)](https://getoccupi.com/malls/chilwell-retail-park). Marked bays and wide aisles. A forward bay park can be set in any car park, so this is the right place to practise driving in and reversing back out.\n\nIt is a private car park and practising there is at the operator's discretion (reasoned). Go early, stay away from the shop doors, and stop if you are asked to.",
    "sources": [
+    "[getoccupi, Chilwell Retail Park](https://getoccupi.com/malls/chilwell-retail-park)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "tesco-toton",
+   "name": "Tesco Extra, Swiney Way, Toton",
+   "short": "Toton Tesco",
+   "kind": "Bay parking",
+   "lat": 52.905,
+   "lon": -1.284,
+   "precision": "approximate",
+   "note": "A large store car park on the Toton side, listed by Tesco as Nottingham Toton Extra, Swiney Way, Toton [(Tesco store locator)](https://www.tesco.com/store-locator/nottingham/swiney-way-toton). Useful if you want bays that are not the ones you have already learned the marks of.\n\nThis pin was placed from knowledge of the area and nothing else, and it may be some hundreds of metres out. Find the store by its address, not by the pin. Same courtesy as any private car park: quiet hours, away from the doors.",
+   "sources": [
+    "[Tesco store locator, Swiney Way, Toton](https://www.tesco.com/store-locator/nottingham/swiney-way-toton)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "parallel",
+   "name": "Inham Nook and the streets off Inham Road",
+   "short": "Parallel park",
+   "kind": "Parallel parking",
+   "lat": 52.924,
+   "lon": -1.244,
+   "precision": "approximate",
+   "note": "A parallel park wants a real gap behind a real parked car on a street with a run of parked cars, not a cone in a car park. The residential estate off Inham Road has parked cars on both sides and light through traffic, which is the right shape of road (unverified, from knowledge of the area). No source says an examiner sets a manoeuvre here, or anywhere else at Chilwell.\n\nVary the street. Do not stop across a driveway, do not do the same manoeuvre outside the same house six times over, and move on if somebody is waiting.",
+   "sources": [
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "rightpull",
+   "name": "The village streets at Attenborough",
+   "short": "Pull up on the right",
+   "kind": "Pulling up on the right",
+   "lat": 52.9105,
+   "lon": -1.234,
+   "precision": "approximate",
+   "note": "Pulling up on the right, reversing about two car lengths and rejoining needs a straight road, quiet enough and wide enough that stopping on the right does not block it, with a clear view both ways (reasoned, from what the manoeuvre asks for).\n\nThe roads down into Attenborough towards the station and the nature reserve are that kind of road: residential, narrower, and not a through route to anywhere (unverified, from knowledge of the area). Again, no source says the manoeuvre is set here. It is the sort of road to look for.",
+   "sources": [
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "hill",
+   "name": "The side streets towards Bramcote",
+   "short": "Hill start",
+   "kind": "Hill start",
+   "lat": 52.9275,
+   "lon": -1.2555,
+   "precision": "approximate",
+   "note": "DVSA requires the test to include a hill start wherever the area allows one, and another ordinary stop is added instead where there is nowhere suitable [(DT1, the car driving test)](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/1-car-driving-test).\n\nChilwell, Attenborough and the business park are close to flat, near the Trent. The ground rises north and west towards Bramcote and Stapleford, so the gradients are up there (unverified, from knowledge of the area, not from a source). Find a side street with a slope you can feel through the clutch and a clear view behind, and work at it until you can go without rolling back.",
+   "sources": [
+    "[DT1, the car driving test](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/1-car-driving-test)",
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "tram",
+   "name": "The tram along the High Road corridor",
+   "short": "Tram crossing",
+   "kind": "Tram practice",
+   "lat": 52.92,
+   "lon": -1.236,
+   "precision": "approximate",
+   "note": "NET Line 1 runs through this corridor, with stops including Bramcote Lane, Eskdale Drive, Inham Road and Toton Lane, and trams between four and eight an hour depending on the day and the time [(Wikipedia, Inham Road tram stop, page not opened)](https://en.wikipedia.org/wiki/Inham_Road_tram_stop). Roads shared with tram lines are named among the awkward features of this test area, without any road being named [(Driving Lessons with Martin, unofficial, page not opened)](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/).\n\nWhere the tram runs on the street, where it runs on its own track, and where it crosses a road a test would use could not be established (unverified). So drive the corridor and look, at the time of day your test is booked.\n\nCross rails as near square as you can, because they are slippery in the wet and will steer a tyre for you. Trams have priority. Tram signals are white bars and do not look like ordinary traffic lights. Do not drive on a section reserved for trams, and never stop where you would block one.",
+   "sources": [
+    "[Wikipedia, Inham Road tram stop](https://en.wikipedia.org/wiki/Inham_Road_tram_stop)",
+    "[Driving Lessons with Martin, on the Chilwell centre](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/)",
     "(reasoned)"
    ]
   }
  ],
  "notes": [
-  "STUB"
+  "Drive every road in the area rather than learning any route. The examiner picks where you go on the day, can take you anywhere in the test area, and gives the directions as you go. Someone who has driven the whole area is ready for any of it. Someone who has learned one loop is ready for that loop.",
+  "The lines on the map are straight lines drawn between points. They are not the roads, and they are not a route. They are there to show which way each corridor lies.",
+  "No coordinate on this page was surveyed. Every one was placed from knowledge of the area, so some will be tens of metres out and the Toton Tesco pin may be further than that. Use them to find a place, not to navigate to it.",
+  "Every route claim behind this page comes from a driving school page or a route site. None of those pages could be opened while this was written, so each claim reached this app through a search engine's summary, at two removes from whoever wrote it, and none of them carries a date.",
+  "One of those pages puts the test centre on Cator Lane, which every other source contradicts. A page that gets the address wrong is not a page to trust on the roads around it.",
+  "A route product that sells you a Chilwell route cannot be checked against anything, because there is no published route to check it against.",
+  "Practise at the time of day your test is booked. The A6005, Beeston High Road and the park and ride are different roads at half past eight in the morning from what they are at eleven.",
+  "If your test falls near the start or the end of the school day, drive the area then as well, when there are children about and parked cars where there normally are none.",
+  "Two redevelopments could change the roads under you: National Highways' improvement programme on the A52 Nottingham junctions, and the Chetwynd Barracks and Toton masterplan. Expect temporary lights and a lane closure somewhere, and drive the area in the week before the test rather than trusting any description written earlier.",
+  "Going the wrong way is not a fault in itself. The examiner will not mark a wrong turning and will help you back on route, and only a fault made while going wrong is marked [(GOV.UK)](https://www.gov.uk/driving-test/what-happens-during-test).",
+  "Nothing on this page is DVSA material. It is a reading of unofficial local sources and of the roads themselves. The examiner's decision on the day is the only one that counts."
  ],
  "sources": [
-  "(reasoned)"
+  "[Driving Lessons with Martin, on the Chilwell centre](https://www.drivinglessonswithmartin.co.uk/451/chilwell-test-centre/)",
+  "[RouteBuddy, Chilwell driving test routes](https://routebuddy.co.uk/chilwell-driving-test-routes/)",
+  "[RouteBuddy, Nottingham Chilwell driving test routes](https://routebuddy.co.uk/nottingham-chilwell-driving-test-routes/)",
+  "[NGPass Driving Academy, Chilwell route guide](https://ngpassdrivingacademy.co.uk/chilwell-driving-test-route-a-complete-guide-for-learners/)",
+  "[Intensive Lessons, Nottingham Chilwell](https://intensivelessons.co.uk/Practical-Test-Centres/Nottinghamshire/Nottingham-Chilwell)",
+  "[h2g2, the A52 and Bardills Island](https://h2g2.com/edited_entry/A425927)",
+  "[JCT Consultancy, Cutting Corners at Bardills](https://www.jctconsultancy.co.uk/Home/docs/jctSymp_bardillsCuttingCorners.pdf)",
+  "[National Highways, A52 Nottingham junctions](https://nationalhighways.co.uk/our-roads/east-midlands/a52-nottingham-junctions/)",
+  "[DVSA Despatch, adjustments to the driving test, November 2025](https://despatch.blog.gov.uk/2025/11/19/making-adjustments-to-the-driving-test/)",
+  "[Ready to Pass, following routes](https://readytopass.campaign.gov.uk/driving-skills/following-routes/)",
+  "[GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test)",
+  "None of the unofficial pages above could be opened while this was written. Every claim taken from them reached this app through a search result summary."
  ]
 }

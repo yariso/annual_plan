@@ -1,56 +1,296 @@
 {
  "booking": {
   "id": "booking",
-  "lede": "STUB",
-  "body": "STUB",
+  "lede": "You book, change and cancel the test yourself on GOV.UK. The fee is reported as £62 on a weekday and £75 in the evening, at a weekend or on a bank holiday. It is the one part of the test you can lose without driving a yard.",
+  "body": "Bookings go through [GOV.UK, book your driving test](https://www.gov.uk/book-driving-test). Aggregator sites report the service as open 6am to 11:40pm every day (unverified). The test centre itself cannot take a booking, change one or cancel one over the phone. DVSA does all of that [(PassMeFast, test centre phone numbers)](https://www.passmefast.co.uk/resources/get-test-ready/practical-test/driving-test-centre-phone-numbers).\n\nThe centre to search for is **Nottingham (Chilwell)**, with the locality in brackets, the way DVSA writes it. The spelling \"Chillwell\", with two l's, will not match.\n\nThree booking rules changed during 2026 and they decide what you can do if you want to move the appointment. From 8 April 2026 you are solely responsible for booking and managing your own practical test, and booking firms, instructors and cancellation finder apps may no longer book on your behalf. Since 31 March 2026 a booking can be changed twice, after which it has to be cancelled and rebooked. From 9 June 2026 a test can only be moved to one of your three nearest test centres. All three come from one unofficial report of a DVSA bulletin that could not be opened when this app was written [(Carwow)](https://www.carwow.co.uk/news/10823/dvsa-driving-test-booking-changes-2026), so check them before you act on them.",
+  "table": {
+   "head": ["What", "Fee", "When it applies"],
+   "rows": [
+    ["Car practical test, weekday", "£62", "Monday to Friday, daytime"],
+    ["Car practical test, evening, weekend or bank holiday", "£75", "A weekday test starting after 16:30 is classed as an evening test (unverified)"],
+    ["Theory test", "£23", "Booked separately, and it has to be passed before you can book the practical"]
+   ],
+   "note": "Figures reported by fee sites in September 2026, not read off GOV.UK, which could not be opened. The £62 weekday fee is reported as unchanged since 2009. Check the current fee on [GOV.UK, driving test cost](https://www.gov.uk/driving-test-cost) before you pay."
+  },
   "points": [
-   "STUB"
+   "Book the test yourself, from your own account, and put the confirmation email somewhere you can find on the morning. The test centre's own phone number, for bad weather, is at the bottom of that email.",
+   "Book it for a time you drive well at. If every lesson you have had is at four in the afternoon, an 8:10 slot is a change of conditions, not just a change of clock.",
+   "The fee is the same wherever you sit in the queue, so there is nothing to gain by taking a slot you are not ready for.",
+   "A test taken in an automatic gives an automatic only licence (unverified). If you are going to drive a manual, test in a manual."
   ],
+  "blocks": [
+   {
+    "name": "Changing or cancelling",
+    "body": "You change or cancel through the same booking service. How much notice you need to give to keep the fee is the one thing this research could not settle. One fee site says three working days, another says ten or more full working days, described as raised from three during 2026. Neither page could be opened.\n\nWork to the longer figure. Ten clear working days of notice is safe under either reading, three is safe under only one of them.",
+    "points": [
+     "Saturdays count as working days for this, so a week of notice is shorter than it sounds (unverified).",
+     "Not enough notice, or not turning up, and the fee is gone. You pay again for the next test.",
+     "Since 31 March 2026 you get two changes before the booking has to be cancelled and rebooked, so do not spend them lightly (reported by Carwow, not confirmed on GOV.UK).",
+     "If you are ill on the day, ring DVSA rather than simply not going. The fee is probably lost either way, but the appointment is then freed for somebody else."
+    ]
+   },
+   {
+    "name": "Waiting times, and how slots come up",
+    "body": "Nobody could give a clean figure for Chilwell. One site gives a median wait of 7.7 weeks as of August 2026 [(The Driving Instructor Directory)](https://www.thedrivinginstructordirectory.co.uk/driving-test-centres/nottingham-chilwell), another gives 11.6 weeks [(bookdrivingtest.uk)](https://bookdrivingtest.uk/test-centres/). Across Great Britain, DVSA's median wait between booking and taking a test is reported as 11.1 weeks for July 2026 [(passrates.uk)](https://passrates.uk/guide/driving-test-wait-times-2026), while news coverage in the same period still described waits of over 20 weeks [(joe.co.uk)](https://www.joe.co.uk/news/driving-test-waiting-times-20-weeks-dvsa-figures-546740). These are measuring different things and none of the pages could be opened. The number that matters is the one the booking service shows you on the day.",
+    "points": [
+     "DVSA caps how far ahead the booking service shows slots at about 24 weeks. Where a centre's real wait is longer than that, the page shows nothing at all until a cancellation drops into the visible window [(passrates.uk)](https://passrates.uk/guide/driving-test-wait-times-2026).",
+     "An empty booking page therefore means no slot is visible, not that no slot exists (reasoned).",
+     "Earlier slots appear when somebody cancels and when DVSA releases new ones. Both happen at no fixed time, so checking is a habit rather than a tactic (reasoned).",
+     "About four learners in ten got a test within seven weeks in 2026, against a DVSA target of seven weeks [(Exam Routes)](https://examroutes.co.uk/27371/dvsa-seven-week-waiting-target-2026-analysis/)."
+    ]
+   },
+   {
+    "name": "Cancellation apps",
+    "body": "The research found one thing about them, and it is the thing that matters. From 8 April 2026, third party booking firms and cancellation finder apps are no longer permitted to book or manage a practical test on a learner's behalf [(Carwow, reporting a DVSA bulletin)](https://www.carwow.co.uk/news/10823/dvsa-driving-test-booking-changes-2026). That report is unofficial and could not be checked against DVSA's own notice.\n\nSo the practical answer is to check the booking service yourself. An app or an agent that offers to hold or move your booking for you is offering something the rules appear no longer to allow, and you would be handing over your licence details to do it."
+   }
+  ],
+  "warn": "Two things in this section are unsettled and both cost money if you get them wrong: the notice needed for a refund, and whether the 2026 booking rule changes are as reported. Check both on [GOV.UK](https://www.gov.uk/book-driving-test) before you change anything.",
   "sources": [
-   "(reasoned)"
+   "[GOV.UK, book your driving test](https://www.gov.uk/book-driving-test)",
+   "[GOV.UK, driving test cost](https://www.gov.uk/driving-test-cost)",
+   "[drivingtestcost.com, fees](https://drivingtestcost.com/fees)",
+   "[drivebot.co.uk, Nottingham (Chilwell)](https://drivebot.co.uk/test-centres/nottingham-chilwell)",
+   "[Carwow, DVSA booking changes 2026](https://www.carwow.co.uk/news/10823/dvsa-driving-test-booking-changes-2026)",
+   "[passrates.uk, driving test wait times 2026](https://passrates.uk/guide/driving-test-wait-times-2026)",
+   "Not one of these pages was opened when this app was written. Every figure here came back in a search result, so check the fee and the notice period yourself."
   ]
  },
  "car": {
   "id": "car",
-  "lede": "STUB",
-  "body": "STUB",
-  "points": [
-   "STUB"
+  "lede": "Before any driving the examiner checks three things: that you are the person on the licence, that the car is fit to take out, and that it is insured for a driving test. Any one of them wrong and the test is cancelled and the fee is lost.",
+  "body": "Bring your UK photocard driving licence. It is the only document that has to be in your hand. You do not need the theory test pass certificate, and you do not need a replacement if you have lost it, because the examiner checks the theory pass on the system [(GOV.UK, what to take)](https://www.gov.uk/driving-test/what-to-take). Bring your glasses or contact lenses if you need them to drive, and then wear them for the whole test.\n\nMost people use their instructor's car, which is already set up for the test. If you use your own, the car has to meet DVSA's rules and be insured for you to take a driving test in it [(GOV.UK, using your own car)](https://www.gov.uk/driving-test/using-your-own-car). Ordinary learner insurance does not always cover a test, so read the policy rather than assuming.\n\nDVSA's Ready to Pass campaign reports 2,281 tests cancelled in July 2026 for an unsuitable car, a forgotten licence or a late arrival [(Ready to Pass, what to take)](https://readytopass.campaign.gov.uk/driving-test/what-to-take/). Treat the exact number as (unverified). The point stands: most wasted tests are lost in the car park.",
+  "checks": [
+   "Photocard licence in your pocket, not in a bag in the boot.",
+   "Glasses or contact lenses, if you need them to read a number plate at 20 metres.",
+   "L plates on the front and the back, not covering the number plate and not blocking your view.",
+   "The extra interior mirror for the examiner, fitted and clean.",
+   "No warning light lit on the dashboard.",
+   "Headlights, brake lights, indicators and horn all working.",
+   "Tyres with legal tread, no cuts or bulges, pressures right.",
+   "Insurance that covers this car for a driving test, and an MOT in date if the car is old enough to need one.",
+   "Tax paid and the car roadworthy.",
+   "Front passenger seat belt working, head restraint fitted, seat able to slide back, footwell clear.",
+   "Any dashcam switched off, or at least not recording the inside of the car (unverified).",
+   "No smoking in the car before or during the test, and enough fuel or charge for about forty minutes of driving (unverified).",
+   "Confirmation email found, with the test centre's phone number on it."
   ],
+  "blocks": [
+   {
+    "name": "What the car has to have",
+    "body": "The requirements that decide whether the test goes ahead at all: L plates front and back and not blocking the view, a rear view mirror for you and a second one fitted for the examiner, no warning lights lit on the dashboard, working headlights, brake lights and indicators, legal tread depth and no damaged tyres, and working driver and passenger seat belts [(Ready to Pass, what to take)](https://readytopass.campaign.gov.uk/driving-test/what-to-take/). The car also has to be roadworthy, taxed, insured for the test and hold a valid MOT where one is due [(Select Drive)](https://www.selectdrivedrivingschool.co.uk/what-to-bring-to-your-driving-test/).\n\nThe examiner is not looking for a clean car. They are looking for a car they can safely sit in for forty minutes and take control of if they have to."
+   },
+   {
+    "name": "Whose car",
+    "body": "An instructor's car is the usual choice, and it is the safe one: it is insured for tests, it has the second mirror, and you already know where its controls are.\n\nYour own car is allowed if it meets the rules and the insurance covers a driving test. A hire car is usually not, because most hire agreements exclude driving tests and supervised learner driving (unverified, this is general knowledge rather than anything the research confirmed). If you are thinking of hiring, ring the hire company and ask them in plain words whether the car is insured for a DVSA practical test.\n\nWhatever car you use, do the manoeuvres in that car before the day. Reference points belong to a car, not to a driver."
+   },
+   {
+    "name": "Who may sit in",
+    "body": "One person aged 16 or over may come and observe. It is usually the instructor, but it can be a relative or a friend. They take no part in the test and say nothing. Two people may be allowed as a reasonable adjustment for a specific need. DVSA suggests sitting behind you is usually least intrusive, and the actual requirement is that the observer can sit upright with the seat belt correctly fitted [(GOV.UK, rules for observing driving tests)](https://www.gov.uk/guidance/rules-for-observing-driving-tests).\n\nThe examiner asks you, not them, and you can say no. There is a second and separate question at the end about whether they may hear the result and the debrief. You can answer the two differently.",
+    "points": [
+     "The strongest reason to have somebody in the back is the debrief. The emailed report says what faults were marked but not where on the route they happened [(Ready to Pass, taking your instructor)](https://readytopass.campaign.gov.uk/driving-test/taking-your-instructor-on-your-test/).",
+     "Tell your instructor which answer you are going to give before the day, so the question is not a decision you make while nervous [(Ready to Pass)](https://readytopass.campaign.gov.uk/driving-test/taking-your-instructor-on-your-test/).",
+     "If somebody sitting behind you would make you worse, say no. That is a legitimate answer and the examiner expects it."
+    ]
+   },
+   {
+    "name": "What gets a test cancelled, with no refund",
+    "points": [
+     "Arriving without your photocard licence.",
+     "Arriving in a car that does not meet the rules, or that is not insured for the test.",
+     "Arriving late enough that the examiner cannot take you out. GOV.UK says arrive five minutes before your appointment; examiners are told to allow at least five minutes of grace, and more at their discretion, but that is theirs to give and not yours to plan around [(GOV.UK, what to take)](https://www.gov.uk/driving-test/what-to-take).",
+     "The test cannot be finished because of a problem with you or with the car, for example a breakdown. A new test has to be booked and paid for [(GOV.UK, bad weather)](https://www.gov.uk/driving-test/test-cancelled-bad-weather).",
+     "Failing the eyesight check. The test ends in the car park, the fee is used up, and no driving happens."
+    ]
+   },
+   {
+    "name": "Bad weather",
+    "body": "DVSA cancels tests when conditions make them unsafe, usually ice, snow, fog or flooding. The decision is made locally and often early in the morning, so the centre may not know the night before.\n\nCheck before you set off, and ring the test centre's own number rather than the national line. Every centre has a direct number, given to candidates for exactly this, and it is at the bottom of your booking confirmation email. The numbers show an 020 code but connect to the local centre [(DVSA bulletin on test centre numbers)](https://content.govdelivery.com/accounts/UKDVSA/bulletins/3859e9e). If DVSA cancels the test you are given a new date and you do not pay again [(GOV.UK, test cancelled because of bad weather)](https://www.gov.uk/driving-test/test-cancelled-bad-weather).\n\nIf the test is not cancelled, it goes ahead in whatever weather there is. Wet, dark and windy are normal test conditions. Practise in them."
+   }
+  ],
+  "warn": "If you have a disability, a health condition or a learning difficulty, tell DVSA when you book rather than on the day. Adjustments have to be recorded against the booking, and some of them, such as allocating two test periods, cannot be arranged at the counter [(GOV.UK)](https://www.gov.uk/driving-test/disability-health-condition-or-learning-difficulty).",
   "sources": [
-   "(reasoned)"
+   "[GOV.UK, what to take to your driving test](https://www.gov.uk/driving-test/what-to-take)",
+   "[GOV.UK, using your own car](https://www.gov.uk/driving-test/using-your-own-car)",
+   "[Ready to Pass, what to take](https://readytopass.campaign.gov.uk/driving-test/what-to-take/)",
+   "[GOV.UK, rules for observing driving tests](https://www.gov.uk/guidance/rules-for-observing-driving-tests)",
+   "[GOV.UK, test cancelled because of bad weather](https://www.gov.uk/driving-test/test-cancelled-bad-weather)",
+   "None of these pages was opened when this app was written. The list above is where each rule should be, and the tick list is a reading of them rather than a copy."
   ]
  },
  "nerves": {
   "id": "nerves",
-  "lede": "STUB",
-  "body": "STUB",
-  "points": [
-   "STUB"
+  "lede": "Nerves on a driving test are ordinary, not a sign that you are not ready. The examiner is told to expect them. What follows is what an instructor would tell you, not what a study proved.",
+  "body": "Be clear about what this section is. The research behind this app could not reach the literature on test anxiety: no paper, no trial and no review was available when it was written (unverified). So nothing here is offered as evidence, and there is no study, author or year cited, because inventing one would be worse than citing none. What is below is the advice a competent driving instructor gives, and the two or three things that are actually written down in DVSA's own guidance.\n\nThe sourced part is this. DVSA tells examiners that a pleasant, outgoing approach matters throughout the test, because many candidates are more nervous on test than they are with their instructor or a friend, and that a candidate who is clearly suffering from nervousness should be offered a few words of reassurance to help them settle [(DT1, the car driving test)](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/1-car-driving-test). Read the examiner's friendliness as what it is. It is in the instructions.\n\nNothing in this section will make you pass. The things that make you pass are the driving and the preparation. These are ways of stopping nerves from taking away driving you already have.",
+  "blocks": [
+   {
+    "name": "The two weeks before",
+    "points": [
+     "Ask your instructor for a mock test, marked properly, in silence, on roads you have not just practised on. DVSA's own guidance to instructors says a mock should take about forty minutes and cover the licence check, the eyesight check, the show me and tell me questions, general driving, a reverse, independent driving, the emergency stop and a result with feedback [(GOV.UK, carry out mock driving tests)](https://www.gov.uk/guidance/carry-out-mock-driving-tests-for-your-pupils). The Mock tab of this app marks the same sheet from the passenger seat.",
+     "Do at least one mock that goes badly and carry on to the end of it. The skill you are practising is recovering from a mistake with thirty minutes still to drive.",
+     "Drive the roads round the centre at the time of day your test is booked for, in the traffic your test will be in.",
+     "Practise the parts you avoid. Almost everybody has one: the bay park, the right turn across traffic, the roundabout with two lanes. Avoidance is what turns into panic.",
+     "Stop taking lessons the day before is not a rule. Do whatever leaves you steady."
+    ]
+   },
+   {
+    "name": "The night before",
+    "points": [
+     "Sleep normally. A short night is the one thing on this page that reliably makes driving worse, and trying to sleep extra early rarely works.",
+     "Get the car and the documents ready now, not in the morning. The licence, the glasses, the L plates, the confirmation email.",
+     "Do not drive the route over and over in your head at midnight. There is no fixed route, the examiner names the roundabout exits for you, and a wrong turn is not a fault.",
+     "Do not read forums. Somebody has always just failed at Chilwell and wants to tell you why."
+    ]
+   },
+   {
+    "name": "The morning of",
+    "points": [
+     "Eat something. Forty minutes of concentration on an empty stomach is a poor idea.",
+     "Go easy on coffee if it makes your hands shake. Keep to whatever you normally drink rather than changing it today.",
+     "Have a short drive beforehand if you can, half an hour, nothing clever. Arriving warmed up beats arriving cold.",
+     "Aim to be at the centre about fifteen minutes early. Long enough to park, find the door and use the toilet. Not so long that you sit rehearsing.",
+     "Use the toilet before you go out to the car. Nobody will ask you if you need to."
+    ]
+   },
+   {
+    "name": "The ten minutes before",
+    "points": [
+     "Put the phone away. Nothing arriving on it in the next hour will help you.",
+     "Slow your breathing out rather than in: a longer breath out than in, for a minute or two. It is simple, it is free, and it is what instructors tell people. No evidence for it was available to this app (unverified).",
+     "Have one sentence ready for the moment it goes wrong, and say it to yourself in advance. \"That is one fault, I have fifteen\" is a better sentence than \"that is it, I have failed\".",
+     "Remember that a mistake does not end the test. GOV.UK says plainly that you can carry on if you make a mistake, and it might not affect your result [(GOV.UK)](https://www.gov.uk/driving-test/what-happens-during-test).",
+     "If you do not hear a direction, ask. DVSA tells examiners to answer a request to repeat or confirm a direction in a friendly, positive way, and asking is not marked against you [(DT1)](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/1-car-driving-test)."
+    ]
+   },
+   {
+    "name": "What is folklore",
+    "points": [
+     "Quotas. DVSA's own myths page says examiners do not pass or fail candidates because of quotas, and that the only number deciding the result is the number of faults you collect [(Ready to Pass, driving test myths)](https://readytopass.campaign.gov.uk/driving-test/driving-test-myths).",
+     "Trick questions and deliberate traps. The guidance examiners work to tells them to help you settle, to give directions in plenty of time and to name the exit at a roundabout.",
+     "That driving slowly is the safe option. It is not. Undue hesitation is a marked item in its own right, and so is failing to make normal progress. Driving well under a safe speed for the road is a fault, not caution (reasoned, from the marking items).",
+     "That a particular time of day or a particular examiner decides it. Nothing in the research supports it, and it is not something you can act on anyway (reasoned).",
+     "That failing means you are a bad driver. Nationally, about half of all tests end in a pass, and the second attempt pass rate is about the same as the first [(passrates.uk)](https://passrates.uk/guide/driving-test-second-attempt-pass-rate)."
+    ]
+   },
+   {
+    "name": "If the nerves are the actual problem",
+    "body": "Two practical points rather than reassurance.\n\nFirst, take your instructor in the car. DVSA's Ready to Pass campaign encourages it, and a nervous candidate gets two things from it: somebody familiar in the car, and somebody who hears exactly which faults were marked and where [(Ready to Pass)](https://readytopass.campaign.gov.uk/driving-test/taking-your-instructor-on-your-test/).\n\nSecond, you are allowed to move the test. Rebooking because you do not feel ready is a legitimate thing to do, and it is better than spending the fee on a test you already know will go badly. But it costs the fee if you leave it late, and the notice needed is unsettled in this app's research, so decide early. The booking section has what is known about the notice period.\n\nIf anxiety about driving is affecting more than the test, that is worth raising with a GP or with your instructor, who will have taught nervous drivers before. This app is not the right source on that."
+   }
   ],
+  "warn": "No part of this section is evidence based advice. The research literature was not reachable when this app was written, so treat all of it as (unverified) instructor practice. Nobody can promise you that any of it will make you pass.",
   "sources": [
-   "(reasoned)"
+   "[DT1, the car driving test](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/1-car-driving-test)",
+   "[Ready to Pass, driving test myths](https://readytopass.campaign.gov.uk/driving-test/driving-test-myths)",
+   "[Ready to Pass, taking your instructor on your test](https://readytopass.campaign.gov.uk/driving-test/taking-your-instructor-on-your-test/)",
+   "[GOV.UK, carry out mock driving tests for your pupils](https://www.gov.uk/guidance/carry-out-mock-driving-tests-for-your-pupils)",
+   "(reasoned)",
+   "No research on test anxiety was reachable when this app was written, and no study is cited here because none could be checked."
   ]
  },
  "after": {
   "id": "after",
-  "lede": "STUB",
-  "body": "STUB",
-  "points": [
-   "STUB"
+  "lede": "The result comes in the car, at the end, before you get out. Then a short debrief, then an email. What happens after that depends on which way it went.",
+  "body": "On a pass the examiner says so and adds something for you to be aware of now that you will be driving alone. On a fail they tell you why. Either way you are asked whether your instructor or accompanying driver may hear the result and the debrief, and you can say no [(DT1, test wordings)](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings).\n\nThe debrief is short. The examiner has a few minutes to explain what went wrong, and that is the most specific feedback on your driving you will ever get. Listen rather than argue. The emailed report tells you how many faults you made and which items they were in, but not where on the route they happened [(Ready to Pass)](https://readytopass.campaign.gov.uk/driving-test/taking-your-instructor-on-your-test/), which is the real argument for having somebody in the car who heard it.",
+  "blocks": [
+   {
+    "name": "If you passed",
+    "points": [
+     "You can drive on your own straight away, as soon as you have insurance that covers you to drive unsupervised [(GOV.UK, apply for your full licence)](https://www.gov.uk/apply-for-your-full-driving-licence). Ring the insurer from the car park, not the next day.",
+     "Hand your provisional licence to the examiner and they give you a pass certificate and arrange for DVLA to send the full licence. Where you gave an email address and the test was recorded on a tablet, this is usually automatic [(GOV.UK, faults and result)](https://www.gov.uk/driving-test/driving-test-faults-result).",
+     "The pass certificate proves the pass while you wait for the plastic to arrive.",
+     "Take the L plates off. Driving with L plates after you have passed is not allowed, and it is an easy thing to forget in the first week (unverified).",
+     "The test is not the standard. It is the minimum. Your first motorway, your first fog, your first night drive on an unlit road and your first car full of friends are all still ahead of you."
+    ]
+   },
+   {
+    "name": "The first two years: the six point rule",
+    "body": "Under the New Drivers Act, if you collect six or more penalty points within two years of passing your first driving test, DVLA revokes your licence. You go back to a provisional, back to L plates and a supervising driver, and you have to pass both the theory test and the practical test again before you get a full licence back. Points you picked up as a learner count towards the six if they are still on the licence [(GOV.UK, new drivers)](https://www.gov.uk/driving-disqualifications/new-drivers).\n\nSix points is not much. Two speeding tickets at three points each will do it, and so will one mobile phone offence at six. An established driver has twelve points to play with before a court gets involved. You have six, and no court is involved: the revocation is automatic.\n\nThis is a stable, long standing rule, but the GOV.UK page was not opened when this app was written, so check it there (unverified as to the exact current wording).",
+    "points": [
+     "Speeding is the usual way it happens, and the usual place is a road you drive every day.",
+     "Using a hand held phone at the wheel is six points on its own. That is the whole allowance in one offence.",
+     "Insurance for a new driver is expensive enough without points on top."
+    ]
+   },
+   {
+    "name": "What to do next",
+    "points": [
+     "Motorway lessons. You may take motorway lessons with an approved driving instructor in a car with dual controls, and you may do it after passing as well as before. It is the single biggest gap between the test and real driving, because the test does not go near a motorway, and the M1 at Junction 25 is a short drive from Eldon Business Park [(PassMeFast, on the business park)](https://www.passmefast.co.uk/test-centres/practical/nottinghamshire/nottingham-chilwell). (The motorway lesson rule itself is unverified: it was not in the research behind this app.)",
+     "Pass Plus. A structured course of about six modules covering town, all weather, rural roads, night driving, dual carriageways and motorways, taught by an approved instructor. Some insurers discount for it and some do not, so ask yours first [(GOV.UK, Pass Plus)](https://www.gov.uk/pass-plus). (unverified as to the current content and the discounts.)",
+     "Drive the things you never did on test: at night, in heavy rain, with a full car, on an unfamiliar route, on a long journey.",
+     "Keep the first few months boring. Most new driver collisions involve speed, distraction or passengers, not skill (unverified, general road safety knowledge rather than anything sourced here)."
+    ]
+   },
+   {
+    "name": "If you did not pass",
+    "body": "The next test has to be at least ten working days away [(GOV.UK, faults and result)](https://www.gov.uk/driving-test/driving-test-faults-result). That is a floor, not a recommendation. Book it once you and your instructor know what needs work, not from the car park in a temper.\n\nYou drive home as a learner. The provisional licence rules still apply, so you need a supervising driver, L plates and insurance that covers learner driving (reasoned, from the provisional rules rather than from a page that was opened).\n\nFor what it is worth: nationally, second attempt pass rates are about the same as first attempt pass rates, roughly 49 per cent, and they stay about level for the third and fourth attempts before falling away [(passrates.uk)](https://passrates.uk/guide/driving-test-second-attempt-pass-rate). Failing once tells you very little about next time."
+   },
+   {
+    "name": "Reading the fault sheet",
+    "body": "The report lists every fault against one of about twenty seven items, marked as a driving fault, a serious fault or a dangerous fault. There is also an ETA box, for examiner took action, which records that the examiner had to speak to you or use the controls. The ETA is a record of the intervention, not a separate fault.\n\nRead it in this order.",
+    "points": [
+     "Find the serious or dangerous fault first, if there is one. That is the fail. Everything else on the sheet is information, not the reason.",
+     "Then look for repeats. Three or four marks in one item is a pattern and that is the thing to take to your next lesson. Four marks spread across four different items is an ordinary pass sheet.",
+     "Then read the rest once and put it down. Fifteen driving faults is a pass, so a sheet with six on it is not a bad sheet.",
+     "Take it to your instructor within a day or two, while the debrief is still fresh. The sheet says what, the debrief said where, and you need both.",
+     "The Test tab of this app has every item on the sheet with what the examiner is assessing and where the line to a serious fault sits."
+    ]
+   },
+   {
+    "name": "Appealing",
+    "body": "An appeal cannot change the result. That is the first thing to understand about it.\n\nYou can appeal on the ground that the test was not conducted according to the regulations, that is, that the examiner did not follow the rules. If your complaint is upheld the result still stands, but you may be given a refund or a free retest [(GOV.UK, faults and result)](https://www.gov.uk/driving-test/driving-test-faults-result).\n\nThe time limits are reported as six months in England and Wales and 21 days in Scotland (unverified, not confirmed by the research behind this app). If you think something went wrong procedurally, act quickly and write down what happened the same day.\n\nDisagreeing with the examiner's judgement of your driving is not a ground for appeal. Complaining that a fault was marked harshly will not get it removed."
+   }
   ],
   "sources": [
-   "(reasoned)"
+   "[GOV.UK, driving test faults and result](https://www.gov.uk/driving-test/driving-test-faults-result)",
+   "[GOV.UK, understanding your driving test result](https://www.gov.uk/guidance/understanding-your-driving-test-result/car-driving-test)",
+   "[GOV.UK, apply for your full driving licence](https://www.gov.uk/apply-for-your-full-driving-licence)",
+   "[GOV.UK, new drivers and the six point rule](https://www.gov.uk/driving-disqualifications/new-drivers)",
+   "[GOV.UK, Pass Plus](https://www.gov.uk/pass-plus)",
+   "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)",
+   "The GOV.UK pages above were not opened when this app was written. The six point rule, Pass Plus and the motorway lesson rule are written here from general knowledge and should be read on GOV.UK."
   ]
  },
  "rates": {
   "id": "rates",
-  "lede": "STUB",
-  "body": "STUB",
+  "lede": "Chilwell was a hard centre in 2024 to 2025 and is close to the national average now. Neither of those facts tells you much about your test.",
+  "body": "The figures below did not come from DVSA. They came from commercial sites that republish DVSA's tables, because the tables themselves could not be opened when this app was written. Where sites disagreed, the disagreement is shown rather than hidden.",
+  "table": {
+   "head": ["Year", "Nottingham (Chilwell)", "Great Britain", "Tests at Chilwell"],
+   "rows": [
+    ["April 2024 to March 2025", "About 44 per cent", "48.7 per cent", "About 6,200"],
+    ["April 2025 to March 2026", "49.89 per cent", "About 50.0 to 50.1 per cent", "9,415"]
+   ],
+   "note": "Chilwell 2024 to 2025 is reported as 43.9, 44.0 and 44.2 per cent by three different sites, so \"about 44\" is the honest version [(drivingtestroutes.com)](https://www.drivingtestroutes.com/driving-test-routes-in-nottingham-chilwell/) [(passdrivingtest.co.uk)](https://passdrivingtest.co.uk/nottingham-chilwell-driving-test-centre/NThiLSpF). Chilwell 2025 to 2026 is given as 49.89 per cent on 9,415 tests by one site and 49.9 per cent by another [(The Driving Instructor Directory)](https://www.thedrivinginstructordirectory.co.uk/driving-test-centres/nottingham-chilwell) [(bookdrivingtest.uk)](https://bookdrivingtest.uk/test-centres/). The national figures are from [passrates.uk](https://passrates.uk/guide/driving-test-pass-rate-2024-2025)."
+  },
   "points": [
-   "STUB"
+   "In 2025 to 2026, 4,888 of the Chilwell tests were first attempts, and those passed at 49.22 per cent. Of those first timers, 126 passed with no driving faults at all, about one in 39 [(The Driving Instructor Directory)](https://www.thedrivinginstructordirectory.co.uk/driving-test-centres/nottingham-chilwell). A clean sheet is not the target. Fifteen driving faults is still a pass.",
+   "Chilwell's best recent month was January 2026, at 56.41 per cent from 453 passes out of 803 tests. Months move around a lot and one month is not a trend [(The Driving Instructor Directory)](https://www.thedrivinginstructordirectory.co.uk/driving-test-centres/nottingham-chilwell).",
+   "Nationally the second attempt pass rate is about 49.5 per cent, almost identical to the first, and the third is about the same again. Rates only fall away from the fifth attempt onwards [(passrates.uk)](https://passrates.uk/guide/driving-test-second-attempt-pass-rate).",
+   "The reported pattern nationally is that the more rural the centre, the higher the pass rate, because traffic, complicated junctions, multi lane roads and heavy signage all add difficulty [(Auto Express)](https://www.autoexpress.co.uk/car-news/first-cars/91405/uk-driving-test-pass-rates-explained/easiest-and-hardest-places-pass-your-driving-test). Chilwell is a suburban centre serving a built up area, so a rate around or a little below the national figure is what you would expect (reasoned).",
+   "Do not switch centres over this. Colwick and Watnall report similar figures for different years, the comparison does not hold, and you would be testing on roads you have not practised on (reasoned)."
   ],
+  "blocks": [
+   {
+    "name": "Two different national averages",
+    "body": "Sites quote national averages that are not the same number and are not measuring the same thing.\n\n48.7 per cent is the real national rate for 2024 to 2025: every pass in Great Britain divided by every test, 893,609 out of 1,836,558 [(passrates.uk)](https://passrates.uk/guide/driving-test-pass-rate-2024-2025). That is the figure a centre's own rate is comparable with.\n\n52.2 per cent is the unweighted mean of individual centre rates, where a centre doing a few hundred tests a year counts the same as one doing twelve thousand [(audrive.net)](https://audrive.net/en/uk/pass-rates). It is not a national pass rate.\n\n50.2 per cent is used as a \"national average\" by at least one site alongside a 2024 to 2025 centre figure, which is how that site gets Chilwell to 6.0 points below average. Against the right comparator it was about 4.5 points below (reasoned)."
+   },
+   {
+    "name": "How much to trust the jump",
+    "body": "Chilwell apparently moved from about 44 per cent to about 49.9 per cent in one year, while the national rate moved about 1.3 points. That is a big move for one centre.\n\nIt may well be real. The centre's test volume grew by about half over the same period, from roughly 6,200 to 9,415, which usually means new examiners and a different mix of candidates. But a jump that size is also what it looks like when a site has mislabelled which year its data covers, and no primary table could be opened to settle it (reasoned).\n\nBoth years are in the table for that reason. If you want one sentence: Chilwell is an ordinary suburban test centre, somewhere around the national average, and it has been harder than average in the recent past."
+   },
+   {
+    "name": "What a centre's pass rate tells you about your test",
+    "body": "Very little. A pass rate is the average of thousands of tests taken by thousands of different people with different amounts of practice. Your result comes from your driving on one morning, marked against fifteen driving faults and no serious ones.\n\nThe things that actually move your odds are the ones you control: hours behind the wheel, private practice on these roads, whether you have driven them in this traffic at this time of day, and whether you are going because you are ready or because the slot came up (reasoned).\n\nIf you fail, the national picture says your chances next time are about the same, not worse, and that roughly nine in ten people who keep going pass within three attempts [(PassMeFast)](https://www.passmefast.co.uk/resources/get-test-ready/practical-test/average-attempts-driving-test)."
+  }
+  ],
+  "warn": "None of these numbers came from DVSA's own tables. Every one was republished by a commercial site and not one of those pages could be opened when this app was written. The centre level table is DRT122A on GOV.UK, and anyone who wants the real figure should open it there.",
   "sources": [
+   "[The Driving Instructor Directory, Nottingham (Chilwell)](https://www.thedrivinginstructordirectory.co.uk/driving-test-centres/nottingham-chilwell)",
+   "[bookdrivingtest.uk, test centres](https://bookdrivingtest.uk/test-centres/)",
+   "[drivingtestroutes.com, Nottingham (Chilwell)](https://www.drivingtestroutes.com/driving-test-routes-in-nottingham-chilwell/)",
+   "[passdrivingtest.co.uk, Nottingham (Chilwell)](https://passdrivingtest.co.uk/nottingham-chilwell-driving-test-centre/NThiLSpF)",
+   "[passrates.uk, driving test pass rate 2024 to 2025](https://passrates.uk/guide/driving-test-pass-rate-2024-2025)",
+   "[passrates.uk, second attempt pass rate](https://passrates.uk/guide/driving-test-second-attempt-pass-rate)",
+   "[audrive.net, UK pass rates](https://audrive.net/en/uk/pass-rates)",
    "(reasoned)"
   ]
  }

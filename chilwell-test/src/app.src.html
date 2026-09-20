@@ -161,6 +161,12 @@ th{font:600 14px/1.2 var(--display);color:var(--muted)}
 .tally .box{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:6px 10px;display:grid;justify-items:center;min-width:64px}
 .tally .box.warn{border-color:var(--f1)}
 .tally .box.fail{border-color:var(--f2);color:var(--f2)}
+@media (max-width:420px){
+  .tally{gap:5px}
+  .tally .box{min-width:0;padding:4px 7px;flex:1 1 auto}
+  .tally .big{font-size:23px}
+  .tally .lab{font-size:11px;text-align:center}
+}
 .stats{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
 .stats div{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:6px 11px;display:grid;justify-items:center;min-width:72px;flex:1 1 72px}
 .stats b{font:700 22px/1.05 var(--display);font-variant-numeric:tabular-nums}
@@ -524,7 +530,7 @@ function makeMap(box, opts) {
       if (m.gps.acc) g.appendChild(el('circle', { cx: p.x, cy: p.y, r: Math.max(6, m.gps.acc / mpp), fill: '#1558B0', 'fill-opacity': .13, stroke: '#1558B0', 'stroke-opacity': .5 }));
       g.appendChild(el('circle', { cx: p.x, cy: p.y, r: 7, fill: '#1558B0', stroke: '#fff', 'stroke-width': 2.5 }));
     }
-    const showLabels = m.z >= 13.6;
+    const showLabels = m.z >= 13.2;
     (m.pts || []).forEach(pt => {
       const p = m.screen(pt.lat, pt.lon);
       if (p.x < -60 || p.y < -60 || p.x > R.w + 60 || p.y > R.h + 60) return;
@@ -537,7 +543,7 @@ function makeMap(box, opts) {
         const t = el('text', { x: p.x, y: p.y + 4.6, 'text-anchor': 'middle', fill: '#fff', 'font-size': 12.5 });
         t.textContent = pt.glyph; gg.appendChild(t);
       }
-      if (showLabels && pt.name) {
+      if ((showLabels || pt.always || on) && pt.name) {
         const t = el('text', { x: p.x + r + 5, y: p.y + 4.5, 'font-size': 13, fill: 'currentColor', stroke: 'var(--ground)', 'stroke-width': 3.4, 'paint-order': 'stroke', 'stroke-linejoin': 'round' });
         t.textContent = pt.name; gg.appendChild(t);
       }
@@ -561,6 +567,9 @@ function makeMap(box, opts) {
   const ptrs = new Map();
   let last = null, moved = 0, downT = 0, pinch0 = 0, z0 = 0;
   box.addEventListener('pointerdown', e => {
+    /* the zoom and location buttons live inside the map, and capturing the
+       pointer here would swallow their clicks */
+    if (e.target.closest && e.target.closest('.mapctl, .attrib')) return;
     box.setPointerCapture && box.setPointerCapture(e.pointerId);
     ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
     if (ptrs.size === 1) { last = { x: e.clientX, y: e.clientY }; moved = 0; downT = performance.now(); }
@@ -1039,7 +1048,6 @@ function jById(id) { return junctionItems().find(j => j.id === id) || null; }
 function mapPoints() {
   const pts = [];
   const c = D.centre || {};
-  if (c.lat) pts.push({ id: 'centre', lat: c.lat, lon: c.lon, name: c.short || 'Test centre', colour: KIND.centre.colour, glyph: KIND.centre.glyph, r: 11 });
   if (st.layers.junctions) junctionItems().forEach(j => {
     const p = jPos(j);
     if (!p.lat) return;
@@ -1051,6 +1059,8 @@ function mapPoints() {
     if (!s.lat) return;
     pts.push({ id: 'spot:' + s.id, lat: s.lat, lon: s.lon, name: s.short || s.name, colour: KIND.spot.colour, glyph: KIND.spot.glyph });
   });
+  /* the centre goes on last so it sits on top of whatever is clustered round it */
+  if (c.lat) pts.push({ id: 'centre', lat: c.lat, lon: c.lon, name: c.short || 'Test centre', colour: KIND.centre.colour, glyph: KIND.centre.glyph, r: 11, always: true });
   return pts;
 }
 function mapLines() {
@@ -1203,6 +1213,11 @@ function renderFaults() {
     (f.do && f.do.length ? '<h4>What to do</h4>' + list(f.do) : '') +
     (f.mistakes && f.mistakes.length ? '<h4>Common faults</h4>' + list(f.mistakes) : '') +
     (f.local ? '<h4>Where this bites near Chilwell</h4>' + para(f.local) : '') +
+    (function () {
+      const js = junctionItems().filter(j => (j.links || []).indexOf(f.id) >= 0);
+      return js.length ? '<h4>Where to practise it</h4><div class="row">' +
+        js.map(j => '<button type="button" class="btn small" data-roadto="' + esc(j.id) + '">' + esc(j.short || j.name) + '</button>').join('') + '</div>' : '';
+    })() +
     srcLine(f.sources) + '</div></details>').join('') || '<p class="muted">Nothing in this group.</p>';
 }
 
@@ -1726,8 +1741,14 @@ function init() {
   const c = D.centre || {};
   map = makeMap($('#mapbox'), { lat: c.lat || 52.9142, lon: c.lon || -1.2233, z: 14.3, onPick: mapCard });
   refreshMap();
+  /* open on the places close to the centre, so the labels are readable. The rest
+     are still there when you zoom out. */
   const all = mapPoints();
-  if (all.length > 1) map.fit(all, 48);
+  const near = c.lat ? all.filter(p => metres({ lat: c.lat, lon: c.lon }, p) < 2500) : all;
+  if (near.length > 1) map.fit(near, 44);
+  else if (all.length > 1) map.fit(all, 48);
+  /* open close enough in that the markers carry their names */
+  if (map.z < 13.3) { map.z = 13.3; map.render(); }
   drawDiagrams(document);
   setTab(st.tab && document.getElementById('tab-' + st.tab) ? st.tab : 'start');
 }
