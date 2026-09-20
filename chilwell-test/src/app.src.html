@@ -119,6 +119,14 @@ th{font:600 14px/1.2 var(--display);color:var(--muted)}
 .mapctl{position:absolute;right:8px;top:8px;display:grid;gap:6px;z-index:3}
 .mapctl button{width:42px;height:42px;border-radius:10px;border:1px solid var(--rule);background:var(--panel);color:var(--ink);font:700 20px/1 var(--display);cursor:pointer;opacity:.94}
 .mapctl button.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+#cross{position:absolute;inset:0;z-index:2;pointer-events:none;display:grid;place-items:center}
+#cross i{display:block;width:38px;height:38px;border:2px solid var(--accent);border-radius:50%;position:relative;background:rgba(21,88,176,.08)}
+#cross i::before,#cross i::after{content:'';position:absolute;background:var(--accent)}
+#cross i::before{left:50%;top:-12px;bottom:-12px;width:2px;margin-left:-1px}
+#cross i::after{top:50%;left:-12px;right:-12px;height:2px;margin-top:-1px}
+.placebar{background:var(--accent);color:var(--on-accent);border-radius:12px;padding:10px 12px;margin:0 0 10px}
+.placebar p{margin:0 0 8px;font-size:15px}
+.placebar .btn{border-color:var(--on-accent);color:var(--on-accent)}
 .attrib{position:absolute;left:0;bottom:0;background:rgba(255,255,255,.82);color:#222;font-size:11px;padding:2px 6px;border-radius:0 8px 0 0;z-index:3}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .attrib{background:rgba(10,14,20,.8);color:#ddd}}
 #mapcard{margin-top:10px}
@@ -243,8 +251,10 @@ nav.tabs svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1
       <button type="button" id="mGps" aria-label="Show where I am">◉</button>
       <button type="button" id="mBig" aria-label="Make the map taller">↕</button>
     </div>
+    <div id="cross" hidden><i></i></div>
     <div class="attrib">Map data © OpenStreetMap contributors</div>
   </div>
+  <div id="placeBar"></div>
   <div class="chips" id="mapLayers" role="group" aria-label="Map layers"></div>
   <div class="mapkey" id="mapKey"></div>
   <div id="mapcard"></div>
@@ -863,14 +873,15 @@ function diagManoeuvre(kind, step) {
 }
 
 /* ---------------- state ---------------- */
-const K = { plan: 'ct.plan', mocks: 'ct.mocks', quiz: 'ct.quiz', checks: 'ct.checks', conf: 'ct.conf', tab: 'ct.tab' };
+const K = { plan: 'ct.plan', mocks: 'ct.mocks', quiz: 'ct.quiz', checks: 'ct.checks', pos: 'ct.pos', tab: 'ct.tab' };
 const st = {
   tab: store.get(K.tab, 'start'),
   plan: store.get(K.plan, { date: '', time: '', name: '' }),
   checks: store.get(K.checks, {}),
   layers: { junctions: true, routes: true, hazards: true, spots: true },
   road: 'all', fault: 'all',
-  sel: null
+  sel: null, placing: null,
+  pos: store.get(K.pos, {})
 };
 let map = null, mockMap = null;
 
@@ -997,6 +1008,30 @@ const KIND = {
   spot: { colour: '#5B7B1F', glyph: 'P', name: 'Practice spot' }
 };
 function junctionItems() { return ((D.junctions && D.junctions.items) || []); }
+/* a position the reader has corrected wins over the one in the data, which is
+   mostly approximate. Nothing here was surveyed, so let them fix it. */
+function jPos(j) {
+  const p = st.pos[j.id];
+  return p ? { lat: p.lat, lon: p.lon, fixed: true, by: p.by } : { lat: j.lat, lon: j.lon, fixed: false, by: null };
+}
+function setPos(id, lat, lon, by) {
+  st.pos[id] = { lat: Math.round(lat * 1e6) / 1e6, lon: Math.round(lon * 1e6) / 1e6, by };
+  store.set(K.pos, st.pos);
+  refreshMap(); renderRoads();
+  if (st.sel === id) mapCard(id);
+}
+function clearPos(id) { delete st.pos[id]; store.set(K.pos, st.pos); refreshMap(); renderRoads(); if (st.sel === id) mapCard(id); }
+function posLine(j) {
+  const p = jPos(j);
+  if (p.fixed) return '<span class="tag ok">position set by you</span>';
+  return j.precision === 'sourced' ? '<span class="tag">position from a source</span>' : '<span class="tag care">position approximate</span>';
+}
+function posButtons(j) {
+  const p = jPos(j);
+  return '<div class="row"><button type="button" class="btn small" data-setgps="' + esc(j.id) + '">Set it from where I am</button>' +
+    '<button type="button" class="btn small" data-setmap="' + esc(j.id) + '">Move the pin on the map</button>' +
+    (p.fixed ? '<button type="button" class="btn small danger" data-clearpos="' + esc(j.id) + '">Put it back</button>' : '') + '</div>';
+}
 function jById(id) { return junctionItems().find(j => j.id === id) || null; }
 
 function mapPoints() {
@@ -1004,10 +1039,11 @@ function mapPoints() {
   const c = D.centre || {};
   if (c.lat) pts.push({ id: 'centre', lat: c.lat, lon: c.lon, name: c.short || 'Test centre', colour: KIND.centre.colour, glyph: KIND.centre.glyph, r: 11 });
   if (st.layers.junctions) junctionItems().forEach(j => {
-    if (!j.lat) return;
+    const p = jPos(j);
+    if (!p.lat) return;
     const k = KIND[j.kind] || KIND.junction;
     if (!st.layers.hazards && j.kind === 'hazard') return;
-    pts.push({ id: j.id, lat: j.lat, lon: j.lon, name: j.short || j.name, colour: k.colour, glyph: k.glyph });
+    pts.push({ id: j.id, lat: p.lat, lon: p.lon, name: j.short || j.name, colour: k.colour, glyph: k.glyph });
   });
   if (st.layers.spots) ((D.routes && D.routes.spots) || []).forEach(s => {
     if (!s.lat) return;
@@ -1083,6 +1119,7 @@ function junctionCard(j, open) {
     (j.mistakes && j.mistakes.length ? '<h4>What goes wrong here</h4>' + list(j.mistakes) : '') +
     (j.lat ? '<div class="row"><button type="button" class="btn small" data-mapto="' + esc(j.id) + '">Show on the map</button></div>' : '') +
     (links ? '<div class="row">' + links + '</div>' : '') +
+    (j.lat ? '<p class="small muted" style="margin:8px 0 0">' + posLine(j) + '</p>' + posButtons(j) : '') +
     srcLine(j.sources) + '</div>';
 }
 function renderRoads() {
@@ -1108,6 +1145,7 @@ function fillJunctionBody(det) {
     (j.watch && j.watch.length ? '<h4>What the examiner is watching</h4>' + list(j.watch) : '') +
     (j.mistakes && j.mistakes.length ? '<h4>What goes wrong here</h4>' + list(j.mistakes) : '') +
     (j.lat ? '<div class="row"><button type="button" class="btn small" data-mapto="' + esc(j.id) + '">Show on the map</button></div>' : '') +
+    (j.lat ? '<p class="small muted" style="margin:8px 0 0">' + posLine(j) + '</p>' + posButtons(j) : '') +
     srcLine(j.sources);
   drawDiagrams(holder);
 }
@@ -1442,6 +1480,37 @@ function renderMockMap(rec) {
   if (pts.length) mockMap.fit(pts, 40);
 }
 
+/* moving a pin: pan the map so the junction sits under the crosshair */
+function placeStart(id) {
+  const j = jById(id); if (!j) return;
+  st.placing = id;
+  setTab('map');
+  setTimeout(() => {
+    const p = jPos(j);
+    if (map) { map.lat = p.lat; map.lon = p.lon; map.z = Math.max(map.z, 17); map.render(); }
+    $('#cross').hidden = false;
+    $('#placeBar').innerHTML = '<div class="placebar"><p><b>' + esc(j.name) + '</b>. Drag the map until the crosshair sits on the junction, then put the pin there. Nothing here was surveyed, so your correction is better than ours.</p>' +
+      '<div class="row"><button type="button" class="btn" data-placecancel="1">Leave it</button><button type="button" class="btn primary" data-placeok="1">Put the pin here</button></div></div>';
+    $('#placeBar').scrollIntoView({ block: 'nearest' });
+  }, 80);
+}
+function placeEnd(save) {
+  const id = st.placing;
+  st.placing = null;
+  $('#cross').hidden = true;
+  $('#placeBar').innerHTML = '';
+  if (save && id && map) { setPos(id, map.lat, map.lon, 'map'); mapCard(id); toast('Pin moved. It stays on this phone.'); }
+}
+function placeFromGps(id) {
+  const j = jById(id); if (!j) return;
+  if (!navigator.geolocation) { toast('This browser will not give a location.'); return; }
+  toast('Getting a fix. Stand at the junction.');
+  navigator.geolocation.getCurrentPosition(pos => {
+    setPos(id, pos.coords.latitude, pos.coords.longitude, 'gps');
+    toast('Set to where you are, give or take ' + Math.round(pos.coords.accuracy) + ' metres.');
+  }, () => toast('No location. On a phone this needs an https page and permission.'), { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
+}
+
 /* paper: the same list of items, with boxes to tick in the car */
 function printSheet() {
   const groups = (D.faults && D.faults.groups) || [];
@@ -1464,7 +1533,7 @@ function printSheet() {
   window.print();
 }
 function saveMocks() {
-  const data = { app: 'chilwell-test', saved: new Date().toISOString(), mocks: store.get(K.mocks, []), quiz: store.get(K.quiz, {}) };
+  const data = { app: 'chilwell-test', saved: new Date().toISOString(), mocks: store.get(K.mocks, []), quiz: store.get(K.quiz, {}), positions: store.get(K.pos, {}) };
   const blob = new Blob([JSON.stringify(data, null, 1)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -1478,6 +1547,10 @@ function loadMocks(file) {
     let o = null;
     try { o = JSON.parse(r.result); } catch (e) { toast('That file is not one of ours.'); return; }
     if (!o || !Array.isArray(o.mocks)) { toast('That file has no mock tests in it.'); return; }
+    if (o.positions && typeof o.positions === 'object') {
+      Object.keys(o.positions).forEach(k => { if (!st.pos[k] && o.positions[k] && o.positions[k].lat) st.pos[k] = o.positions[k]; });
+      store.set(K.pos, st.pos); refreshMap(); renderRoads();
+    }
     const have = store.get(K.mocks, []), seen = new Set(have.map(m => m.when));
     let added = 0;
     o.mocks.forEach(m => { if (m && m.when && !seen.has(m.when)) { have.push(m); seen.add(m.when); added++; } });
@@ -1508,7 +1581,7 @@ function openFault(id) {
   }, 60);
 }
 document.addEventListener('click', e => {
-  const t = e.target.closest('[data-tab],[data-go],[data-layer],[data-road],[data-fault-group],[data-fault],[data-mapto],[data-roadto],[data-mark],[data-qshow],[data-qmark],[data-qspeak],[data-qstop],[data-mstep],[data-hist]');
+  const t = e.target.closest('[data-tab],[data-go],[data-layer],[data-road],[data-fault-group],[data-fault],[data-mapto],[data-roadto],[data-mark],[data-qshow],[data-qmark],[data-qspeak],[data-qstop],[data-mstep],[data-hist],[data-setgps],[data-setmap],[data-clearpos],[data-placeok],[data-placecancel]');
   if (!t) return;
   const d = t.dataset;
   if (d.tab) setTab(d.tab);
@@ -1517,7 +1590,7 @@ document.addEventListener('click', e => {
   else if (d.road) { st.road = d.road; renderRoads(); }
   else if (d.faultGroup) { st.fault = d.faultGroup; renderFaults(); }
   else if (d.fault) openFault(d.fault);
-  else if (d.mapto) { setTab('map'); setTimeout(() => { const j = jById(d.mapto); if (j && map) { map.lat = j.lat; map.lon = j.lon; map.z = Math.max(map.z, 16); mapCard(j.id); } }, 60); }
+  else if (d.mapto) { setTab('map'); setTimeout(() => { const j = jById(d.mapto); if (j && map) { const p = jPos(j); map.lat = p.lat; map.lon = p.lon; map.z = Math.max(map.z, 16); mapCard(j.id); } }, 60); }
   else if (d.roadto) { st.road = 'all'; renderRoads(); setTab('roads'); setTimeout(() => { const det = $('[data-jid="' + d.roadto + '"]'); if (det) { det.open = true; fillJunctionBody(det); det.scrollIntoView({ block: 'center', behavior: 'smooth' }); } }, 60); }
   else if (d.mark) mockAdd(d.mark, d.k);
   else if (d.qshow) { quizState.shown = true; quizDraw(); }
@@ -1531,6 +1604,11 @@ document.addEventListener('click', e => {
     dg.dataset.step = String(clamp(parseInt(dg.dataset.step || '0', 10) + parseInt(d.mstep, 10), 0, n - 1));
     drawManStep(dg, it || {});
   }
+  else if (d.setgps) placeFromGps(d.setgps);
+  else if (d.setmap) placeStart(d.setmap);
+  else if (d.clearpos) { clearPos(d.clearpos); toast('Back to the position in the app.'); }
+  else if (d.placeok) placeEnd(true);
+  else if (d.placecancel) placeEnd(false);
   else if (d.hist) { const h = store.get(K.mocks, [])[parseInt(d.hist, 10)]; if (h) { renderResult(h); renderMockMap(h); $('#mockResult').scrollIntoView({ block: 'start', behavior: 'smooth' }); } }
 });
 document.addEventListener('change', e => {

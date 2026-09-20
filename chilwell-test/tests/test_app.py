@@ -128,6 +128,35 @@ def run(pw):
         drew += d.locator('.diag svg').count()
     check('at least one junction diagram drew', drew > 0, '%d diagrams' % drew)
 
+    print('\nthe map pins can be corrected by the reader')
+    d = page.locator('#roadList details').first
+    if d.locator('[data-setmap]').count():
+        d.locator('[data-setmap]').click()
+        page.wait_for_timeout(350)
+        check('the crosshair appears', page.locator('#cross').is_visible())
+        check('the placing bar explains itself', len(page.inner_text('#placeBar')) > 40)
+        page.mouse.move(200, 400)
+        page.mouse.down()
+        page.mouse.move(250, 430, steps=5)
+        page.mouse.up()
+        page.wait_for_timeout(150)
+        page.click('[data-placeok]')
+        page.wait_for_timeout(250)
+        saved = page.evaluate("JSON.parse(localStorage.getItem('ct.pos') || '{}')")
+        check('the new position is saved', len(saved) == 1, str(saved)[:60])
+        check('the crosshair goes away', not page.locator('#cross').is_visible())
+        page.click('nav.tabs button[data-tab="roads"]')
+        page.wait_for_timeout(150)
+        d = page.locator('#roadList details').first
+        d.locator('summary').click()
+        page.wait_for_timeout(200)
+        check('the card says the reader set it', 'set by you' in d.inner_text())
+        d.locator('[data-clearpos]').click()
+        page.wait_for_timeout(200)
+        check('putting it back clears the override', page.evaluate("Object.keys(JSON.parse(localStorage.getItem('ct.pos') || '{}')).length") == 0)
+    else:
+        check('a junction card offers to move its pin', False, 'no data-setmap button')
+
     print('\nthe test tab lists what the examiner wants')
     page.click('nav.tabs button[data-tab="test"]')
     page.wait_for_timeout(150)

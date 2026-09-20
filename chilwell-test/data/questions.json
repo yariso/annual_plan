@@ -1,25 +1,199 @@
 {
- "intro": "STUB",
+ "intro": "Two questions, one before you drive and one while you are driving. Between them they are worth a single driving fault: get both wrong and it is still one mark. The risk is not the mark, it is doing the show me question at the wrong moment. Wait for a clear, straight stretch and work the control by feel.",
  "items": [
   {
-   "id": "tell-1",
+   "id": "tell-brakes",
    "type": "tell",
-   "q": "Tell me how you would check the brakes.",
-   "a": "STUB",
-   "extra": "STUB",
-   "common": "STUB",
-   "sources": [
-    "(reasoned)"
-   ]
+   "q": "Tell me how you would check that the brakes are working before starting a journey.",
+   "a": "The brakes should not feel spongy or slack. I would test them as I set off, at low speed, and the car should not pull to one side.",
+   "extra": "Say all three parts: the feel of the pedal, testing them as you move off, and the pull to one side. The examiner is listening for the whole routine.",
+   "common": "Saying only \"I would press the pedal\". That is not a check, it is a description.",
+   "sources": ["[GOV.UK, car show me tell me questions](https://www.gov.uk/government/publications/car-show-me-tell-me-vehicle-safety-questions/car-show-me-tell-me-vehicle-safety-questions)"]
   },
   {
-   "id": "show-1",
+   "id": "tell-pressures",
+   "type": "tell",
+   "q": "Tell me where you would find the information for the recommended tyre pressures for this car, and how tyre pressures should be checked.",
+   "a": "In the manufacturer's guide, and usually on a label in the driver's door shut or inside the fuel filler flap. I would check them with a reliable pressure gauge when the tyres are cold, including the spare, and put the valve caps back on.",
+   "extra": "Cold matters: a tyre that has been driven on reads high. Many cars now carry a repair kit instead of a spare, so say so if that is the case.",
+   "common": "Forgetting the spare, and forgetting that the reading must be taken cold.",
+   "sources": ["[GOV.UK, car show me tell me questions](https://www.gov.uk/government/publications/car-show-me-tell-me-vehicle-safety-questions/car-show-me-tell-me-vehicle-safety-questions)"]
+  },
+  {
+   "id": "tell-headrest",
+   "type": "tell",
+   "q": "Tell me how you make sure your head restraint is correctly adjusted so it provides the best protection in the event of a crash.",
+   "a": "The rigid part of the head restraint should be at least as high as my eyes or the top of my ears, and as close to the back of my head as is comfortable.",
+   "extra": "You can show it as you say it. Some restraints are fixed and cannot be adjusted, which is a fine answer if that is the car you are in.",
+   "common": "Calling it a head rest and treating it as a cushion. It is a restraint, and its height is the point.",
+   "sources": ["[GOV.UK, car show me tell me questions](https://www.gov.uk/government/publications/car-show-me-tell-me-vehicle-safety-questions/car-show-me-tell-me-vehicle-safety-questions)"]
+  },
+  {
+   "id": "tell-tyres",
+   "type": "tell",
+   "q": "Tell me how you would check the tyres to ensure that they have sufficient tread depth and that their general condition is safe to use on the road.",
+   "a": "No cuts or bulges in the sidewall, and at least 1.6 mm of tread across the central three quarters of the tyre and all the way round.",
+   "extra": "1.6 mm is the legal minimum, not a target. The tread wear indicators moulded into the grooves are the quick check.",
+   "common": "Saying 1.6 mm but not saying where it has to be, which is the central three quarters and the whole circumference.",
+   "sources": ["[GOV.UK, car show me tell me questions](https://www.gov.uk/government/publications/car-show-me-tell-me-vehicle-safety-questions/car-show-me-tell-me-vehicle-safety-questions)"]
+  },
+  {
+   "id": "tell-lights",
+   "type": "tell",
+   "q": "Tell me how you would check that the headlights and tail lights are working.",
+   "a": "Turn the ignition on if it is needed, operate the light switch, then walk round the car and look.",
+   "extra": "This is a tell me question, so you do not have to get out and do it.",
+   "common": "Starting to climb out of the car. Stay put and describe it.",
+   "sources": ["[GOV.UK, car show me tell me questions](https://www.gov.uk/government/publications/car-show-me-tell-me-vehicle-safety-questions/car-show-me-tell-me-vehicle-safety-questions)"]
+  },
+  {
+   "id": "tell-abs",
+   "type": "tell",
+   "q": "Tell me how you would know if there was a problem with your anti lock braking system.",
+   "a": "A warning light on the dashboard would come on if there is a fault with the anti lock braking system.",
+   "extra": "Point at where that light is in this car if you know it. On most cars it is the letters ABS in a circle.",
+   "common": "Describing how ABS works instead of answering how you would know it had failed.",
+   "sources": ["[GOV.UK, car show me tell me questions](https://www.gov.uk/government/publications/car-show-me-tell-me-vehicle-safety-questions/car-show-me-tell-me-vehicle-safety-questions)"]
+  },
+  {
+   "id": "tell-indicators",
+   "type": "tell",
+   "q": "Tell me how you would check the direction indicators are working.",
+   "a": "Put the hazard warning lights on, or work each indicator in turn, then walk round the car and check that all of them flash.",
+   "extra": "The hazards are the quick way because they light every indicator at once.",
+   "common": "Only checking one side.",
+   "sources": ["[DT1 annex 1, safety check questions](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/annex-1-safety-check-questions-cars)"]
+  },
+  {
+   "id": "tell-brakelights",
+   "type": "tell",
+   "q": "Tell me how you would check the brake lights are working.",
+   "a": "Press the brake pedal and look for the reflection in a window, a garage door or the car behind, or ask somebody to stand behind the car and tell me.",
+   "extra": "Some cars show a rear camera view when reversing, which is another way to see them.",
+   "common": "Saying you would get out and look. You cannot press the pedal from outside.",
+   "sources": ["[DT1 annex 1, safety check questions](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/annex-1-safety-check-questions-cars)"]
+  },
+  {
+   "id": "tell-steering",
+   "type": "tell",
+   "q": "Tell me how you would check the power assisted steering is working before starting a journey.",
+   "a": "Hold gentle pressure on the steering wheel while starting the engine: the wheel should give a slight but noticeable movement as the assistance comes in. Or turn the wheel just after moving off and feel whether it is light.",
+   "extra": "Either answer is accepted. If the steering feels heavy, the assistance is not working.",
+   "common": "Turning the wheel hard with the engine off and the car stationary, which tells you nothing and is bad for the tyres.",
+   "sources": ["[DT1 annex 1, safety check questions](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/annex-1-safety-check-questions-cars)"]
+  },
+  {
+   "id": "tell-fog",
+   "type": "tell",
+   "q": "Tell me how you would switch on the rear fog lights and explain when you would use them.",
+   "a": "Turn the ignition and dipped headlights on if needed, operate the fog light switch, and check the warning light on the dashboard is lit. I would use them when visibility is seriously reduced, which generally means less than 100 metres, and switch them off when it clears.",
+   "extra": "Point at the switch as you say it. The part people forget is switching them off again: fog lights dazzle the car behind once the fog has gone.",
+   "common": "Confusing the rear fog light with the rear demister or with the front fog lights.",
+   "sources": ["[DT1 annex 1, safety check questions](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/annex-1-safety-check-questions-cars)"]
+  },
+  {
+   "id": "tell-mainbeam",
+   "type": "tell",
+   "q": "Tell me how you would switch your headlight from dipped to main beam, and explain how you would know the main beam is on.",
+   "a": "Push or pull the light stalk with the ignition or engine on, and the blue main beam warning light on the dashboard tells me it is on.",
+   "extra": "The blue symbol is the giveaway. Say blue, because that is what the examiner is listening for.",
+   "common": "Showing the flash function instead of latching the main beam on.",
+   "sources": ["[DT1 annex 1, safety check questions](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/annex-1-safety-check-questions-cars)"]
+  },
+  {
+   "id": "tell-oil",
+   "type": "tell",
+   "q": "Open the bonnet and tell me how you would check that the engine has sufficient oil.",
+   "a": "Find the dipstick, pull it out, wipe it clean, put it back fully, pull it out again and check that the oil sits between the minimum and maximum marks. The car must be level and the engine cold or switched off for a while.",
+   "extra": "Some cars have no dipstick and read the oil level on the dashboard menu instead. If that is your car, say so and show where.",
+   "common": "Not knowing where the bonnet release is. Find it before the day, and know how the safety catch works.",
+   "sources": ["[DT1 annex 1, safety check questions](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/annex-1-safety-check-questions-cars)"]
+  },
+  {
+   "id": "tell-coolant",
+   "type": "tell",
+   "q": "Open the bonnet and tell me how you would check that the engine has sufficient coolant.",
+   "a": "Find the coolant header tank and check the level is between the high and low marks, with the engine cold. I would top it up with the correct coolant mix, and never open the cap on a hot engine.",
+   "extra": "Saying \"never with the engine hot\" is the safety point the question is really asking about.",
+   "common": "Pointing at the screen wash bottle. Learn which is which in the car you are testing in.",
+   "sources": ["[DT1 annex 1, safety check questions](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/annex-1-safety-check-questions-cars)"]
+  },
+  {
+   "id": "tell-brakefluid",
+   "type": "tell",
+   "q": "Open the bonnet and tell me how you would check that you have a safe level of hydraulic brake fluid.",
+   "a": "Find the brake fluid reservoir and check the level sits between the high and low markings on the side.",
+   "extra": "If you cannot see the level through the plastic, the answer is still to check it against those markings, not to open it.",
+   "common": "Mixing up the brake fluid reservoir with the clutch or power steering one.",
+   "sources": ["[DT1 annex 1, safety check questions](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/annex-1-safety-check-questions-cars)"]
+  },
+  {
+   "id": "show-rearscreen",
    "type": "show",
-   "q": "Show me how you would wash the windscreen.",
-   "a": "STUB",
-   "sources": [
-    "(reasoned)"
-   ]
+   "q": "When it is safe to do so, can you show me how you wash and clean the rear windscreen.",
+   "a": "Wait for a clear stretch, then hold the washer function on the wiper stalk until the screen is wet and the wiper has cleared it, and let it return.",
+   "extra": "On most cars the rear washer is the same stalk pushed or pulled the other way from the front. Find it before the day.",
+   "common": "Hunting for the stalk while looking down at it, at a junction.",
+   "sources": ["[DT1, vehicle safety check questions](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/13-vehicle-safety-check-questions)"]
+  },
+  {
+   "id": "show-frontscreen",
+   "type": "show",
+   "q": "When it is safe to do so, can you show me how you wash and clean the front windscreen.",
+   "a": "On a clear stretch, pull the washer function towards me until the screen is washed and wiped clean.",
+   "extra": "Give it long enough to actually clean the screen. A half second squirt leaves a smear and the examiner can see it.",
+   "common": "Doing it immediately, whatever is happening on the road.",
+   "sources": ["[DT1, vehicle safety check questions](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/13-vehicle-safety-check-questions)"]
+  },
+  {
+   "id": "show-dipped",
+   "type": "show",
+   "q": "When it is safe to do so, can you show me how you would switch on your dipped headlights.",
+   "a": "Turn the light switch to the dipped headlight position, and check the green headlight symbol has come up on the dashboard.",
+   "extra": "If the car is on automatic lights, turn the switch to the dipped position rather than leaving it on auto, so the examiner can see the choice being made.",
+   "common": "Turning on the sidelights and stopping there.",
+   "sources": ["[DT1, vehicle safety check questions](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/13-vehicle-safety-check-questions)"]
+  },
+  {
+   "id": "show-reardemist",
+   "type": "show",
+   "q": "When it is safe to do so, can you show me how you would set the rear demister.",
+   "a": "Press the rear demister button and check its light comes on.",
+   "extra": "It is the button with the rectangle and the three wavy arrows going up. The front demister button has a curved screen shape.",
+   "common": "Pressing the front demister instead, or pressing it and not noticing nothing happened.",
+   "sources": ["[DT1, vehicle safety check questions](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/13-vehicle-safety-check-questions)"]
+  },
+  {
+   "id": "show-horn",
+   "type": "show",
+   "q": "When it is safe to do so, can you show me how you would operate the horn.",
+   "a": "Press the centre of the steering wheel briefly.",
+   "extra": "One short press is enough. Do not lean on it: the Highway Code says the horn is to warn others of your presence, not to show annoyance.",
+   "common": "Waiting for a moment that never comes because the road is busy, and then forgetting.",
+   "sources": ["[DT1, vehicle safety check questions](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/13-vehicle-safety-check-questions)"]
+  },
+  {
+   "id": "show-frontdemist",
+   "type": "show",
+   "q": "When it is safe to do so, can you show me how you would demist the front windscreen.",
+   "a": "Set the fan to a good speed, direct the air at the windscreen, turn the heat up, and put the air conditioning on if the car has it, or press the front demister button which does all of that at once.",
+   "extra": "The button that does it in one press is the safest answer while driving, because it is one movement.",
+   "common": "Adjusting four separate dials while the car drifts.",
+   "sources": ["[DT1, vehicle safety check questions](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/13-vehicle-safety-check-questions)"]
+  },
+  {
+   "id": "show-window",
+   "type": "show",
+   "q": "When it is safe to do so, can you show me how you would open and close the side window.",
+   "a": "Press the driver's window switch down to open it and up to close it, without taking my attention off the road.",
+   "extra": "This question is widely listed as the seventh show me question, but its exact wording could not be confirmed on a GOV.UK page during this research (unverified). Learn it anyway: it takes a minute.",
+   "common": "Opening the wrong window, or looking down at the switches.",
+   "sources": ["(unverified)"]
   }
+ ],
+ "sources": [
+  "[GOV.UK, car show me tell me vehicle safety questions](https://www.gov.uk/government/publications/car-show-me-tell-me-vehicle-safety-questions/car-show-me-tell-me-vehicle-safety-questions)",
+  "[DT1 annex 1, safety check questions for cars](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/annex-1-safety-check-questions-cars)",
+  "[DT1, vehicle safety check questions](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/13-vehicle-safety-check-questions)"
  ]
 }

@@ -1,138 +1,174 @@
 {
- "intro": "STUB",
+ "intro": "One reversing exercise is set in your test, chosen by the examiner from these four. The emergency stop is separate and comes up in about one test in seven. The methods below are the way they are usually taught (reasoned): DVSA publishes what is assessed, not a method. What is quoted is the examiner's own wording. The reference points in any method belong to the car you practise in, so find them again if you test in a different car.",
  "items": [
   {
-   "id": "parallel",
-   "name": "STUB parallel",
-   "diagram": "parallel",
-   "asked": "STUB",
-   "words": "STUB",
-   "lede": "STUB",
-   "steps": [
-    "STUB 1",
-    "STUB 2",
-    "STUB 3",
-    "STUB 4",
-    "STUB 5"
-   ],
-   "watch": [
-    "STUB"
-   ],
-   "serious": "STUB",
-   "mistakes": [
-    "STUB"
-   ],
-   "refs": "STUB",
-   "sources": [
-    "(reasoned)"
-   ]
-  },
-  {
    "id": "bayreverse",
-   "name": "STUB bayreverse",
+   "name": "Reverse into a bay, then drive out",
    "diagram": "bayreverse",
-   "asked": "STUB",
-   "words": "STUB",
-   "lede": "STUB",
+   "asked": "Only in a test centre car park, so at Chilwell it usually comes at the very end, back in the small car park off Eldon Road.",
+   "words": "\"Would you pull forward either to the left or the right so that your wheels are straight, then reverse into a convenient parking bay.\" Then: \"Finish within one of the bays.\"",
+   "lede": "The one most people worry about, and the one where taking your time costs nothing. You are allowed to pull forward and try again.",
    "steps": [
-    "STUB 1",
-    "STUB 2",
-    "STUB 3",
-    "STUB 4",
-    "STUB 5"
+    "Drive up the aisle at walking pace and pick your bay. Aim to end up with two or three bays between you and the one you want, so the car has room to swing.",
+    "Stop with your wheels straight and the car reasonably square to the bays. This is the position the whole manoeuvre is built on, so get it right before you touch reverse.",
+    "Select reverse and look all round before you move: through the back window first, then both mirrors, then the blind spots. Start back slowly and put the steering on full lock towards the bay.",
+    "Keep the car creeping and keep looking round, not just behind. As the bay lines come square in your door mirrors, start taking the lock off. Check both mirrors to see the lines the same distance from each side.",
+    "Straighten up and reverse far enough in that the whole car is inside the lines. Handbrake, neutral. If you are badly off, pull forward and correct it: that is allowed and it is better than sitting across a line."
    ],
    "watch": [
-    "STUB"
+    "Observation all the way through, not just at the start. The examiner is watching where you look, and a car park has people walking in it.",
+    "Control: slow, smooth, no stalling, no big steering corrections at a standstill.",
+    "Accuracy: finishing inside the bay, reasonably straight."
    ],
-   "serious": "STUB",
+   "serious": "Finishing with a wheel or the body outside the bay lines, mounting a kerb, or reversing without looking round. Touching or crossing a line is judged by the examiner rather than by a published measurement (reasoned).",
    "mistakes": [
-    "STUB"
+    "Starting too close to the bay, so there is no room to swing the front round.",
+    "Looking only in the mirrors. Mirrors cannot see a child walking behind you.",
+    "Rushing. Nothing in this exercise is timed.",
+    "At Chilwell the car park is small and the bays are not all the same width, so a method learned in a wide supermarket bay may not fit (unofficial, from a local instructor's account)."
    ],
-   "refs": "STUB",
+   "refs": "Most methods use a point where the bay line appears in the door mirror as the cue to start straightening. That point depends on the height of your mirrors and where you sit, so it is only reliable in the car you found it in.",
    "sources": [
-    "(reasoned)"
+    "[GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test)",
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)"
    ]
   },
   {
    "id": "bayforward",
-   "name": "STUB bayforward",
+   "name": "Drive forward into a bay, then reverse out",
    "diagram": "bayforward",
-   "asked": "STUB",
-   "words": "STUB",
-   "lede": "STUB",
+   "asked": "Can be set in any car park, so this is the one you might meet away from the test centre.",
+   "words": "\"I'd like you to drive forward into a convenient parking bay finishing within the lines, either to the left or the right.\" Then, later: \"Now, I'd like you to reverse out either to the left or the right.\"",
+   "lede": "Easier going in and harder coming out, because reversing out of a bay is the part where you cannot see.",
    "steps": [
-    "STUB 1",
-    "STUB 2",
-    "STUB 3",
-    "STUB 4",
-    "STUB 5",
-    "STUB 6"
+    "Approach at walking pace and choose a bay with space around it. An empty bay next to the one you want makes the whole thing simpler.",
+    "Come past the bay far enough that you can turn into it, roughly two bays on. Check your mirrors and the blind spot on the side you are turning towards.",
+    "Turn in smoothly at a crawl, keeping the front wheels clear of the line.",
+    "Straighten as the car lines up between the lines, and look at both door mirrors to check you are central.",
+    "Drive far enough in to be inside the bay, handbrake, neutral. Correct it if you are across a line.",
+    "To come out: select reverse, then look all round before and while you move. Reverse straight back until you can see along the aisle, then steer round. Keep stopping and looking: the cars beside you are hiding everything until you are out."
    ],
    "watch": [
-    "STUB"
+    "Observation before and during the reverse out, which is where most marks are lost.",
+    "Whether you finish inside the bay going in.",
+    "Control and speed in a car park with pedestrians."
    ],
-   "serious": "STUB",
+   "serious": "Reversing out without effective observation, or making another road user or a pedestrian change what they were doing.",
    "mistakes": [
-    "STUB"
+    "Reversing out in one continuous sweep without pausing to look as the view opens up.",
+    "Cutting the corner going in and clipping the line.",
+    "Forgetting that the front of the car swings the other way as you steer out."
    ],
-   "refs": "STUB",
+   "refs": "Going in, the usual cue is the far line of the bay appearing in the door mirror as the point to start turning. Coming out, there is no useful reference point: it is observation and patience.",
    "sources": [
-    "(reasoned)"
+    "[GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test)",
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)"
+   ]
+  },
+  {
+   "id": "parallel",
+   "name": "Parallel park at the side of the road",
+   "diagram": "parallel",
+   "asked": "On a road, behind a parked car the examiner picks.",
+   "words": "\"Would you drive forward and stop alongside the car ahead. Then reverse in and park reasonably close to and parallel with the kerb. Try to complete the exercise within about two car lengths.\"",
+   "lede": "The one that needs the most observation, because your front swings out into the road while you do it.",
+   "steps": [
+    "Pull up alongside the parked car, about a metre out, roughly level with it, wheels straight. Check all round before you stop.",
+    "Select reverse, look all round again, especially behind, and start back slowly with the steering going left so the back of the car aims at the kerb.",
+    "As the car comes round to about forty five degrees the front swings out into the road, so look over your right shoulder and down the road before you go any further. Straighten the wheel and keep creeping back.",
+    "When the front of the car is clear of the parked car, steer right to bring the front in towards the kerb, still at a crawl, watching the kerb in your left mirror.",
+    "Straighten up parallel and reasonably close to the kerb, inside about two car lengths. Handbrake, neutral. A small correction to tidy it up is fine."
+   ],
+   "watch": [
+    "Observation, especially over the right shoulder while the front is out in the road.",
+    "How close and how parallel you finish, and whether you touch the kerb.",
+    "Whether anybody had to wait or go round you, and what you did about it."
+   ],
+   "serious": "Hitting the kerb hard or mounting it, finishing a long way out from the kerb, or reversing into the road without looking while traffic is coming. DVSA does not publish a distance from the kerb: it is the examiner's judgement of whether you are parked safely and reasonably (reasoned).",
+   "mistakes": [
+    "Starting too far from the parked car, which leaves you out in the road at the end.",
+    "Watching only the kerb and forgetting the road behind you.",
+    "Freezing when a car comes. Stop, let them pass, then carry on. That is the right answer and it is not marked against you."
+   ],
+   "refs": "Common cues are the back of the parked car appearing in your left rear window as the moment to turn, and its nearside headlight appearing in your left mirror as the moment to steer back. Both depend on your car and your seating position.",
+   "sources": [
+    "[GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test)",
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)"
    ]
   },
   {
    "id": "rightpull",
-   "name": "STUB rightpull",
+   "name": "Pull up on the right, reverse, and rejoin",
    "diagram": "rightpull",
-   "asked": "STUB",
-   "words": "STUB",
-   "lede": "STUB",
+   "asked": "On a quiet two way road, somewhere the examiner judges it is safe to cross to the wrong side.",
+   "words": "\"Pull up on the right when it is safe to do so, please.\" Then: \"I would now like you to reverse for about two car lengths, keeping reasonably close to the kerb.\"",
+   "lede": "The newest of the four and the one that feels wrong, because you deliberately park facing the traffic. The whole exercise is about observation.",
    "steps": [
-    "STUB 1",
-    "STUB 2",
-    "STUB 3",
-    "STUB 4",
-    "STUB 5",
-    "STUB 6",
-    "STUB 7"
+    "Mirrors first, then a right signal, and choose your moment. You are crossing the path of oncoming traffic, so wait for a proper gap rather than making anybody slow.",
+    "Cross over smoothly when it is clear and stop close and parallel to the right hand kerb, wheels straight. Handbrake, neutral.",
+    "Before reversing, look all round again. Most of your view is now over your left shoulder because you are on the wrong side of the road.",
+    "Reverse slowly, looking mainly through the back window, keeping a steady distance from the kerb.",
+    "Stop after about two car lengths. There is no need to measure it: two lengths of your own car, roughly.",
+    "Handbrake on, and wait for the examiner to ask you to move off.",
+    "Moving off is the hard part: check the mirrors, look over both shoulders, and watch for traffic coming towards you as well as from behind. Signal if it helps anybody, and cross back to the left as soon as it is safe, without making anybody wait."
    ],
    "watch": [
-    "STUB"
+    "Observation before crossing, before reversing, and before moving off again.",
+    "How close and parallel you keep to the kerb.",
+    "Whether you made any other road user slow down, change direction or wait."
    ],
-   "serious": "STUB",
+   "serious": "Crossing into the path of an oncoming car, reversing without proper observation, or pulling out again without checking both ways.",
    "mistakes": [
-    "STUB"
+    "Choosing a spot opposite a parked car or a junction, so the road is blocked while you are there.",
+    "Reversing on the steering rather than steering to hold a line, which drifts you away from the kerb.",
+    "Moving off looking only in the mirrors. You are facing the traffic: the danger is in front of you as well as behind."
    ],
-   "refs": "STUB",
+   "refs": "There is no reference point for this one. Keep the kerb a constant distance in your right hand mirror and keep your speed at a crawl.",
    "sources": [
-    "(reasoned)"
+    "[GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test)",
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)"
    ]
   },
   {
    "id": "stop",
-   "name": "STUB stop",
+   "name": "The emergency stop",
    "diagram": "stop",
-   "asked": "STUB",
-   "words": "STUB",
-   "lede": "STUB",
+   "asked": "In about one test in seven since 24 November 2025. It was one in three before that.",
+   "words": "Pulled up first: \"Shortly I shall ask you to carry out an emergency stop.\" Then, demonstrating the signal: \"When I give this signal, stop, I'd like you to stop as quickly and as safely as possible.\"",
+   "lede": "There is no surprise in it. You are stopped at the side of the road, told it is coming, and shown the signal before you drive on. The examiner has already checked behind you.",
    "steps": [
-    "STUB 1",
-    "STUB 2",
-    "STUB 3",
-    "STUB 4",
-    "STUB 5"
+    "Drive on normally after the briefing. Do not crawl along waiting for it: normal driving is part of what is being marked.",
+    "The examiner's hand comes up and they say stop. React straight away. Do not check the mirror first: the examiner has checked behind, and the delay is what is being measured.",
+    "Both hands on the wheel, no signal. Brake firmly and progressively, and keep the car straight. If the wheels lock or the anti lock system judders, keep the pressure on.",
+    "Put the clutch down just before the car stops so the engine stays running. Handbrake on, neutral.",
+    "Then treat it as an ordinary move off: handbrake, look all round including both blind spots, and go when it is genuinely clear. People lose the mark here, not on the stop."
    ],
    "watch": [
-    "STUB"
+    "How quickly you react, how firmly you brake, and whether the car stays straight.",
+    "Whether you keep control of the car rather than locking up and skidding.",
+    "The observation before moving off afterwards."
    ],
-   "serious": "STUB",
+   "serious": "Reacting so slowly that the stop is not an emergency stop, losing control, or moving off afterwards without looking properly.",
    "mistakes": [
-    "STUB"
+    "Checking the mirror before braking.",
+    "Braking hard and then easing off halfway.",
+    "Putting the clutch down at the same time as the brake, which lengthens the stop.",
+    "Signalling. There is no time and no need."
    ],
-   "refs": "STUB",
+   "refs": "None. It is a reaction, not a manoeuvre.",
    "sources": [
-    "(reasoned)"
+    "[DVSA Despatch, adjustments to the driving test](https://despatch.blog.gov.uk/2025/11/19/making-adjustments-to-the-driving-test/)",
+    "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)",
+    "[DVSA driving test prompt cards](https://assets.publishing.service.gov.uk/media/624d5879d3bf7f32b5aa072b/driving-test-prompt-cards.pdf)"
    ]
   }
+ ],
+ "notes": [
+  "The turn in the road, often called the three point turn, and reversing around a corner were both taken out of the test on 4 December 2017. Plenty of people still practise them, and they are worth being able to do, but they are not on the test [(GOV.UK, driving test changes 2017)](https://www.gov.uk/government/news/driving-test-changes-4-december-2017)."
+ ],
+ "sources": [
+  "[GOV.UK, what happens during the test](https://www.gov.uk/driving-test/what-happens-during-test)",
+  "[DT1, test wordings](https://www.gov.uk/guidance/guidance-for-driving-examiners-carrying-out-driving-tests-dt1/14-test-wordings)",
+  "[GOV.UK, driving test changes 4 December 2017](https://www.gov.uk/government/news/driving-test-changes-4-december-2017)"
  ]
 }

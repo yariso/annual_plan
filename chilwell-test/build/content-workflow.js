@@ -20,9 +20,19 @@ READ FIRST, IN THIS ORDER
 1. ${ROOT}/docs/data-contract.md. It gives the exact shape of the file you are writing.
    The app ignores anything not in the shape, so keep to it.
 2. The research notes you are told to use, in ${ROOT}/research/. Read them in full.
-   They are the only source you have: the page fetching tool is blocked in this
-   sandbox for every domain, so do not try to open pages, and do not invent sources.
-   You may use WebSearch to fill a specific gap, but the notes already hold most of it.
+   They are the only source you have. Two limits apply and you must respect both:
+   - The page fetching tool is blocked in this sandbox for every domain, so no page in
+     the notes was opened and read. Every URL in them came back from a search engine.
+   - The session's web search budget ran out partway through the research. Do not try
+     to search: it will be refused. More importantly, the notes written after the budget
+     ran out say so at the top, and they rest on the writer's own knowledge rather than
+     on sources. Treat anything in those files that is not attached to a URL as
+     knowledge, not as fact, and label it (unverified) when you use it.
+   The six files written while search still worked, and so the ones with real sourcing,
+   are centre-facts.md, pass-rates.md, test-structure.md, marking-dl25.md,
+   common-faults.md and, in part, dt1-guidance.md. Prefer them. Where a later file
+   contradicts one of those six, the sourced file wins.
+   Do not invent a source, a URL, a statistic or a quotation. Ever.
 
 HOUSE STYLE, ENFORCED BY THE BUILD
 - UK English.
@@ -39,6 +49,17 @@ HOUSE STYLE, ENFORCED BY THE BUILD
   rests on one of those and it matters, say so, in the text or with (unverified).
 - No content about a named individual, and nothing that encourages breaking the law or
   driving without due care.
+- COORDINATES. Any lat and lon you write is "precision": "approximate" unless a source in
+  the notes actually published that coordinate, in which case it is "sourced". The app
+  prints the precision to the reader. Never round a guess to four decimal places to make
+  it look surveyed, and never place a marker for a junction you are not confident exists
+  where you are putting it. A missing junction is better than a wrong one.
+- LOCAL DETAIL. A specific claim about a particular road (a speed limit, a bus lane, a
+  filter arrow, a box junction, a school) is exactly the kind of thing the research could
+  not verify. Write it only if the notes support it, and mark it (unverified) if they do
+  not. Where you are unsure, write the true general thing tied to the named road instead:
+  "the A6005 through Chilwell is a busy urban road with side turnings, parked cars and
+  bus stops" is safe and useful, "there is a 20 mph limit on X" is a claim.
 
 WRITING RULES THAT MATTER HERE
 - Be specific and useful, not encouraging. "Look right, then left, then right again
@@ -50,10 +71,11 @@ WRITING RULES THAT MATTER HERE
   once at a junction should be tight. A reference section can be longer.
 
 THE STYLE TO MATCH
-${ROOT}/data/test.json and ${ROOT}/data/marking.json are already written, by hand, in the
+${ROOT}/data/test.json, ${ROOT}/data/marking.json, ${ROOT}/data/questions.json and
+${ROOT}/data/manoeuvres.json are already written, by hand, in the
 voice the whole app uses. Read data/test.json before you start and match it: the length of
 a paragraph, how sources are attached, how a disagreement between sources is handled, how
-an inference is labelled. Do not change either file.
+an inference is labelled. Do not change any of those four files.
 
 OUTPUT
 Write the file with the Write tool, as valid JSON, UTF-8, no trailing commas, no
@@ -78,7 +100,7 @@ const JOBS = [
   {
     file: 'faults.json',
     label: 'faults',
-    reads: ['marking-dl25.md', 'dt1-guidance.md', 'common-faults.md', 'highway-code-key.md', 'local-roads.md'],
+    reads: ['marking-dl25.md', 'dt1-guidance.md', 'common-faults.md', 'local-roads.md'],
     ask: `Write data/faults.json: every line on the examiner's marking sheet, which is both the Test tab's reference and the mock test sheet.
 
 Cover every competency the research establishes for a car test, at the level of its sub boxes where the sub box is a different skill (so "Junctions: observation" and "Junctions: approach speed" are separate items, but do not split a sub box that adds nothing).
@@ -104,56 +126,16 @@ Also write "intro" for the tab: one short paragraph saying what this list is and
 Aim for 30 to 40 items. Make the top ten faults from the research unmistakably strong, because those are the ones that fail people.`,
   },
   {
-    file: 'manoeuvres.json',
-    label: 'manoeuvres',
-    reads: ['manoeuvres.md', 'marking-dl25.md', 'centre-facts.md'],
-    ask: `Write data/manoeuvres.json: the four manoeuvres and the controlled stop.
-
-Items, with these exact ids and diagram names so the pictures match:
-  parallel     diagram "parallel"     5 steps
-  bayreverse   diagram "bayreverse"   5 steps
-  bayforward   diagram "bayforward"   6 steps
-  rightpull    diagram "rightpull"    7 steps
-  stop         diagram "stop"         5 steps
-The number of entries in "steps" MUST equal the number given above, because each step
-drives one frame of the diagram. Write each step as one instruction, in the order the
-driver does it, and make the step that needs an observation say so, because the diagram
-marks an eye at those frames.
-
-The diagram frames, so your words match the picture:
-- parallel: 1 alongside the parked car, 2 reversing back with the wheel going left, 3 at the angle with the front swinging out, 4 straightening, 5 parked behind it.
-- bayreverse: 1 driving up the car park aisle, 2 the point you stop at, 3 turning the wheel and starting back, 4 swinging into the bay, 5 straight in the bay.
-- bayforward: 1 approaching, 2 the point you turn from, 3 swinging in, 4 straightening into the bay, 5 stopped in the bay, 6 reversing back out.
-- rightpull: 1 mirrors and signal on the approach, 2 crossing to the right, 3 stopped at the right kerb, 4 reversing back, 5 about two car lengths back, 6 stopped, 7 moving off and back to the left.
-- stop: 1 driving normally, 2 the examiner's hand goes up, 3 braking, 4 stopped, 5 moving off again.
-
-For each: what the examiner says (quoted where the research has it), when and where it is asked, what is marked, where the serious fault line sits (kerb contact, ending outside the bay, how far from the kerb, observation), the usual taught method with reference points and why reference points differ between cars, and the common faults.
-
-Chilwell specifics that matter: the test centre car park has seven bays, five opposite the entrance on the right as you drive in and two on the left that are perpendicular and kerbed, and the bays are not all the same width. Reverse bay parking is normally only asked at a test centre car park. Say what that means for practice. Label those car park details unofficial, because they come from a local instructor's page rather than DVSA.
-
-Also say clearly which manoeuvres were removed from the test and when, because plenty of people still practise turn in the road and reversing round a corner.`,
-  },
-  {
-    file: 'questions.json',
-    label: 'questions',
-    reads: ['show-me-tell-me.md'],
-    ask: `Write data/questions.json: every show me tell me question.
-
-All of them, the tell me questions asked before you drive and the show me questions asked while you are driving, each with the question as DVSA words it, an answer that works for a normal modern car, what else the examiner will accept, and the wrong answer people give. Where a car with an electric handbrake, a digital dashboard, stop start or no dipstick would change the answer, say so: many cars now do.
-
-Say in "intro" how the two are asked, what happens if one is answered wrongly (one driving fault, and how that adds up if both are wrong), and that doing the show me question unsafely can cost more than the mark itself.`,
-  },
-  {
     file: 'junctions.json',
     label: 'junctions',
-    reads: ['local-roads.md', 'tram-and-hazards.md', 'coords.md', 'routes-reported.md', 'centre-facts.md'],
+    reads: ['local-roads.md', 'routes-reported.md', 'centre-facts.md', 'common-faults.md'],
     ask: `Write data/junctions.json: the places around Chilwell a candidate needs to have driven before the test, as cards on a map.
 
-Twelve to twenty items. They must be real places from the research notes, with coordinates from research/coords.md. Where coords.md could not source a coordinate, either leave the place out or use the best coordinate available and set "precision" to "approximate". Never invent a coordinate silently: "precision" is shown to the reader.
+Twelve to eighteen items. They must be real places named in the research notes. There is no coordinate file: the research ran out of web search budget before one could be made, so no coordinate in this app is sourced. Give your best coordinate for each place from your own knowledge of the area, to four decimal places, and set "precision": "approximate" on every single one. The app prints that to the reader and offers them a button to move the pin to the right place themselves, so an approximate pin is useful and an invented junction is not. If you are not reasonably sure a place exists where you would put it, leave it out.
 
 Pick for teaching value, not for coverage: the junctions and stretches where a candidate loses marks. Almost certainly among them: the exit from Eldon Road onto the A6005, Bardills roundabout on the A52, the A52 dual carriageway itself, the A6005 Nottingham Road corridor, the tram where it meets the road at Chilwell and Beeston, the Beeston town centre one way system and its bus lanes, Queens Road and Station Road, the residential streets used for manoeuvres and for pulling up on the right, the 20 mph streets, Attenborough and the narrow lanes, Inham Nook, Stapleford and the Long Eaton approaches, and a hill start if the notes give one.
 
-For each: kind (roundabout, lights, junction, tram, hazard or road), where, speed (say if it is not confirmed), why (one or two sentences on why it matters), drive (how to drive it, in order, as prose), watch (what the examiner is watching here), mistakes, links (ids from data/faults.json if that file already exists, otherwise leave the array empty), sources.
+For each: kind (roundabout, lights, junction, tram, hazard or road), where, speed, why (one or two sentences on why it matters), drive (how to drive it, in order, as prose), watch (what the examiner is watching here), mistakes, links (ids from data/faults.json if that file already exists, otherwise leave the array empty), sources.
 
 Diagrams: give one where it genuinely helps.
 - A roundabout gets {"type":"roundabout", exits by compass bearing, enter, leave, title}. Get the bearings roughly right against the real layout in the notes: north is 0, east is 90. Put the road you arrive on as "enter" and the one you leave by as "leave", and describe the exit you are showing in "diagramCap".
@@ -161,17 +143,19 @@ Diagrams: give one where it genuinely helps.
 - A plain junction gets {"type":"junction","shape":"tjoin" or "crossroads","turn":"left","right" or "ahead"}.
 Leave the diagram out where you cannot describe the real layout from the notes. A wrong picture is worse than none, so say in "diagramCap" that the diagram is a schematic showing the exits, not a survey.
 
-Write "intro" saying what these cards are: the roads a test from this centre has to use, not a route.`,
+SPEED LIMITS. Not one speed limit in the notes was confirmed against a council or mapping source, and the notes say so. So do not print a bare speed limit as fact. Either leave "speed" out, or write what kind of road it is ("urban road with side turnings and bus stops", "dual carriageway"), or give the limit followed by (unverified). The reader is going to be looking at the signs anyway, and a wrong limit in an app is worse than none.
+
+Write "intro" saying what these cards are: the roads a test from this centre has to use, not a route, and that the local detail comes from driving school pages and local knowledge rather than from a survey, so the signs on the road always win.`,
   },
   {
     file: 'routes.json',
     label: 'routes',
-    reads: ['routes-reported.md', 'local-roads.md', 'coords.md', 'manoeuvres.md'],
+    reads: ['routes-reported.md', 'local-roads.md', 'centre-facts.md'],
     ask: `Write data/routes.json: what is and is not known about the test routes from this centre.
 
 "official" is a warning block, shown in a red bordered box. It must say plainly: DVSA stopped publishing test routes (give the year from the research), no route here is official, routes change, and learning a route by rote is not how to pass. Give DVSA's own position where the research found it.
 
-"corridors": three to five directions a test from Eldon Road actually goes, each with a name, a note on what it contains and why it is worth driving, the roads in order, and "points" as a list of [lat, lon] pairs from research/coords.md so the app can draw the corridor on the map. Keep the points to places you have coordinates for. The app draws straight lines between points and says so, so do not pretend it is the road.
+"corridors": three to five directions a test from Eldon Road actually goes, each with a name, a note on what it contains and why it is worth driving, the roads in order, and "points" as a list of [lat, lon] pairs, from your own knowledge of the area, so the app can draw the corridor on the map. Four or five points each is plenty. Keep the points to places you have coordinates for. The app draws straight lines between points and says so, so do not pretend it is the road.
 
 "spots": places worth practising at, with coordinates: the test centre car park for bay parking, a supermarket or retail car park, quiet residential streets for parallel parking and for pulling up on the right, a hill start, and somewhere to practise the tram crossing.
 
@@ -180,8 +164,13 @@ Write "intro" saying what these cards are: the roads a test from this centre has
   {
     file: 'advice.json',
     label: 'advice',
-    reads: ['vehicle-and-docs.md', 'nerves-evidence.md', 'after-the-test.md', 'pass-rates.md', 'centre-facts.md'],
+    reads: ['pass-rates.md', 'centre-facts.md', 'test-structure.md', 'marking-dl25.md'],
     ask: `Write data/advice.json: the five reference panels on the Start tab. Each is one section object.
+
+IMPORTANT. The research notes for booking, the car and the documents, nerves, and what happens afterwards were never written: the session ran out of web search budget first. So three of these five sections come from your own knowledge, and you must handle that honestly.
+- What you may state plainly: the stable, well known rules (what to bring, the L plates, the extra mirror, the insurance, the ten working day wait after a fail, the six point New Drivers Act rule, how an appeal works). Attach the GOV.UK page you believe carries it, as a link, and say in the section's "sources" that the pages were not opened in this research.
+- What you must hedge: any figure that changes (fees, waiting times). The fee figures in research/test-structure.md, 62 pounds on a weekday and 75 pounds in the evening or at a weekend, came from a search result and are the ones to use, with a line telling the reader to check the current fee on GOV.UK.
+- The nerves section: describe what the evidence supports in general terms. DO NOT cite a study, an author, a year or a journal. You have no research note to draw them from and a made up citation would be worse than no citation. Say instead that the research literature behind this was not reachable when the app was written (unverified), and keep the advice to what a driving instructor would recognise: sleep, routine, practising under pressure with mock tests, arriving with time, and that nerves are normal and the examiner is instructed to try to settle you (that last one IS sourced, in research/test-structure.md).
 
 "booking": booking, the fee for a weekday and for evenings and weekends, changing and cancelling and the notice needed, what happens to the fee, waiting times and how slots come up, and what the research says about cancellation apps. Include a table of the fees if the research supports one.
 
@@ -196,7 +185,7 @@ Write "intro" saying what these cards are: the roads a test from this centre has
   {
     file: 'plan.json',
     label: 'plan',
-    reads: ['centre-facts.md', 'nerves-evidence.md', 'test-structure.md', 'common-faults.md', 'routes-reported.md'],
+    reads: ['centre-facts.md', 'test-structure.md', 'common-faults.md', 'routes-reported.md', 'local-roads.md'],
     ask: `Write data/plan.json: the Start tab's journey, and the short introductions that sit at the top of the other tabs.
 
 "journey": five or six steps, in order, each an accordion the reader opens: something like 1 Learn what is actually being marked, 2 Drive the roads round the centre, 3 Practise the manoeuvres and the questions, 4 Mock test yourself properly, 5 The week before, 6 On the day. Each has a lede, a short body, a "checks" tick list (three to eight lines, concrete), and "do" buttons linking to the tab that step needs. Valid "go" values are start, map, roads, test, skills and mock.
@@ -219,7 +208,8 @@ const written = await parallel(JOBS.map((j) => () =>
 YOUR FILE: ${ROOT}/data/${j.file}
 
 RESEARCH NOTES TO READ IN FULL FIRST: ${j.reads.map((r) => ROOT + '/research/' + r).join(', ')}
-(Also read ${ROOT}/research/gaps.md, which lists what the research got wrong or thin.)
+Read whatever else in ${ROOT}/research/ looks relevant; there is no gaps.md, because the
+research was stopped when its web search budget ran out.
 
 WHAT TO WRITE:
 ${j.ask}
