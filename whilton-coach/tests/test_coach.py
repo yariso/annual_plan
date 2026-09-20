@@ -188,6 +188,40 @@ with sync_playwright() as p:
     assert abs(r['startAt'][0]) < 0.01 and abs(r['startAt'][1]) < 0.01, 'the start line must sit on the origin'
     assert len(r['laps']) == 2 and 150 < r['laps'][0]['s'] < 220 and r['brakes'] >= 8 and r['nWords'] >= 20, 'the practice loop did not coach a full walked lap'
 
+    # the phone's motion sensor, simulated in the driver's pocket at a random orientation: the axis locks within a lap, brake points land within a few metres of the truth
+    # at one fix a second, the lead calibration engages at 1 Hz for a late braker, a spin is logged, and a normal lap logs none
+    MOTION = """(cfg) => { const W = window.__wm; Object.assign(W.st, { layout: 'intl', chic: true, wet: false, profile: 'novice' }); Object.assign(W.set, { mode: 'words', sayFlat: true, sayLift: true, sayBrake: true, coachSay: true, lapSay: false, prepCue: true, autoLead: true, wordLead: 1.6, motion: true, gpsDelay: 0.3 });
+      window.speechSynthesis.speak = () => {}; W.sim.rate = cfg.rate; W.sim.bad = false; W.sim.late = !!cfg.late; W.sim.crawl = false; W.sim.rot = 0; W.lapReset(W.simT()); W.motionReset();
+      const e1 = cfg.e1, e2 = cfg.e2, e3 = cfg.e3, c = Math.cos, s = Math.sin;
+      const Rz = [[c(e1), -s(e1), 0], [s(e1), c(e1), 0], [0, 0, 1]], Rx = [[1, 0, 0], [0, c(e2), -s(e2)], [0, s(e2), c(e2)]], Ry = [[c(e3), 0, s(e3)], [0, 1, 0], [-s(e3), 0, c(e3)]];
+      const mul = (A, B) => A.map(r => B[0].map((_, j) => r[0] * B[0][j] + r[1] * B[1][j] + r[2] * B[2][j]));
+      const R = mul(mul(Rz, Rx), Ry); W.sim.imu = { R, truth: [], noise: cfg.noise == null ? .5 : cfg.noise, spin: cfg.spin ? { t0: 1000 + cfg.spin * 1000, ms: 900 } : null };
+      W.motion.on = !!cfg.motion; W.motion.perm = 'granted';
+      const n = W.LY().centre.length, laps = []; let now = 1000; W.lapE.onLap = lap => laps.push({ n: lap.n, s: +(lap.ms / 1000).toFixed(2), spins: lap.spins, imu: Object.keys(lap.m).filter(k => lap.m[k].imu), tips: lap.tips.map(t => t.name + ': ' + t.tip), brakeOn: Object.fromEntries(Object.keys(lap.m).filter(k => lap.m[k].brakeOn != null && lap.m[k].imu).map(k => [k, lap.m[k].brakeOn])) });
+      W.sim.pos = n - 18; W.sim.v = 17; W.sim.fixAcc = 1e9; W.sim.tickAcc = 0; const dt = 0.02; let lockAt = null;
+      for (let i = 0; i < cfg.secs / dt; i++) { now += dt * 1000; W.simStep(dt, now, true); if (lockAt == null && W.motion.ok) lockAt = (now - 1000) / 1000; }
+      const fwd = [R[0][0], R[1][0], R[2][0]], f = W.motion.f, dot = f ? f[0] * fwd[0] + f[1] * fwd[1] + f[2] * fwd[2] : null, lock = +W.motion.lock.toFixed(2), Sw = Math.round(W.motion.Sw), Fw = Math.round(W.motion.Fw), quiet = W.lapE.quiet, ev = (W.lapE.mEvents || []).length;
+      const step = W.LY().step, truth = W.sim.imu.truth.map(x => x.pos), errs = {};
+      for (const lap of laps.slice(1)) for (const k of Object.keys(lap.brakeOn)) { const b = ((lap.brakeOn[k] % n) + n) % n; let best = 1e9; for (const p of truth) { let d = Math.abs(p - b); d = Math.min(d, n - d); best = Math.min(best, d); } errs[k] = Math.max(errs[k] || 0, +(best * step).toFixed(1)); }
+      const n2 = n, evs = (W.lapE.mEvents || []).map(e => ({ k: e.k, g: e.g == null ? null : +e.g.toFixed(1), pumps: e.pumps, pos: (() => { const c = W.cumAtT(e.t); return c == null ? null : +((c % n2 + n2) % n2).toFixed(1); })() })), truthPos = W.sim.imu.truth.slice(-12).map(x => +x.pos.toFixed(1)), st = W.motion.st, aL = +W.motion.aLon.toFixed(2);
+      W.sim.imu = null; W.motion.on = false; W.motionReset();
+      return { evs, truthPos, st, aL, laps, lockAt, dot: dot == null ? null : +dot.toFixed(3), lock, Sw, Fw, quiet, ev, errs, leadAdj: W.lapE.leadAdj, rate: +W.lapE.rate.toFixed(1) }; }"""
+    r = pg.evaluate(MOTION, dict(rate=1, secs=280, motion=True, e1=0.7, e2=1.9, e3=-0.4)); print('MOTION 1Hz:', {k: v for k, v in r.items() if k not in ('laps', 'evs')}, 'events', r['evs'], 'spins', [l['spins'] for l in r['laps']], 'imu corners', [len(l['imu']) for l in r['laps']])
+    assert r['lockAt'] is not None and r['lockAt'] < 65 and r['dot'] > 0.97 and r['lock'] >= 0.6, 'motion axis did not lock: ' + str(r)
+    assert len(r['laps']) >= 3 and all(len(l['imu']) >= 4 for l in r['laps']), 'motion brake points missing on some laps'
+    assert r['errs'] and max(r['errs'].values()) < 6, 'motion brake points off the truth: ' + str(r['errs'])
+    assert sum(l['spins'] for l in r['laps']) == 0, 'a spin was logged on a normal lap'
+    assert all(v == 0 for v in r['leadAdj'].values()), 'lead calibration moved calls for a driver braking on the plan: ' + str(r['leadAdj'])
+    r = pg.evaluate(MOTION, dict(rate=1, secs=420, motion=True, late=True, e1=2.2, e2=0.3, e3=1.1)); print('MOTION 1Hz late braker: leadAdj', r['leadAdj'], 'errs', r['errs'])
+    moved = [k for k, v in r['leadAdj'].items() if v >= 10]
+    assert len(moved) >= 3, 'the motion sensor did not let the lead calibration act at 1 Hz on a late braker: ' + str(r['leadAdj'])
+    r = pg.evaluate(MOTION, dict(rate=1, secs=200, motion=True, spin=90, e1=-1.2, e2=2.6, e3=0.2)); print('MOTION spin:', [(l['n'], l['spins']) for l in r['laps']])
+    assert sum(l['spins'] for l in r['laps']) == 1, 'the spin at 90 s was not logged exactly once: ' + str([l['spins'] for l in r['laps']])
+    r = pg.evaluate(MOTION, dict(rate=10, secs=200, motion=True, e1=3.0, e2=-0.8, e3=2.4)); print('MOTION 10Hz: lockAt', r['lockAt'], 'dot', r['dot'])
+    assert r['lockAt'] is not None and r['dot'] > 0.97, 'motion axis did not lock at 10 Hz'
+    # with motion off, the engine runs exactly as before: no motion brake points, no lead moves at 1 Hz
+    r = pg.evaluate(MOTION, dict(rate=1, secs=200, motion=False, e1=0.7, e2=1.9, e3=-0.4)); assert r['lockAt'] is None and all(len(l['imu']) == 0 for l in r['laps']) and not r['leadAdj'], 'motion off still changed the engine'
+
     # the team's shared brain against a mocked project: signed in, laps merged, a live lap posted, the Team level learned in the right direction
     pg.route('https://team.supabase.co/**', cloud_mock)
     pg.evaluate("() => { localStorage.setItem('wm.cloud', JSON.stringify({ url: 'https://team.supabase.co', anon: 'anonkey-anonkey-anonkey-anonkey' })); localStorage.setItem('wm.cloudsess', JSON.stringify({ access_token: 'tok', refresh_token: 'ref', expires_at: Math.floor(Date.now() / 1000) + 3600, email: null })); localStorage.removeItem('wm.team'); }")

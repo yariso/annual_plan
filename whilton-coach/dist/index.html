@@ -338,7 +338,7 @@ svg text{font-family:var(--display);fill:var(--ink)}
 <section class="tab" id="tab-coach" hidden>
   <div class="panel" id="startPanel">
     <h2 style="margin:0 0 4px">GPS coach</h2>
-    <p class="muted" style="margin:0 0 10px;max-width:64ch">Earphones in. Press Start in the pits, wait for it to say GPS ready, phone in your pocket, drive. It talks you round every corner, gives the lap time after each lap and one thing to change, and shows the team's best corners afterwards.</p>
+    <p class="muted" style="margin:0 0 10px;max-width:64ch">Earphones in. Press Start in the pits, allow motion access when the phone asks (it is how a phone in a pocket times your braking), wait for it to say GPS ready, phone in your pocket, drive. It talks you round every corner, gives the lap time after each lap and one thing to change, and shows the team's best corners afterwards.</p>
     <label class="f" style="margin:0 0 10px">Driver<input type="text" id="driverName" placeholder="Your name" maxlength="16" autocomplete="off"></label>
     <button type="button" class="btn primary big" id="liveBtn">Start GPS</button>
     <div class="status" id="liveStatus">Not running.</div>
@@ -351,6 +351,7 @@ svg text{font-family:var(--display);fill:var(--ink)}
       <div><b id="liveSpd">0</b><span>mph</span></div>
       <div><b id="liveRate">0.0</b><span>fixes a second</span></div>
       <div><b id="liveAcc">none</b><span>accuracy, m</span></div>
+      <div><b id="liveMotion">off</b><span>motion sensor</span></div>
     </div>
     <div class="row">
       <button type="button" class="btn small" id="pocketBtn" hidden>Show the pocket screen</button>
@@ -374,7 +375,7 @@ svg text{font-family:var(--display);fill:var(--ink)}
 
   <details class="panel">
     <summary>Practice at home</summary>
-    <p style="max-width:64ch">No track time before the day? Ten minutes of this, daily, puts the lap in your head: the corner order, what your feet do at each one, and the rhythm. Earpieces in. Set the layout, driver level and conditions on the Map tab first.</p>
+    <p style="max-width:64ch">No track time before the day? Ten minutes of this, daily, puts the lap in your head: the corner order, what your feet do at each one, and the rhythm. Earpieces in. Set the layout, driver level and conditions on the Map tab first. Do it the way the imagery research says works: sit as you will sit in the kart, hands up on an imagined wheel, eyes shut, first person, feel the brake and the wheel as well as see the corner, at real lap timing, ten to fifteen minutes, three times a week, straight after watching an onboard video.</p>
     <div class="row">
       <button type="button" class="btn primary" id="virtBtn">Virtual lap, talked round</button>
       <button type="button" class="btn" id="mindBtn">Lap in your head</button>
@@ -450,6 +451,7 @@ svg text{font-family:var(--display);fill:var(--ink)}
       <label class="sw"><input type="checkbox" id="set_lapSay"> Lap times</label>
       <label class="sw"><input type="checkbox" id="set_coachSay"> Coaching point each lap</label>
       <label class="sw"><input type="checkbox" id="set_prepCue"> Chirp a second before each brake word</label>
+      <label class="sw"><input type="checkbox" id="set_motion"> Use the phone's motion sensor</label>
       <label class="sw"><input type="checkbox" id="set_autoLead"> Learn my brake timing</label>
     </div>
     <ul class="small muted" style="margin-top:8px">
@@ -991,6 +993,28 @@ function renderPlan() {
   $('#plan').innerHTML =
     '<div class="panel"><h3>Move up the table: the one-page plan</h3>' +
     '<p style="max-width:64ch">A novice team moves up a hire-kart enduro by three things, in this order: no spins, every driver at the same pace, and the flat corners taken flat. Speed comes last. This is standard coaching, and every line below is what the app measures or reads out.</p>' +
+    '<p style="margin:8px 0 4px"><b>The event, as its own site describes 2026</b></p><ul>' +
+    '<li>Karun\'s Karting Carnival, Whilton Mill, Sunday 4 October 2026 from 10am: a 30-minute practice and qualifying session, two 60-minute heats and a 45-minute final for the top twelve teams from each heat. Teams of three or four, and every team makes the same three pit stops. Confirm the format, the layout and the start type at the briefing.</li>' +
+    '<li>Whilton\'s hire karts are BirelART N35 390cc (new September 2024), and a quick hire driver laps the International with the chicane in about 1:04.5. Pressing the brake cuts the throttle on these karts, so it is one pedal or the other, never both.</li>' +
+    '<li>Four drivers and three stops in a 60-minute heat is four stints of about 14 minutes; in the final about 11. Karts vary by seconds a lap, so note your kart number in practice and ask whether karts are swapped at the stops.</li></ul>' +
+    '<p style="margin:8px 0 4px"><b>The ten changes worth the most to a novice, in the coaches\' order</b></p><ol>' +
+    '<li>Look through the corner: at the apex while braking, at the exit at the apex, at the next corner on the exit. Kart-Map calls a short gaze the number one beginner mistake; Red Bull and Terence Dove say the same.</li>' +
+    '<li>Brake in a straight line, hard first, then ease off, never locked. Club100\'s Whilton guide for beginners: brake earlier than the post to start with, then a little later and harder every lap.</li>' +
+    '<li>Stop over-slowing. A heavy 390cc kart cannot buy the speed back (Kart Class); mid-corner oversteer means you came in too fast, not that you should brake more (CRG).</li>' +
+    '<li>Full throttle as early as it will take it, and hold it: no half throttle, no throttle-then-lift, which costs about a tenth a corner (Ross Bentley). A dipping engine note means the throttle came late (Kart Class).</li>' +
+    '<li>No sliding. A sliding tyre scrubs speed and never repeats (Kartletix, Kart Class).</li>' +
+    '<li>Turn in late for a late apex and drive the exit; if you run wide flat out, the apex was too early (Kart-Map, Red Bull).</li>' +
+    '<li>Hands fixed at quarter to three, push the wheel, small inputs: Daytona says 99 per cent of drivers would be quicker smoother.</li>' +
+    '<li>Zero spins and even laps beat one hero lap: every endurance guide says so.</li>' +
+    '<li>First two laps of a stint are learning laps: cold hard tyres, and every kart is different (Kart Class, BUKC).</li>' +
+    '<li>Let faster karts through on a straight, off the line, never in a braking zone, and copy their line and brake lights (Kart Class, CRG). One defensive move only (Motorsport UK).</li></ol>' +
+    '<p style="margin:8px 0 4px"><b>Team craft for a hire enduro</b></p><ul>' +
+    '<li>Order: not the reckless fast driver and not the consistent qualifier at the start; the calmest driver starts, the quickest and calmest finishes (TKART, Kartdrome endurance guides). Everyone drives one stint per heat.</li>' +
+    '<li>The change: old driver out to the left, new driver in from the right, pedals and seat set, engine as the marshals say. Rehearse it on the ground until it is calm: amateurs\' heart rates spike at the handover (Barthel 2020). Daytona says these races are won or lost there.</li>' +
+    '<li>Pit lane at walking pace: at the Daytona 24 hours the good teams have a captain walk the kart in so nobody collects a speeding penalty.</li>' +
+    '<li>Spun or stalled: stay in the kart, hands on the wheel, wait for the marshal. A spin is a yellow flag and a marshal restart, about a lap lost.</li>' +
+    '<li>No scarves, snoods or loose neck wear (two UK case reports of neck injuries from wear caught in the rear wheel), hair tied, sit back from the wheel. Grippy gloves for the second half of a stint (arm pump is real). Drink normally: in October a stint is moderate exertion, no need to force fluids.</li>' +
+    '<li>Wet: the same three pit stops, so no strategy call to make; the calmest driver takes the wettest stint, and every call in the app switches to the wet plan when Wet is on.</li></ul>' +
     '<p style="margin:8px 0 4px"><b>Before the day, ten minutes each, daily</b></p><ul>' +
     '<li>Coach tab: the virtual lap once, the lap in your head once, the corner quiz until you get ten right. Then Read me the lap with your eyes shut.</li>' +
     '<li>Learn these by name. Flat: ' + esc(join(byLv.flat)) + '. Lift only: ' + esc(join(byLv.lift)) + '. Brake: ' + esc(join(byLv.brake)) + '.</li>' +
@@ -998,7 +1022,7 @@ function renderPlan() {
     '<p style="margin:8px 0 4px"><b>On the day</b></p><ul>' +
     '<li>At the briefing ask three things: is the chicane in use, are earpieces allowed, and does the concrete beyond the white line count. Then set the Map tab to match.</li>' +
     '<li>Practice, about seven minutes each: two laps at eight tenths with tones only, then three laps working on one thing, then the in-lap. Quickest driver goes last and does the qualifying laps. Type each driver\'s name above Start GPS.</li>' +
-    '<li>Rehearse the driver change on the ground: belt, seat, go. Under a minute. A slow change costs more than any corner.</li>' +
+    '<li>Rehearse the driver change on the ground: out left, in right, seat, pedals, go. Aim for twenty seconds stationary. A slow change costs more than any corner.</li>' +
     '<li>In the kart: one steering movement per corner, eyes on the exit, brake in a straight line, throttle progressively because the hire karts oversteer on power. Flat where the list says flat. Let faster karts through and hold your line: a pass costs a second, a spin costs twenty, contact costs the race.</li>' +
     '<li>With the earpiece: chirp, then the word, then the tone. Brake at the word, come off the brake as the tone ends. If it says GPS lost, drive on your own until GPS back.</li></ul>' +
     '<p style="margin:8px 0 4px"><b>After each stint</b></p><ul>' +
@@ -1171,7 +1195,7 @@ const store = {
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } },
   del(k) { try { localStorage.removeItem(k); } catch (e) { } }
 };
-const set = Object.assign({ mode: 'words', wordLead: 1.6, toneLead: 0.35, gpsDelay: 0.3, toneBrake: true, toneLift: true, goBlip: true, sayBrake: true, sayLift: true, sayFlat: true, lapSay: true, coachSay: true, prepCue: true, autoLead: true }, store.get('wm.settings2', {}));
+const set = Object.assign({ mode: 'words', wordLead: 1.6, toneLead: 0.35, gpsDelay: 0.3, toneBrake: true, toneLift: true, goBlip: true, sayBrake: true, sayLift: true, sayFlat: true, lapSay: true, coachSay: true, prepCue: true, autoLead: true, motion: true }, store.get('wm.settings2', {}));
 let rec = store.get('wm.rec', []);
 function saveSettings() { store.set('wm.settings2', set); }
 function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => { t.hidden = true; }, 3400); }
@@ -1251,7 +1275,7 @@ function fitRecording(R) {
 }
 
 /* ---------------- lap engine: where the kart is on the map, lap times, and what the audio should be doing ---------------- */
-const lapE = { T: null, L: null, n: 0, s: null, cum: 0, v: 0, acc: 0, tFix: 0, tAny: 0, far: 0, rate: 0, times: [], samples: [], lapStartT: null, lapStartCum: null, laps: [], best: null, bestSeg: {}, events: [], wordCum: null, prepCum: null, queue: [], quiet: false, onWord: null, onLap: null, onCue: null, said: {}, prof: null, profs: [], leadAdj: {}, cal: {}, focus: null, dropped: null, flatTicks: 0, goCum: null };
+const lapE = { T: null, L: null, n: 0, s: null, cum: 0, v: 0, acc: 0, tFix: 0, tAny: 0, far: 0, rate: 0, times: [], samples: [], lapStartT: null, lapStartCum: null, laps: [], best: null, bestSeg: {}, events: [], wordCum: null, prepCum: null, queue: [], quiet: false, onWord: null, onLap: null, onCue: null, said: {}, prof: null, profs: [], leadAdj: {}, cal: {}, focus: null, dropped: null, flatTicks: 0, goCum: null, mEvents: [] };
 function nearestIdx(L, x, y, hint) {
   const C = L.centre, n = C.length; let bi = -1, bd = 1e18;
   const test = i => { const p = C[i], d = (p[0] - x) * (p[0] - x) + (p[1] - y) * (p[1] - y); if (d < bd) { bd = d; bi = i; } };
@@ -1268,7 +1292,7 @@ function buildEvents() {
 }
 function lapReset(T, quiet) {
   lapE.gate = 1; lapE.offScale = 1; lapE.lastM = null;
-  const L = LY(); Object.assign(lapE, { T, L, layKey: st.layout + (st.chic ? '_c' : '_n'), n: L.centre.length, s: null, cum: 0, v: 0, acc: 0, tFix: 0, tAny: 0, far: 0, off: false, rate: 0, times: [], samples: [], lapStartT: null, lapStartCum: null, laps: [], best: null, bestSeg: {}, events: buildEvents(), wordCum: null, prepCum: null, queue: [], quiet: !!quiet, said: {}, prof: null, profs: [], leadAdj: {}, cal: {}, focus: null, dropped: null, flatTicks: 0, goCum: null });
+  const L = LY(); Object.assign(lapE, { T, L, layKey: st.layout + (st.chic ? '_c' : '_n'), n: L.centre.length, s: null, cum: 0, v: 0, acc: 0, tFix: 0, tAny: 0, far: 0, off: false, rate: 0, times: [], samples: [], lapStartT: null, lapStartCum: null, laps: [], best: null, bestSeg: {}, events: buildEvents(), wordCum: null, prepCum: null, queue: [], quiet: !!quiet, said: {}, prof: null, profs: [], leadAdj: {}, cal: {}, focus: null, dropped: null, flatTicks: 0, goCum: null, mEvents: [], lagKnown: false });
   setTone(1);
 }
 function lapFix(f) {          // f: { t (ms), lat, lon, spd (m/s or null), acc }
@@ -1283,6 +1307,7 @@ function lapFix(f) {          // f: { t (ms), lat, lon, spd (m/s or null), acc }
   } else if (E.s != null) {
     const ds = mod(hit.i - E.s + E.n / 2, E.n) - E.n / 2, dt = (f.t - E.tFix) / 1000;
     if (dt > 0 && (v == null || isNaN(v))) v = Math.max(0, ds * E.L.step / dt);
+    if (motion.on && v != null && !isNaN(v)) motionLearn(E.v, v, E.tFix, f.t);          // the sensor's mean push over the same second, signed by the speed change, is how it learns which way is forward
     if (dt > .02 && dt < 1.6) E.acc = Math.max(-8, Math.min(5, ((v || 0) - E.v) / dt)) * .7; else E.acc = 0;
     const before = E.cum; E.cum += ds;
     const k = Math.floor(E.cum / E.n); if (k > Math.floor(before / E.n) && ds > 0 && prev && (v || 0) > 8 * (E.gate || 1)) {        // crossed the start line at speed (a pit-lane pass does not count)
@@ -1300,7 +1325,7 @@ function lapTick(now) {       // runs ten times a second: carries the last fix f
   const E = lapE; if (!E.T || E.s == null || E.off) { setTone(1); return null; }
   if (now - E.tFix > 3000) { setTone(1); return null; }                                   // no fix for three seconds: say nothing rather than guess
   const age = Math.min(2.5, Math.max(0, (now - E.tFix) / 1000) + (E.lagKnown ? 0 : set.gpsDelay)), lv = LVL(E.L), at = c => +lv[mod(Math.floor(c), E.n)];   // a measured fix age is already in tFix; the allowance is for phones that report none
-  const run = advance(E.cum, E.v, E.acc, age), cumNow = run.c, vNow = run.v;
+  const run = motionOk() ? advanceImu(E.cum, E.v, E.tFix - lagMs(), now) : advance(E.cum, E.v, E.acc, age), cumNow = run.c, vNow = run.v;   // with the motion sensor locked, the speed since the fix is integrated from what it measured, not guessed
   const evPos = ev => ev.i - (E.leadAdj[ev.key] || 0) / E.L.step;                                   // a corner whose call the driver keeps braking late for gets its word (and chirp) earlier
   const G = E.gate || 1;   // 1 on the track; smaller on the practice loop, where a jog counts as flat out
   if (E.quiet || vNow < 3 * G) { setTone(1); return { cum: cumNow, v: vNow, level: at(cumNow) }; }
@@ -1334,7 +1359,7 @@ function lapTick(now) {       // runs ten times a second: carries the last fix f
   // the lap time and the coaching point wait for a quiet moment: nothing to say for the next few seconds, and nothing still being said
   if (E.queue.length && vNow > 6 * G) {
     const horizon = cumNow + vNow * (lead + 3) / E.L.step, soon = set.mode !== 'tones' && E.events.some(ev => ev.level >= 2 && evOn(ev) && ev.i + Math.ceil((cumNow - ev.i) / E.n) * E.n <= horizon);
-    if (!soon && !busy()) { const q = E.queue.shift(); if (q.say) speak(q.text); if (E.onWord) E.onWord(q.text, 0); }
+    const q0 = E.queue[0]; if (!soon && !busy() && !(q0.wait && E.qSaidAt && now - E.qSaidAt < q0.wait)) { const q = E.queue.shift(); E.qSaidAt = now; if (q.say) speak(q.text); if (E.onWord) E.onWord(q.text, 0); }   // a coaching point waits a few seconds after the lap time: instant feedback teaches worse than feedback a moment later
   }
   return { cum: cumNow, v: vNow, level: at(cumNow) };
 }
@@ -1358,11 +1383,11 @@ function lapProfile(c0) {      // the lap just driven as a speed for every centr
   return P;
 }
 function calibrateLead(m) {    // if the driver's brake point keeps landing later than the plan at a corner, the call there moves earlier by the difference, up to 20 m
-  const E = lapE, L = E.L; if ((E.rate || 1) < 4) return;   // at a phone's one fix a second the brake point is known to a fix spacing at best: nothing to learn from
+  const E = lapE, L = E.L, fineGps = (E.rate || 1) >= 4;   // at a phone's one fix a second the brake point is known to a fix spacing at best: nothing to learn from, unless the motion sensor timed it
   cardList().forEach(([key]) => {
-    const c = CARDS[key], x = m[key]; if (!x || lvOf(c) < 3 || x.brakeOn == null) return; const zs = zoneStartIdx(key); if (zs == null) return;
+    const c = CARDS[key], x = m[key]; if (!x || lvOf(c) < 3 || x.brakeOn == null || (!fineGps && !x.imu)) return; const zs = zoneStartIdx(key); if (zs == null) return;
     const d = (x.brakeOn - zs) * L.step + (E.leadAdj[key] || 0), h = E.cal[key] = (E.cal[key] || []).concat([d]).slice(-3);   // where the brake landed against the plan, given the lead already added
-    if (h.length < 3) return; const s = h.slice().sort((a, b) => a - b), slack = Math.max(8, 1.0 * x.vIn / Math.max(1, E.rate || 1));      // a full fix spacing: at one fix a second (about 20 m) nothing is learned, at 10 Hz and up it is
+    if (h.length < 3) return; const s = h.slice().sort((a, b) => a - b), slack = x.imu ? 6 : Math.max(8, 1.0 * x.vIn / Math.max(1, E.rate || 1));      // a full fix spacing: at one fix a second (about 20 m) nothing is learned, at 10 Hz and up it is; the sensor's onset is good to the fix error
     let room = 0; const lv = LVL(L); for (let q = zs - 1; q > zs - 60 && lv[mod(q, E.n)] === '1'; q--) room++;   // the flat run before this zone, in points
     const was = E.leadAdj[key] || 0, next = s[1] > slack && s[0] > 0 ? Math.min(20, Math.floor(room * L.step * .4 / 5) * 5, Math.round(s[1] / 5) * 5) : 0;   // at most 20 m, and never more than 40% of the flat run, so the call stays out of the previous corner
     E.leadAdj[key] = next; if (next !== was) E.cal[key] = [];   // the readings behind a move are stale once the call has moved
@@ -1395,7 +1420,13 @@ function lapMetrics(startCum) {
     let vMin = 1e9, cMin = c0, brakeOn = null, decel = 0, first = null, plateau = 0, pj = 0; W.forEach((p, j) => { if (p.v < vMin) { vMin = p.v; cMin = p.c; } if (j) { const q = W[j - 1], d = (q.v - p.v) / Math.max(.05, (p.t - q.t) / 1000); decel = Math.max(decel, d); if (first == null) { if (q.v >= plateau) { plateau = q.v; pj = j - 1; } if (d > 1.6) first = j; } } });
     if (first != null) { for (let j = pj + 1; j <= first; j++) { const p = W[j]; if (p.v < plateau - .5) { brakeOn = Math.max(c0, p.c - (plateau * plateau - p.v * p.v) / (2 * Math.max(decel, 1.6) * L.step)); break; } } if (brakeOn == null) brakeOn = (W[first - 1].c + W[first].c) / 2; }   // the onset is where the speed left its plateau: back-projected from the first fix below it along the hardest braking seen, so it does not read late at one fix a second whichever fix phase the lap had
     let thr = null; for (const p of W) if (p.c > cMin && p.v > vMin + 1) { thr = p.c; break; }
-    out[key] = { tSeg: (t1 - t0) / 1000, vIn: vAt(c0), vMin, cMin: cMin - startCum, brakeOn: brakeOn == null ? null : brakeOn - startCum, decel, thrLag: thr == null ? null : thr - cMin };
+    let imu = false, pumps = 0; const ME = E.mEvents || [], lg = lagMs();
+    if (ME.length) {   // the phone's motion sensor saw the brake go on at a moment; that moment on the GPS trace is the brake point, good to the fix error rather than the fix spacing
+      const b = ME.find(e => e.k === 'b' && e.t + lg >= t0 - 400 && e.t + lg <= t1), cb = b ? cumAtT(b.t) : null;
+      if (cb != null && cb >= c0 - 2 && cb <= c1) { brakeOn = Math.max(c0, cb); decel = Math.max(decel, b.g || 0); imu = true; pumps = b.pumps || 0; }   // a lift never reaches the 2.2 m/s/s the detector needs, so every logged event is a brake, gentle novice ones included
+      const th = ME.find(e => e.k === 't' && e.t + lg > (b ? b.t + lg : t0) && e.t + lg <= t1 + 600), ct = th ? cumAtT(th.t) : null; if (ct != null && ct > cMin - 1 && ct <= c1 + 2) thr = ct;
+    }
+    out[key] = { tSeg: (t1 - t0) / 1000, vIn: vAt(c0), vMin, cMin: cMin - startCum, brakeOn: brakeOn == null ? null : brakeOn - startCum, decel, thrLag: thr == null ? null : thr - cMin, imu, pumps };
   });
   return out;
 }
@@ -1407,9 +1438,10 @@ function coachTips(m, best) {
     if (lvl === 1 && drop > 3.5) { tip = 'keep it flat. You dropped ' + Math.round(drop) + ' miles an hour'; sev = drop / 12; }
     else if (lvl === 2 && x.decel > 3.8) { tip = 'a lift is enough. You braked'; sev = .45; }
     else if (lvl >= 3) {
-      const zs = zoneStartIdx(key), early = zs != null && x.brakeOn != null ? (zs - x.brakeOn) * L.step : 0, slack = Math.max(14, 1.1 * x.vIn / Math.max(1, lapE.rate || 1));   // at one fix a second the braking point is only known to a kart length or two
+      const zs = zoneStartIdx(key), early = zs != null && x.brakeOn != null ? (zs - x.brakeOn) * L.step : 0, slack = x.imu ? 8 : Math.max(14, 1.1 * x.vIn / Math.max(1, lapE.rate || 1));   // at one fix a second the braking point is only known to a kart length or two, unless the motion sensor timed it
       if (early > slack) { tip = 'brake later, by about ' + Math.round(early / 5) * 5 + ' metres'; sev = early / 35; }
-      else if (early < -slack && c.prims.length === 1 && (lapE.rate || 1) >= 4 && x.cMin > apex + 3) { tip = 'you braked late and were still slowing past the apex. Brake a touch earlier'; sev = .5; }
+      else if (early < -slack && c.prims.length === 1 && (x.imu || (lapE.rate || 1) >= 4) && x.cMin > apex + 3) { tip = 'you braked late and were still slowing past the apex. Brake a touch earlier'; sev = .5; }
+      else if (x.pumps >= 2 && c.prims.length === 1 && (() => { const pl = lapE.laps[lapE.laps.length - 1]; return pl && pl.m[key] && pl.m[key].pumps >= 2; })()) { tip = 'one squeeze of the brake, not two. You came off the pedal and went back on'; sev = .4; }   // two laps running, and never at a chicane, where two brakes are the plan
     }
     const fine = (lapE.rate || 1) >= 4, minLoss = fine ? .12 : .3;   // one fix a second cannot resolve small differences, so only speak up about big ones
     if (!tip && b && x.vMin < b.vMin - (fine ? 1.3 : 2.2) && loss > minLoss) { tip = 'you over-slowed. ' + Math.round((b.vMin - x.vMin) * MPH) + ' miles an hour down on your best at the apex'; sev = loss; }
@@ -1448,25 +1480,26 @@ function finishLap(tc, endCum) {
   }
   else if (tips.length) { tip = tips[0].name + ': ' + tips[0].tip + '.'; say = tips[0].name + ', ' + SHORT(tips[0].tip) + '.'; }
   else if (E.laps.length > 1 && lap === E.best) tip = say = 'Best lap. Same again.';
-  lap.tip = tip; lap.say = say;
+  lap.tip = tip; lap.say = say; const lg = lagMs(); lap.spins = (E.mEvents || []).filter(e => e.k === 's' && e.t + lg >= E.lapStartT && e.t + lg <= tc).length;
+  E.mEvents = (E.mEvents || []).filter(e => e.t + lg > tc - 3000);
   if (live.on) teamLog(lap);
   // the lap time, then how it compares: "71.5, best" or "71.9, 0.4 off"; both are said at the next quiet moment so no brake word cuts them off
   const g = prevBest ? (ms - E.best.ms) / 1000 : 0, gap = !prevBest ? '' : E.best === lap ? ', best' : g < .05 ? ', equal best' : ', ' + g.toFixed(1) + ' off';
   E.queue = []; E.said = {};
-  if (!E.quiet) { if (set.lapSay) E.queue.push({ text: (ms / 1000).toFixed(1) + gap, say: true }); if (say) E.queue.push({ text: say, say: set.coachSay }); if (E.onLap) E.onLap(lap); }
+  if (!E.quiet) { if (set.lapSay) E.queue.push({ text: (ms / 1000).toFixed(1) + gap + (lap.spins ? (lap.spins > 1 ? ', ' + lap.spins + ' spins' : ', a spin') : ''), say: true }); if (say) E.queue.push({ text: say, say: set.coachSay, wait: 3000 }); if (E.onLap) E.onLap(lap); }
 }
 function renderDebrief() {
   const E = lapE, box = $('#debriefBody'); if (!box) return;
   if (!E.laps.length) { box.innerHTML = '<p class="muted" style="margin:0">No complete laps yet. Run the demo, start GPS at the circuit, or load a CSV trace from a lap timer.</p>' + (teamTable() || officialBlock([], {})); return; }
   const last = E.laps[E.laps.length - 1], best = E.best, rows = cardList().map(([key]) => { const x = last.m[key], b = E.bestSeg[key]; if (!x) return ''; const d = b ? x.tSeg - b.tSeg : 0; return '<tr><td>' + CARDS[key].name + '</td><td>' + x.tSeg.toFixed(2) + '</td><td class="' + (d > .08 ? 'neg' : '') + '">' + (d > .005 ? '+' + d.toFixed(2) : 'best') + '</td><td>' + Math.round(x.vIn * MPH) + '</td><td>' + Math.round(x.vMin * MPH) + '</td></tr>'; }).join('');
-  box.innerHTML = '<p style="margin:0 0 8px"><b>Lap ' + last.n + ': ' + fmtLap(last.ms) + '</b>' + (best && best !== last ? ', ' + ((last.ms - best.ms) / 1000).toFixed(2) + ' s off your best (' + fmtLap(best.ms) + ', lap ' + best.n + ')' : ', your best so far') + '.</p>' +
+  box.innerHTML = '<p class="small muted" style="margin:0 0 6px">Before you read on: where do you think you lost time?</p><p style="margin:0 0 8px"><b>Lap ' + last.n + ': ' + fmtLap(last.ms) + '</b>' + (best && best !== last ? ', ' + ((last.ms - best.ms) / 1000).toFixed(2) + ' s off your best (' + fmtLap(best.ms) + ', lap ' + best.n + ')' : ', your best so far') + '.</p>' +
     (last.said ? '<p style="margin:0 0 8px"><b>' + esc(last.said) + '.</b></p>' : '') +
     (last.focus ? '<p style="margin:0 0 8px">Focus corner: <b>' + esc(CARDS[last.focus].name) + '</b>' + (last.tip && !last.said ? ', ' + esc(last.tip.replace(/^[^:]+: /, '')) : '.') + '</p>' : '') +
     (last.tips.length ? '<ol class="tips">' + last.tips.map(t => '<li><b>' + t.name + ':</b> ' + esc(t.tip) + '.' + (t.loss > .05 ? ' <span class="muted">About ' + t.loss.toFixed(2) + ' s lost to your best there.</span>' : '') + '</li>').join('') + '</ol>' : '<p class="muted">Nothing stands out on that lap. Keep it consistent.</p>') +
     '<div style="overflow-x:auto"><table class="deb"><thead><tr><th>Corner</th><th>Time, s</th><th>To best</th><th>In, mph</th><th>Min, mph</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
     sessionTable() + teamTable() +
     (Object.keys(E.leadAdj).some(k => E.leadAdj[k]) ? '<p class="small" style="margin:8px 0 0">Brake calls moved earlier from your laps: ' + Object.keys(E.leadAdj).filter(k => E.leadAdj[k]).map(k => CARDS[k].name + ' ' + E.leadAdj[k] + ' m').join(', ') + '.</p>' : '') +
-    '<p class="small muted" style="margin:8px 0 0">' + (E.rate && E.rate < 3 ? 'GPS is giving about ' + E.rate.toFixed(0) + ' fix a second, so braking points here are good to roughly 10 to 20 metres and corner times to a tenth or two. A 10 to 25 Hz receiver tightens all of this.' : 'Laps: ' + E.laps.map(l => fmtLap(l.ms)).join(', ') + '.') + '</p>';
+    '<p class="small muted" style="margin:8px 0 0">' + (E.rate && E.rate < 3 ? (Object.keys(last.m).some(k => last.m[k].imu) ? 'GPS is giving about ' + E.rate.toFixed(0) + ' fix a second, but the phone\'s motion sensor timed the brake and throttle points, so those are good to a few metres; corner times are still good to a tenth or two. A 10 to 25 Hz receiver tightens the rest.' : 'GPS is giving about ' + E.rate.toFixed(0) + ' fix a second, so braking points here are good to roughly 10 to 20 metres and corner times to a tenth or two. A 10 to 25 Hz receiver tightens all of this.') : 'Laps: ' + E.laps.map(l => fmtLap(l.ms)).join(', ') + '.') + '</p>';
 }
 /* ---------------- the team's shared brain: a Supabase project the team signs into; laps go up, everyone's laps come down, and a Team level is learned from them ---------------- */
 const CLOUD_DEFAULT = { url: '', anon: '' };   // whoever runs the team can also bake their project in here
@@ -1610,6 +1643,7 @@ function simStep(dt, now, quiet) {
   else if (lv >= 3) { const d = Math.max(2, (bEnd - i + 1) * ds), v2 = Math.min(sim.v, vt + 1.2); a = Math.max(-9.5, Math.min(sim.bad ? -.2 : -1.5, (v2 * v2 - sim.v * sim.v) / (2 * d))); }
   else { const d = Math.max(2, (rEnd - i + 1) * ds), v2 = Math.min(sim.v, vt); a = Math.max(-6, Math.min(sim.bad ? -.1 : -.5, (v2 * v2 - sim.v * sim.v) / (2 * d))); }
   sim.v = Math.max(5, sim.v + a * dt); if (sim.crawl) sim.v = Math.min(sim.v, 7); sim.pos = (sim.pos + sim.v * dt / ds) % n;   // crawl: stuck behind a slower kart
+  if (sim.imu) simImu(sim.v <= 5 && a < 0 ? 0 : a, now);
   const at = pos => { const pp = mod(pos, n), j = Math.floor(pp), fr = pp - j, p = LN[j % n], q = LN[(j + 1) % n]; return { x: p[0] + (q[0] - p[0]) * fr, y: p[1] + (q[1] - p[1]) * fr }; };
   const here = at(sim.pos); sim.fixAcc += dt; (sim.ring = sim.ring || []).push({ t: now, pos: sim.pos, v: sim.v }); while (sim.ring.length && now - sim.ring[0].t > 2000) sim.ring.shift();
   if (sim.fixAcc >= 1 / sim.rate) {
@@ -1619,6 +1653,15 @@ function simStep(dt, now, quiet) {
   sim.tickAcc += dt;
   if (sim.tickAcc >= .1) { sim.tickAcc = 0; const s = lapTick(now); if (!quiet) { $('#simSpd').textContent = Math.round(sim.v * MPH); $('#simLap').textContent = lapE.lapStartT != null ? fmtLap(now - lapE.lapStartT) : '0:00.0'; pedalShow('#simPedal', s ? +lvS[mod(Math.floor(s.cum + s.v * set.toneLead / ds), n)] : 1); } }
   return here;
+}
+function simImu(aLon, now) {   // what a phone in the driver's pocket would feel: the kart's push in a fixed unknown orientation, with body wobble, at the tick rate (tests) or 60 Hz
+  const S = sim.imu, L = LY(), n = L.centre.length, LN = LINE(L), i = Math.floor(sim.pos) % n;
+  if (!S.kap || S.kap.length !== n) { S.kap = new Float32Array(n); for (let k = 0; k < n; k++) { const p = LN[mod(k - 2, n)], q = LN[k], r = LN[(k + 2) % n], a1 = Math.atan2(q[1] - p[1], q[0] - p[0]), a2 = Math.atan2(r[1] - q[1], r[0] - q[0]); let d = a2 - a1; while (d > Math.PI) d -= 2 * Math.PI; while (d < -Math.PI) d += 2 * Math.PI; S.kap[k] = d / (2 * L.step); } }
+  const kap = S.kap[i], aLat = sim.v * sim.v * kap, spin = S.spin && now >= S.spin.t0 && now < S.spin.t0 + S.spin.ms, yaw = spin ? 360 : sim.v * kap * 180 / Math.PI, nz = S.noise == null ? .5 : S.noise, noise = () => (Math.random() - .5) * 2 * nz;
+  const R = S.R, rot = v => [R[0][0] * v[0] + R[0][1] * v[1] + R[0][2] * v[2], R[1][0] * v[0] + R[1][1] * v[1] + R[1][2] * v[2], R[2][0] * v[0] + R[2][1] * v[1] + R[2][2] * v[2]];
+  const a = rot([aLon + noise(), aLat + noise(), noise()]), g = rot([0, 0, 9.81]), w = rot([noise() * 20, noise() * 20, yaw + noise() * 20]);
+  motionEvent({ acceleration: { x: a[0], y: a[1], z: a[2] }, accelerationIncludingGravity: { x: a[0] + g[0], y: a[1] + g[1], z: a[2] + g[2] }, rotationRate: { alpha: w[2], beta: w[0], gamma: w[1] } }, now);
+  if (S.truth) { const braking = aLon < -2.2; if (braking && !S.wasB) S.truth.push({ t: now, pos: sim.pos }); S.wasB = braking; }
 }
 function pedalShow(id, level) { const b = $(id); if (b._l === level) return; b._l = level; b.textContent = level === 1 ? 'Flat out' : level === 2 ? 'Lift' : LV[level].name; b.style.background = lvColor(level); }
 function wordShow(id, text) { const b = $(id); b.textContent = text; clearTimeout(b._t); b._t = setTimeout(() => { b.textContent = ''; }, 2600); }
@@ -1727,7 +1770,96 @@ function readStart() {
 function readStop() { reader.on = false; $('#readBtn').textContent = 'Read me the lap'; try { speechSynthesis.cancel(); } catch (e) { } }
 
 /* ---------------- live GPS ---------------- */
+/* ---------------- the phone's motion sensor: brake, throttle, cornering and spins at 60 Hz from a pocket, between the 1 Hz fixes ---------------- */
+// The accelerometer does not know which way the phone sits in a pocket. It learns: over every second in which GPS says the kart clearly sped up or slowed,
+// the sensor's mean horizontal push, signed by that speed change, is added up; the sum points forward once a few brakings agree (coherence above 0.6).
+const motion = { on: false, ok: false, perm: null, bound: null, tNow: 0 };
+function motionReset() { Object.assign(motion, { ok: false, n: 0, g: null, h: null, f: null, F: null, Fw: 0, S: null, Sw: 0, lock: 0, aLon: 0, aLat: 0, yaw: 0, tLast: 0, tRing: 0, tRec: 0, ring: [], rec: [], hz: 0, cnt: 0, tCnt: 0, st: 'flat', nB: 0, nT: 0, nS: 0, tB0: 0, tOff: 0, bEv: null, bPeak: 0, thrDone: true }); }
+motionReset();
+const lagMs = () => lapE.lagKnown ? 0 : set.gpsDelay * 1000;   // the sensor keeps real time; a fix without a timestamp is older than it looks by the delay allowance
+function motionStart() {          // inside the button press: iOS only grants the sensor from a user gesture
+  const M = motion; if (!set.motion || typeof DeviceMotionEvent === 'undefined') { M.on = false; return; }
+  motionReset(); M.on = true; M.perm = null;
+  const listen = () => { M.perm = 'granted'; if (!M.bound) { M.bound = e => motionEvent(e); } window.addEventListener('devicemotion', M.bound); };
+  try {
+    if (typeof DeviceMotionEvent.requestPermission === 'function') DeviceMotionEvent.requestPermission().then(r => { if (r === 'granted') listen(); else M.perm = 'denied'; }).catch(() => { M.perm = 'denied'; });
+    else listen();
+  } catch (e) { M.perm = 'denied'; }
+}
+function motionStop() { const M = motion; if (M.bound) window.removeEventListener('devicemotion', M.bound); M.on = false; M.ok = false; }
+function motionOk() { const M = motion; return M.on && M.ok && !!M.f && M.tLast > 0 && (M.tNow - M.tLast) < 1500; }
+function motionStatus() { const M = motion; return !M.on ? 'off' : M.perm === 'denied' ? 'blocked' : !M.n ? 'waiting' : M.ok ? 'locked, ' + Math.round(M.hz) + '/s' : 'learning'; }
+function motionEvent(e, tSim) {
+  const M = motion, ag = e.accelerationIncludingGravity, a = e.acceleration, t = tSim != null ? tSim : performance.now(); if (!ag || ag.x == null) return; M.tNow = t;
+  const dt = M.tLast ? Math.min(.1, Math.max(.001, (t - M.tLast) / 1000)) : .0167; M.tLast = t; M.n++;
+  const hasA = a && a.x != null && !isNaN(a.x), gi = hasA ? [ag.x - a.x, ag.y - a.y, ag.z - a.z] : [ag.x, ag.y, ag.z];   // the platform's own gravity estimate when it separates the two, else a slow average
+  if (!M.g) M.g = gi; else { const k = Math.min(1, dt / (hasA ? .5 : 3)); for (let i = 0; i < 3; i++) M.g[i] += (gi[i] - M.g[i]) * k; }
+  const gn = Math.hypot(M.g[0], M.g[1], M.g[2]) || 9.81, u = [M.g[0] / gn, M.g[1] / gn, M.g[2] / gn], la = hasA ? [a.x, a.y, a.z] : [ag.x - M.g[0], ag.y - M.g[1], ag.z - M.g[2]];
+  const d = la[0] * u[0] + la[1] * u[1] + la[2] * u[2], h = [la[0] - d * u[0], la[1] - d * u[1], la[2] - d * u[2]];   // the horizontal part of the push
+  if (!M.h) M.h = h; else { const k = Math.min(1, dt / .1); for (let i = 0; i < 3; i++) M.h[i] += (h[i] - M.h[i]) * k; }   // a light smoothing, about 1.6 Hz: body wobble out, braking in
+  const r = e.rotationRate; if (r && r.alpha != null && !isNaN(r.alpha)) { const yaw = r.beta * u[0] + r.gamma * u[1] + r.alpha * u[2]; M.yaw += (yaw - M.yaw) * Math.min(1, dt / .1); }   // turning rate about the vertical, degrees a second
+  M.cnt++; if (!M.tCnt) M.tCnt = t; else if (t - M.tCnt >= 2000) { M.hz = M.cnt / ((t - M.tCnt) / 1000); M.cnt = 0; M.tCnt = t; }
+  if (M.f) { const f = M.f, sdir = [u[1] * f[2] - u[2] * f[1], u[2] * f[0] - u[0] * f[2], u[0] * f[1] - u[1] * f[0]]; M.aLon = M.h[0] * f[0] + M.h[1] * f[1] + M.h[2] * f[2]; M.aLat = M.h[0] * sdir[0] + M.h[1] * sdir[1] + M.h[2] * sdir[2]; }
+  if (t - M.tRing >= 50) {           // twenty samples a second are kept for four seconds: enough to integrate from the last fix, and to average over the last one
+    M.tRing = t; M.ring.push({ t, aLon: M.aLon, aLat: M.aLat, yaw: M.yaw, h: [M.h[0], M.h[1], M.h[2]] }); while (M.ring.length > 80) M.ring.shift();
+    if (M.ok && live.on && t - M.tRec >= 100) { M.tRec = t; M.rec.push([Math.round(t), +M.aLon.toFixed(2), +M.aLat.toFixed(2), Math.round(M.yaw)]); if (M.rec.length > 40000) M.rec.splice(0, 10000); }
+    motionAxis(M.ring[M.ring.length - 1]); if (M.ok) motionEvents(t, M.ring[M.ring.length - 1]);
+  }
+}
+function hor(v) { const g = motion.g, gn = Math.hypot(g[0], g[1], g[2]) || 9.81, u = [g[0] / gn, g[1] / gn, g[2] / gn], d = v[0] * u[0] + v[1] * u[1] + v[2] * u[2]; return { u, h: [v[0] - d * u[0], v[1] - d * u[1], v[2] - d * u[2]] }; }
+function motionAxis(s) {   // every sample in a corner: the push the phone feels is sideways, and GPS speed times the gyro's turn rate says how hard and which way. Left and right corners both teach the same axis
+  const M = motion, E = lapE, v = E.T ? E.v : 0, w = v * s.yaw * RAD; if (v < 4 || Math.abs(w) < 1.5) return;
+  const mag = Math.hypot(s.h[0], s.h[1], s.h[2]); if (mag < .8) return;
+  M.S = M.S || [0, 0, 0]; M.Sw += Math.abs(w) * mag * .05; for (let i = 0; i < 3; i++) M.S[i] += w * s.h[i] * .05;
+  if (M.Sw > 600) { M.Sw *= .5; for (let i = 0; i < 3; i++) M.S[i] *= .5; }   // forgets slowly, so a phone that shifts in the pocket is relearned
+  motionLock();
+}
+function motionLock() {   // lateral axis from the corners, forward at right angles to it, its sign from the brakings; locked when the corners agree (coherence above 0.6) and the brakings agree with the sign
+  const M = motion; if (!M.S || M.Sw < 150 || !M.F || M.Fw < 6 || !M.g) return;
+  const L = hor(M.S), ln = Math.hypot(L.h[0], L.h[1], L.h[2]); if (!ln) return; const l = [L.h[0] / ln, L.h[1] / ln, L.h[2] / ln], u = L.u, coh = ln / M.Sw;
+  const f0 = [u[1] * l[2] - u[2] * l[1], u[2] * l[0] - u[0] * l[2], u[0] * l[1] - u[1] * l[0]], Fh = hor(M.F).h, fn = Math.hypot(Fh[0], Fh[1], Fh[2]), agree = fn ? (Fh[0] * f0[0] + Fh[1] * f0[1] + Fh[2] * f0[2]) / fn : 0;
+  M.lock = coh;
+  if (coh >= .6 && Math.abs(agree) >= .5) { const sg = agree < 0 ? -1 : 1, was = M.ok; M.f = [sg * f0[0], sg * f0[1], sg * f0[2]]; M.ok = true; if (!was && !lapE.quiet && live.on) lapE.queue.push({ text: 'Motion sensor locked', say: set.mode !== 'tones' }); }
+  else if (coh < .4) { M.ok = false; M.f = null; }
+}
+function ringMean(t0, t1) { let n = 0; const m = [0, 0, 0]; for (const s of motion.ring) { if (s.t < t0 || s.t > t1) continue; n++; m[0] += s.h[0]; m[1] += s.h[1]; m[2] += s.h[2]; } return n >= 1 ? [m[0] / n, m[1] / n, m[2] / n] : null; }
+function motionLearn(v0, v1, t0, t1) {   // one GPS interval: speed went from v0 to v1 between t0 and t1 (fix time base); which way did the sensor push?
+  const M = motion; if (!M.on || !M.g) return; const dt = (t1 - t0) / 1000; if (!(dt > .05 && dt < 2.5)) return;
+  const a = (v1 - v0) / dt; if (Math.abs(a) < 1.2 || (v0 < 2 && v1 < 2)) return;   // only clear brakings and clear accelerations teach the axis
+  const lg = lagMs(), h = ringMean(t0 - lg, t1 - lg); if (!h) return; const mag = Math.hypot(h[0], h[1], h[2]); if (mag < .5) return;
+  const w = Math.min(4, Math.abs(a)); M.F = M.F || [0, 0, 0]; M.Fw += w * mag; for (let i = 0; i < 3; i++) M.F[i] += Math.sign(a) * w * h[i];
+  if (M.Fw > 60) { M.Fw *= .5; for (let i = 0; i < 3; i++) M.F[i] *= .5; }   // the sum forgets slowly, so a phone that shifts in the pocket is relearned
+  motionLock();
+}
+function advanceImu(c0, v0, t0, t1) {    // carry the last fix forward by integrating the measured longitudinal push, rather than assuming the last second's acceleration
+  const E = lapE, R = motion.ring; let c = c0, v = v0, tp = t0; if (!(t1 > t0)) return { c: c0, v: v0 };
+  for (const s of R) { if (s.t <= t0) continue; if (s.t > t1) break; const dt = Math.min(.25, (s.t - tp) / 1000); v = Math.max(0, v + s.aLon * dt); c += v * dt / E.L.step; tp = s.t; }
+  const rest = Math.min(2.5, Math.max(0, (t1 - tp) / 1000)); if (rest > 0) { const aL = R.length ? R[R.length - 1].aLon : 0; v = Math.max(0, v + aL * rest); c += v * rest / E.L.step; }
+  return { c, v };
+}
+function cumAtT(t) {                      // where on the lap the kart was at a sensor moment: interpolated on the GPS trace (fix time base), extrapolated past the last fix
+  const S = lapE.samples, ts = t + lagMs(); if (!S.length || ts < S[0].t) return null;
+  for (let j = S.length - 1; j > 0; j--) if (S[j - 1].t <= ts) { if (S[j].t >= ts) { const a = S[j - 1], b = S[j], f = (ts - a.t) / Math.max(1, b.t - a.t); return a.c + (b.c - a.c) * f; } break; }
+  const l = S[S.length - 1]; return l.c + Math.max(0, l.v * (ts - l.t) / 1000) / lapE.L.step;
+}
+function motionEvents(t, s) {             // twenty times a second: the brake going on (four samples below 2.2 m/s/s), coming off, going straight back on (a pump), the throttle after it, and a spin (turning faster than 150 degrees a second for 0.4 s)
+  const M = motion, E = lapE, aL = s.aLon; if (!E.T) return; E.mEvents = E.mEvents || [];
+  if (aL < -1.2) { if (!M.tB0) M.tB0 = t; } else M.tB0 = 0;
+  if (M.st === 'brake') {
+    M.bPeak = Math.max(M.bPeak, -aL); M.bEv.g = M.bPeak;
+    if (aL > -.8) { if (!M.tOff) M.tOff = t; M.nB = 0; if (t - M.tOff > 300) { M.st = 'flat'; M.tOff = 0; } }                       // off the pedal for a third of a second: that braking is over
+    else if (aL < -2.2 && M.tOff) { if (++M.nB >= 3) { if (M.tOff - M.bEv.t > 200) M.bEv.pumps++; M.tOff = 0; M.nB = 0; } }   // back on hard within the third of a second: a pump
+    else if (aL >= -2.2) M.nB = 0;
+  } else if (aL < -2.2) { if (++M.nB >= 4) { M.st = 'brake'; M.bPeak = -aL; M.tOff = 0; M.nB = 0; M.bEv = { k: 'b', t: M.tB0 || t, g: -aL, pumps: 0 }; E.mEvents.push(M.bEv); M.thrDone = false; } }
+  else M.nB = 0;
+  if (M.st !== 'brake' && !M.thrDone) { if (aL > .7) { if (++M.nT >= 4) { M.thrDone = true; M.st = 'flat'; E.mEvents.push({ k: 't', t: t - 200 }); } } else M.nT = 0; }
+  if (Math.abs(s.yaw) > 150) { if (++M.nS === 8) E.mEvents.push({ k: 's', t }); } else M.nS = 0;
+  if (E.mEvents.length > 400) E.mEvents.splice(0, 100);
+}
 const live = { on: false, watch: null, timer: null, fixes: 0, rec: [], lastFit: 0, lost: false, stored: false, chk: 0, bad: 0, lag: 0 };
+document.addEventListener('visibilitychange', () => {   // iOS stops GPS and motion and drops the wake lock the moment the page is hidden (a pocket press of the side button): take the lock back and say so when it returns
+  if (document.visibilityState !== 'visible' || !live.on) return; keepAwake(true); audioResume(); speak('Screen was off. Coaching back on.'); liveStatus('The screen went off for a while: keep the phone unlocked with this page in front.');
+});
 function liveStatus(msg) { $('#liveStatus').textContent = msg; const k = $('#pkStatus'); if (k) k.textContent = msg; }
 function pocketShow(on) { $('#pocket').hidden = !on; $('#pocketBtn').hidden = on || !live.on; if (on) window.scrollTo(0, 0); }
 function lockInfo() {
@@ -1746,7 +1878,7 @@ function tryLock(R, announce) {
 }
 function liveStart() {
   if (sim.on) simStop(); if (loop.on) loopStop(true); if (!('geolocation' in navigator)) { liveStatus('This browser has no location support.'); return; }
-  if (reader.on) readStop(); audioInit(); keepAwake(true); live.rec = []; live.fixes = 0; live.on = true; live.lastFit = 0; live.lost = false; live.chk = 0; live.bad = 0; live.lag = 0; $('#liveBtn').textContent = 'Stop GPS';
+  if (reader.on) readStop(); audioInit(); keepAwake(true); motionStart(); live.rec = []; live.fixes = 0; live.on = true; live.lastFit = 0; live.lost = false; live.chk = 0; live.bad = 0; live.lag = 0; $('#liveBtn').textContent = 'Stop GPS';
   const q = gpsQuality(); if (set.mode !== 'tones') speak('Coach on.' + (st.wet ? ' Wet mode.' : '') + ' Waiting for GPS.' + (q && (q.acc > 15 || q.rate < .7) ? ' Your walk test was poor, ' + Math.round(q.acc) + ' metres. Expect the calls to wander.' : ''));           // spoken inside the button press, which is what lets the phone speak later from a timer
   const k = store.get('wm.lock', null); live.stored = !!k;
   if (k) { if (st.layout !== k.lay) toast('Using the stored ' + (k.lay === 'nat' ? 'National' : 'International') + ' lock. Press Forget map lock if the circuit is running the other layout today.'); useLock(k); } else lapE.T = null;
@@ -1764,7 +1896,7 @@ function liveStart() {
       if (live.stored && (c.speed == null || c.speed > 4) && d != null) { live.chk++; if (d > 18) live.bad++; if (live.chk >= 60) { if (live.bad / live.chk > .25 && live.rec.length > 60 && now - live.lastFit > 15000) { live.lastFit = now; const got = tryLock(live.rec, false); if (got) { useLock(got); live.stored = false; speak('Map re-locked'); toast('Map re-locked to the ' + (got.lay === 'nat' ? 'National' : 'International') + ' from today\'s trace.'); } } live.chk = 0; live.bad = 0; } }
     }
     else if (live.rec.length > 60 && now - live.lastFit > 15000) { live.lastFit = now; const got = tryLock(live.rec, false); if (got) { useLock(got); speak('Map locked'); } }
-    liveStatus(lapE.T ? (lapE.off ? 'Locked, but you are off the track map (pits or paddock).' : 'Recording and coaching.') : 'Recording. Drive a full lap and the map locks itself.');
+    liveStatus(lapE.T ? (lapE.off ? 'Locked, but you are off the track map (pits or paddock).' : 'Recording and coaching.' + (motionOk() ? ' Motion sensor locked.' : '')) : 'Recording. Drive a full lap and the map locks itself.');
     $('#liveAcc').textContent = c.accuracy != null ? Math.round(c.accuracy) : 'none'; $('#liveLag').textContent = live.lag.toFixed(2);
   }, err => {
     const blocked = err && err.code === 1;
@@ -1775,7 +1907,7 @@ function liveStart() {
     const s = lapTick(performance.now()), E = lapE;
     if (live.fixes && !live.lost && E.tAny && performance.now() - E.tAny > 4000) { live.lost = true; setTone(1); speak('GPS lost'); liveStatus('No GPS fix for a few seconds. Coaching paused until it returns.'); }
     if (!(live.tick = (live.tick || 0) + 1) % 10) audioResume();                        // once a second: a call or another app can leave the audio suspended
-    $('#liveSpd').textContent = s ? Math.round(s.v * MPH) : 0; $('#liveRate').textContent = E.rate ? E.rate.toFixed(1) : '0.0';
+    $('#liveSpd').textContent = s ? Math.round(s.v * MPH) : 0; $('#liveRate').textContent = E.rate ? E.rate.toFixed(1) : '0.0'; $('#liveMotion').textContent = motionStatus();
     const lapTxt = E.lapStartT != null ? fmtLap(performance.now() - E.lapStartT) : '0:00.0', lastTxt = fmtLap(E.laps.length ? E.laps[E.laps.length - 1].ms : null), bestTxt = fmtLap(E.best && E.best.ms);
     $('#liveLap').textContent = lapTxt; $('#liveLast').textContent = lastTxt; $('#liveBest').textContent = bestTxt; $('#pkLap').textContent = lapTxt; $('#pkLast').textContent = lastTxt; $('#pkBest').textContent = bestTxt; $('#pkSpd').textContent = s ? Math.round(s.v * MPH) : 0;
     pedalShow('#livePedal', s ? +LVL(E.L)[mod(Math.floor(s.cum + s.v * set.toneLead / E.L.step), E.n)] : 1);
@@ -1866,7 +1998,7 @@ function walkStop(quiet) {
 function soundTest() { audioInit(); if (set.mode !== 'tones') speak(set.mode === 'talk' ? callFor({ key: 'christmas', level: 5 }) : WORD[5]); setTimeout(() => setTone(5), 900); setTimeout(() => setTone(2), 2100); setTimeout(() => setTone(1), 2700); }
 function gpsCheck() {           // anywhere, not only at the track: ten seconds of fixes, then how many came, how accurate, and how far from Whilton Mill
   if (live.on) { toast('GPS is already running.'); return; } if (!('geolocation' in navigator)) { liveStatus('This browser has no location support.'); return; }
-  audioInit(); const b = $('#gpsCheck'); b.disabled = true; liveStatus('Checking GPS for ten seconds. Stand where you can see the sky.'); speak('Checking GPS');
+  audioInit(); const b = $('#gpsCheck'); b.disabled = true; liveStatus('Checking GPS for ten seconds. Stand where you can see the sky.'); speak('Checking GPS'); motionStart();
   const t0 = performance.now(), fixes = []; let w = null;
   const done = () => {
     if (w != null) navigator.geolocation.clearWatch(w); w = null; b.disabled = false;
@@ -1875,7 +2007,8 @@ function gpsCheck() {           // anywhere, not only at the track: ten seconds 
     const R = 6371, dLat = (last.lat - SIM_ORIGIN.lat) * RAD, dLon = (last.lon - SIM_ORIGIN.lon) * RAD, h = Math.sin(dLat / 2) ** 2 + Math.cos(last.lat * RAD) * Math.cos(SIM_ORIGIN.lat * RAD) * Math.sin(dLon / 2) ** 2, km = 2 * R * Math.asin(Math.sqrt(h));
     const where = km < 1 ? 'at Whilton Mill' : 'about ' + (km < 10 ? km.toFixed(1) : Math.round(km)) + ' km from Whilton Mill';
     const msg = 'GPS works. ' + fixes.length + (fixes.length === 1 ? ' fix' : ' fixes') + ' in ' + Math.round(secs) + ' s (' + rate + ' a second), best accuracy ' + Math.round(acc) + ' m' + (last.spd != null ? ', speed ' + Math.round(last.spd * MPH) + ' mph' : '') + ', ' + where + '. Position ' + last.lat.toFixed(5) + ', ' + last.lon.toFixed(5) + '.';
-    liveStatus(msg); speak('GPS works. Accuracy ' + Math.round(acc) + ' metres, ' + rate + ' fixes a second.'); $('#liveAcc').textContent = Math.round(acc); $('#liveRate').textContent = rate;
+    const mo = motion.n ? ' Motion sensor: ' + Math.round(motion.hz || motion.n / secs) + ' samples a second.' : motion.perm === 'denied' ? ' Motion sensor blocked: allow Motion and Orientation access when asked, or in Settings, Safari.' : set.motion ? ' No motion sensor readings.' : '';
+    liveStatus(msg + mo); speak('GPS works. Accuracy ' + Math.round(acc) + ' metres, ' + rate + ' fixes a second.' + (motion.n ? ' Motion sensor works.' : '')); $('#liveAcc').textContent = Math.round(acc); $('#liveRate').textContent = rate; $('#liveMotion').textContent = motionStatus(); motionStop();
   };
   w = navigator.geolocation.watchPosition(pos => { const c = pos.coords; fixes.push({ lat: c.latitude, lon: c.longitude, acc: c.accuracy || 999, spd: c.speed == null || isNaN(c.speed) ? null : c.speed }); liveStatus('Fix ' + fixes.length + ': accuracy ' + Math.round(c.accuracy || 0) + ' m. Keep still for ten seconds.'); },
     err => { b.disabled = false; if (w != null) navigator.geolocation.clearWatch(w); w = null; liveStatus(err && err.code === 1 ? 'Location is blocked for this page. Allow it in the browser prompt, or in Settings, Safari, Location. If you opened this inside another app, open the link in Safari.' : 'No GPS fix (' + (err && err.message ? err.message : 'unknown error') + '). Move into the open and try again.'); },
@@ -1883,7 +2016,7 @@ function gpsCheck() {           // anywhere, not only at the track: ten seconds 
   setTimeout(done, 10000);
 }
 function liveStop(keepMsg) {
-  live.on = false; if (live.watch != null) navigator.geolocation.clearWatch(live.watch); live.watch = null; clearInterval(live.timer); setTone(1); keepAwake(false); $('#liveBtn').textContent = 'Start GPS'; pocketShow(false); $('#pocketBtn').hidden = true; if (lapE.laps.length) $('#debriefDetails').open = true;
+  live.on = false; if (live.watch != null) navigator.geolocation.clearWatch(live.watch); live.watch = null; clearInterval(live.timer); setTone(1); keepAwake(false); motionStop(); if (motion.rec.length > 20) store.set('wm.imu', motion.rec); $('#liveBtn').textContent = 'Start GPS'; pocketShow(false); $('#pocketBtn').hidden = true; if (lapE.laps.length) $('#debriefDetails').open = true;
   if (live.rec.length > 5) { rec = live.rec; const ok = store.set('wm.rec', rec); if (!keepMsg) liveStatus('Stopped. ' + rec.length + ' fixes recorded' + (ok ? ' and kept on this phone.' : '. Could not store them on this phone, so save the CSV now.')); }
   else if (!keepMsg) liveStatus('Stopped.');
   renderDebrief();
@@ -1995,11 +2128,11 @@ $('#loadFile').addEventListener('change', e => {
 const bindNum = (id, key) => { const i = $(id); i.value = set[key]; i.addEventListener('change', () => { const v = parseFloat(i.value); if (isFinite(v)) { set[key] = v; saveSettings(); } }); };
 const bindChk = (id, key) => { const i = $(id); i.checked = !!set[key]; i.addEventListener('change', () => { set[key] = i.checked; saveSettings(); }); };
 bindNum('#setWordLead', 'wordLead'); bindNum('#setToneLead', 'toneLead'); bindNum('#setDelay', 'gpsDelay');
-['toneBrake', 'toneLift', 'goBlip', 'sayBrake', 'sayLift', 'sayFlat', 'lapSay', 'coachSay', 'prepCue', 'autoLead'].forEach(k => bindChk('#set_' + k, k));
+['toneBrake', 'toneLift', 'goBlip', 'sayBrake', 'sayLift', 'sayFlat', 'lapSay', 'coachSay', 'prepCue', 'autoLead', 'motion'].forEach(k => bindChk('#set_' + k, k));
 $('#setMode').value = set.mode; $('#setMode').addEventListener('change', e => { set.mode = e.target.value; saveSettings(); });
 
 renderLegend(); refreshAll(); lockInfo(); renderDebrief(); walkDraw(); setTab(st.tab);
-window.__wm = { cardList, refreshAll, cloud, cloudPull, cloudPush, cloudRender, cloudTakeHash, teamLevels, teamBest, parseOfficial, official, gpsQuality, loop, loopFit, loopStart, loopStop, modelAgreement, guideOffset, pocketShow, walk, walkStart, walkStop, renderStart, D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, MK, modelLine, M, refTimes, mindTap, mind, quizAsk, quizAnswer, quiz, virtualStart, team, teamLog, teamTable, live, speechLag, speechLags, SHORT, setRec: r => { rec = r; }, getRec: () => rec };
+window.__wm = { motion, motionEvent, motionOk, motionStart, motionStop, motionReset, cumAtT, advanceImu, cardList, refreshAll, cloud, cloudPull, cloudPush, cloudRender, cloudTakeHash, teamLevels, teamBest, parseOfficial, official, gpsQuality, loop, loopFit, loopStart, loopStop, modelAgreement, guideOffset, pocketShow, walk, walkStart, walkStop, renderStart, D, LY, LVL, callFor, lapE, sim, set, st, select, setTab, simStep, simStart, simStop, simT, lapReset, lapFix, lapTick, fitRecording, replay, renderDebrief, toLL, m2w, SIM_ORIGIN, lapScript, readStart, readStop, reader, parseCsv, MK, modelLine, M, refTimes, mindTap, mind, quizAsk, quizAnswer, quiz, virtualStart, team, teamLog, teamTable, live, speechLag, speechLags, SHORT, setRec: r => { rec = r; }, getRec: () => rec };
 })();
 </script>
 </body>
