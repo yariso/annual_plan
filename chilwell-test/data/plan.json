@@ -1,0 +1,30 @@
+{
+ "strap": "STUB strap",
+ "mapIntro": "STUB",
+ "mapAbout": "STUB",
+ "roadsIntro": "STUB",
+ "faultsIntro": "STUB",
+ "qIntro": "STUB",
+ "mockIntro": "STUB",
+ "practiceEmpty": "STUB",
+ "journey": [
+  {
+   "n": "1",
+   "name": "Before the day",
+   "lede": "STUB",
+   "body": "STUB",
+   "checks": [
+    "STUB check"
+   ],
+   "do": [
+    {
+     "t": "The roads",
+     "go": "roads"
+    }
+   ],
+   "sources": [
+    "(reasoned)"
+   ]
+  }
+ ]
+}

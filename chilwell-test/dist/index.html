@@ -1,0 +1,1616 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chilwell driving test guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --ground:#EEF1F5; --panel:#FFFFFF; --field:#DFE5EC; --ink:#151B22; --muted:#55606C; --rule:#C7D0DA;
+  --accent:#1558B0; --on-accent:#FFFFFF;
+  --ok:#1E7A46; --care:#B07400; --no:#C02532; --dang:#8B1220;
+  --f0:#1E7A46; --f1:#B07400; --f2:#C02532; --f3:#8B1220; --on-f:#FFFFFF;
+  --lplate:#C8102E;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:Barlow,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#10151B; --panel:#19212A; --field:#1E2832; --ink:#E7EDF4; --muted:#9FADBC; --rule:#2C3947;
+    --accent:#5B9BFF; --on-accent:#08111F; --ok:#38B76C; --care:#E3A400; --no:#FF5F6B; --dang:#FF8A93;
+    --f0:#38B76C; --f1:#E3A400; --f2:#FF5F6B; --f3:#FF3243; --on-f:#0C1218;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#10151B; --panel:#19212A; --field:#1E2832; --ink:#E7EDF4; --muted:#9FADBC; --rule:#2C3947;
+  --accent:#5B9BFF; --on-accent:#08111F; --ok:#38B76C; --care:#E3A400; --no:#FF5F6B; --dang:#FF8A93;
+  --f0:#38B76C; --f1:#E3A400; --f2:#FF5F6B; --f3:#FF3243; --on-f:#0C1218;
+}
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none !important}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.5 var(--body);padding-bottom:78px}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.1;margin:0;letter-spacing:.005em}
+h1{font-size:27px}
+h2{font-size:24px;margin:16px 0 10px}
+h3{font-size:19px;font-weight:600}
+h4{font:600 16px/1.2 var(--display);margin:12px 0 4px}
+p{margin:0 0 10px}
+ul,ol{margin:0 0 10px;padding-left:22px}
+li{margin:0 0 5px}
+a{color:var(--accent)}
+button{font:inherit;color:inherit}
+button:focus-visible,summary:focus-visible,select:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 14px}
+header.top{padding:16px 0 0}
+header.top p{color:var(--muted);margin:2px 0 9px;max-width:62ch;font-size:15px;line-height:1.35}
+.lline{height:7px;background:repeating-linear-gradient(90deg,var(--ink) 0 26px,transparent 26px 52px);border-radius:2px;opacity:.65}
+
+section.tab{padding-top:4px}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+.lede{font-size:17px;line-height:1.45;max-width:62ch}
+
+/* buttons and controls */
+.btn{border:1.5px solid var(--ink);background:transparent;border-radius:10px;padding:10px 14px;font:600 16px/1 var(--display);cursor:pointer;min-height:42px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.small{padding:7px 10px;min-height:34px;font-size:14px}
+.btn.big{width:100%;min-height:70px;font-size:24px;border-radius:14px}
+.btn[disabled]{opacity:.45;cursor:default}
+.btn.danger{border-color:var(--no);color:var(--no)}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.row .btn{flex:1 1 auto}
+.seg{display:inline-flex;border:1.5px solid var(--ink);border-radius:999px;overflow:hidden;background:var(--panel)}
+.seg button{border:0;background:transparent;padding:8px 13px;font:600 15px/1 var(--display);cursor:pointer;min-height:36px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--ground)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
+.chip{border:1.5px solid var(--rule);background:transparent;border-radius:999px;padding:6px 12px;font:600 14px/1 var(--display);cursor:pointer;min-height:32px}
+.chip[aria-pressed="true"]{border-color:var(--ink);background:var(--panel)}
+input[type=text],input[type=date],input[type=time],input[type=number],select,textarea{font:inherit;background:var(--panel);color:var(--ink);border:1.5px solid var(--rule);border-radius:10px;padding:9px 11px;min-height:42px;max-width:100%}
+label.fld{display:grid;gap:3px;font:600 14px/1.2 var(--display);color:var(--muted);margin:0 0 10px}
+
+/* cards and panels */
+.card{background:var(--panel);border:1px solid var(--rule);border-left:8px solid var(--lv,var(--rule));border-radius:12px;padding:14px;margin:0 0 10px}
+.card .head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin-bottom:4px}
+.card .kind{color:var(--muted);font-size:14px;flex-basis:100%}
+.card .do{font-size:17px;line-height:1.45;margin:8px 0 10px;max-width:62ch}
+details.panel{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:12px 14px;margin:0 0 10px}
+details.panel>summary{list-style:none;cursor:pointer;font:700 19px/1.2 var(--display);padding:2px 0}
+details.panel>summary::-webkit-details-marker{display:none}
+details.panel>summary::before{content:'+';display:inline-block;width:22px;color:var(--muted)}
+details.panel[open]>summary::before{content:'\2013'}
+details.panel[open]>summary{margin-bottom:8px}
+details.acc{background:var(--panel);border:1px solid var(--rule);border-left:8px solid var(--lv,var(--rule));border-radius:12px;margin:0 0 8px}
+details.acc summary{list-style:none;cursor:pointer;padding:12px 14px;display:flex;align-items:center;gap:10px}
+details.acc summary::-webkit-details-marker{display:none}
+details.acc summary .nm{font:700 19px/1.15 var(--display);flex:1}
+details.acc summary .tn{font:600 13px/1 var(--display);color:var(--muted);min-width:30px}
+details.acc .inner{padding:0 14px 12px}
+dl.facts{margin:0}
+dl.facts div{padding:8px 0;border-top:1px solid var(--rule)}
+dl.facts dt{font:600 14px/1.2 var(--display);color:var(--muted);margin-bottom:2px}
+dl.facts dd{margin:0;max-width:64ch}
+.note{border-left:4px solid var(--accent);background:var(--field);border-radius:0 10px 10px 0;padding:10px 12px;margin:10px 0;font-size:15px}
+.note.warn{border-left-color:var(--no)}
+.note.src{border-left-color:var(--muted);font-size:13.5px;color:var(--muted)}
+.tag{display:inline-block;border-radius:999px;padding:3px 9px;font:600 12.5px/1.3 var(--display);background:var(--field);color:var(--muted);border:1px solid var(--rule)}
+.tag.no{background:var(--no);border-color:var(--no);color:#fff}
+.tag.care{background:var(--care);border-color:var(--care);color:#fff}
+.tag.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:0 0 10px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font:600 14px/1.2 var(--display);color:var(--muted)}
+.scroll{overflow-x:auto}
+
+/* map */
+#mapbox{position:relative;height:60vh;min-height:320px;background:var(--field);border:1px solid var(--rule);border-radius:12px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+#mapbox.tall{height:78vh}
+#tiles{position:absolute;inset:0}
+#tiles img{position:absolute;display:block;image-rendering:auto}
+#tiles img.bad{opacity:0}
+#mapsvg{position:absolute;inset:0;width:100%;height:100%}
+#mapsvg text{font-family:var(--display);font-weight:600}
+.mapctl{position:absolute;right:8px;top:8px;display:grid;gap:6px;z-index:3}
+.mapctl button{width:42px;height:42px;border-radius:10px;border:1px solid var(--rule);background:var(--panel);color:var(--ink);font:700 20px/1 var(--display);cursor:pointer;opacity:.94}
+.mapctl button.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.attrib{position:absolute;left:0;bottom:0;background:rgba(255,255,255,.82);color:#222;font-size:11px;padding:2px 6px;border-radius:0 8px 0 0;z-index:3}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .attrib{background:rgba(10,14,20,.8);color:#ddd}}
+#mapcard{margin-top:10px}
+.mapkey{display:flex;flex-wrap:wrap;gap:5px 14px;margin:9px 0 0;font-size:13.5px;color:var(--muted)}
+.mapkey span{display:inline-flex;align-items:center;gap:5px}
+.mapkey i{width:14px;height:14px;border-radius:50%;display:inline-block}
+
+/* diagrams */
+.diag{background:var(--field);border:1px solid var(--rule);border-radius:10px;margin:10px 0;overflow:hidden}
+.diag svg{display:block;width:100%;height:auto}
+.diag .cap{font-size:13px;color:var(--muted);padding:0 10px 8px}
+.steps{display:flex;gap:6px;align-items:center;padding:8px 10px;flex-wrap:wrap}
+.steps .btn.small{min-width:44px}
+.stepnote{padding:0 10px 10px;font-size:15px;max-width:62ch}
+
+/* mock test sheet */
+.sheet{display:grid;gap:6px}
+.frow{display:grid;grid-template-columns:1fr auto auto auto;gap:6px;align-items:center;background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:7px 8px 7px 11px}
+.frow .fn{font:600 15.5px/1.15 var(--display)}
+.frow .fs{font-size:12.5px;color:var(--muted);grid-column:1/-1;margin-top:-2px}
+.frow button{border:1.5px solid var(--rule);background:transparent;border-radius:9px;min-width:44px;min-height:40px;font:700 15px/1 var(--display);cursor:pointer}
+.frow button[data-k="d"]{border-color:var(--f1);color:var(--f1)}
+.frow button[data-k="s"]{border-color:var(--f2);color:var(--f2)}
+.frow button[data-k="x"]{border-color:var(--f3);color:var(--f3)}
+.frow button b{display:block;font-size:12px;font-weight:600;opacity:.8}
+.frow button i{display:block;font-style:normal;font-weight:700;font-size:16px;line-height:1;min-height:16px}
+.frow.hit{border-color:var(--f1)}
+.frow.serious{border-color:var(--f2);box-shadow:inset 3px 0 0 var(--f2)}
+.tally{position:sticky;top:0;z-index:5;background:var(--ground);padding:8px 0;display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--rule)}
+.tally .big{font:700 30px/1 var(--display);font-variant-numeric:tabular-nums}
+.tally .lab{font-size:13px;color:var(--muted)}
+.tally .box{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:6px 10px;display:grid;justify-items:center;min-width:64px}
+.tally .box.warn{border-color:var(--f1)}
+.tally .box.fail{border-color:var(--f2);color:var(--f2)}
+.stats{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
+.stats div{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:6px 11px;display:grid;justify-items:center;min-width:72px;flex:1 1 72px}
+.stats b{font:700 22px/1.05 var(--display);font-variant-numeric:tabular-nums}
+.stats span{font-size:12px;color:var(--muted);text-align:center}
+.result{border-radius:12px;padding:14px;margin:10px 0;color:#fff}
+.result.pass{background:var(--ok)}
+.result.fail{background:var(--no)}
+.result h3{font-size:26px}
+
+/* quiz */
+.qcard{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:16px;margin:10px 0}
+.qcard .q{font:600 20px/1.25 var(--display);margin-bottom:8px}
+.qcard .a{font-size:16px;line-height:1.5}
+.bar{height:9px;background:var(--field);border-radius:999px;overflow:hidden;margin:8px 0}
+.bar i{display:block;height:100%;background:var(--accent)}
+
+/* tabs */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--panel);border-top:1px solid var(--rule);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.tabs button{flex:1;max-width:170px;border:0;background:none;padding:8px 2px 9px;display:grid;justify-items:center;gap:3px;font:600 13px/1 var(--display);color:var(--muted);cursor:pointer;border-top:3px solid transparent}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-top-color:var(--accent)}
+nav.tabs svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#toast{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--ground);padding:9px 14px;border-radius:999px;font-size:14.5px;z-index:30;max-width:90vw}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+
+#printArea{display:none}
+@media print{
+  body{background:#fff;color:#000;padding:0}
+  body>*{display:none !important}
+  #printArea{display:block !important;padding:0}
+  #printArea h1{font-size:19pt;margin:0 0 2mm}
+  #printArea .ph{display:flex;justify-content:space-between;font-size:9pt;border-bottom:1px solid #000;padding-bottom:2mm;margin-bottom:3mm}
+  #printArea table{width:100%;border-collapse:collapse;font-size:8.6pt}
+  #printArea th{text-align:left;font-size:8pt;border-bottom:1px solid #000;padding:1mm}
+  #printArea td{border-bottom:.4pt solid #999;padding:.8mm 1mm;vertical-align:middle}
+  #printArea td.gp{font-weight:700;background:#eee;padding-top:1.6mm}
+  #printArea .bx{display:inline-block;width:4.4mm;height:4.4mm;border:.5pt solid #333;margin-right:.7mm}
+  #printArea .bx.s{border-width:1pt}
+  #printArea .fin{margin-top:4mm;font-size:9pt;border-top:1px solid #000;padding-top:2mm}
+  @page{margin:12mm 10mm}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <h1>Chilwell driving test guide</h1>
+  <p id="strap">The roads, the rules and what the examiner is looking for, for a car practical test at the Nottingham (Chilwell) test centre.</p>
+  <div class="lline"></div>
+</header>
+<main>
+
+<section class="tab" id="tab-start">
+  <div class="note" id="countBox">
+    <div class="row" style="margin:0 0 6px">
+      <label class="fld" style="flex:1 1 150px">Test date<input type="date" id="tDate"></label>
+      <label class="fld" style="flex:1 1 110px">Time<input type="time" id="tTime"></label>
+      <label class="fld" style="flex:1 1 150px">Your name<input type="text" id="tName" placeholder="optional" autocomplete="off"></label>
+    </div>
+    <div id="countOut" class="lede"></div>
+    <div id="progress"></div>
+  </div>
+
+  <h2>The journey, in order</h2>
+  <p class="lede">Work down this list. Everything it names is in the app, and the buttons jump straight there.</p>
+  <div id="journey"></div>
+
+  <h2>Where you are going</h2>
+  <div id="centreCard"></div>
+
+  <details class="panel" id="panel-book"><summary>Booking, the fee and changing the date</summary><div id="bookBody"></div></details>
+  <details class="panel" id="panel-car"><summary>The car, the documents and what gets a test stopped</summary><div id="carBody"></div></details>
+  <details class="panel" id="panel-nerves"><summary>Nerves: what actually helps</summary><div id="nervesBody"></div></details>
+  <details class="panel" id="panel-after"><summary>Afterwards, either way</summary><div id="afterBody"></div></details>
+  <details class="panel" id="panel-rates"><summary>Pass rates at this centre</summary><div id="ratesBody"></div></details>
+  <details class="panel" id="panel-sources"><summary>Where all of this comes from, and what is not verified</summary><div id="srcBody"></div></details>
+</section>
+
+<section class="tab" id="tab-map" hidden>
+  <h2>The area</h2>
+  <p class="small muted" id="mapIntro"></p>
+  <div id="mapbox">
+    <div id="tiles"></div>
+    <svg id="mapsvg" aria-label="Map of the test centre area"></svg>
+    <div class="mapctl">
+      <button type="button" id="mZoomIn" aria-label="Zoom in">+</button>
+      <button type="button" id="mZoomOut" aria-label="Zoom out">−</button>
+      <button type="button" id="mHome" aria-label="Back to the test centre">⌂</button>
+      <button type="button" id="mGps" aria-label="Show where I am">◉</button>
+      <button type="button" id="mBig" aria-label="Make the map taller">↕</button>
+    </div>
+    <div class="attrib">Map data © OpenStreetMap contributors</div>
+  </div>
+  <div class="chips" id="mapLayers" role="group" aria-label="Map layers"></div>
+  <div class="mapkey" id="mapKey"></div>
+  <div id="mapcard"></div>
+  <details class="panel"><summary>What this map is, and what it is not</summary><div id="mapAbout"></div></details>
+</section>
+
+<section class="tab" id="tab-roads" hidden>
+  <h2>The roads and junctions</h2>
+  <p class="lede" id="roadsIntro"></p>
+  <div class="chips" id="roadFilter" role="group" aria-label="Filter"></div>
+  <div id="roadList"></div>
+  <details class="panel"><summary>Routes: what is known and what is not</summary><div id="routesBody"></div></details>
+</section>
+
+<section class="tab" id="tab-test" hidden>
+  <h2>The test, in order</h2>
+  <div id="testOrder"></div>
+  <h2>How it is marked</h2>
+  <div id="markingBody"></div>
+  <h2>What the examiner is looking for</h2>
+  <p class="lede" id="faultsIntro"></p>
+  <div class="chips" id="faultFilter" role="group" aria-label="Filter"></div>
+  <div id="faultList"></div>
+</section>
+
+<section class="tab" id="tab-skills" hidden>
+  <h2>Manoeuvres</h2>
+  <p class="lede" id="manIntro"></p>
+  <div id="manList"></div>
+  <h2>Show me, tell me</h2>
+  <p class="lede" id="qIntro"></p>
+  <div class="row">
+    <button type="button" class="btn primary" id="qStart">Start the quiz</button>
+    <button type="button" class="btn" id="qAll">Show all the questions</button>
+  </div>
+  <div id="qBox"></div>
+  <div id="qList"></div>
+</section>
+
+<section class="tab" id="tab-mock" hidden>
+  <h2>Mock test</h2>
+  <p class="lede" id="mockIntro"></p>
+  <div id="mockSetup">
+    <div class="row">
+      <button type="button" class="btn primary big" id="mockStart">Start a mock test</button>
+    </div>
+    <label class="fld" style="max-width:320px">Who is driving<input type="text" id="mockDriver" placeholder="name" autocomplete="off"></label>
+    <div class="chips" id="mockOpts" role="group" aria-label="Options"></div>
+    <div class="row">
+      <button type="button" class="btn small" id="mockPrint">Print a paper sheet</button>
+      <button type="button" class="btn small" id="mockSave">Save the mocks to a file</button>
+      <label class="btn small" style="display:inline-flex;align-items:center;cursor:pointer">Load a file<input type="file" id="mockLoad" accept="application/json,.json" hidden></label>
+    </div>
+  </div>
+  <div id="mockRun" hidden>
+    <div class="tally" id="mockTally"></div>
+    <div class="row">
+      <button type="button" class="btn danger" id="mockStop">Finish and mark</button>
+      <button type="button" class="btn small" id="mockUndo">Undo last</button>
+    </div>
+    <div class="sheet" id="mockSheet"></div>
+  </div>
+  <div id="mockResult"></div>
+  <h2>Where the faults happened</h2>
+  <div id="mockMapWrap">
+    <div id="mockMapNote" class="small muted"></div>
+    <div id="mockMapBox"></div>
+  </div>
+  <h2>What to practise next</h2>
+  <div id="practiceBody"></div>
+  <details class="panel"><summary>Past mocks</summary><div id="histBody"></div></details>
+</section>
+</main>
+</div>
+
+<nav class="tabs" role="tablist" aria-label="Sections">
+  <button type="button" role="tab" data-tab="start" aria-selected="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4l14 8-14 8z"/></svg>Start</button>
+  <button type="button" role="tab" data-tab="map" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/></svg>Map</button>
+  <button type="button" role="tab" data-tab="roads" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 21L9 3M17 21l-2-18"/><path d="M12 5v3M12 11v3M12 17v3"/></svg>Roads</button>
+  <button type="button" role="tab" data-tab="test" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10a2 2 0 0 1 2 2v16H5V5a2 2 0 0 1 2-2z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>Test</button>
+  <button type="button" role="tab" data-tab="skills" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg>Skills</button>
+  <button type="button" role="tab" data-tab="mock" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11l2 2 4-5"/><rect x="4" y="3" width="16" height="18" rx="2"/></svg>Mock</button>
+</nav>
+<div id="toast" hidden></div>
+<div id="printArea"></div>
+
+<script>
+(function(){
+'use strict';
+const D = {"centre":{"name":"STUB centre","short":"Test centre","address":["Unit 24, Eldon Business Park","Eldon Road","NG9 6DZ"],"lat":52.9105,"lon":-1.2265,"precision":"approximate","intro":"STUB intro.","arrival":["STUB step one","STUB step two"],"facts":[{"k":"Getting there","v":"STUB"}],"sources":["(reasoned)"]},"test":{"intro":"STUB","steps":[{"id":"eyes","name":"The eyesight check","time":"first minutes","what":"STUB","says":"Read that number plate.","watch":["STUB"],"tips":["STUB"],"sources":["(reasoned)"]}],"sources":["(reasoned)"]},"marking":{"intro":"STUB","faultTypes":[{"name":"Driving fault","what":"STUB","effect":"STUB","example":"STUB"},{"name":"Serious fault","what":"STUB","effect":"STUB"},{"name":"Dangerous fault","what":"STUB","effect":"STUB"}],"limit":{"number":15,"text":"STUB"},"sheet":"STUB","immediate":["STUB"],"notes":["STUB"],"sources":["(reasoned)"]},"faults":{"intro":"STUB","groups":[{"id":"control","name":"Control"},{"id":"junctions","name":"Junctions"}],"items":[{"id":"move-off-safely","group":"control","no":"5","name":"Move off: safely","short":"Move off safely","sheet":"Move off / safely","looking":"STUB","serious":"STUB","do":["STUB"],"mistakes":["STUB"],"local":"STUB","mock":true,"sources":["(reasoned)"]},{"id":"junctions-observation","group":"junctions","no":"16","name":"Junctions: observation","short":"Junction obs","sheet":"Junctions / observation","looking":"STUB","serious":"STUB","do":["STUB"],"mistakes":["STUB"],"local":"STUB","mock":true,"sources":["(reasoned)"]}]},"manoeuvres":{"intro":"STUB","items":[{"id":"parallel","name":"STUB parallel","diagram":"parallel","asked":"STUB","words":"STUB","lede":"STUB","steps":["STUB 1","STUB 2","STUB 3","STUB 4","STUB 5"],"watch":["STUB"],"serious":"STUB","mistakes":["STUB"],"refs":"STUB","sources":["(reasoned)"]},{"id":"bayreverse","name":"STUB bayreverse","diagram":"bayreverse","asked":"STUB","words":"STUB","lede":"STUB","steps":["STUB 1","STUB 2","STUB 3","STUB 4","STUB 5"],"watch":["STUB"],"serious":"STUB","mistakes":["STUB"],"refs":"STUB","sources":["(reasoned)"]},{"id":"bayforward","name":"STUB bayforward","diagram":"bayforward","asked":"STUB","words":"STUB","lede":"STUB","steps":["STUB 1","STUB 2","STUB 3","STUB 4","STUB 5","STUB 6"],"watch":["STUB"],"serious":"STUB","mistakes":["STUB"],"refs":"STUB","sources":["(reasoned)"]},{"id":"rightpull","name":"STUB rightpull","diagram":"rightpull","asked":"STUB","words":"STUB","lede":"STUB","steps":["STUB 1","STUB 2","STUB 3","STUB 4","STUB 5","STUB 6","STUB 7"],"watch":["STUB"],"serious":"STUB","mistakes":["STUB"],"refs":"STUB","sources":["(reasoned)"]},{"id":"stop","name":"STUB stop","diagram":"stop","asked":"STUB","words":"STUB","lede":"STUB","steps":["STUB 1","STUB 2","STUB 3","STUB 4","STUB 5"],"watch":["STUB"],"serious":"STUB","mistakes":["STUB"],"refs":"STUB","sources":["(reasoned)"]}]},"questions":{"intro":"STUB","items":[{"id":"tell-1","type":"tell","q":"Tell me how you would check the brakes.","a":"STUB","extra":"STUB","common":"STUB","sources":["(reasoned)"]},{"id":"show-1","type":"show","q":"Show me how you would wash the windscreen.","a":"STUB","sources":["(reasoned)"]}]},"junctions":{"intro":"STUB","items":[{"id":"bardills","name":"Bardills roundabout","short":"Bardills","kind":"roundabout","lat":52.9165,"lon":-1.2455,"precision":"approximate","where":"A52 at Swiney Way","speed":"40 mph","why":"STUB","drive":"STUB","watch":["STUB"],"mistakes":["STUB"],"diagram":{"type":"roundabout","title":"STUB","enter":180,"leave":270,"exits":[{"b":0,"label":"A52 east","lanes":2},{"b":90,"label":"Nottingham Road"},{"b":180,"label":"Swiney Way","n":"you come in here"},{"b":270,"label":"A52 west"}]},"diagramCap":"STUB","links":["junctions-observation"],"sources":["(reasoned)"]},{"id":"tram","name":"High Road tram crossing","short":"Tram","kind":"tram","lat":52.9195,"lon":-1.2205,"precision":"approximate","where":"High Road","speed":"30 mph","why":"STUB","drive":"STUB","watch":["STUB"],"mistakes":["STUB"],"diagram":{"type":"tram","angle":-20,"label":"tram tracks","stopLabel":"stop line"},"links":[],"sources":["(reasoned)"]}]},"routes":{"intro":"STUB","official":"STUB","corridors":[{"id":"a","name":"STUB corridor","note":"STUB","roads":["STUB"],"colour":"#1558B0","points":[[52.9105,-1.2265],[52.9165,-1.2455]]}],"spots":[{"id":"retail","name":"Chilwell Retail Park","kind":"Practice spot","lat":52.9128,"lon":-1.2308,"precision":"approximate","note":"STUB","sources":["(reasoned)"]}],"notes":["STUB"],"sources":["(reasoned)"]},"advice":{"booking":{"id":"booking","lede":"STUB","body":"STUB","points":["STUB"],"sources":["(reasoned)"]},"car":{"id":"car","lede":"STUB","body":"STUB","points":["STUB"],"sources":["(reasoned)"]},"nerves":{"id":"nerves","lede":"STUB","body":"STUB","points":["STUB"],"sources":["(reasoned)"]},"after":{"id":"after","lede":"STUB","body":"STUB","points":["STUB"],"sources":["(reasoned)"]},"rates":{"id":"rates","lede":"STUB","body":"STUB","points":["STUB"],"sources":["(reasoned)"]}},"plan":{"strap":"STUB strap","mapIntro":"STUB","mapAbout":"STUB","roadsIntro":"STUB","faultsIntro":"STUB","qIntro":"STUB","mockIntro":"STUB","practiceEmpty":"STUB","journey":[{"n":"1","name":"Before the day","lede":"STUB","body":"STUB","checks":["STUB check"],"do":[{"t":"The roads","go":"roads"}],"sources":["(reasoned)"]}]},"sources":{"intro":"STUB","limits":["STUB"],"list":[{"n":1,"name":"STUB","url":"https://www.gov.uk/","use":"STUB","kind":"official"}]}};
+const NS = 'http://www.w3.org/2000/svg';
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const el = (n, a, kids) => { const e = document.createElementNS(NS, n); for (const k in (a || {})) e.setAttribute(k, a[k]); (kids || []).forEach(c => e.appendChild(c)); return e; };
+const clamp = (v, lo, hi) => v < lo ? lo : v > hi ? hi : v;
+
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } },
+  del(k) { try { localStorage.removeItem(k); } catch (e) { } }
+};
+
+let toastT = 0;
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.hidden = false;
+  clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 3400);
+}
+
+/* text with [source](url) links and (reasoned) labels turned into markup */
+function rich(s) {
+  let out = esc(s);
+  out = out.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, (m, txt, url) => '<a href="' + url + '" target="_blank" rel="noopener">' + txt + '</a>');
+  out = out.replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>');
+  return out;
+}
+function para(text) {
+  if (!text) return '';
+  return String(text).split(/\n\n+/).map(p => '<p>' + rich(p).replace(/\n/g, '<br>') + '</p>').join('');
+}
+function list(items, cls) {
+  if (!items || !items.length) return '';
+  return '<ul' + (cls ? ' class="' + cls + '"' : '') + '>' + items.map(i => '<li>' + rich(i) + '</li>').join('') + '</ul>';
+}
+function olist(items) {
+  if (!items || !items.length) return '';
+  return '<ol>' + items.map(i => '<li>' + rich(i) + '</li>').join('') + '</ol>';
+}
+function srcLine(src) {
+  if (!src) return '';
+  const a = Array.isArray(src) ? src : [src];
+  return '<div class="note src">Source: ' + a.map(rich).join(' · ') + '</div>';
+}
+
+/* ---------------- speech ---------------- */
+let voice = null, voiceTried = false;
+function pickVoice() { try { const vs = speechSynthesis.getVoices(); if (!vs.length) return; voiceTried = true; voice = vs.find(x => x.localService && /^en[-_]GB/i.test(x.lang)) || vs.find(x => /^en[-_]GB/i.test(x.lang)) || vs.find(x => /^en/i.test(x.lang)) || null; } catch (e) { } }
+try { speechSynthesis.onvoiceschanged = () => { voiceTried = false; pickVoice(); }; } catch (e) { }
+function speak(text) {
+  try {
+    if (!text || !('speechSynthesis' in window)) return;
+    if (!voiceTried) pickVoice();
+    if (speechSynthesis.speaking || speechSynthesis.pending) speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 1.02; u.lang = 'en-GB'; if (voice) u.voice = voice;
+    speechSynthesis.speak(u);
+  } catch (e) { }
+}
+function speakStop() { try { speechSynthesis.cancel(); } catch (e) { } }
+
+/* ---------------- slippy map ----------------
+   Raster tiles from OpenStreetMap, drawn straight into the page with an SVG
+   overlay on top. No map library: the whole app stays one file.
+   Web Mercator, 256 px tiles, fractional zoom by scaling the tile size. */
+const TSZ = 256, MINZ = 11, MAXZ = 18.6;
+const projX = (lon, z) => (lon + 180) / 360 * TSZ * Math.pow(2, z);
+const projY = (lat, z) => { const r = lat * Math.PI / 180; return (1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * TSZ * Math.pow(2, z); };
+const unprojLon = (x, z) => x / (TSZ * Math.pow(2, z)) * 360 - 180;
+const unprojLat = (y, z) => { const n = Math.PI - 2 * Math.PI * y / (TSZ * Math.pow(2, z)); return 180 / Math.PI * Math.atan(0.5 * (Math.exp(n) - Math.exp(-n))); };
+function metres(a, b) {
+  const R = 6371000, dLat = (b.lat - a.lat) * Math.PI / 180, dLon = (b.lon - a.lon) * Math.PI / 180;
+  const la = a.lat * Math.PI / 180, lb = b.lat * Math.PI / 180;
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(la) * Math.cos(lb) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.min(1, Math.sqrt(h)));
+}
+
+function makeMap(box, opts) {
+  opts = opts || {};
+  const tileHost = box.querySelector('.tiles') || box.querySelector('#tiles');
+  const svg = box.querySelector('svg');
+  const m = {
+    box, tileHost, svg, lat: opts.lat, lon: opts.lon, z: opts.z || 14.2,
+    pts: [], lines: [], gps: null, sel: null, onPick: opts.onPick || null,
+    imgs: new Map(), tileFail: 0, tilesTried: 0
+  };
+
+  function rect() { const r = box.getBoundingClientRect(); return { w: r.width || 320, h: r.height || 320, left: r.left, top: r.top }; }
+  m.rect = rect;
+  function zi() { return clamp(Math.round(m.z), MINZ, Math.round(MAXZ)); }
+  function scale() { return Math.pow(2, m.z - zi()); }
+  m.screen = (lat, lon) => {
+    const R = rect(), k = zi(), s = scale();
+    return { x: R.w / 2 + (projX(lon, k) - projX(m.lon, k)) * s, y: R.h / 2 + (projY(lat, k) - projY(m.lat, k)) * s };
+  };
+  m.latLon = (sx, sy) => {
+    const R = rect(), k = zi(), s = scale();
+    return { lat: unprojLat(projY(m.lat, k) + (sy - R.h / 2) / s, k), lon: unprojLon(projX(m.lon, k) + (sx - R.w / 2) / s, k) };
+  };
+  m.zoomAt = (nz, sx, sy) => {
+    nz = clamp(nz, MINZ, MAXZ);
+    const ll = m.latLon(sx, sy), R = rect();
+    m.z = nz;
+    const k = zi(), s = scale();
+    m.lon = unprojLon(projX(ll.lon, k) - (sx - R.w / 2) / s, k);
+    m.lat = unprojLat(projY(ll.lat, k) - (sy - R.h / 2) / s, k);
+    m.render();
+  };
+  m.fit = (pts, pad) => {
+    if (!pts || !pts.length) return;
+    const R = rect(); pad = pad == null ? 46 : pad;
+    let la1 = 90, la2 = -90, lo1 = 180, lo2 = -180;
+    pts.forEach(p => { la1 = Math.min(la1, p.lat); la2 = Math.max(la2, p.lat); lo1 = Math.min(lo1, p.lon); lo2 = Math.max(lo2, p.lon); });
+    m.lat = (la1 + la2) / 2; m.lon = (lo1 + lo2) / 2;
+    let best = MINZ;
+    for (let z = MAXZ; z >= MINZ; z -= 0.1) {
+      const w = (projX(lo2, z) - projX(lo1, z)), h = (projY(la1, z) - projY(la2, z));
+      if (w <= R.w - pad * 2 && h <= R.h - pad * 2) { best = z; break; }
+    }
+    m.z = best; m.render();
+  };
+
+  /* tiles */
+  function tiles() {
+    const R = rect(), k = zi(), s = scale(), n = Math.pow(2, k);
+    const px = projX(m.lon, k) - R.w / 2 / s, py = projY(m.lat, k) - R.h / 2 / s;
+    const x0 = Math.floor(px / TSZ), x1 = Math.floor((px + R.w / s) / TSZ);
+    const y0 = Math.floor(py / TSZ), y1 = Math.floor((py + R.h / s) / TSZ);
+    const want = new Set();
+    for (let x = x0; x <= x1; x++) for (let y = y0; y <= y1; y++) {
+      if (y < 0 || y >= n) continue;
+      const wx = ((x % n) + n) % n, key = k + '/' + wx + '/' + y;
+      want.add(key);
+      let img = m.imgs.get(key);
+      if (!img) {
+        img = new Image();
+        img.decoding = 'async'; img.alt = '';
+        img.onerror = () => { img.classList.add('bad'); m.tileFail++; tileNote(); };
+        img.onload = () => { m.tilesTried++; };
+        img.src = 'https://tile.openstreetmap.org/' + k + '/' + wx + '/' + y + '.png';
+        m.imgs.set(key, img); tileHost.appendChild(img);
+      }
+      const sz = Math.ceil(TSZ * s) + 1;
+      img.style.width = sz + 'px'; img.style.height = sz + 'px';
+      img.style.left = Math.round(R.w / 2 + (x * TSZ - projX(m.lon, k)) * s) + 'px';
+      img.style.top = Math.round(R.h / 2 + (y * TSZ - projY(m.lat, k)) * s) + 'px';
+    }
+    m.imgs.forEach((img, key) => { if (!want.has(key)) { img.remove(); m.imgs.delete(key); } });
+  }
+  function tileNote() {
+    if (m.tileFail > 4 && !box.querySelector('.tilewarn')) {
+      const d = document.createElement('div');
+      d.className = 'attrib tilewarn'; d.style.left = 'auto'; d.style.right = '0'; d.style.borderRadius = '8px 0 0 0';
+      d.textContent = 'Map images will not load. The markers still work.';
+      box.appendChild(d);
+    }
+  }
+
+  /* overlay */
+  m.render = () => {
+    const R = rect();
+    tiles();
+    svg.setAttribute('viewBox', '0 0 ' + R.w + ' ' + R.h);
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    const g = el('g', {});
+    (m.lines || []).forEach(ln => {
+      const pts = ln.points.map(p => m.screen(p[0], p[1]));
+      if (pts.length < 2) return;
+      const d = pts.map((p, i) => (i ? 'L' : 'M') + p.x.toFixed(1) + ' ' + p.y.toFixed(1)).join(' ');
+      g.appendChild(el('path', { d, fill: 'none', stroke: ln.colour || '#1558B0', 'stroke-width': ln.w || 5, 'stroke-opacity': ln.op || 0.55, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-dasharray': ln.dash || '' }));
+    });
+    if (m.gps) {
+      const p = m.screen(m.gps.lat, m.gps.lon), R2 = rect(), k = zi(), s = scale();
+      const mpp = 156543.03392 * Math.cos(m.gps.lat * Math.PI / 180) / Math.pow(2, k) / s;
+      if (m.gps.acc) g.appendChild(el('circle', { cx: p.x, cy: p.y, r: Math.max(6, m.gps.acc / mpp), fill: '#1558B0', 'fill-opacity': .13, stroke: '#1558B0', 'stroke-opacity': .5 }));
+      g.appendChild(el('circle', { cx: p.x, cy: p.y, r: 7, fill: '#1558B0', stroke: '#fff', 'stroke-width': 2.5 }));
+    }
+    const showLabels = m.z >= 13.6;
+    (m.pts || []).forEach(pt => {
+      const p = m.screen(pt.lat, pt.lon);
+      if (p.x < -60 || p.y < -60 || p.x > R.w + 60 || p.y > R.h + 60) return;
+      const on = m.sel === pt.id, r = pt.r || (on ? 12 : 9);
+      const gg = el('g', { class: 'mk', tabindex: '0', role: 'button', 'aria-label': pt.name });
+      gg.dataset.id = pt.id;
+      gg.appendChild(el('circle', { cx: p.x, cy: p.y, r: r + 3, fill: '#fff', 'fill-opacity': .85 }));
+      gg.appendChild(el('circle', { cx: p.x, cy: p.y, r, fill: pt.colour || '#1558B0', stroke: on ? '#111' : '#fff', 'stroke-width': on ? 3 : 2 }));
+      if (pt.glyph) {
+        const t = el('text', { x: p.x, y: p.y + 4.6, 'text-anchor': 'middle', fill: '#fff', 'font-size': 12.5 });
+        t.textContent = pt.glyph; gg.appendChild(t);
+      }
+      if (showLabels && pt.name) {
+        const t = el('text', { x: p.x + r + 5, y: p.y + 4.5, 'font-size': 13, fill: 'currentColor', stroke: 'var(--ground)', 'stroke-width': 3.4, 'paint-order': 'stroke', 'stroke-linejoin': 'round' });
+        t.textContent = pt.name; gg.appendChild(t);
+      }
+      g.appendChild(gg);
+    });
+    svg.appendChild(g);
+  };
+
+  /* gestures */
+  const ptrs = new Map();
+  let last = null, moved = 0, downT = 0, pinch0 = 0, z0 = 0;
+  box.addEventListener('pointerdown', e => {
+    box.setPointerCapture && box.setPointerCapture(e.pointerId);
+    ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (ptrs.size === 1) { last = { x: e.clientX, y: e.clientY }; moved = 0; downT = performance.now(); }
+    if (ptrs.size === 2) { const a = Array.from(ptrs.values()); pinch0 = Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y); z0 = m.z; }
+  });
+  box.addEventListener('pointermove', e => {
+    if (!ptrs.has(e.pointerId)) return;
+    ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    const R = rect();
+    if (ptrs.size >= 2) {
+      const a = Array.from(ptrs.values());
+      const d = Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y);
+      if (pinch0 > 12) m.zoomAt(z0 + Math.log2(d / pinch0), (a[0].x + a[1].x) / 2 - R.left, (a[0].y + a[1].y) / 2 - R.top);
+      moved = 99;
+      return;
+    }
+    if (!last) return;
+    const dx = e.clientX - last.x, dy = e.clientY - last.y;
+    moved += Math.abs(dx) + Math.abs(dy);
+    last = { x: e.clientX, y: e.clientY };
+    const k = zi(), s = scale();
+    m.lon = unprojLon(projX(m.lon, k) - dx / s, k);
+    m.lat = unprojLat(projY(m.lat, k) - dy / s, k);
+    m.render();
+  });
+  function up(e) {
+    const had = ptrs.size;
+    ptrs.delete(e.pointerId);
+    if (had === 1 && moved < 9 && performance.now() - downT < 500) {
+      const R = rect(), sx = e.clientX - R.left, sy = e.clientY - R.top;
+      let best = null, bd = 30;
+      (m.pts || []).forEach(pt => { const p = m.screen(pt.lat, pt.lon), d = Math.hypot(p.x - sx, p.y - sy); if (d < bd) { bd = d; best = pt; } });
+      if (best && m.onPick) m.onPick(best.id);
+    }
+    if (ptrs.size < 2) pinch0 = 0;
+    if (!ptrs.size) last = null;
+  }
+  box.addEventListener('pointerup', up);
+  box.addEventListener('pointercancel', up);
+  box.addEventListener('wheel', e => {
+    e.preventDefault();
+    const R = rect();
+    m.zoomAt(m.z - clamp(e.deltaY, -90, 90) / 260, e.clientX - R.left, e.clientY - R.top);
+  }, { passive: false });
+  window.addEventListener('resize', () => m.render());
+  return m;
+}
+
+/* ---------------- diagrams ----------------
+   Schematics, not maps. They show lane choice, order and observation points.
+   Geometry lives here so the content files only carry words. */
+function svgTag(vb, cls) { const s = el('svg', { viewBox: vb, class: cls || '' }); return s; }
+const RAD = d => d * Math.PI / 180;
+
+function carShape(x, y, a, colour, label) {
+  /* x, y in diagram units (metres), a in degrees, 0 pointing right */
+  const L = 4.2, W = 1.8, g = el('g', { transform: 'translate(' + x + ' ' + y + ') rotate(' + a + ')' });
+  g.appendChild(el('rect', { x: -L / 2, y: -W / 2, width: L, height: W, rx: .5, fill: colour || 'var(--accent)', stroke: 'var(--ink)', 'stroke-width': .09 }));
+  g.appendChild(el('rect', { x: -L / 2 + .55, y: -W / 2 + .28, width: 1.5, height: W - .56, rx: .22, fill: 'var(--panel)', 'fill-opacity': .55, stroke: 'none' }));
+  g.appendChild(el('rect', { x: L / 2 - 1.5, y: -W / 2 + .3, width: .85, height: W - .6, rx: .2, fill: 'var(--panel)', 'fill-opacity': .75, stroke: 'none' }));
+  if (label) {
+    const holder = el('g', {});
+    holder.appendChild(g);
+    const t = el('text', { x: x, y: y - 1.55, 'text-anchor': 'middle', 'font-size': .95, fill: 'var(--muted)' });
+    t.textContent = label; holder.appendChild(t);
+    return holder;
+  }
+  return g;
+}
+
+function arrowMark(id) {
+  const mk = el('marker', { id, viewBox: '0 0 10 10', refX: 8, refY: 5, markerWidth: 5, markerHeight: 5, orient: 'auto-start-reverse' });
+  mk.appendChild(el('path', { d: 'M0 1 L9 5 L0 9 z', fill: 'var(--accent)' }));
+  return mk;
+}
+
+/* roundabout schematic: exits by bearing (0 is north, up), UK circulation clockwise */
+function diagRoundabout(spec) {
+  const W = 360, H = 352, cx = 180, cy = 170, R = 52, HW = 13, OUT = 146;
+  const S = svgTag('0 0 ' + W + ' ' + H);
+  const defs = el('defs', {}); defs.appendChild(arrowMark('rbarrow')); S.appendChild(defs);
+  const pt = (b, r) => ({ x: cx + r * Math.sin(RAD(b)), y: cy - r * Math.cos(RAD(b)) });
+  const exits = (spec.exits || []);
+  exits.forEach(ex => {
+    const w = (ex.lanes && ex.lanes > 1) ? HW * 1.75 : HW;
+    const a = pt(ex.b, R - 6), b = pt(ex.b, OUT);
+    const nx = Math.cos(RAD(ex.b)), ny = Math.sin(RAD(ex.b));
+    const d = 'M' + (a.x + nx * w) + ' ' + (a.y + ny * w) + ' L' + (b.x + nx * w) + ' ' + (b.y + ny * w) +
+      ' L' + (b.x - nx * w) + ' ' + (b.y - ny * w) + ' L' + (a.x - nx * w) + ' ' + (a.y - ny * w) + ' Z';
+    S.appendChild(el('path', { d, fill: 'var(--rule)', 'fill-opacity': .5, stroke: 'none' }));
+    if (ex.lanes && ex.lanes > 1) {
+      const c = pt(ex.b, R + 4), e = pt(ex.b, OUT - 4);
+      S.appendChild(el('path', { d: 'M' + c.x + ' ' + c.y + ' L' + e.x + ' ' + e.y, stroke: 'var(--panel)', 'stroke-width': 1.6, 'stroke-dasharray': '7 6' }));
+    }
+  });
+  S.appendChild(el('circle', { cx, cy, r: R, fill: 'none', stroke: 'var(--rule)', 'stroke-width': 24, 'stroke-opacity': .5 }));
+  S.appendChild(el('circle', { cx, cy, r: R - 12, fill: 'var(--field)', stroke: 'var(--muted)', 'stroke-width': 1.2, 'stroke-dasharray': spec.mini ? '' : '5 4' }));
+  if (spec.mini) S.appendChild(el('circle', { cx, cy, r: R - 12, fill: 'var(--muted)', 'fill-opacity': .35 }));
+
+  /* number the exits the way an instruction does: first, second, third, going round */
+  if (spec.enter != null) {
+    const order = exits.filter(e => (((e.b - spec.enter) % 360) + 360) % 360 > 4)
+      .sort((a, b) => ((((a.b - spec.enter) % 360) + 360) % 360) - ((((b.b - spec.enter) % 360) + 360) % 360));
+    order.forEach((e, i) => {
+      const q = pt(e.b - 15, R + 21);
+      S.appendChild(el('circle', { cx: q.x, cy: q.y, r: 10, fill: 'var(--panel)', stroke: 'var(--muted)', 'stroke-width': 1.3 }));
+      const t = el('text', { x: q.x, y: q.y + 4, 'text-anchor': 'middle', 'font-size': 12, fill: 'var(--muted)' });
+      t.textContent = String(i + 1); S.appendChild(t);
+    });
+  }
+
+  if (spec.enter != null && spec.leave != null) {
+    const r = spec.path === 'inside' ? R - 7 : R + 6;
+    const turn = (((spec.leave - spec.enter) % 360) + 360) % 360;
+    const a = pt(spec.enter, r), b = pt(spec.leave, r), big = turn > 180 ? 1 : 0;
+    const start = pt(spec.enter, OUT - 26), end = pt(spec.leave, OUT - 34);
+    const d = 'M' + start.x + ' ' + start.y + ' L' + a.x + ' ' + a.y +
+      ' A' + r + ' ' + r + ' 0 ' + big + ' 1 ' + b.x + ' ' + b.y + ' L' + end.x + ' ' + end.y;
+    S.appendChild(el('path', { d, fill: 'none', stroke: 'var(--accent)', 'stroke-width': 4.5, 'stroke-linecap': 'round', 'stroke-dasharray': '11 7', 'marker-end': 'url(#rbarrow)' }));
+  }
+
+  /* labels last, so they sit on top */
+  exits.forEach(ex => {
+    const dx = Math.sin(RAD(ex.b)), dy = -Math.cos(RAD(ex.b));
+    const px = cx + (OUT - 13) * dx, py = cy + (OUT - 13) * dy;
+    const side = Math.abs(dx) >= .36;
+    const anchor = side ? (dx > 0 ? 'end' : 'start') : 'middle';
+    const lift = side ? -13 : 0;
+    const lines = String(ex.label || '').split('|');
+    lines.forEach((ln, i) => {
+      const t = el('text', { x: px, y: lift + py + i * 13 + (dy > .5 ? 4 : dy < -.5 ? 0 : 4), 'text-anchor': anchor, 'font-size': 12.5, fill: 'var(--ink)', stroke: 'var(--field)', 'stroke-width': 3.2, 'paint-order': 'stroke', 'stroke-linejoin': 'round' });
+      t.textContent = ln; S.appendChild(t);
+    });
+    if (ex.n) {
+      const t = el('text', { x: px, y: lift + py + lines.length * 13 + (dy > .5 ? 4 : dy < -.5 ? 0 : 4), 'text-anchor': anchor, 'font-size': 11, fill: 'var(--muted)', stroke: 'var(--field)', 'stroke-width': 3, 'paint-order': 'stroke', 'stroke-linejoin': 'round' });
+      t.textContent = ex.n; S.appendChild(t);
+    }
+  });
+  if (spec.title) { const t = el('text', { x: 180, y: 17, 'text-anchor': 'middle', 'font-size': 13.5, fill: 'var(--muted)' }); t.textContent = spec.title; S.appendChild(t); }
+  return S;
+}
+
+/* a plain junction: your road, the new road, give way line and the look */
+function diagJunction(spec) {
+  const S = svgTag('0 0 360 300');
+  const defs = el('defs', {}); defs.appendChild(arrowMark('jarrow')); S.appendChild(defs);
+  const kind = spec.shape || 'tjoin';
+  const road = (x, y, w, h) => S.appendChild(el('rect', { x, y, width: w, height: h, fill: 'var(--rule)', 'fill-opacity': .55 }));
+  if (kind === 'crossroads') { road(150, 0, 60, 300); road(0, 120, 360, 60); }
+  else if (kind === 'tleft') { road(150, 60, 60, 240); road(0, 60, 360, 60); }
+  else { road(150, 60, 60, 240); road(0, 60, 360, 60); }
+  S.appendChild(el('path', { d: 'M150 120 L210 120', stroke: 'var(--ink)', 'stroke-width': 3, 'stroke-dasharray': '7 5' }));
+  const path = spec.turn === 'right' ? 'M180 290 L180 150 Q180 132 205 132 L350 132' :
+    spec.turn === 'left' ? 'M180 290 L180 150 Q180 92 150 92 L10 92' : 'M180 290 L180 10';
+  S.appendChild(el('path', { d: path, fill: 'none', stroke: 'var(--accent)', 'stroke-width': 4.5, 'stroke-dasharray': '11 7', 'stroke-linecap': 'round', 'marker-end': 'url(#jarrow)' }));
+  (spec.labels || []).forEach(l => { const t = el('text', { x: l.x, y: l.y, 'font-size': 12.5, fill: 'var(--ink)', 'text-anchor': l.anchor || 'middle' }); t.textContent = l.t; S.appendChild(t); });
+  return S;
+}
+
+/* tram or rail crossing the road */
+function diagTram(spec) {
+  const S = svgTag('0 0 360 260');
+  S.appendChild(el('rect', { x: 130, y: 0, width: 100, height: 260, fill: 'var(--rule)', 'fill-opacity': .55 }));
+  const a = spec.angle == null ? -22 : spec.angle;
+  const g = el('g', { transform: 'translate(180 118) rotate(' + a + ')' });
+  [-9, 9].forEach(off => {
+    g.appendChild(el('rect', { x: -230, y: off - 2.4, width: 460, height: 4.8, fill: 'var(--muted)' }));
+  });
+  for (let x = -230; x < 230; x += 16) g.appendChild(el('rect', { x, y: -13, width: 9, height: 26, fill: 'var(--muted)', 'fill-opacity': .35 }));
+  S.appendChild(g);
+  S.appendChild(el('path', { d: 'M180 250 L180 10', fill: 'none', stroke: 'var(--accent)', 'stroke-width': 4.5, 'stroke-dasharray': '11 7', 'stroke-linecap': 'round' }));
+  S.appendChild(el('path', { d: 'M132 168 L228 168', stroke: 'var(--ink)', 'stroke-width': 3.5 }));
+  const t = el('text', { x: 246, y: 112, 'font-size': 12.5, fill: 'var(--muted)' }); t.textContent = spec.label || 'tram tracks'; S.appendChild(t);
+  const t2 = el('text', { x: 240, y: 172, 'font-size': 12.5, fill: 'var(--muted)' }); t2.textContent = spec.stopLabel || 'stop line'; S.appendChild(t2);
+  return S;
+}
+
+/* manoeuvre frames: the car drawn at each step, on a road or in a bay.
+   Metres, roughly to scale: a car is 4.2 m by 1.8 m, a lane about 3.2 m,
+   a marked bay about 4.8 m by 2.4 m. obs marks a step where the examiner
+   wants to see you look. */
+function eyeMark(x, y, label) {
+  const g = el('g', {});
+  g.appendChild(el('path', { d: 'M' + (x - 1) + ' ' + y + ' Q' + x + ' ' + (y - .8) + ' ' + (x + 1) + ' ' + y + ' Q' + x + ' ' + (y + .8) + ' ' + (x - 1) + ' ' + y + ' Z', fill: 'none', stroke: 'var(--care)', 'stroke-width': .16 }));
+  g.appendChild(el('circle', { cx: x, cy: y, r: .3, fill: 'var(--care)' }));
+  if (label) { const t = el('text', { x, y: y + 1.5, 'text-anchor': 'middle', 'font-size': .8, fill: 'var(--care)' }); t.textContent = label; g.appendChild(t); }
+  return g;
+}
+function roadScene(S, w, h, kerbTop) {
+  S.appendChild(el('rect', { x: 0, y: kerbTop ? 1.6 : 0, width: w, height: h - 1.6 - (kerbTop ? 1.6 : 0), fill: 'var(--rule)', 'fill-opacity': .4 }));
+  S.appendChild(el('rect', { x: 0, y: h - 1.6, width: w, height: 1.6, fill: 'var(--field)', stroke: 'var(--muted)', 'stroke-width': .07 }));
+  if (kerbTop) S.appendChild(el('rect', { x: 0, y: 0, width: w, height: 1.6, fill: 'var(--field)', stroke: 'var(--muted)', 'stroke-width': .07 }));
+  const mid = kerbTop ? h / 2 : (h - 1.6) / 2;
+  S.appendChild(el('path', { d: 'M0 ' + mid + ' L' + w + ' ' + mid, stroke: 'var(--panel)', 'stroke-width': .16, 'stroke-dasharray': '1.6 1.5' }));
+}
+const MAN = {
+  parallel: {
+    vb: '0 0 24 10', w: 24, h: 10,
+    scene(S) {
+      roadScene(S, 24, 10, false);
+      S.appendChild(carShape(6.5, 7.1, 180, 'var(--muted)', ''));
+      const t = el('text', { x: 6.5, y: 7.4, 'font-size': .78, fill: 'var(--panel)', 'text-anchor': 'middle' });
+      t.textContent = 'parked'; S.appendChild(t);
+      S.appendChild(el('path', { d: 'M8.75 8.3 L8.75 9 M8.75 8.65 L15 8.65 M15 8.3 L15 9', stroke: 'var(--care)', 'stroke-width': .1 }));
+    },
+    frames: [
+      { x: 6.9, y: 4.4, a: 180, obs: [12, 2.1, 'all round'] },
+      { x: 8.9, y: 4.7, a: 196, obs: [12, 2.1, 'all round again'] },
+      { x: 10.3, y: 5.6, a: 208, obs: [12, 2.1, 'right shoulder'] },
+      { x: 11.3, y: 6.6, a: 194 },
+      { x: 11.6, y: 7.1, a: 180 }
+    ]
+  },
+  bayreverse: {
+    vb: '0 0 26 19', w: 26, h: 19,
+    scene(S) {
+      S.appendChild(el('rect', { x: 0, y: 0, width: 26, height: 19, fill: 'var(--rule)', 'fill-opacity': .35 }));
+      for (let i = 0; i < 6; i++) {
+        S.appendChild(el('path', { d: 'M' + (2.5 + i * 2.6) + ' .8 L' + (2.5 + i * 2.6) + ' 5.6', stroke: 'var(--panel)', 'stroke-width': .2 }));
+        S.appendChild(el('path', { d: 'M' + (2.5 + i * 2.6) + ' 13.4 L' + (2.5 + i * 2.6) + ' 18.2', stroke: 'var(--panel)', 'stroke-width': .2 }));
+      }
+      S.appendChild(el('path', { d: 'M2.5 5.6 L15.5 5.6M2.5 13.4 L15.5 13.4', stroke: 'var(--panel)', 'stroke-width': .2 }));
+      S.appendChild(carShape(6.4, 3.2, 270, 'var(--muted)', ''));
+      S.appendChild(carShape(11.6, 15.8, 90, 'var(--muted)', ''));
+    },
+    frames: [
+      { x: 21.5, y: 9.5, a: 180, obs: [19, 6.6, 'all round'] },
+      { x: 15.5, y: 9.5, a: 180 },
+      { x: 11.6, y: 9.6, a: 166 },
+      { x: 10.2, y: 7.2, a: 232, obs: [17, 7.2, 'keep looking'] },
+      { x: 9.1, y: 3.6, a: 270 }
+    ]
+  },
+  bayforward: {
+    vb: '0 0 26 19', w: 26, h: 19,
+    scene(S) {
+      S.appendChild(el('rect', { x: 0, y: 0, width: 26, height: 19, fill: 'var(--rule)', 'fill-opacity': .35 }));
+      for (let i = 0; i < 6; i++) {
+        S.appendChild(el('path', { d: 'M' + (2.5 + i * 2.6) + ' .8 L' + (2.5 + i * 2.6) + ' 5.6', stroke: 'var(--panel)', 'stroke-width': .2 }));
+        S.appendChild(el('path', { d: 'M' + (2.5 + i * 2.6) + ' 13.4 L' + (2.5 + i * 2.6) + ' 18.2', stroke: 'var(--panel)', 'stroke-width': .2 }));
+      }
+      S.appendChild(el('path', { d: 'M2.5 5.6 L15.5 5.6M2.5 13.4 L15.5 13.4', stroke: 'var(--panel)', 'stroke-width': .2 }));
+      S.appendChild(carShape(6.4, 3.2, 270, 'var(--muted)', ''));
+      S.appendChild(carShape(11.6, 15.8, 90, 'var(--muted)', ''));
+    },
+    frames: [
+      { x: 23, y: 9.5, a: 180 },
+      { x: 16.5, y: 9.5, a: 180 },
+      { x: 12.6, y: 7.8, a: 214 },
+      { x: 10.2, y: 5.2, a: 262 },
+      { x: 9.1, y: 3.4, a: 270 },
+      { x: 9.1, y: 8.4, a: 270, rev: true, obs: [17, 11.4, 'all round'] }
+    ]
+  },
+  rightpull: {
+    vb: '0 0 28 13', w: 28, h: 13,
+    scene(S) {
+      roadScene(S, 28, 13, true);
+      S.appendChild(carShape(4.5, 9.6, 180, 'var(--muted)', ''));
+      S.appendChild(carShape(24.5, 2.9, 0, 'var(--muted)', ''));
+    },
+    frames: [
+      { x: 20, y: 9.1, a: 180, obs: [20, 6.4, 'mirrors, signal'] },
+      { x: 16.2, y: 8, a: 194 },
+      { x: 12.6, y: 3.2, a: 180 },
+      { x: 16.4, y: 3.2, a: 0, rev: true, obs: [10.5, 5.6, 'look behind'] },
+      { x: 20.6, y: 3.2, a: 0, rev: true },
+      { x: 20.6, y: 3.2, a: 0 },
+      { x: 14.5, y: 6.9, a: 176, obs: [14.5, 10.9, 'blind spot'] }
+    ]
+  },
+  stop: {
+    vb: '0 0 28 12', w: 28, h: 12,
+    scene(S) {
+      roadScene(S, 28, 12, false);
+      const t = el('text', { x: 3.2, y: 2.6, 'font-size': .95, fill: 'var(--muted)' }); t.textContent = 'no signal, both hands on the wheel'; S.appendChild(t);
+    },
+    frames: [
+      { x: 24, y: 8.6, a: 180 },
+      { x: 18.5, y: 8.6, a: 180, obs: [18.5, 11.3, 'the hand goes up'] },
+      { x: 13.5, y: 8.6, a: 180 },
+      { x: 10.4, y: 8.6, a: 180 },
+      { x: 9.9, y: 8.6, a: 180, obs: [9.9, 11.3, 'all round after'] }
+    ]
+  }
+};
+
+function diagManoeuvre(kind, step) {
+  const m = MAN[kind];
+  if (!m) return null;
+  const S = svgTag(m.vb);
+  m.scene(S);
+  const fr = m.frames;
+  const upto = clamp(step, 0, fr.length - 1);
+  const d = fr.slice(0, upto + 1).map((f, i) => (i ? 'L' : 'M') + f.x + ' ' + f.y).join(' ');
+  if (upto > 0) S.appendChild(el('path', { d, fill: 'none', stroke: 'var(--accent)', 'stroke-width': .22, 'stroke-dasharray': '.6 .45', 'stroke-opacity': .85 }));
+  fr.forEach((f, i) => {
+    if (i === upto) return;
+    if (i < upto) S.appendChild(el('circle', { cx: f.x, cy: f.y, r: .22, fill: 'var(--accent)', 'fill-opacity': .5 }));
+  });
+  const f = fr[upto];
+  S.appendChild(carShape(f.x, f.y, f.a, 'var(--accent)', f.rev ? 'reversing' : ''));
+  if (f.obs) S.appendChild(eyeMark(f.obs[0], f.obs[1], f.obs[2]));
+  return S;
+}
+
+/* ---------------- state ---------------- */
+const K = { plan: 'ct.plan', mocks: 'ct.mocks', quiz: 'ct.quiz', checks: 'ct.checks', conf: 'ct.conf', tab: 'ct.tab' };
+const st = {
+  tab: store.get(K.tab, 'start'),
+  plan: store.get(K.plan, { date: '', time: '', name: '' }),
+  checks: store.get(K.checks, {}),
+  layers: { junctions: true, routes: true, hazards: true, spots: true },
+  road: 'all', fault: 'all',
+  sel: null
+};
+let map = null, mockMap = null;
+
+function setTab(name) {
+  st.tab = name; store.set(K.tab, name);
+  $$('section.tab').forEach(s => { s.hidden = s.id !== 'tab-' + name; });
+  $$('nav.tabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === name)));
+  window.scrollTo(0, 0);
+  if (name === 'map' && map) setTimeout(() => map.render(), 30);
+  if (name === 'mock' && mockMap) setTimeout(() => mockMap.render(), 30);
+}
+
+/* ---------------- Start tab ---------------- */
+function fmtDays(n) { return n === 0 ? 'today' : n === 1 ? 'tomorrow' : n < 0 ? Math.abs(n) + ' days ago' : 'in ' + n + ' days'; }
+function renderCount() {
+  const out = $('#countOut'), p = st.plan;
+  if (!p.date) { out.innerHTML = '<b>Put your test date in and the plan counts down to it.</b> Everything else works without it.'; return; }
+  const when = new Date(p.date + 'T' + (p.time || '09:00') + ':00');
+  if (isNaN(when.getTime())) { out.textContent = 'That date did not make sense.'; return; }
+  const now = new Date();
+  const d0 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const d1 = new Date(when.getFullYear(), when.getMonth(), when.getDate());
+  const days = Math.round((d1 - d0) / 86400000);
+  const nice = when.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+  const time = p.time ? ' at ' + p.time : '';
+  let line = '<b>' + esc(p.name ? p.name + ', your test is ' : 'Your test is ') + fmtDays(days) + '</b>, ' + esc(nice) + esc(time) + '.';
+  const stage = days > 21 ? 'There is time. Use it on the roads in the Roads tab and one mock test a week.'
+    : days > 7 ? 'Two weeks out. Book a mock test on a route like the real one, and work the faults you keep collecting.'
+      : days > 1 ? 'This week. Keep the driving normal, do one mock, and read the show me tell me questions once a day.'
+        : days === 1 ? 'Tomorrow. Nothing new today. Sleep, eat, and drive the roads you already know.'
+          : days === 0 ? 'Today. Arrive ten minutes early, not thirty. Read the checklist below and nothing else.'
+            : 'The date has passed. Change it if you have a new one.';
+  out.innerHTML = line + '<div class="small muted" style="margin-top:4px">' + esc(stage) + '</div>';
+}
+
+function renderProgress() {
+  const hist = store.get(K.mocks, []);
+  const best = hist.map(r => mockVerdict(r.marks)).filter(v => v.pass).length;
+  const score = store.get(K.quiz, {});
+  const qs = qItems();
+  const solid = qs.filter(q => { const x = score[q.id]; return x && x.right >= 2 && x.right > x.wrong; }).length;
+  const checks = Object.values(st.checks).filter(Boolean).length;
+  const cells = [
+    hist.length ? [hist.length, 'mock' + (hist.length === 1 ? '' : 's') + ' run'] : null,
+    hist.length ? [best, 'would have passed'] : null,
+    qs.length ? [solid + ' of ' + qs.length, 'questions solid'] : null,
+    checks ? [checks, 'things ticked off'] : null
+  ].filter(Boolean);
+  $('#progress').innerHTML = cells.length ? '<div class="stats">' + cells.map(c => '<div><b>' + esc(c[0]) + '</b><span>' + esc(c[1]) + '</span></div>').join('') + '</div>' : '';
+}
+function checkKey(id) { return 'c:' + id; }
+function checkList(items, group) {
+  return '<ul style="list-style:none;padding:0">' + items.map((t, i) => {
+    const id = group + ':' + i, on = !!st.checks[checkKey(id)];
+    return '<li style="margin:0 0 6px"><label style="display:flex;gap:9px;align-items:flex-start;cursor:pointer">' +
+      '<input type="checkbox" data-check="' + esc(id) + '"' + (on ? ' checked' : '') + ' style="width:22px;height:22px;flex:none;margin-top:1px">' +
+      '<span' + (on ? ' style="opacity:.55;text-decoration:line-through"' : '') + '>' + rich(t) + '</span></label></li>';
+  }).join('') + '</ul>';
+}
+
+function renderJourney() {
+  const J = (D.plan && D.plan.journey) || [];
+  $('#journey').innerHTML = J.map((s, i) => {
+    const go = (s.do || []).map(x => x.go ? '<button type="button" class="btn small" data-go="' + esc(x.go) + '">' + esc(x.t) + '</button>' : '').join(' ');
+    return '<details class="acc"' + (i === 0 ? ' open' : '') + '><summary><span class="tn">' + esc(s.n || (i + 1)) + '</span><span class="nm">' + esc(s.name) + '</span></summary><div class="inner">' +
+      (s.lede ? '<p class="lede">' + rich(s.lede) + '</p>' : '') +
+      (s.body ? para(s.body) : '') +
+      (s.checks && s.checks.length ? checkList(s.checks, 'j' + i) : '') +
+      (go ? '<div class="row">' + go + '</div>' : '') +
+      srcLine(s.sources) + '</div></details>';
+  }).join('');
+}
+
+function renderCentre() {
+  const c = D.centre || {};
+  const facts = (c.facts || []).map(f => '<div><dt>' + esc(f.k) + '</dt><dd>' + rich(f.v) + '</dd></div>').join('');
+  $('#centreCard').innerHTML = '<div class="card" style="--lv:var(--accent)">' +
+    '<div class="head"><h3>' + esc(c.name || 'The test centre') + '</h3></div>' +
+    (c.address ? '<div class="kind">' + c.address.map(esc).join(', ') + '</div>' : '') +
+    (c.intro ? '<div class="do">' + rich(c.intro) + '</div>' : '') +
+    (c.arrival && c.arrival.length ? '<h4>When you get there</h4>' + olist(c.arrival) : '') +
+    (facts ? '<dl class="facts">' + facts + '</dl>' : '') +
+    '<div class="row"><button type="button" class="btn small" data-go="map">Show it on the map</button>' +
+    (c.lat ? '<a class="btn small" style="text-decoration:none;display:inline-flex;align-items:center" target="_blank" rel="noopener" href="https://www.openstreetmap.org/?mlat=' + c.lat + '&mlon=' + c.lon + '#map=17/' + c.lat + '/' + c.lon + '">Open in a map app</a>' : '') + '</div>' +
+    srcLine(c.sources) + '</div>';
+}
+
+function sectionHtml(s) {
+  if (!s) return '<p class="muted">Not filled in.</p>';
+  return (s.lede ? '<p class="lede">' + rich(s.lede) + '</p>' : '') +
+    (s.body ? para(s.body) : '') +
+    (s.points && s.points.length ? list(s.points) : '') +
+    (s.table ? tableHtml(s.table) : '') +
+    (s.blocks || []).map(b => '<h4>' + esc(b.name) + '</h4>' + (b.body ? para(b.body) : '') + (b.points ? list(b.points) : '') + (b.table ? tableHtml(b.table) : '')).join('') +
+    (s.checks && s.checks.length ? checkList(s.checks, 'sec:' + (s.id || 'x')) : '') +
+    (s.warn ? '<div class="note warn">' + rich(s.warn) + '</div>' : '') +
+    srcLine(s.sources);
+}
+function tableHtml(t) {
+  if (!t || !t.rows) return '';
+  return '<div class="scroll"><table>' +
+    (t.head ? '<thead><tr>' + t.head.map(h => '<th>' + rich(h) + '</th>').join('') + '</tr></thead>' : '') +
+    '<tbody>' + t.rows.map(r => '<tr>' + r.map(c => '<td>' + rich(c) + '</td>').join('') + '</tr>').join('') + '</tbody></table></div>' +
+    (t.note ? '<p class="small muted">' + rich(t.note) + '</p>' : '');
+}
+
+function renderSources() {
+  const s = D.sources || {};
+  const rows = (s.list || []).map(x => '<tr><td>' + esc(x.name) + (x.url ? '<br><a href="' + esc(x.url) + '" target="_blank" rel="noopener" class="small">' + esc(x.url.replace(/^https?:\/\//, '').slice(0, 52)) + '</a>' : '') + '</td><td>' + rich(x.use || '') + '</td><td>' + esc(x.kind || '') + '</td></tr>').join('');
+  $('#srcBody').innerHTML = (s.intro ? para(s.intro) : '') +
+    (s.limits && s.limits.length ? '<h4>What is not verified</h4>' + list(s.limits) : '') +
+    (rows ? '<h4>Sources</h4><div class="scroll"><table><thead><tr><th>Source</th><th>What it gave</th><th>Kind</th></tr></thead><tbody>' + rows + '</tbody></table></div>' : '');
+}
+
+/* ---------------- Map tab ---------------- */
+const KIND = {
+  centre: { colour: '#1558B0', glyph: 'T', name: 'Test centre' },
+  roundabout: { colour: '#C25E00', glyph: 'R', name: 'Roundabout' },
+  lights: { colour: '#9B1D8E', glyph: 'L', name: 'Traffic lights' },
+  junction: { colour: '#0F7B6C', glyph: 'J', name: 'Junction' },
+  tram: { colour: '#B0003A', glyph: 'X', name: 'Tram or rail' },
+  hazard: { colour: '#C02532', glyph: '!', name: 'Watch out' },
+  road: { colour: '#3B5566', glyph: '=', name: 'Road' },
+  spot: { colour: '#5B7B1F', glyph: 'P', name: 'Practice spot' }
+};
+function junctionItems() { return ((D.junctions && D.junctions.items) || []); }
+function jById(id) { return junctionItems().find(j => j.id === id) || null; }
+
+function mapPoints() {
+  const pts = [];
+  const c = D.centre || {};
+  if (c.lat) pts.push({ id: 'centre', lat: c.lat, lon: c.lon, name: c.short || 'Test centre', colour: KIND.centre.colour, glyph: KIND.centre.glyph, r: 11 });
+  if (st.layers.junctions) junctionItems().forEach(j => {
+    if (!j.lat) return;
+    const k = KIND[j.kind] || KIND.junction;
+    if (!st.layers.hazards && j.kind === 'hazard') return;
+    pts.push({ id: j.id, lat: j.lat, lon: j.lon, name: j.short || j.name, colour: k.colour, glyph: k.glyph });
+  });
+  if (st.layers.spots) ((D.routes && D.routes.spots) || []).forEach(s => {
+    if (!s.lat) return;
+    pts.push({ id: 'spot:' + s.id, lat: s.lat, lon: s.lon, name: s.short || s.name, colour: KIND.spot.colour, glyph: KIND.spot.glyph });
+  });
+  return pts;
+}
+function mapLines() {
+  if (!st.layers.routes) return [];
+  return ((D.routes && D.routes.corridors) || []).map((c, i) => ({
+    points: c.points || [], colour: c.colour || ['#1558B0', '#C25E00', '#0F7B6C', '#9B1D8E'][i % 4], w: 6, op: .45, dash: c.dash || ''
+  }));
+}
+function refreshMap() {
+  if (!map) return;
+  map.pts = mapPoints(); map.lines = mapLines(); map.sel = st.sel;
+  map.render();
+}
+function mapCard(id) {
+  st.sel = id;
+  const box = $('#mapcard');
+  if (id === 'centre') { box.innerHTML = ''; renderCentreInto(box); refreshMap(); box.scrollIntoView({ block: 'nearest' }); return; }
+  if (id && id.indexOf('spot:') === 0) {
+    const s = ((D.routes && D.routes.spots) || []).find(x => 'spot:' + x.id === id);
+    box.innerHTML = s ? '<div class="card" style="--lv:' + KIND.spot.colour + '"><div class="head"><h3>' + esc(s.name) + '</h3></div>' +
+      '<div class="kind">' + esc(s.kind || 'Practice spot') + (s.precision === 'approximate' ? ' · position approximate' : '') + '</div>' +
+      (s.note ? '<div class="do">' + rich(s.note) + '</div>' : '') + srcLine(s.sources) + '</div>' : '';
+    refreshMap(); box.scrollIntoView({ block: 'nearest' }); return;
+  }
+  const j = jById(id);
+  box.innerHTML = j ? junctionCard(j, true) : '';
+  refreshMap();
+  if (j) box.scrollIntoView({ block: 'nearest' });
+}
+function renderCentreInto(box) {
+  const c = D.centre || {};
+  box.innerHTML = '<div class="card" style="--lv:var(--accent)"><div class="head"><h3>' + esc(c.name || 'Test centre') + '</h3></div>' +
+    (c.address ? '<div class="kind">' + c.address.map(esc).join(', ') + '</div>' : '') +
+    (c.intro ? '<div class="do">' + rich(c.intro) + '</div>' : '') + srcLine(c.sources) + '</div>';
+}
+
+function renderMapLayers() {
+  const L = [['junctions', 'Junctions'], ['hazards', 'Watch out'], ['routes', 'Route corridors'], ['spots', 'Practice spots']];
+  $('#mapLayers').innerHTML = L.map(([k, n]) => '<button type="button" class="chip" data-layer="' + k + '" aria-pressed="' + (st.layers[k] ? 'true' : 'false') + '">' + n + '</button>').join('');
+  const used = {};
+  junctionItems().forEach(j => { used[j.kind] = true; });
+  used.centre = true; if (((D.routes && D.routes.spots) || []).length) used.spot = true;
+  $('#mapKey').innerHTML = Object.keys(KIND).filter(k => used[k]).map(k => '<span><i style="background:' + KIND[k].colour + '"></i>' + esc(KIND[k].name) + '</span>').join('');
+}
+
+/* ---------------- Roads tab ---------------- */
+function diagramFor(spec) {
+  if (!spec) return null;
+  if (spec.type === 'roundabout') return diagRoundabout(spec);
+  if (spec.type === 'junction') return diagJunction(spec);
+  if (spec.type === 'tram') return diagTram(spec);
+  return null;
+}
+function diagramHtmlHolder(spec, cap) {
+  if (!spec) return '';
+  return '<div class="diag" data-diag=\'' + esc(JSON.stringify(spec)).replace(/'/g, '&#39;') + '\'>' + (cap ? '<div class="cap">' + esc(cap) + '</div>' : '') + '</div>';
+}
+function junctionCard(j, open) {
+  const k = KIND[j.kind] || KIND.junction;
+  const links = (j.links || []).map(id => { const f = faultById(id); return f ? '<button type="button" class="btn small" data-fault="' + esc(id) + '">' + esc(f.name) + '</button>' : ''; }).join(' ');
+  return '<div class="card" style="--lv:' + k.colour + '">' +
+    '<div class="head"><h3>' + esc(j.name) + '</h3></div>' +
+    '<div class="kind">' + esc([k.name, j.where, j.speed].filter(Boolean).join(' · ')) + '</div>' +
+    (j.why ? '<div class="do">' + rich(j.why) + '</div>' : '') +
+    diagramHtmlHolder(j.diagram, j.diagramCap) +
+    (j.drive ? '<h4>How to drive it</h4>' + para(j.drive) : '') +
+    (j.watch && j.watch.length ? '<h4>What the examiner is watching</h4>' + list(j.watch) : '') +
+    (j.mistakes && j.mistakes.length ? '<h4>What goes wrong here</h4>' + list(j.mistakes) : '') +
+    (j.lat ? '<div class="row"><button type="button" class="btn small" data-mapto="' + esc(j.id) + '">Show on the map</button></div>' : '') +
+    (links ? '<div class="row">' + links + '</div>' : '') +
+    srcLine(j.sources) + '</div>';
+}
+function renderRoads() {
+  const items = junctionItems();
+  const kinds = Array.from(new Set(items.map(i => i.kind)));
+  $('#roadFilter').innerHTML = ['all'].concat(kinds).map(k => '<button type="button" class="chip" data-road="' + esc(k) + '" aria-pressed="' + (st.road === k ? 'true' : 'false') + '">' + esc(k === 'all' ? 'Everything' : (KIND[k] || { name: k }).name) + '</button>').join('');
+  const show = items.filter(i => st.road === 'all' || i.kind === st.road);
+  $('#roadList').innerHTML = show.map(j => {
+    const k = KIND[j.kind] || KIND.junction;
+    return '<details class="acc" style="--lv:' + k.colour + '" data-jid="' + esc(j.id) + '"><summary><span class="nm">' + esc(j.name) + '</span></summary><div class="inner" data-body="' + esc(j.id) + '"></div></details>';
+  }).join('') || '<p class="muted">Nothing in this group.</p>';
+}
+function fillJunctionBody(det) {
+  const id = det.dataset.jid, holder = det.querySelector('[data-body]');
+  if (!holder || holder.dataset.done) return;
+  const j = jById(id); if (!j) return;
+  holder.dataset.done = '1';
+  const k = KIND[j.kind] || KIND.junction;
+  holder.innerHTML = '<div class="kind">' + esc([k.name, j.where, j.speed].filter(Boolean).join(' · ')) + '</div>' +
+    (j.why ? '<p class="lede">' + rich(j.why) + '</p>' : '') +
+    diagramHtmlHolder(j.diagram, j.diagramCap) +
+    (j.drive ? '<h4>How to drive it</h4>' + para(j.drive) : '') +
+    (j.watch && j.watch.length ? '<h4>What the examiner is watching</h4>' + list(j.watch) : '') +
+    (j.mistakes && j.mistakes.length ? '<h4>What goes wrong here</h4>' + list(j.mistakes) : '') +
+    (j.lat ? '<div class="row"><button type="button" class="btn small" data-mapto="' + esc(j.id) + '">Show on the map</button></div>' : '') +
+    srcLine(j.sources);
+  drawDiagrams(holder);
+}
+function drawDiagrams(root) {
+  $$('[data-diag]', root || document).forEach(d => {
+    if (d.dataset.drawn) return;
+    let spec = null;
+    try { spec = JSON.parse(d.dataset.diag); } catch (e) { return; }
+    const s = diagramFor(spec);
+    if (!s) return;
+    d.insertBefore(s, d.firstChild);
+    d.dataset.drawn = '1';
+  });
+}
+
+/* ---------------- Test tab ---------------- */
+function renderTestOrder() {
+  const t = D.test || {};
+  $('#testOrder').innerHTML = (t.intro ? '<p class="lede">' + rich(t.intro) + '</p>' : '') +
+    (t.steps || []).map((s, i) => '<details class="acc"><summary><span class="tn">' + (i + 1) + '</span><span class="nm">' + esc(s.name) + '</span></summary><div class="inner">' +
+      (s.time ? '<div class="kind">' + esc(s.time) + '</div>' : '') +
+      (s.what ? para(s.what) : '') +
+      (s.says ? '<div class="note">The examiner says: ' + rich(s.says) + '</div>' : '') +
+      (s.watch && s.watch.length ? '<h4>What is being assessed</h4>' + list(s.watch) : '') +
+      (s.tips && s.tips.length ? '<h4>Getting it right</h4>' + list(s.tips) : '') +
+      srcLine(s.sources) + '</div></details>').join('') +
+    srcLine(t.sources);
+}
+function renderMarking() {
+  const m = D.marking || {};
+  const ft = (m.faultTypes || []).map((f, i) => '<div class="card" style="--lv:var(--f' + (i + 1) + ')"><div class="head"><h3>' + esc(f.name) + '</h3></div>' +
+    (f.what ? '<div class="do">' + rich(f.what) + '</div>' : '') +
+    (f.effect ? '<p class="small muted">' + rich(f.effect) + '</p>' : '') +
+    (f.example ? '<p class="small">For example: ' + rich(f.example) + '</p>' : '') + '</div>').join('');
+  $('#markingBody').innerHTML = (m.intro ? '<p class="lede">' + rich(m.intro) + '</p>' : '') + ft +
+    (m.limit ? '<div class="note"><b>' + esc(m.limit.number) + ' driving faults</b> is the limit. ' + rich(m.limit.text || '') + '</div>' : '') +
+    (m.sheet ? '<h4>The sheet itself</h4>' + para(m.sheet) : '') +
+    (m.immediate && m.immediate.length ? '<h4>What ends a test there and then</h4>' + list(m.immediate) : '') +
+    (m.notes && m.notes.length ? list(m.notes) : '') +
+    srcLine(m.sources);
+}
+function faultItems() { return ((D.faults && D.faults.items) || []); }
+function faultById(id) { return faultItems().find(f => f.id === id) || null; }
+function renderFaults() {
+  const groups = (D.faults && D.faults.groups) || [];
+  $('#faultFilter').innerHTML = [{ id: 'all', name: 'Everything' }].concat(groups).map(g =>
+    '<button type="button" class="chip" data-fault-group="' + esc(g.id) + '" aria-pressed="' + (st.fault === g.id ? 'true' : 'false') + '">' + esc(g.name) + '</button>').join('');
+  const show = faultItems().filter(f => st.fault === 'all' || f.group === st.fault);
+  $('#faultList').innerHTML = show.map(f => '<details class="acc" id="fault-' + esc(f.id) + '"><summary><span class="tn">' + esc(f.no || '') + '</span><span class="nm">' + esc(f.name) + '</span></summary><div class="inner">' +
+    (f.sheet ? '<div class="kind">On the sheet: ' + esc(f.sheet) + '</div>' : '') +
+    (f.looking ? '<p class="lede">' + rich(f.looking) + '</p>' : '') +
+    (f.serious ? '<div class="note warn"><b>Serious rather than a driving fault when:</b> ' + rich(f.serious) + '</div>' : '') +
+    (f.do && f.do.length ? '<h4>What to do</h4>' + list(f.do) : '') +
+    (f.mistakes && f.mistakes.length ? '<h4>Common faults</h4>' + list(f.mistakes) : '') +
+    (f.local ? '<h4>Where this bites near Chilwell</h4>' + para(f.local) : '') +
+    srcLine(f.sources) + '</div></details>').join('') || '<p class="muted">Nothing in this group.</p>';
+}
+
+/* ---------------- Skills tab: manoeuvres ---------------- */
+function renderManoeuvres() {
+  const m = D.manoeuvres || {};
+  $('#manIntro').innerHTML = rich(m.intro || '');
+  $('#manList').innerHTML = (m.items || []).map(it => '<details class="acc" id="man-' + esc(it.id) + '" data-man="' + esc(it.id) + '"><summary><span class="nm">' + esc(it.name) + '</span></summary><div class="inner" data-manbody="' + esc(it.id) + '"></div></details>').join('');
+}
+function fillManBody(det) {
+  const id = det.dataset.man, holder = det.querySelector('[data-manbody]');
+  if (!holder || holder.dataset.done) return;
+  const it = ((D.manoeuvres || {}).items || []).find(x => x.id === id); if (!it) return;
+  holder.dataset.done = '1';
+  const hasDiag = it.diagram && MAN[it.diagram];
+  holder.innerHTML =
+    (it.asked ? '<div class="kind">' + esc(it.asked) + '</div>' : '') +
+    (it.words ? '<div class="note">The examiner says: ' + rich(it.words) + '</div>' : '') +
+    (it.lede ? '<p class="lede">' + rich(it.lede) + '</p>' : '') +
+    (hasDiag ? '<div class="diag" data-man-diag="' + esc(it.diagram) + '"><div class="steps"><button type="button" class="btn small" data-mstep="-1">Back</button><span class="small muted" data-mstepn></span><button type="button" class="btn small" data-mstep="1">Next</button></div><div class="stepnote" data-mnote></div></div>' : '') +
+    (it.steps && it.steps.length ? '<h4>Step by step</h4>' + olist(it.steps.map(s => typeof s === 'string' ? s : s.note)) : '') +
+    (it.watch && it.watch.length ? '<h4>What the examiner marks</h4>' + list(it.watch) : '') +
+    (it.serious ? '<div class="note warn"><b>Serious fault:</b> ' + rich(it.serious) + '</div>' : '') +
+    (it.mistakes && it.mistakes.length ? '<h4>What goes wrong</h4>' + list(it.mistakes) : '') +
+    (it.refs ? '<h4>Reference points</h4>' + para(it.refs) : '') +
+    srcLine(it.sources);
+  const dg = holder.querySelector('[data-man-diag]');
+  if (dg) { dg.dataset.step = '0'; drawManStep(dg, it); }
+}
+function drawManStep(dg, it) {
+  const kind = dg.dataset.manDiag, step = parseInt(dg.dataset.step || '0', 10);
+  const frames = (MAN[kind] || {}).frames || [];
+  const old = dg.querySelector('svg'); if (old) old.remove();
+  const s = diagManoeuvre(kind, step);
+  if (s) dg.insertBefore(s, dg.firstChild);
+  const steps = (it.steps || []).map(x => typeof x === 'string' ? x : x.note);
+  dg.querySelector('[data-mstepn]').textContent = 'Step ' + (step + 1) + ' of ' + frames.length;
+  const note = dg.querySelector('[data-mnote]');
+  note.innerHTML = rich(steps[step] || (it.frameNotes && it.frameNotes[step]) || '');
+}
+
+/* ---------------- Skills tab: show me tell me ---------------- */
+const quizState = { on: false, order: [], at: 0, shown: false, score: store.get(K.quiz, {}) };
+function qItems() { return ((D.questions || {}).items || []); }
+function quizStart() {
+  const items = qItems();
+  if (!items.length) { toast('No questions loaded.'); return; }
+  const weight = it => { const s = quizState.score[it.id] || { right: 0, wrong: 0 }; return 1 + s.wrong * 2 - Math.min(s.right, 3) * 0.3; };
+  const idx = items.map((it, i) => ({ i, w: weight(it) }));
+  idx.sort((a, b) => b.w - a.w || a.i - b.i);
+  const head = idx.slice(0, Math.ceil(idx.length / 2)), tail = idx.slice(Math.ceil(idx.length / 2));
+  quizState.order = head.concat(tail).map(x => x.i);
+  quizState.on = true; quizState.at = 0; quizState.shown = false;
+  quizDraw();
+}
+function quizDraw() {
+  const box = $('#qBox');
+  if (!quizState.on) { box.innerHTML = ''; return; }
+  const items = qItems(), it = items[quizState.order[quizState.at]];
+  if (!it) { quizState.on = false; box.innerHTML = '<div class="qcard"><p class="lede">That is all of them. Start again any time.</p></div>'; return; }
+  const s = quizState.score[it.id] || { right: 0, wrong: 0 };
+  box.innerHTML = '<div class="qcard">' +
+    '<div class="kind small muted">' + esc(it.type === 'show' ? 'Show me, asked while you are driving' : 'Tell me, asked before you drive off') + ' · ' + (quizState.at + 1) + ' of ' + quizState.order.length + (s.wrong ? ' · missed ' + s.wrong + ' times' : '') + '</div>' +
+    '<div class="q">' + rich(it.q) + '</div>' +
+    (quizState.shown ? '<div class="a">' + para(it.a) + (it.extra ? '<p class="small muted">' + rich(it.extra) + '</p>' : '') + (it.common ? '<div class="note warn small">' + rich(it.common) + '</div>' : '') + '</div>' : '<p class="muted small">Say your answer out loud first, the way you would to the examiner.</p>') +
+    '<div class="row">' +
+    (quizState.shown
+      ? '<button type="button" class="btn" data-qmark="wrong">I did not know it</button><button type="button" class="btn primary" data-qmark="right">I had it</button>'
+      : '<button type="button" class="btn" data-qspeak="1">Read it to me</button><button type="button" class="btn primary" data-qshow="1">Show the answer</button>') +
+    '</div><div class="row"><button type="button" class="btn small" data-qstop="1">Stop the quiz</button></div></div>';
+}
+function quizMark(right) {
+  const items = qItems(), it = items[quizState.order[quizState.at]];
+  if (it) {
+    const s = quizState.score[it.id] || { right: 0, wrong: 0 };
+    if (right) s.right++; else s.wrong++;
+    quizState.score[it.id] = s; store.set(K.quiz, quizState.score);
+  }
+  quizState.at++; quizState.shown = false; quizDraw(); renderQList(); renderProgress();
+}
+function renderQList() {
+  const items = qItems();
+  const tell = items.filter(i => i.type !== 'show'), show = items.filter(i => i.type === 'show');
+  const one = it => {
+    const s = quizState.score[it.id] || { right: 0, wrong: 0 };
+    const tag = s.wrong > s.right ? '<span class="tag care">keeps catching you</span>' : s.right > 1 ? '<span class="tag ok">solid</span>' : '';
+    return '<details class="acc"><summary><span class="nm">' + rich(it.q) + '</span></summary><div class="inner">' + tag + para(it.a) +
+      (it.extra ? '<p class="small muted">' + rich(it.extra) + '</p>' : '') +
+      (it.common ? '<div class="note warn small">' + rich(it.common) + '</div>' : '') + srcLine(it.sources) + '</div></details>';
+  };
+  $('#qList').innerHTML = (qListOpen ? '<h4>Tell me, before you drive (' + tell.length + ')</h4>' + tell.map(one).join('') +
+    '<h4>Show me, while you are driving (' + show.length + ')</h4>' + show.map(one).join('') +
+    srcLine((D.questions || {}).sources) : '');
+}
+let qListOpen = false;
+
+/* ---------------- Mock test ----------------
+   The passenger marks, never the driver. Every tap is stamped with the time
+   since the start and, if location is allowed, with where the car was. */
+const mock = { on: false, t0: 0, marks: [], driver: '', gpsOn: true, watch: null, fix: null, timer: 0, route: [] };
+const FK = { d: { name: 'Driving fault', colour: 'var(--f1)', pin: '#B07400' }, s: { name: 'Serious', colour: 'var(--f2)', pin: '#C02532' }, x: { name: 'Dangerous', colour: 'var(--f3)', pin: '#8B1220' } };
+
+function mockItems() { return faultItems().filter(f => f.mock !== false); }
+function mockCount(id, kind) { return mock.marks.filter(m => m.id === id && m.k === kind).length; }
+function mockTotals(marks) {
+  const t = { d: 0, s: 0, x: 0 };
+  (marks || mock.marks).forEach(m => { t[m.k] = (t[m.k] || 0) + 1; });
+  return t;
+}
+function mockVerdict(marks) {
+  const t = mockTotals(marks), lim = ((D.marking || {}).limit || {}).number || 15;
+  const pass = t.s === 0 && t.x === 0 && t.d <= lim;
+  return { pass, t, lim };
+}
+function renderMockSheet() {
+  const groups = (D.faults && D.faults.groups) || [];
+  const items = mockItems();
+  const byGroup = {};
+  items.forEach(i => { (byGroup[i.group] = byGroup[i.group] || []).push(i); });
+  const order = groups.length ? groups : Object.keys(byGroup).map(g => ({ id: g, name: g }));
+  $('#mockSheet').innerHTML = order.filter(g => byGroup[g.id]).map(g =>
+    '<h4>' + esc(g.name) + '</h4>' + byGroup[g.id].map(f => {
+      const cd = mockCount(f.id, 'd'), cs = mockCount(f.id, 's'), cx = mockCount(f.id, 'x');
+      const cls = cs || cx ? 'frow serious' : cd ? 'frow hit' : 'frow';
+      return '<div class="' + cls + '" data-frow="' + esc(f.id) + '">' +
+        '<span class="fn">' + esc(f.short || f.name) + '</span>' +
+        '<button type="button" data-mark="' + esc(f.id) + '" data-k="d" aria-label="Driving fault, ' + esc(f.short || f.name) + '"><i data-n>' + (cd || '') + '</i><b>fault</b></button>' +
+        '<button type="button" data-mark="' + esc(f.id) + '" data-k="s" aria-label="Serious fault, ' + esc(f.short || f.name) + '"><i data-n>' + (cs || '') + '</i><b>serious</b></button>' +
+        '<button type="button" data-mark="' + esc(f.id) + '" data-k="x" aria-label="Dangerous fault, ' + esc(f.short || f.name) + '"><i data-n>' + (cx || '') + '</i><b>danger</b></button>' +
+        (f.sheet ? '<span class="fs">' + esc(f.sheet) + '</span>' : '') + '</div>';
+    }).join('')).join('');
+}
+function mmss(ms) { const s = Math.max(0, Math.round(ms / 1000)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
+function renderTally() {
+  const v = mockVerdict();
+  const dCls = v.t.d > v.lim ? 'box fail' : v.t.d > v.lim - 5 ? 'box warn' : 'box';
+  $('#mockTally').innerHTML =
+    '<div class="' + dCls + '"><span class="big">' + v.t.d + '</span><span class="lab">faults of ' + v.lim + '</span></div>' +
+    '<div class="box' + (v.t.s ? ' fail' : '') + '"><span class="big">' + v.t.s + '</span><span class="lab">serious</span></div>' +
+    '<div class="box' + (v.t.x ? ' fail' : '') + '"><span class="big">' + v.t.x + '</span><span class="lab">dangerous</span></div>' +
+    '<div class="box"><span class="big">' + mmss(performance.now() - mock.t0) + '</span><span class="lab">minutes</span></div>' +
+    '<div class="lab" style="flex:1;min-width:120px">' + (v.pass ? 'A pass as it stands.' : v.t.s || v.t.x ? 'That is a fail as it stands.' : 'Over the limit.') + '</div>';
+}
+function mockStart() {
+  mock.on = true; mock.t0 = performance.now(); mock.marks = []; mock.route = [];
+  mock.driver = ($('#mockDriver').value || '').trim();
+  $('#mockSetup').hidden = true; $('#mockRun').hidden = false; $('#mockResult').innerHTML = '';
+  renderMockSheet(); renderTally();
+  clearInterval(mock.timer); mock.timer = setInterval(renderTally, 1000);
+  if (mock.gpsOn && navigator.geolocation) {
+    try {
+      mock.watch = navigator.geolocation.watchPosition(p => {
+        mock.fix = { lat: p.coords.latitude, lon: p.coords.longitude, acc: p.coords.accuracy };
+        const last = mock.route[mock.route.length - 1];
+        if (!last || metres({ lat: last[0], lon: last[1] }, mock.fix) > 12) mock.route.push([mock.fix.lat, mock.fix.lon]);
+      }, err => { mock.fix = null; toast('No location: the faults will still be counted, just not placed on the map.'); }, { enableHighAccuracy: true, maximumAge: 4000, timeout: 12000 });
+    } catch (e) { }
+  }
+  toast('Marking. The passenger holds the phone, never the driver.');
+}
+function mockAdd(id, k) {
+  if (!mock.on) return;
+  mock.marks.push({ id, k, t: Math.round(performance.now() - mock.t0), lat: mock.fix ? mock.fix.lat : null, lon: mock.fix ? mock.fix.lon : null });
+  const row = $('[data-frow="' + id + '"]');
+  if (row) {
+    const f = faultById(id), cd = mockCount(id, 'd'), cs = mockCount(id, 's'), cx = mockCount(id, 'x');
+    row.className = cs || cx ? 'frow serious' : cd ? 'frow hit' : 'frow';
+    const b = $$('button i[data-n]', row);
+    if (b[0]) b[0].textContent = String(cd || '');
+    if (b[1]) b[1].textContent = String(cs || '');
+    if (b[2]) b[2].textContent = String(cx || '');
+  }
+  renderTally();
+  if (navigator.vibrate) { try { navigator.vibrate(k === 'd' ? 18 : 60); } catch (e) { } }
+}
+function mockUndo() {
+  if (!mock.marks.length) { toast('Nothing to undo.'); return; }
+  const m = mock.marks.pop();
+  renderMockSheet(); renderTally();
+  const f = faultById(m.id);
+  toast('Took back ' + (f ? (f.short || f.name) : m.id) + '.');
+}
+function mockStop() {
+  if (!mock.on) return;
+  mock.on = false;
+  clearInterval(mock.timer);
+  if (mock.watch != null && navigator.geolocation) { try { navigator.geolocation.clearWatch(mock.watch); } catch (e) { } mock.watch = null; }
+  const rec = {
+    when: new Date().toISOString(), driver: mock.driver,
+    mins: Math.round((performance.now() - mock.t0) / 60000),
+    marks: mock.marks.slice(), route: mock.route.slice()
+  };
+  const hist = store.get(K.mocks, []);
+  hist.unshift(rec); while (hist.length > 20) hist.pop();
+  store.set(K.mocks, hist);
+  $('#mockRun').hidden = true; $('#mockSetup').hidden = false;
+  renderResult(rec); renderPractice(); renderHist(); renderMockMap(rec); renderProgress();
+  $('#mockResult').scrollIntoView({ block: 'start', behavior: 'smooth' });
+}
+function worstItems(marks, n) {
+  const by = {};
+  marks.forEach(m => { const b = by[m.id] = by[m.id] || { id: m.id, d: 0, s: 0, x: 0 }; b[m.k]++; });
+  return Object.values(by).sort((a, b) => (b.x * 100 + b.s * 50 + b.d) - (a.x * 100 + a.s * 50 + a.d)).slice(0, n || 99);
+}
+function renderResult(rec) {
+  const v = mockVerdict(rec.marks);
+  const worst = worstItems(rec.marks, 5);
+  const lines = worst.map(w => {
+    const f = faultById(w.id);
+    const bits = [w.d ? w.d + ' driving' : '', w.s ? w.s + ' serious' : '', w.x ? w.x + ' dangerous' : ''].filter(Boolean).join(', ');
+    return '<tr><td>' + esc(f ? f.name : w.id) + '</td><td>' + esc(bits) + '</td><td><button type="button" class="btn small" data-fault="' + esc(w.id) + '">What they want</button></td></tr>';
+  }).join('');
+  $('#mockResult').innerHTML =
+    '<div class="result ' + (v.pass ? 'pass' : 'fail') + '"><h3>' + (v.pass ? 'That would have been a pass' : 'That would have been a fail') + '</h3>' +
+    '<p style="margin:4px 0 0">' + v.t.d + ' driving fault' + (v.t.d === 1 ? '' : 's') + ', ' + v.t.s + ' serious, ' + v.t.x + ' dangerous, over ' + rec.mins + ' minute' + (rec.mins === 1 ? '' : 's') + '.' +
+    (v.pass ? ' The limit is ' + v.lim + ' driving faults and none serious or dangerous.' : v.t.s || v.t.x ? ' One serious or dangerous fault is a fail, whatever else went well.' : ' The limit is ' + v.lim + ' driving faults.') + '</p></div>' +
+    (lines ? '<div class="scroll"><table><thead><tr><th>Where the marks went</th><th>Count</th><th></th></tr></thead><tbody>' + lines + '</tbody></table></div>' : '<p>No faults marked at all. Either it was a clean drive or the marking was too kind.</p>');
+}
+function renderHist() {
+  const hist = store.get(K.mocks, []);
+  if (!hist.length) { $('#histBody').innerHTML = '<p class="muted">No mocks yet.</p>'; return; }
+  $('#histBody').innerHTML = '<div class="scroll"><table><thead><tr><th>When</th><th>Who</th><th>Result</th><th>Faults</th><th></th></tr></thead><tbody>' +
+    hist.map((r, i) => {
+      const v = mockVerdict(r.marks);
+      const d = new Date(r.when);
+      return '<tr><td>' + esc(isNaN(d) ? r.when : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })) + '</td><td>' + esc(r.driver || '') + '</td><td>' + (v.pass ? '<span class="tag ok">pass</span>' : '<span class="tag no">fail</span>') + '</td><td>' + v.t.d + ' / ' + v.t.s + ' / ' + v.t.x + '</td><td><button type="button" class="btn small" data-hist="' + i + '">Open</button></td></tr>';
+    }).join('') + '</tbody></table></div>' +
+    '<div class="row"><button type="button" class="btn small danger" id="histClear">Clear the history</button></div>';
+}
+function renderPractice() {
+  const hist = store.get(K.mocks, []);
+  const all = [];
+  hist.slice(0, 4).forEach(r => all.push.apply(all, r.marks));
+  const box = $('#practiceBody');
+  if (!all.length) { box.innerHTML = '<p class="muted">' + rich(((D.plan || {}).practiceEmpty) || 'Run a mock test and this fills with the things that cost you marks.') + '</p>'; return; }
+  const worst = worstItems(all, 6);
+  box.innerHTML = '<p class="lede">From your last ' + Math.min(hist.length, 4) + ' mock' + (Math.min(hist.length, 4) === 1 ? '' : 's') + ', in the order they cost you most.</p>' +
+    worst.map(w => {
+      const f = faultById(w.id);
+      if (!f) return '';
+      const js = junctionItems().filter(j => (j.links || []).indexOf(w.id) >= 0).slice(0, 3);
+      return '<div class="card" style="--lv:' + (w.s || w.x ? 'var(--f2)' : 'var(--f1)') + '"><div class="head"><h3>' + esc(f.name) + '</h3></div>' +
+        '<div class="kind">' + [w.d ? w.d + ' driving fault' + (w.d === 1 ? '' : 's') : '', w.s ? w.s + ' serious' : '', w.x ? w.x + ' dangerous' : ''].filter(Boolean).join(' · ') + '</div>' +
+        (f.do && f.do.length ? '<ul>' + f.do.slice(0, 3).map(x => '<li>' + rich(x) + '</li>').join('') + '</ul>' : '') +
+        '<div class="row"><button type="button" class="btn small" data-fault="' + esc(f.id) + '">The full item</button>' +
+        js.map(j => '<button type="button" class="btn small" data-roadto="' + esc(j.id) + '">Practise at ' + esc(j.short || j.name) + '</button>').join('') + '</div></div>';
+    }).join('');
+}
+function renderMockMap(rec) {
+  const box = $('#mockMapBox');
+  const marks = (rec && rec.marks || []).filter(m => m.lat);
+  if (!rec) { const h = store.get(K.mocks, []); if (h.length) return renderMockMap(h[0]); }
+  if (!rec) { box.innerHTML = ''; $('#mockMapNote').textContent = 'Run a mock test with location allowed and every fault is pinned where it happened.'; return; }
+  if (!marks.length && !(rec.route || []).length) { box.innerHTML = ''; $('#mockMapNote').textContent = 'That mock has no positions saved, so there is nothing to pin. Allow location before you start and the faults land on the map.'; return; }
+  $('#mockMapNote').textContent = marks.length + ' fault' + (marks.length === 1 ? '' : 's') + ' pinned from the last mock. Tap a pin to see what it was.';
+  box.innerHTML = '<div id="mockbox" style="position:relative;height:52vh;min-height:300px;background:var(--field);border:1px solid var(--rule);border-radius:12px;overflow:hidden;touch-action:none"><div class="tiles" style="position:absolute;inset:0"></div><svg style="position:absolute;inset:0;width:100%;height:100%"></svg><div class="attrib">Map data © OpenStreetMap contributors</div></div><div id="mockPinCard"></div>';
+  const bx = $('#mockbox');
+  $$('#mockbox .tiles img').forEach(i => i.remove());
+  mockMap = makeMap(bx, {
+    lat: marks.length ? marks[0].lat : (D.centre || {}).lat, lon: marks.length ? marks[0].lon : (D.centre || {}).lon, z: 14,
+    onPick: id => {
+      const i = parseInt(String(id).split(':')[1], 10), m = marks[i];
+      if (!m) return;
+      const f = faultById(m.id);
+      $('#mockPinCard').innerHTML = '<div class="card" style="--lv:' + FK[m.k].colour + '"><div class="head"><h3>' + esc(f ? f.name : m.id) + '</h3></div><div class="kind">' + esc(FK[m.k].name) + ' at ' + mmss(m.t) + ' into the drive</div>' +
+        (f && f.do ? list(f.do.slice(0, 3)) : '') + '<div class="row"><button type="button" class="btn small" data-fault="' + esc(m.id) + '">What they want</button></div></div>';
+      mockMap.sel = id; mockMap.render();
+    }
+  });
+  mockMap.lines = (rec.route || []).length > 1 ? [{ points: rec.route, colour: '#1558B0', w: 4, op: .5 }] : [];
+  mockMap.pts = marks.map((m, i) => {
+    const f = faultById(m.id);
+    return { id: 'mk:' + i, lat: m.lat, lon: m.lon, name: (f ? (f.short || f.name) : m.id), colour: FK[m.k].pin, glyph: m.k === 'd' ? '' : m.k === 's' ? 'S' : 'X' };
+  });
+  mockMap.render();
+  const pts = mockMap.pts.concat((rec.route || []).map(p => ({ lat: p[0], lon: p[1] })));
+  if (pts.length) mockMap.fit(pts, 40);
+}
+
+/* paper: the same list of items, with boxes to tick in the car */
+function printSheet() {
+  const groups = (D.faults && D.faults.groups) || [];
+  const items = mockItems(), byGroup = {};
+  items.forEach(i => { (byGroup[i.group] = byGroup[i.group] || []).push(i); });
+  const order = groups.length ? groups : Object.keys(byGroup).map(g => ({ id: g, name: g }));
+  const bx = n => new Array(n).fill('<span class="bx"></span>').join('');
+  const rows = order.filter(g => byGroup[g.id]).map(g =>
+    '<tr><td class="gp" colspan="3">' + esc(g.name) + '</td></tr>' +
+    byGroup[g.id].map(f => '<tr><td>' + esc(f.name) + '</td><td>' + bx(6) + '</td><td><span class="bx s"></span><span class="bx s"></span></td></tr>').join('')
+  ).join('');
+  const lim = ((D.marking || {}).limit || {}).number || 15;
+  $('#printArea').innerHTML =
+    '<h1>Mock test marking sheet</h1>' +
+    '<div class="ph"><span>Driver: ' + esc(($('#mockDriver').value || st.plan.name || '').trim() || '.'.repeat(30)) + '</span><span>Date: ' + '.'.repeat(18) + '</span><span>Route: ' + '.'.repeat(22) + '</span></div>' +
+    '<table><thead><tr><th>Item</th><th>Driving faults</th><th>Serious / dangerous</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+    '<div class="fin">Total driving faults: ........  Serious: ........  Dangerous: ........  Result: pass / fail' +
+    '<br>' + lim + ' driving faults is the limit, and one serious or dangerous fault is a fail. ' +
+    'This is a practice sheet built from the app, not a DVSA form.</div>';
+  window.print();
+}
+function saveMocks() {
+  const data = { app: 'chilwell-test', saved: new Date().toISOString(), mocks: store.get(K.mocks, []), quiz: store.get(K.quiz, {}) };
+  const blob = new Blob([JSON.stringify(data, null, 1)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'mock-tests.json';
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+function loadMocks(file) {
+  const r = new FileReader();
+  r.onload = () => {
+    let o = null;
+    try { o = JSON.parse(r.result); } catch (e) { toast('That file is not one of ours.'); return; }
+    if (!o || !Array.isArray(o.mocks)) { toast('That file has no mock tests in it.'); return; }
+    const have = store.get(K.mocks, []), seen = new Set(have.map(m => m.when));
+    let added = 0;
+    o.mocks.forEach(m => { if (m && m.when && !seen.has(m.when)) { have.push(m); seen.add(m.when); added++; } });
+    have.sort((a, b) => String(b.when).localeCompare(String(a.when)));
+    while (have.length > 40) have.pop();
+    store.set(K.mocks, have);
+    renderHist(); renderPractice(); renderMockMap(have[0] || null);
+    toast(added ? 'Added ' + added + ' mock' + (added === 1 ? '' : 's') + '.' : 'Nothing new in that file.');
+  };
+  r.readAsText(file);
+}
+
+/* ---------------- wiring ---------------- */
+function goTo(spec) {
+  const [tab, anchor] = String(spec).split('#');
+  setTab(tab);
+  if (anchor) setTimeout(() => {
+    const t = document.getElementById(anchor);
+    if (t) { if (t.tagName === 'DETAILS') { t.open = true; t.dispatchEvent(new Event('toggle')); } t.scrollIntoView({ block: 'center', behavior: 'smooth' }); }
+  }, 60);
+}
+function openFault(id) {
+  st.fault = 'all'; renderFaults();
+  setTab('test');
+  setTimeout(() => {
+    const d = document.getElementById('fault-' + id);
+    if (d) { d.open = true; d.scrollIntoView({ block: 'center', behavior: 'smooth' }); }
+  }, 60);
+}
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-tab],[data-go],[data-layer],[data-road],[data-fault-group],[data-fault],[data-mapto],[data-roadto],[data-mark],[data-qshow],[data-qmark],[data-qspeak],[data-qstop],[data-mstep],[data-hist]');
+  if (!t) return;
+  const d = t.dataset;
+  if (d.tab) setTab(d.tab);
+  else if (d.go) goTo(d.go);
+  else if (d.layer) { st.layers[d.layer] = !st.layers[d.layer]; t.setAttribute('aria-pressed', String(st.layers[d.layer])); refreshMap(); }
+  else if (d.road) { st.road = d.road; renderRoads(); }
+  else if (d.faultGroup) { st.fault = d.faultGroup; renderFaults(); }
+  else if (d.fault) openFault(d.fault);
+  else if (d.mapto) { setTab('map'); setTimeout(() => { const j = jById(d.mapto); if (j && map) { map.lat = j.lat; map.lon = j.lon; map.z = Math.max(map.z, 16); mapCard(j.id); } }, 60); }
+  else if (d.roadto) { st.road = 'all'; renderRoads(); setTab('roads'); setTimeout(() => { const det = $('[data-jid="' + d.roadto + '"]'); if (det) { det.open = true; fillJunctionBody(det); det.scrollIntoView({ block: 'center', behavior: 'smooth' }); } }, 60); }
+  else if (d.mark) mockAdd(d.mark, d.k);
+  else if (d.qshow) { quizState.shown = true; quizDraw(); }
+  else if (d.qmark) quizMark(d.qmark === 'right');
+  else if (d.qspeak) { const it = qItems()[quizState.order[quizState.at]]; if (it) speak(it.q); }
+  else if (d.qstop) { quizState.on = false; speakStop(); quizDraw(); }
+  else if (d.mstep) {
+    const dg = t.closest('[data-man-diag]'), det = t.closest('details');
+    const it = ((D.manoeuvres || {}).items || []).find(x => x.id === (det && det.dataset.man));
+    const n = (MAN[dg.dataset.manDiag] || {}).frames.length;
+    dg.dataset.step = String(clamp(parseInt(dg.dataset.step || '0', 10) + parseInt(d.mstep, 10), 0, n - 1));
+    drawManStep(dg, it || {});
+  }
+  else if (d.hist) { const h = store.get(K.mocks, [])[parseInt(d.hist, 10)]; if (h) { renderResult(h); renderMockMap(h); $('#mockResult').scrollIntoView({ block: 'start', behavior: 'smooth' }); } }
+});
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.dataset && t.dataset.check) {
+    st.checks[checkKey(t.dataset.check)] = t.checked;
+    store.set(K.checks, st.checks);
+    renderProgress();
+    const span = t.parentElement.querySelector('span');
+    if (span) span.style.cssText = t.checked ? 'opacity:.55;text-decoration:line-through' : '';
+  }
+  if (t.id === 'tDate' || t.id === 'tTime' || t.id === 'tName') {
+    st.plan = { date: $('#tDate').value, time: $('#tTime').value, name: $('#tName').value };
+    store.set(K.plan, st.plan); renderCount();
+  }
+});
+document.addEventListener('toggle', e => {
+  const t = e.target;
+  if (t.tagName !== 'DETAILS' || !t.open) return;
+  if (t.dataset.jid) fillJunctionBody(t);
+  if (t.dataset.man) fillManBody(t);
+}, true);
+
+$('#mockStart').addEventListener('click', mockStart);
+$('#mockStop').addEventListener('click', mockStop);
+$('#mockUndo').addEventListener('click', mockUndo);
+$('#mockPrint').addEventListener('click', printSheet);
+$('#mockSave').addEventListener('click', saveMocks);
+$('#mockLoad').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if (f) loadMocks(f); e.target.value = ''; });
+$('#qStart').addEventListener('click', () => { quizStart(); $('#qBox').scrollIntoView({ block: 'nearest' }); });
+$('#qAll').addEventListener('click', () => { qListOpen = !qListOpen; $('#qAll').textContent = qListOpen ? 'Hide the list' : 'Show all the questions'; renderQList(); });
+$('#mZoomIn').addEventListener('click', () => { const r = map.rect(); map.zoomAt(map.z + 1, r.w / 2, r.h / 2); });
+$('#mZoomOut').addEventListener('click', () => { const r = map.rect(); map.zoomAt(map.z - 1, r.w / 2, r.h / 2); });
+$('#mHome').addEventListener('click', () => { const c = D.centre || {}; if (c.lat) { map.lat = c.lat; map.lon = c.lon; map.z = 14.4; map.render(); } });
+$('#mBig').addEventListener('click', () => { $('#mapbox').classList.toggle('tall'); setTimeout(() => map.render(), 30); });
+$('#mGps').addEventListener('click', function () {
+  const b = this;
+  if (map.gpsWatch != null) { try { navigator.geolocation.clearWatch(map.gpsWatch); } catch (e) { } map.gpsWatch = null; map.gps = null; b.classList.remove('on'); map.render(); return; }
+  if (!navigator.geolocation) { toast('This browser will not give a location.'); return; }
+  b.classList.add('on');
+  map.gpsWatch = navigator.geolocation.watchPosition(p => {
+    map.gps = { lat: p.coords.latitude, lon: p.coords.longitude, acc: p.coords.accuracy };
+    if (!map.gpsSeen) { map.gpsSeen = true; map.lat = map.gps.lat; map.lon = map.gps.lon; }
+    map.render();
+  }, () => { toast('No location. On a phone this needs an https page and permission.'); b.classList.remove('on'); }, { enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 });
+});
+
+/* ---------------- init ---------------- */
+function init() {
+  const P = D.plan || {};
+  if (P.strap) $('#strap').textContent = P.strap;
+  $('#mapIntro').innerHTML = rich(P.mapIntro || '');
+  $('#roadsIntro').innerHTML = rich(P.roadsIntro || '');
+  $('#faultsIntro').innerHTML = rich(P.faultsIntro || '');
+  $('#qIntro').innerHTML = rich(P.qIntro || '');
+  $('#mockIntro').innerHTML = rich(P.mockIntro || '');
+  $('#mapAbout').innerHTML = para(P.mapAbout || '');
+
+  $('#tDate').value = st.plan.date || ''; $('#tTime').value = st.plan.time || ''; $('#tName').value = st.plan.name || '';
+  renderCount(); renderJourney(); renderCentre();
+
+  const A = D.advice || {};
+  $('#bookBody').innerHTML = sectionHtml(A.booking);
+  $('#carBody').innerHTML = sectionHtml(A.car);
+  $('#nervesBody').innerHTML = sectionHtml(A.nerves);
+  $('#afterBody').innerHTML = sectionHtml(A.after);
+  $('#ratesBody').innerHTML = sectionHtml(A.rates);
+  renderSources();
+
+  renderMapLayers(); renderRoads(); renderTestOrder(); renderMarking(); renderFaults();
+  renderManoeuvres(); renderQList();
+  $('#routesBody').innerHTML = (function () {
+    const r = D.routes || {};
+    return (r.official ? '<div class="note warn">' + rich(r.official) + '</div>' : '') +
+      (r.intro ? para(r.intro) : '') +
+      (r.corridors || []).map(c => '<h4>' + esc(c.name) + '</h4>' + (c.note ? para(c.note) : '') + (c.roads ? list(c.roads) : '')).join('') +
+      (r.notes ? list(r.notes) : '') + srcLine(r.sources);
+  })();
+
+  const mockOpts = $('#mockOpts');
+  mockOpts.innerHTML = '<button type="button" class="chip" data-mockgps aria-pressed="true">Pin the faults on the map</button>';
+  mockOpts.addEventListener('click', e => {
+    const b = e.target.closest('[data-mockgps]'); if (!b) return;
+    mock.gpsOn = !mock.gpsOn; b.setAttribute('aria-pressed', String(mock.gpsOn));
+  });
+  $('#mockDriver').value = st.plan.name || '';
+  renderPractice(); renderHist(); renderMockMap(null); renderProgress();
+  $('#histBody').addEventListener('click', e => {
+    if (e.target.id === 'histClear') { store.del(K.mocks); renderHist(); renderPractice(); renderMockMap(null); toast('History cleared.'); }
+  });
+
+  const c = D.centre || {};
+  map = makeMap($('#mapbox'), { lat: c.lat || 52.9142, lon: c.lon || -1.2233, z: 14.3, onPick: mapCard });
+  refreshMap();
+  const all = mapPoints();
+  if (all.length > 1) map.fit(all, 48);
+  drawDiagrams(document);
+  setTab(st.tab && document.getElementById('tab-' + st.tab) ? st.tab : 'start');
+}
+init();
+})();
+</script>
+</body>
+</html>

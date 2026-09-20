@@ -1,0 +1,35 @@
+{
+ "intro": "STUB",
+ "faultTypes": [
+  {
+   "name": "Driving fault",
+   "what": "STUB",
+   "effect": "STUB",
+   "example": "STUB"
+  },
+  {
+   "name": "Serious fault",
+   "what": "STUB",
+   "effect": "STUB"
+  },
+  {
+   "name": "Dangerous fault",
+   "what": "STUB",
+   "effect": "STUB"
+  }
+ ],
+ "limit": {
+  "number": 15,
+  "text": "STUB"
+ },
+ "sheet": "STUB",
+ "immediate": [
+  "STUB"
+ ],
+ "notes": [
+  "STUB"
+ ],
+ "sources": [
+  "(reasoned)"
+ ]
+}

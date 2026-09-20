@@ -1,0 +1,57 @@
+{
+ "booking": {
+  "id": "booking",
+  "lede": "STUB",
+  "body": "STUB",
+  "points": [
+   "STUB"
+  ],
+  "sources": [
+   "(reasoned)"
+  ]
+ },
+ "car": {
+  "id": "car",
+  "lede": "STUB",
+  "body": "STUB",
+  "points": [
+   "STUB"
+  ],
+  "sources": [
+   "(reasoned)"
+  ]
+ },
+ "nerves": {
+  "id": "nerves",
+  "lede": "STUB",
+  "body": "STUB",
+  "points": [
+   "STUB"
+  ],
+  "sources": [
+   "(reasoned)"
+  ]
+ },
+ "after": {
+  "id": "after",
+  "lede": "STUB",
+  "body": "STUB",
+  "points": [
+   "STUB"
+  ],
+  "sources": [
+   "(reasoned)"
+  ]
+ },
+ "rates": {
+  "id": "rates",
+  "lede": "STUB",
+  "body": "STUB",
+  "points": [
+   "STUB"
+  ],
+  "sources": [
+   "(reasoned)"
+  ]
+ }
+}

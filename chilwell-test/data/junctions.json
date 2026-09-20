@@ -1,0 +1,86 @@
+{
+ "intro": "STUB",
+ "items": [
+  {
+   "id": "bardills",
+   "name": "Bardills roundabout",
+   "short": "Bardills",
+   "kind": "roundabout",
+   "lat": 52.9165,
+   "lon": -1.2455,
+   "precision": "approximate",
+   "where": "A52 at Swiney Way",
+   "speed": "40 mph",
+   "why": "STUB",
+   "drive": "STUB",
+   "watch": [
+    "STUB"
+   ],
+   "mistakes": [
+    "STUB"
+   ],
+   "diagram": {
+    "type": "roundabout",
+    "title": "STUB",
+    "enter": 180,
+    "leave": 270,
+    "exits": [
+     {
+      "b": 0,
+      "label": "A52 east",
+      "lanes": 2
+     },
+     {
+      "b": 90,
+      "label": "Nottingham Road"
+     },
+     {
+      "b": 180,
+      "label": "Swiney Way",
+      "n": "you come in here"
+     },
+     {
+      "b": 270,
+      "label": "A52 west"
+     }
+    ]
+   },
+   "diagramCap": "STUB",
+   "links": [
+    "junctions-observation"
+   ],
+   "sources": [
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "tram",
+   "name": "High Road tram crossing",
+   "short": "Tram",
+   "kind": "tram",
+   "lat": 52.9195,
+   "lon": -1.2205,
+   "precision": "approximate",
+   "where": "High Road",
+   "speed": "30 mph",
+   "why": "STUB",
+   "drive": "STUB",
+   "watch": [
+    "STUB"
+   ],
+   "mistakes": [
+    "STUB"
+   ],
+   "diagram": {
+    "type": "tram",
+    "angle": -20,
+    "label": "tram tracks",
+    "stopLabel": "stop line"
+   },
+   "links": [],
+   "sources": [
+    "(reasoned)"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,45 @@
+{
+ "intro": "STUB",
+ "official": "STUB",
+ "corridors": [
+  {
+   "id": "a",
+   "name": "STUB corridor",
+   "note": "STUB",
+   "roads": [
+    "STUB"
+   ],
+   "colour": "#1558B0",
+   "points": [
+    [
+     52.9105,
+     -1.2265
+    ],
+    [
+     52.9165,
+     -1.2455
+    ]
+   ]
+  }
+ ],
+ "spots": [
+  {
+   "id": "retail",
+   "name": "Chilwell Retail Park",
+   "kind": "Practice spot",
+   "lat": 52.9128,
+   "lon": -1.2308,
+   "precision": "approximate",
+   "note": "STUB",
+   "sources": [
+    "(reasoned)"
+   ]
+  }
+ ],
+ "notes": [
+  "STUB"
+ ],
+ "sources": [
+  "(reasoned)"
+ ]
+}

@@ -1,0 +1,26 @@
+{
+ "name": "STUB centre",
+ "short": "Test centre",
+ "address": [
+  "Unit 24, Eldon Business Park",
+  "Eldon Road",
+  "NG9 6DZ"
+ ],
+ "lat": 52.9105,
+ "lon": -1.2265,
+ "precision": "approximate",
+ "intro": "STUB intro.",
+ "arrival": [
+  "STUB step one",
+  "STUB step two"
+ ],
+ "facts": [
+  {
+   "k": "Getting there",
+   "v": "STUB"
+  }
+ ],
+ "sources": [
+  "(reasoned)"
+ ]
+}

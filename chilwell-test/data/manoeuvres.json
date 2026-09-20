@@ -1,0 +1,138 @@
+{
+ "intro": "STUB",
+ "items": [
+  {
+   "id": "parallel",
+   "name": "STUB parallel",
+   "diagram": "parallel",
+   "asked": "STUB",
+   "words": "STUB",
+   "lede": "STUB",
+   "steps": [
+    "STUB 1",
+    "STUB 2",
+    "STUB 3",
+    "STUB 4",
+    "STUB 5"
+   ],
+   "watch": [
+    "STUB"
+   ],
+   "serious": "STUB",
+   "mistakes": [
+    "STUB"
+   ],
+   "refs": "STUB",
+   "sources": [
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "bayreverse",
+   "name": "STUB bayreverse",
+   "diagram": "bayreverse",
+   "asked": "STUB",
+   "words": "STUB",
+   "lede": "STUB",
+   "steps": [
+    "STUB 1",
+    "STUB 2",
+    "STUB 3",
+    "STUB 4",
+    "STUB 5"
+   ],
+   "watch": [
+    "STUB"
+   ],
+   "serious": "STUB",
+   "mistakes": [
+    "STUB"
+   ],
+   "refs": "STUB",
+   "sources": [
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "bayforward",
+   "name": "STUB bayforward",
+   "diagram": "bayforward",
+   "asked": "STUB",
+   "words": "STUB",
+   "lede": "STUB",
+   "steps": [
+    "STUB 1",
+    "STUB 2",
+    "STUB 3",
+    "STUB 4",
+    "STUB 5",
+    "STUB 6"
+   ],
+   "watch": [
+    "STUB"
+   ],
+   "serious": "STUB",
+   "mistakes": [
+    "STUB"
+   ],
+   "refs": "STUB",
+   "sources": [
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "rightpull",
+   "name": "STUB rightpull",
+   "diagram": "rightpull",
+   "asked": "STUB",
+   "words": "STUB",
+   "lede": "STUB",
+   "steps": [
+    "STUB 1",
+    "STUB 2",
+    "STUB 3",
+    "STUB 4",
+    "STUB 5",
+    "STUB 6",
+    "STUB 7"
+   ],
+   "watch": [
+    "STUB"
+   ],
+   "serious": "STUB",
+   "mistakes": [
+    "STUB"
+   ],
+   "refs": "STUB",
+   "sources": [
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "stop",
+   "name": "STUB stop",
+   "diagram": "stop",
+   "asked": "STUB",
+   "words": "STUB",
+   "lede": "STUB",
+   "steps": [
+    "STUB 1",
+    "STUB 2",
+    "STUB 3",
+    "STUB 4",
+    "STUB 5"
+   ],
+   "watch": [
+    "STUB"
+   ],
+   "serious": "STUB",
+   "mistakes": [
+    "STUB"
+   ],
+   "refs": "STUB",
+   "sources": [
+    "(reasoned)"
+   ]
+  }
+ ]
+}

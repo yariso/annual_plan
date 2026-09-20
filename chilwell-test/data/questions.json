@@ -1,0 +1,25 @@
+{
+ "intro": "STUB",
+ "items": [
+  {
+   "id": "tell-1",
+   "type": "tell",
+   "q": "Tell me how you would check the brakes.",
+   "a": "STUB",
+   "extra": "STUB",
+   "common": "STUB",
+   "sources": [
+    "(reasoned)"
+   ]
+  },
+  {
+   "id": "show-1",
+   "type": "show",
+   "q": "Show me how you would wash the windscreen.",
+   "a": "STUB",
+   "sources": [
+    "(reasoned)"
+   ]
+  }
+ ]
+}
