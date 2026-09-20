@@ -114,6 +114,30 @@ voice; and printing, because there is no printer. All four need a hand test on a
 | What helps with test nerves | The evidence pass never ran; no studies are cited | The app says what is broadly supported and does not name a paper |
 | Phone behaviour: location needing https, permissions, the screen locking during a mock | From memory, unverified | Could not be tested in this sandbox |
 
+## The review of the finished content
+
+A separate pass read every data file against this contract and against the research, and
+looked for contradictions between files, claims stated more firmly than their sources
+allow, house style breaches, and driving advice that was wrong. What it found, and what
+was done:
+
+- Five pieces of advice were wrong and were corrected: the speed limit described as a
+  target rather than a maximum; the emergency stop telling every driver to hold the pedal
+  through a lock up, which is right with anti lock brakes and wrong without; one way
+  described as a blue circle with a white arrow, which is a different sign meaning ahead
+  only; another driver's wave treated as permission to go; and the room to give a cyclist
+  put at the same as a car, against the card's own text.
+- Eight places where the app disagreed with itself were reconciled, including the fault
+  limit arithmetic in a calming line, the layout of the two kerbed bays at the centre, the
+  waiting time, the second attempt pass rate, and the year routes stopped being published,
+  which is now nowhere in the app because nothing supports it.
+- Three measurements that were never measured are now labelled as such: the distance to
+  Attenborough station, the tram frequency, and the queue figures at Bardills.
+- The mock sheet's default list had no button for the manoeuvre, and eco safe driving was
+  counted towards a verdict it probably cannot affect. Both fixed.
+
+The review is not a guarantee. It read the content, not the roads.
+
 ## Claim by claim
 
 The per topic records live in `research/`, each with its own Sources and Not found
