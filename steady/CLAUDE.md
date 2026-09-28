@@ -11,5 +11,7 @@ A personal self-help tool. The brief is `steady-spec.md`; read it before changin
 - `data/` is gitignored. It holds `profile.json` from the onboarding interview, which is personal. Never commit it.
 - Build sessions are capped at 90 minutes. Phase 1 only until the user has a week of real data.
 
+On claude.ai: `app/artifact.html` is the entry page for the private artifact (published with the `downloads` capability for Export). No service worker there, so no offline mode.
+
 Run: `npm start` from this folder, then open http://localhost:8000/app/ (serving from here lets the app pick up `data/profile.json` on first load).
 When changing any app file, bump `VERSION` in `app/sw.js` so installed copies update.

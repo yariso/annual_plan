@@ -71,13 +71,25 @@ function countdown(el, seconds, onDone) {
   }, 1000);
 }
 
-function download(name, text, type) {
+// On claude.ai the frame blocks plain download links, so use the downloads capability there.
+async function download(name, text, type) {
+  const dl = window.claude?.use ? await window.claude.use('downloads').catch(() => null) : null;
+  if (dl) {
+    try { await dl.save({ filename: name, data: text }); }
+    catch (e) { if (e?.code !== 'declined') showMsg('Saving files is not available here.'); }
+    return;
+  }
   const url = URL.createObjectURL(new Blob([text], { type }));
   const a = Object.assign(document.createElement('a'), { href: url, download: name });
   document.body.append(a);
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function showMsg(text) {
+  const el = $('#msg');
+  if (el) { el.textContent = text; el.hidden = false; }
 }
 
 // ---------- Home ----------
@@ -530,10 +542,18 @@ function gapSummary() {
 
 // ---------- More: settings, profile, export ----------
 
+let pendingRestore = null;
+
 function more() {
   const s = db.settings;
   const th = thresholds();
   main().innerHTML = `
+    <p id="msg" class="flag-row concern" hidden></p>
+    ${pendingRestore ? `<section class="card">
+      <h3>Replace everything on this device with this backup?</h3>
+      <p class="muted small">Export first if you want to keep what is here now.</p>
+      <div class="row"><button class="btn small danger" id="rjyes">Replace</button><button class="btn small ghost" id="rjno">Cancel</button></div>
+    </section>` : ''}
     <section class="card">
       <h2>More</h2>
       <a class="btn" href="#safety">Safety card</a>
@@ -588,10 +608,13 @@ function more() {
   const readFile = (input, fn) => input.addEventListener('change', async () => {
     const file = input.files[0];
     if (!file) return;
-    try { fn(JSON.parse(await file.text())); render(); } catch { alert('That file could not be read.'); }
+    try { fn(JSON.parse(await file.text())); render(); }
+    catch { showMsg('That file could not be read. Pick a .json file exported from Steady, or profile.json.'); }
   });
   readFile($('#pf'), p => store.importProfile(p));
-  readFile($('#rj'), d => { if (confirm('Replace everything on this device with this backup?')) { store.replaceAll(d); location.reload(); } });
+  readFile($('#rj'), d => { pendingRestore = d; });
+  $('#rjyes')?.addEventListener('click', () => { store.replaceAll(pendingRestore); pendingRestore = null; location.reload(); });
+  $('#rjno')?.addEventListener('click', () => { pendingRestore = null; render(); });
   main().querySelectorAll('[data-toggle]').forEach(b => b.addEventListener('click', () => {
     const a = db.activities.find(x => x.id === Number(b.dataset.toggle));
     store.update('activities', a.id, { active: a.active === false });
@@ -629,11 +652,12 @@ function safety() {
     <h2>This tool isn't for this bit.</h2>
     <p>Call your GP today, or NHS 111 and choose the mental health option, or Samaritans on 116 123, free, any time. If you are in immediate danger, call 999.</p>
     <div class="stack">
-      ${gp ? `<a class="btn" href="tel:${esc(gp)}">Call GP</a>` : ''}
-      <a class="btn" href="tel:111">Call NHS 111</a>
-      <a class="btn" href="tel:116123">Call Samaritans, 116 123</a>
-      <a class="btn danger" href="tel:999">Call 999</a>
+      ${gp ? `<a class="btn" href="tel:${esc(gp)}">GP <span class="num">${esc(gp)}</span></a>` : ''}
+      <a class="btn" href="tel:111">NHS 111 <span class="num">111</span></a>
+      <a class="btn" href="tel:116123">Samaritans <span class="num">116 123</span></a>
+      <a class="btn danger" href="tel:999">Emergency <span class="num">999</span></a>
     </div>
+    <p class="muted small">If tapping does not start a call, dial the number shown.</p>
     ${gp ? '' : `<form id="gpf" class="row"><input name="p" type="tel" placeholder="Add your GP's number"><button class="btn small" type="submit">Save</button></form>`}
     <a class="btn ghost" href="#home">Back</a>
   </section>`;
