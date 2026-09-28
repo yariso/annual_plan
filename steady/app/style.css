@@ -101,3 +101,6 @@ td.up { color: var(--improve); font-weight: 600; }
 td.down { color: var(--concern); }
 .safety p { font-size: 18px; }
 .btn .num { font-variant-numeric: tabular-nums; user-select: all; margin-left: 6px; }
+.why { font-size: 15px; color: var(--muted); border-top: 1px solid var(--line); margin-top: 16px; padding-top: 12px; }
+.how li { margin: 8px 0; }
+.how h3 { margin-top: 18px; }

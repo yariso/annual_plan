@@ -11,7 +11,14 @@ const main = () => $('#main');
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const thresholds = () => ({ ...DEFAULT_THRESHOLDS, ...(db.settings.thresholds ?? {}) });
 
-const STATE_LABEL = { flat: 'Flat', spiral: 'Spiral', push: 'Push', steady: 'Steady' };
+const STATE_LABEL = { flat: 'Low', spiral: 'Worried', push: 'Overdoing', steady: 'Steady' };
+const STATE_HELP = {
+  flat: 'Low energy today. The only aim is to start one small thing. You don\'t need to feel like it first: with low mood, doing comes before feeling.',
+  spiral: 'Worry or "I\'m not good enough" thoughts are running. A few short steps to step back from them, then one small action.',
+  push: 'High energy and deep into something. This is the point where you tend to work for hours and then crash, so these steps put an end on today.',
+  steady: 'An ordinary day. One activity to keep things moving, and an optional short exercise.',
+};
+const why = text => `<p class="why"><strong>Why:</strong> ${text}</p>`;
 const METRICS = [
   ['energy', 'Energy'], ['mood', 'Mood'], ['anxiety', 'Anxiety'], ['sleep_hours', 'Sleep'], ['drinks', 'Drinks'],
 ];
@@ -27,7 +34,7 @@ function today() {
 
 // ---------- Router ----------
 
-const routes = { home, checkin, evidence, charts, more, safety };
+const routes = { home, checkin, evidence, charts, more, safety, how };
 
 function render() {
   clearTimer();
@@ -103,16 +110,19 @@ function home() {
       <section class="card one">
         <p class="kicker">Next</p>
         <h2>Check in</h2>
-        <p class="muted">Under a minute. Then one small thing.</p>
+        <p class="muted">Tap a few numbers about how you are today. It takes under a minute. Then the app picks one small thing for you to do.</p>
         <a class="btn primary" href="#checkin">Check in</a>
+        <a class="btn ghost" href="#how">How this works</a>
       </section>`;
     bindSignalBanner(m);
     return;
   }
   m.innerHTML = `
+    <p class="label">Today's mode <span class="muted small">(set by your check-in; tap to change)</span></p>
     <div class="state-row">
       ${STATES.map(s => `<button class="state ${s}${t.state === s ? ' on' : ''}" data-state="${s}">${STATE_LABEL[s]}</button>`).join('')}
     </div>
+    <p class="muted small">${STATE_HELP[t.state]}</p>
     ${signalBanner()}
     <div id="step"></div>`;
   m.querySelectorAll('.state').forEach(b => b.addEventListener('click', () => setState(b.dataset.state, true)));
@@ -142,13 +152,22 @@ function planInput(c) {
 function signalBanner() {
   const open = db.signals.filter(s => !s.acknowledged);
   if (!open.length) return '';
-  const label = s => `${METRICS.find(m => m[0] === s.metric)?.[1] ?? s.metric}: ${RULES[s.rule]?.label.toLowerCase() ?? s.rule}`;
+  const label = s => {
+    const m = METRICS.find(x => x[0] === s.metric)?.[1] ?? s.metric;
+    const dir = s.side === 'low' ? 'lower' : 'higher';
+    return {
+      outsideLimits: `${m} today is ${dir} than your usual range.`,
+      shift: `${m} has been ${dir} than your average for 7 days in a row.`,
+      trend: `${m} has gone ${s.side === 'low' ? 'down' : 'up'} 6 days in a row.`,
+      nearLimit: `${m} has been close to the edge of your usual range.`,
+    }[s.rule] ?? m;
+  };
   return `<section class="flag">${open.map(s => `
     <div class="flag-row ${s.kind}">
-      <div><strong>${s.kind === 'concern' ? 'Signal' : 'Change'}</strong> ${esc(label(s))} (${s.side})</div>
+      <div><strong>${s.kind === 'concern' ? 'Worth noticing:' : 'Change:'}</strong> ${esc(label(s))} This is more than normal day-to-day up and down.</div>
       <div class="row">
-        ${protocolForSignal(s) && today() ? `<button class="btn small" data-proto="${protocolForSignal(s)}" data-sig="${s.id}">Use ${STATE_LABEL[protocolForSignal(s)]} route</button>` : ''}
-        <button class="btn small ghost" data-ack="${s.id}">Noted</button>
+        ${protocolForSignal(s) && today() ? `<button class="btn small" data-proto="${protocolForSignal(s)}" data-sig="${s.id}">Show the ${STATE_LABEL[protocolForSignal(s)].toLowerCase()} steps</button>` : ''}
+        <button class="btn small ghost" data-ack="${s.id}">OK</button>
       </div>
     </div>`).join('')}</section>`;
 }
@@ -201,10 +220,12 @@ function stepActivity(el, step, t) {
       <p class="kicker">${esc(a.category)}</p>
       <h2>${esc(a.name)}</h2>
       <p class="start">${esc(a.two_minute_start)}</p>
-      <p class="label">How much will you enjoy it? (0 to 10)</p>
+      <p class="muted small">Just this. Two minutes. You can stop after that and it still counts.</p>
+      <p class="label">First, guess: how much will you enjoy it? (0 = not at all, 10 = loads)</p>
       ${chips('predicted', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], predicted, 'eleven')}
       <button class="btn primary" id="go" ${predicted == null ? 'disabled' : ''}>Start two minutes</button>
       <button class="btn ghost" id="other">Something else</button>
+      ${why('This is behavioural activation, a main part of CBT for low mood. Low mood tells you nothing will be enjoyable, so you wait to feel motivated, and the feeling never comes. Starting small breaks that loop. You guess the enjoyment first and rate it after, because low mood makes the guess too gloomy. Over time the app shows you the difference.')}
     </section>`;
     bindChips(el, (_n, v) => { predicted = Number(v); $('#go').disabled = false; });
     $('#go').addEventListener('click', run);
@@ -262,12 +283,13 @@ function stepEvidence(el, step, t) {
   }
   const items = extras.evidenceIds.map(id => db.evidence.find(x => x.id === id)).filter(Boolean);
   el.innerHTML = `<section class="card one">
-    <p class="kicker">Evidence on: ${esc(CLAIMS[step.claim])}</p>
+    <p class="kicker">Facts about: ${esc(CLAIMS[step.claim])}</p>
     <h2>Read these slowly</h2>
+    ${why('From CBT for imposter feelings. The "I\'m not good enough" thought feels like a fact, but it is a guess. These are real things that happened, written down at the time. Reading them lets you check the guess against the facts.')}
     ${items.map(e => `<article class="ev">
       <p>${esc(e.what_happened)}</p>
       <p class="muted">${esc(e.date)} · ${esc(e.source)} · strength ${e.strength}/5</p>
-      ${e.yes_but ? `<p class="muted">The yes-but: ${esc(e.yes_but)}</p>` : ''}
+      ${e.yes_but ? `<p class="muted">What your mind said to dismiss it: ${esc(e.yes_but)}</p>` : ''}
     </article>`).join('')}
     ${items.length < step.count ? `<p class="muted">Only ${items.length} so far. Add more in Evidence when something happens.</p>` : ''}
     <button class="btn primary" id="next">Next</button>
@@ -279,8 +301,9 @@ function stepWorries(el, _step, t) {
   const extras = (t.extras ??= {});
   el.innerHTML = `<section class="card one">
     <p class="kicker">Worry</p>
-    <h2>Name them</h2>
-    <p class="muted">A word or two each, commas between. No need to solve anything.</p>
+    <h2>What are you worrying about?</h2>
+    <p class="muted">A word or two for each, with commas between. For example: the cat, A levels, money. You don't need to solve anything.</p>
+    ${why('When worry is about everything at once it feels like one huge weight. Naming each worry separately makes it a list of specific things, which is easier to hold.')}
     <input id="w" placeholder="the cat, A levels, ..." value="${esc((extras.worries ?? []).join(', '))}">
     <button class="btn primary" id="next">Next</button>
   </section>`;
@@ -297,10 +320,11 @@ function stepDefusion(el, step, t) {
     : ['Say the thought to yourself, word for word.', 'Now say: "I\'m having the thought that..." and the thought.',
        'Now: "I notice I\'m having the thought that..." and the thought.'];
   el.innerHTML = `<section class="card one">
-    <p class="kicker">Defusion, 90 seconds</p>
+    <p class="kicker">Step back, 90 seconds</p>
     <h2>${step.variant === 'worry' ? 'Say each one, slowly' : 'Step back from the thought'}</h2>
     <ul class="script">${lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul>
-    <p class="muted">Then notice where you are: five things you can see.</p>
+    <p class="muted">Then look around and name five things you can see.</p>
+    ${why('This comes from ACT, a type of CBT. You don\'t argue with the thought or try to push it away, which tends to make it louder. Saying "I\'m noticing..." in front of it reminds you it is a thought, not a fact, and it loosens its grip. Naming things you can see brings you back to the room.')}
     <div class="clock" id="clock"></div>
     <button class="btn primary" id="next">Next</button>
   </section>`;
@@ -319,13 +343,15 @@ function stepValues(el) {
   let chosen = null;
   el.innerHTML = `<section class="card one">
     <p class="kicker">Optional</p>
-    <h2>Values check</h2>
+    <h2>What matters to you</h2>
+    <p class="muted small">These are the values you chose.</p>
     <p class="label">Pick one</p>
     ${chips('value', vals, null)}
     <p class="label">One thing in the next ten minutes that moves towards it</p>
     <input id="act" maxlength="120">
     <button class="btn primary" id="save">Commit</button>
     <button class="btn ghost" id="skip">Skip</button>
+    ${why('From ACT. When mood is low, doing things for how they will feel doesn\'t work, because nothing feels like much. Doing one small thing because it matters to you works whatever your mood.')}
   </section>`;
   bindChips(el, (_n, v) => { chosen = v; });
   $('#save').addEventListener('click', () => {
@@ -344,6 +370,7 @@ function stepStopTime(el, _s, t) {
   el.innerHTML = `<section class="card one">
     <p class="kicker">Push</p>
     <h2>What time do you stop today?</h2>
+    ${why('You told me your pattern: you get excited, work for hours, then crash. Deciding a stop time now, while you feel good, protects tomorrow.')}
     ${db.settings.work_rules.length ? `<ul class="rules">${db.settings.work_rules.map(r => `<li>${esc(r)}</li>`).join('')}</ul>` : ''}
     <input id="stop" type="time" value="${esc(extras.stopTime ?? '18:00')}">
     <button class="btn primary" id="next">Set it</button>
@@ -356,7 +383,7 @@ function stepFirstTask(el, _s, t) {
   el.innerHTML = `<section class="card one">
     <p class="kicker">Push</p>
     <h2>Tomorrow's first task</h2>
-    <p class="muted">Write it now, so today can end.</p>
+    <p class="muted">Write it now. Then you don't have to keep it in your head, and today can end.</p>
     <input id="task" maxlength="140" value="${esc(extras.firstTask ?? '')}">
     <button class="btn primary" id="next">Written</button>
   </section>`;
@@ -369,6 +396,7 @@ function stepWarnings(el, _s, t) {
   el.innerHTML = `<section class="card one">
     <p class="kicker">Early warning</p>
     <h2>Any of these this week?</h2>
+    <p class="muted small">These are the signs you told me come before a crash. Tick any that are true.</p>
     <div class="checks">${list.map((w, i) => `<label><input type="checkbox" data-i="${i}"> ${esc(w)}</label>`).join('')}</div>
     <div id="tip"></div>
     <button class="btn primary" id="next">Done</button>
@@ -393,17 +421,18 @@ function checkin() {
   const yn = (name, label) => `<div class="yn"><span>${label}</span>${chips(name, [['0', 'No'], ['1', 'Yes']], '0', 'two')}</div>`;
   const scale = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   main().innerHTML = `<form class="card" id="f">
+    <p class="muted small">Tap one number for each. 1 is lowest, 10 is highest.</p>
     <p class="label">Energy</p>${chips('energy', scale, null, 'ten')}
     <p class="label">Mood</p>${chips('mood', scale, null, 'ten')}
     <p class="label">Anxiety</p>${chips('anxiety', scale, null, 'ten')}
     <p class="label">Hours slept</p>${chips('sleep_hours', [[4, '4-'], 5, 6, 7, 8, 9, 10, 11, 12, [13, '13+']], null, 'ten')}
     ${db.settings.show_drinks ? `<p class="label">Drinks yesterday</p>${chips('drinks', [0, 1, 2, 3, 4, 5, [6, '6+']], null)}` : ''}
     ${yn('started', 'Started anything yet today?')}
-    ${yn('imposter_thought', 'Imposter thought?')}
-    <div id="claim" hidden><p class="label">About</p>${chips('claim', Object.entries(CLAIMS), 1)}</div>
-    ${yn('worry', 'Worry running?')}
-    ${yn('into_something', 'Into something?')}
-    <input id="note" placeholder="One line (optional)" maxlength="200">
+    ${yn('imposter_thought', 'Thinking "I\'m not good enough"?')}
+    <div id="claim" hidden><p class="label">About what?</p>${chips('claim', Object.entries(CLAIMS), 1)}</div>
+    ${yn('worry', 'Worrying about lots of things?')}
+    ${yn('into_something', 'Deep into a task for hours?')}
+    <input id="note" placeholder="Anything else? One line (optional)" maxlength="200">
     <button class="btn primary" id="save" type="submit" disabled>Done</button>
   </form>`;
   const form = $('#f');
@@ -454,22 +483,22 @@ function ensureBaseline(metric, series) {
 function evidence() {
   main().innerHTML = `<section class="card">
     <h2>Evidence log</h2>
-    <p class="muted">What happened, in your words. Not how you felt about it.</p>
+    <p class="muted">When the "I'm not good enough" voice starts, it is a guess, not a fact. This is where you keep the facts: real things that happened, like good feedback or a job done well. Write what happened, not how you felt about it. The app shows you some of these on hard days.</p>
     <details><summary class="btn">Add an entry</summary>
       <form id="ef">
         <input name="date" type="date" value="${localDate()}">
         <input name="source" placeholder="Source (who, where)" required>
         <textarea name="what_happened" placeholder="What happened" required></textarea>
-        <p class="label">Bears on</p>${chips('claim', Object.entries(CLAIMS), 1)}
+        <p class="label">What it's evidence of</p>${chips('claim', Object.entries(CLAIMS), 1)}
         <p class="label">Strength</p>${chips('strength', [1, 2, 3, 4, 5], 3)}
-        <input name="yes_but" placeholder="The yes-but your mind offers (optional)">
+        <input name="yes_but" placeholder="What does your mind say to dismiss it? e.g. 'they were just being polite' (optional)">
         <button class="btn primary" type="submit">Save</button>
       </form>
     </details>
     ${[...db.evidence].reverse().map(e => `<article class="ev">
       <p>${esc(e.what_happened)}</p>
       <p class="muted">${esc(e.date)} · ${esc(e.source)} · ${esc(CLAIMS[e.claim])} · ${e.strength}/5 · read ${e.read_count ?? 0}</p>
-      ${e.yes_but ? `<p class="muted">Yes-but: ${esc(e.yes_but)}</p>` : ''}
+      ${e.yes_but ? `<p class="muted">What your mind said to dismiss it: ${esc(e.yes_but)}</p>` : ''}
     </article>`).join('')}
   </section>`;
   const pick = { claim: 1, strength: 3 };
@@ -508,8 +537,8 @@ function xmrChart(metric, label) {
       <polyline class="line" points="${vals.map((v, i) => `${x(i)},${y(v)}`).join(' ')}"/>
       ${vals.map((v, i) => `<circle cx="${x(i)}" cy="${y(v)}" r="3.5" class="pt ${flagged.get(i) ?? ''}"><title>${series[i].date}: ${v}</title></circle>`).join('')}
     </svg>` : '<p class="muted">No data yet.</p>'}
-    <p class="muted small">${b ? `Limits from ${b.from}, set ${b.set_at}.` : `Limits appear after ${BASELINE_POINTS} days (${Math.max(0, BASELINE_POINTS - vals.length)} to go).`}</p>
-    ${vals.length >= BASELINE_POINTS ? `<button class="btn small ghost" data-recalc="${metric}">Recalculate from last ${BASELINE_POINTS}</button>` : ''}
+    <p class="muted small">${b ? `Usual range worked out from the ${b.from} days, on ${b.set_at}.` : `Your usual range shows after ${BASELINE_POINTS} days (${Math.max(0, BASELINE_POINTS - vals.length)} to go).`}</p>
+    ${vals.length >= BASELINE_POINTS ? `<button class="btn small ghost" data-recalc="${metric}">Reset usual range to the last ${BASELINE_POINTS} days</button>` : ''}
   </section>`;
 }
 
@@ -517,10 +546,15 @@ function charts() {
   const shown = METRICS.filter(([m]) => m !== 'drinks' || db.settings.show_drinks);
   const rows = db.activities.map(a => ({ a, s: activityStats(a.id, db.activity_log) })).filter(r => r.s.count);
   main().innerHTML = `
+    <section class="card">
+      <h2>Your charts</h2>
+      <p class="muted small">Each dot is one day. The solid line is your average. After 15 days, dashed lines show your usual range: how far you normally go up and down. An orange dot means something has changed by more than normal ups and downs, in a worse direction. Blue means better. This is how you spot a crash coming early, from the numbers rather than from how you feel.</p>
+    </section>
     ${shown.map(([m, l]) => xmrChart(m, l)).join('')}
     <section class="card">
-      <h3>Predicted and actual enjoyment</h3>
-      ${rows.length ? `<table><tr><th>Activity</th><th>Times</th><th>Actual minus predicted</th></tr>
+      <h3>Guessed and actual enjoyment</h3>
+      <p class="muted small">How much you enjoyed each activity compared with what you guessed beforehand. A plus number means it went better than you expected.</p>
+      ${rows.length ? `<table><tr><th>Activity</th><th>Times</th><th>Better than guessed by</th></tr>
         ${rows.sort((p, q) => q.s.gap - p.s.gap).map(r => `<tr><td>${esc(r.a.name)}</td><td>${r.s.count}</td>
         <td class="${r.s.gap > 0 ? 'up' : r.s.gap < 0 ? 'down' : ''}">${r.s.gap > 0 ? '+' : ''}${r.s.gap.toFixed(1)}</td></tr>`).join('')}</table>
         <p class="muted small">${gapSummary()}</p>` : '<p class="muted">Shows up after your first activity.</p>'}
@@ -537,7 +571,7 @@ function charts() {
 function gapSummary() {
   const rated = db.activity_log.filter(r => r.actual != null && r.predicted != null);
   const beat = rated.filter(r => r.actual > r.predicted).length;
-  return `Actual beat predicted ${beat} of ${rated.length} times.`;
+  return `It went better than you guessed ${beat} of ${rated.length} times.`;
 }
 
 // ---------- More: settings, profile, export ----------
@@ -556,7 +590,8 @@ function more() {
     </section>` : ''}
     <section class="card">
       <h2>More</h2>
-      <a class="btn" href="#safety">Safety card</a>
+      <a class="btn" href="#how">How this works</a>
+      <a class="btn" href="#safety">If things get very bad</a>
     </section>
     <section class="card">
       <h3>Profile</h3>
@@ -642,6 +677,38 @@ function more() {
   $('#xj').addEventListener('click', () => download(`steady-${localDate()}.json`, store.exportJSON(), 'application/json'));
   main().querySelectorAll('[data-csv]').forEach(b => b.addEventListener('click', () =>
     download(`steady-${b.dataset.csv}-${localDate()}.csv`, store.exportCSV(b.dataset.csv), 'text/csv')));
+}
+
+// ---------- How this works ----------
+
+function how() {
+  main().innerHTML = `<section class="card how">
+    <h2>How this works</h2>
+    <h3>What it's based on</h3>
+    <p>Steady uses CBT (cognitive behavioural therapy). CBT is what the NHS recommends for low mood and anxiety. It doesn't use gestalt therapy.</p>
+    <p>It uses three parts of CBT:</p>
+    <ul>
+      <li><strong>Behavioural activation.</strong> When you're low, you wait to feel motivated before doing things, and the motivation doesn't come. So you do less, and feel worse. Behavioural activation turns that round: do one small thing first, and the feeling follows later. This is the main part of the app.</li>
+      <li><strong>Checking thoughts against facts.</strong> Thoughts like "I'm not good enough" feel true, but they are guesses. The evidence log keeps real facts to check them against.</li>
+      <li><strong>ACT</strong> (acceptance and commitment therapy, a newer type of CBT). Instead of arguing with worries, you learn to notice them as thoughts and step back from them, then do something that matters to you anyway.</li>
+    </ul>
+    <h3>What to do each day</h3>
+    <ol>
+      <li>Check in: tap a few numbers about how you are. Under a minute.</li>
+      <li>The app picks a mode for today from your answers, and shows one small thing to do.</li>
+      <li>Do it for two minutes. Rate it afterwards. That's it for the day.</li>
+    </ol>
+    <h3>The four modes</h3>
+    <ul>
+      <li><strong>Low:</strong> ${STATE_HELP.flat}</li>
+      <li><strong>Worried:</strong> ${STATE_HELP.spiral}</li>
+      <li><strong>Overdoing:</strong> ${STATE_HELP.push}</li>
+      <li><strong>Steady:</strong> ${STATE_HELP.steady}</li>
+    </ul>
+    <h3>What it isn't</h3>
+    <p>It isn't therapy and can't replace a person. If you'd like CBT with a therapist, NHS Talking Therapies is free and you can refer yourself, without going through your GP. Search "NHS Talking Therapies Derbyshire", or ask your GP.</p>
+    <a class="btn primary" href="#home">Back to today</a>
+  </section>`;
 }
 
 // ---------- Safety card ----------
