@@ -42,23 +42,42 @@ test('Push needs energy 8+ and either over hours or into something', () => {
 
 test('Flat plan is one two-minute activity and nothing else', () => {
   const p = routePlan('flat', { ...base, energy: 2 });
-  assert.deepEqual(p.steps, [{ kind: 'activity', twoMinuteOnly: true }]);
+  assert.deepEqual(p.steps, [{ kind: 'activity', twoMinuteOnly: true, opposite: false }]);
   assert.equal(p.thoughtRecord, false);
   assert.equal(p.reading, false);
   assert.equal(allowsThinkingWork('flat'), false);
 });
 
-test('Spiral plan: imposter gets three evidence entries, defusion, then one action', () => {
+test('Spiral plan: imposter gets three evidence entries, a stage exercise, then one action', () => {
   const p = routePlan('spiral', { ...base, imposter: true });
-  assert.deepEqual(p.steps.map(s => s.kind), ['evidence', 'defusion', 'activity']);
+  assert.deepEqual(p.steps.map(s => s.kind), ['evidence', 'exercise', 'activity']);
   assert.equal(p.steps[0].count, 3);
-  assert.equal(p.steps[1].seconds, 90);
+  assert.equal(p.steps[1].id, 'calm-place');
 });
 
-test('Spiral plan: worry gets naming and worry defusion, no evidence', () => {
+test('Spiral plan: worry gets naming, then the container in stage 1', () => {
   const p = routePlan('spiral', { ...base, worry: true });
-  assert.deepEqual(p.steps.map(s => s.kind), ['name-worries', 'defusion', 'activity']);
-  assert.equal(p.steps[1].variant, 'worry');
+  assert.deepEqual(p.steps.map(s => s.kind), ['name-worries', 'exercise', 'activity']);
+  assert.equal(p.steps[1].id, 'container');
+});
+
+test('each therapy stage brings its own exercise', () => {
+  const c = { ...base, anxiety: 7 };
+  assert.equal(routePlan('spiral', c, undefined, 1).steps[0].id, 'calm-place');
+  assert.equal(routePlan('spiral', c, undefined, 2).steps[0].id, 'awareness');
+  assert.equal(routePlan('spiral', c, undefined, 3).steps[0].id, 'stop');
+  assert.equal(routePlan('spiral', { ...c, anxiety: 9 }, undefined, 3).steps[0].id, 'tipp');
+  assert.equal(routePlan('steady', base, undefined, 2).steps[1].id, 'awareness');
+  assert.equal(routePlan('push', base, undefined, 3).steps[0].id, 'stop');
+});
+
+test('Low days stay one activity at every stage; stage 3 frames it as opposite action', () => {
+  for (const st of [1, 2, 3]) {
+    const p = routePlan('flat', { ...base, energy: 2 }, undefined, st);
+    assert.equal(p.steps.length, 1);
+    assert.equal(p.steps[0].kind, 'activity');
+    assert.equal(p.steps[0].opposite, st === 3);
+  }
 });
 
 test('Spiral offers a thought record only at energy 5+', () => {

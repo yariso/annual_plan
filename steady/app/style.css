@@ -104,3 +104,8 @@ td.down { color: var(--concern); }
 .why { font-size: 15px; color: var(--muted); border-top: 1px solid var(--line); margin-top: 16px; padding-top: 12px; }
 .how li { margin: 8px 0; }
 .how h3 { margin-top: 18px; }
+.stage.current { border-color: var(--accent); border-width: 2px; }
+.pill { background: var(--accent); color: var(--accent-ink); border-radius: 999px; padding: 4px 10px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+.stage .row.between { align-items: flex-start; gap: 12px; }
+nav a { font-size: 14px; }
+.chips.pair { grid-template-columns: repeat(2, 1fr); margin-top: 10px; }

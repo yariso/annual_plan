@@ -23,12 +23,31 @@ export function routeState(c, now = new Date(), t = DEFAULT_THRESHOLDS) {
   return 'steady';
 }
 
+// The therapy path, in the order a friend suggested: EMDR, then gestalt, then DBT.
+// The app only carries the between-session practice for each stage; the therapy
+// itself happens with a therapist.
+export const STAGES = [1, 2, 3];
+
+// Which guided exercise a state gets at each stage.
+export function stageExercise(stage, state, c = {}) {
+  if (stage === 3) {
+    if (state === 'spiral') return c.anxiety >= 8 ? 'tipp' : 'stop';
+    if (state === 'push') return 'stop';
+    return 'wise-mind';
+  }
+  if (stage === 2) return 'awareness';
+  // Stage 1: calm place settles the body; the container parks named worries.
+  if (state === 'spiral' && c.worry) return 'container';
+  return 'calm-place';
+}
+
 // The ordered steps for a state. The home screen shows only the current step.
-export function routePlan(state, c, t = DEFAULT_THRESHOLDS) {
+export function routePlan(state, c, t = DEFAULT_THRESHOLDS, stage = 1) {
   switch (state) {
     case 'flat':
+      // Low energy never gets thinking work, whatever the stage.
       return {
-        steps: [{ kind: 'activity', twoMinuteOnly: true }],
+        steps: [{ kind: 'activity', twoMinuteOnly: true, opposite: stage === 3 }],
         thoughtRecord: false,
         reading: false,
       };
@@ -36,24 +55,19 @@ export function routePlan(state, c, t = DEFAULT_THRESHOLDS) {
       const steps = [];
       if (c.imposter) steps.push({ kind: 'evidence', count: 3, claim: c.claim ?? 1 });
       if (c.worry) steps.push({ kind: 'name-worries' });
-      steps.push({ kind: 'defusion', seconds: 90, variant: c.worry && !c.imposter ? 'worry' : 'thought' });
+      steps.push({ kind: 'exercise', id: stageExercise(stage, 'spiral', c) });
       steps.push({ kind: 'activity' });
       return { steps, thoughtRecord: c.energy >= t.thoughtRecordEnergy, reading: false };
     }
-    case 'push':
-      return {
-        steps: [
-          { kind: 'stop-time' },
-          { kind: 'first-task' },
-          { kind: 'activity', excludeCategories: ['work-adjacent'] },
-          { kind: 'warning-check' },
-        ],
-        thoughtRecord: false,
-        reading: false,
-      };
+    case 'push': {
+      const steps = [{ kind: 'stop-time' }, { kind: 'first-task' }];
+      if (stage === 3) steps.unshift({ kind: 'exercise', id: 'stop' });
+      steps.push({ kind: 'activity', excludeCategories: ['work-adjacent'] }, { kind: 'warning-check' });
+      return { steps, thoughtRecord: false, reading: false };
+    }
     default:
       return {
-        steps: [{ kind: 'activity' }, { kind: 'values', optional: true }],
+        steps: [{ kind: 'activity' }, { kind: 'exercise', id: stageExercise(stage, 'steady', c), optional: true }],
         thoughtRecord: false,
         reading: true,
       };

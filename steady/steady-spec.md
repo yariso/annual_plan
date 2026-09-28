@@ -179,3 +179,14 @@ Rules first; the data decides. No model needed for any of this.
 - Create CLAUDE.md stating: single user, mobile-first, no external calls in Phase 1, no telemetry, tests for routing logic and XmR rules, no em dashes in any copy.
 - Phase 1 only. Stop and show the running app before touching Phase 2.
 - Build sessions are capped at 90 minutes, then the tool gets used rather than built. Building this is a good thing to be into this week; it is also exactly the kind of work that runs away. The cap is part of the tool.
+
+## 11. Therapy path (added after Phase 1)
+
+A friend's suggestion, adopted by the user: EMDR first, then gestalt to understand how the past connects to the present, then DBT if new coping strategies are still needed. The tool follows this order.
+
+- Each stage is therapy with a trained therapist. The app carries only the between-session practice: stage 1 calm place and container (EMDR resourcing), stage 2 "right now I notice" awareness (gestalt), stage 3 STOP, TIPP, wise mind and opposite action (DBT).
+- The app never does EMDR memory processing or deep gestalt work (for example empty chair). Those stay with the therapist.
+- The Worried route and the optional Steady exercise use the current stage's exercise. The Low route stays one two-minute activity at every stage; at stage 3 it is framed as opposite action.
+- Every exercise rates how upset you are before and after (0 to 10), so the path page can show whether it helps.
+- My path page: the stage you are on (you choose when to move), therapist name and link per stage, contact status, a before-you-book checklist (EMDR UK accreditation, UKCP registration), and notes to take to sessions.
+- Therapist names and links are kept in data/profile.json, not in git.

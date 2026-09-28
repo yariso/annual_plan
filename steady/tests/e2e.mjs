@@ -79,9 +79,27 @@ await doCheckin({ energy: 6, anxiety: 5, worry: 1, started: 1 });
 assert.ok(!(await page.textContent('#step')).includes('quality insights pack'));
 await page.fill('#w', 'the cat, A levels');
 await tap('#next');
-assert.ok((await page.textContent('#step')).includes("I'm noticing worry about the cat."));
-await snap('07-worry-defusion');
-console.log('ok worry route');
+assert.ok((await page.textContent('#step')).includes('Container'), 'stage 1 worry gets the container');
+await snap('07-exercise-intro');
+await chip('before', 7);
+await tap('#go');
+assert.ok((await page.textContent('#step')).includes('the cat, A levels'));
+await snap('07b-container');
+await tap('#done');
+await chip('after', 5);
+await tap('#save');
+console.log('ok worry route with stage 1 container');
+
+// Therapy path page: three stages, therapist from the profile, stage switch changes the exercise.
+await page.goto(URL + '#path');
+await page.waitForSelector('.stage.current');
+assert.equal(await page.locator('.stage').count(), 3);
+assert.ok((await page.inputValue('input[data-f="therapist"][data-n="2"]')).includes('Katy Wakelin'));
+await snap('11-path');
+await tap('[data-stage="3"]');
+assert.equal(await page.locator('.stage.current h3').textContent(), '3. DBT');
+await tap('[data-stage="1"]');
+console.log('ok therapy path');
 
 // 5. Charts: limits after 15 points, and rule breaks flagged.
 await fresh();

@@ -42,6 +42,7 @@ function empty() {
     steady_markers: [],
     gp_notes: [],
     baselines: {},
+    path: {},
     today: null, // { date, checkin_id, state, overridden, step, extras }
   };
   for (const t of TABLES) db[t] = [];
@@ -113,6 +114,10 @@ export function importProfile(p) {
   }
   if (p.q10_work_rules?.rules) db.settings.work_rules = p.q10_work_rules.rules;
   if (p.notes_for_gp) db.gp_notes = [...new Set([...db.gp_notes, ...p.notes_for_gp])];
+  for (const [n, v] of Object.entries(p.therapy_path ?? {})) {
+    db.path ??= {};
+    db.path[n] = { status: 'none', notes: [], ...(db.path[n] ?? {}), therapist: v.therapist ?? '', link: v.link ?? '' };
+  }
   db.profile = p;
   save();
 }

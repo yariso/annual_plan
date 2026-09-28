@@ -4,6 +4,7 @@ import {
   localDate, dailySeries, pickEvidence, BASELINE_POINTS, RULES,
 } from './logic.js';
 import * as store from './store.js';
+import { EXERCISES, STAGE_INFO } from './exercises.js';
 
 const db = store.load();
 const $ = sel => document.querySelector(sel);
@@ -14,9 +15,9 @@ const thresholds = () => ({ ...DEFAULT_THRESHOLDS, ...(db.settings.thresholds ??
 const STATE_LABEL = { flat: 'Low', spiral: 'Worried', push: 'Overdoing', steady: 'Steady' };
 const STATE_HELP = {
   flat: 'Low energy today. The only aim is to start one small thing. You don\'t need to feel like it first: with low mood, doing comes before feeling.',
-  spiral: 'Worry or "I\'m not good enough" thoughts are running. A few short steps to step back from them, then one small action.',
+  spiral: 'Worry or "I\'m not good enough" thoughts are running. A short calming or coping exercise from your therapy stage, then one small action.',
   push: 'High energy and deep into something. This is the point where you tend to work for hours and then crash, so these steps put an end on today.',
-  steady: 'An ordinary day. One activity to keep things moving, and an optional short exercise.',
+  steady: 'An ordinary day. One activity to keep things moving, and an optional exercise from your therapy stage.',
 };
 const why = text => `<p class="why"><strong>Why:</strong> ${text}</p>`;
 const METRICS = [
@@ -34,12 +35,14 @@ function today() {
 
 // ---------- Router ----------
 
-const routes = { home, checkin, evidence, charts, more, safety, how };
+const routes = { home, checkin, evidence, charts, more, safety, how, path };
+const stage = () => db.settings.stage ?? 1;
 
 function render() {
   clearTimer();
   const name = (location.hash.slice(1) || 'home').split('?')[0];
-  (routes[name] ?? home)();
+  if (name.startsWith('practice-') && EXERCISES[name.slice(9)]) practice(name.slice(9));
+  else (routes[name] ?? home)();
   document.querySelectorAll('nav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === `#${name}`));
   window.scrollTo(0, 0);
 }
@@ -135,7 +138,7 @@ function setState(state, overridden) {
   const c = db.checkins.find(x => x.id === t.checkin_id) ?? {};
   t.state = state;
   t.overridden = overridden;
-  t.plan = routePlan(state, planInput(c, t), thresholds());
+  t.plan = routePlan(state, planInput(c, t), thresholds(), stage());
   t.step = 0;
   if (overridden) store.update('checkins', c.id, { state, state_overridden: true });
   store.save();
@@ -201,8 +204,8 @@ function renderStep(el) {
       <a class="btn ghost" href="#checkin">Check in again</a></section>`;
     return;
   }
-  const fn = { activity: stepActivity, evidence: stepEvidence, 'name-worries': stepWorries, defusion: stepDefusion,
-    values: stepValues, 'stop-time': stepStopTime, 'first-task': stepFirstTask, 'warning-check': stepWarnings }[step.kind];
+  const fn = { activity: stepActivity, evidence: stepEvidence, 'name-worries': stepWorries, exercise: stepExercise,
+    'stop-time': stepStopTime, 'first-task': stepFirstTask, 'warning-check': stepWarnings }[step.kind];
   fn(el, step, t);
 }
 
@@ -221,6 +224,7 @@ function stepActivity(el, step, t) {
       <h2>${esc(a.name)}</h2>
       <p class="start">${esc(a.two_minute_start)}</p>
       <p class="muted small">Just this. Two minutes. You can stop after that and it still counts.</p>
+      ${step.opposite ? `<p class="muted small"><strong>Opposite action (DBT):</strong> low mood says stay on the sofa. Doing the opposite, even for two minutes, is how the mood starts to shift.</p>` : ''}
       <p class="label">First, guess: how much will you enjoy it? (0 = not at all, 10 = loads)</p>
       ${chips('predicted', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], predicted, 'eleven')}
       <button class="btn primary" id="go" ${predicted == null ? 'disabled' : ''}>Start two minutes</button>
@@ -313,56 +317,75 @@ function stepWorries(el, _step, t) {
   });
 }
 
-function stepDefusion(el, step, t) {
-  const worries = t.extras?.worries ?? [];
-  const lines = step.variant === 'worry'
-    ? (worries.length ? worries : ['this']).map(w => `I'm noticing worry about ${w}.`)
-    : ['Say the thought to yourself, word for word.', 'Now say: "I\'m having the thought that..." and the thought.',
-       'Now: "I notice I\'m having the thought that..." and the thought.'];
-  el.innerHTML = `<section class="card one">
-    <p class="kicker">Step back, 90 seconds</p>
-    <h2>${step.variant === 'worry' ? 'Say each one, slowly' : 'Step back from the thought'}</h2>
-    <ul class="script">${lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul>
-    <p class="muted">Then look around and name five things you can see.</p>
-    ${why('This comes from ACT, a type of CBT. You don\'t argue with the thought or try to push it away, which tends to make it louder. Saying "I\'m noticing..." in front of it reminds you it is a thought, not a fact, and it loosens its grip. Naming things you can see brings you back to the room.')}
-    <div class="clock" id="clock"></div>
-    <button class="btn primary" id="next">Next</button>
-  </section>`;
-  const start = Date.now();
-  const finish = completed => {
-    store.insert('exercise_log', { exercise_name: `defusion-${step.variant}`, module: 'spiral',
-      duration_seconds: Math.round((Date.now() - start) / 1000), completed });
-    nextStep();
-  };
-  countdown($('#clock'), step.seconds, () => { $('#clock').textContent = 'Done'; });
-  $('#next').addEventListener('click', () => finish(Date.now() - start >= step.seconds * 1000 - 1500));
+function stepExercise(el, step, t) {
+  runExercise(el, step.id, { worries: t.extras?.worries ?? [], optional: step.optional, module: t.state, onDone: nextStep });
 }
 
-function stepValues(el) {
-  const vals = db.values.length ? db.values : ['family', 'health', 'calm'];
-  let chosen = null;
-  el.innerHTML = `<section class="card one">
-    <p class="kicker">Optional</p>
-    <h2>What matters to you</h2>
-    <p class="muted small">These are the values you chose.</p>
-    <p class="label">Pick one</p>
-    ${chips('value', vals, null)}
-    <p class="label">One thing in the next ten minutes that moves towards it</p>
-    <input id="act" maxlength="120">
-    <button class="btn primary" id="save">Commit</button>
-    <button class="btn ghost" id="skip">Skip</button>
-    ${why('From ACT. When mood is low, doing things for how they will feel doesn\'t work, because nothing feels like much. Doing one small thing because it matters to you works whatever your mood.')}
-  </section>`;
-  bindChips(el, (_n, v) => { chosen = v; });
-  $('#save').addEventListener('click', () => {
-    store.insert('exercise_log', { exercise_name: 'values-check', module: 'steady', duration_seconds: 0, completed: true,
-      note: `${chosen ?? ''}: ${$('#act').value.trim()}` });
-    nextStep();
-  });
-  $('#skip').addEventListener('click', () => {
-    store.insert('exercise_log', { exercise_name: 'values-check', module: 'steady', duration_seconds: 0, completed: false });
-    nextStep();
-  });
+// Guided exercise: rate how upset you are, follow the script with a timer, rate again.
+function runExercise(el, id, { worries = [], optional = false, module = 'practice', onDone }) {
+  const ex = EXERCISES[id];
+  const info = STAGE_INFO[ex.stage];
+  const scale = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  let before = null, after = null;
+  const start = Date.now();
+
+  const intro = () => {
+    el.innerHTML = `<section class="card one">
+      <p class="kicker">${optional ? 'Optional, ' : ''}${esc(info.name)} skill</p>
+      <h2>${esc(ex.title)}</h2>
+      <p class="label">How upset or wound up do you feel right now? (0 = calm, 10 = the worst)</p>
+      ${chips('before', scale, before, 'eleven')}
+      <button class="btn primary" id="go" disabled>Start</button>
+      ${optional ? '<button class="btn ghost" id="skip">Skip</button>' : ''}
+      ${why(esc(ex.why))}
+    </section>`;
+    bindChips(el, (_n, v) => { before = Number(v); $('#go').disabled = false; });
+    $('#go').addEventListener('click', run);
+    $('#skip')?.addEventListener('click', () => {
+      store.insert('exercise_log', { exercise_name: id, module, duration_seconds: 0, completed: false });
+      onDone();
+    });
+  };
+
+  const run = () => {
+    const word = id === 'calm-place' && db.settings.calm_word ? `<p class="muted">Your word: <strong>${esc(db.settings.calm_word)}</strong></p>` : '';
+    el.innerHTML = `<section class="card one">
+      <p class="kicker">${esc(ex.title)}</p>
+      ${word}
+      <ol class="script">${ex.lines(worries).map(l => `<li>${esc(l)}</li>`).join('')}</ol>
+      <p class="muted small">Go slowly. Take each line in turn.</p>
+      <div class="clock" id="clock"></div>
+      <button class="btn primary" id="done">Finished</button>
+    </section>`;
+    countdown($('#clock'), ex.seconds, () => { $('#clock').textContent = 'Time'; });
+    $('#done').addEventListener('click', () => { clearTimer(); rate(); });
+  };
+
+  const rate = () => {
+    el.innerHTML = `<section class="card one">
+      <p class="kicker">${esc(ex.title)}</p>
+      <p class="label">And now? (0 = calm, 10 = the worst)</p>
+      ${chips('after', scale, after, 'eleven')}
+      ${ex.ask ? `<input id="ask" maxlength="200" placeholder="${esc(ex.ask)}">` : ''}
+      <button class="btn primary" id="save" disabled>Save</button>
+    </section>`;
+    bindChips(el, (_n, v) => { after = Number(v); $('#save').disabled = false; });
+    $('#save').addEventListener('click', () => {
+      const note = $('#ask')?.value.trim() ?? '';
+      if (id === 'calm-place' && note) db.settings.calm_word = note;
+      if (id === 'awareness' && note) pathStage(2).notes.push(note);
+      store.insert('exercise_log', { exercise_name: id, module, duration_seconds: Math.round((Date.now() - start) / 1000),
+        completed: true, before, after, note });
+      onDone();
+    });
+  };
+  intro();
+}
+
+function practice(id) {
+  const m = main();
+  m.innerHTML = '<div id="step"></div>';
+  runExercise($('#step'), id, { onDone: () => { location.hash = 'path'; } });
 }
 
 function stepStopTime(el, _s, t) {
@@ -450,7 +473,7 @@ function checkin() {
     const state = routeState(input, new Date(), thresholds());
     const c = store.insert('checkins', { ...f, note, state, state_overridden: false });
     db.today = { date: localDate(), checkin_id: c.id, state, overridden: false,
-      plan: routePlan(state, input, thresholds()), step: 0, extras: {} };
+      plan: routePlan(state, input, thresholds(), stage()), step: 0, extras: {} };
     store.save();
     flagSignals();
     const moods = dailySeries(db.checkins, 'mood').map(d => ({ date: d.date, mood: d.value }));
@@ -679,18 +702,94 @@ function more() {
     download(`steady-${b.dataset.csv}-${localDate()}.csv`, store.exportCSV(b.dataset.csv), 'text/csv')));
 }
 
+// ---------- Therapy path ----------
+
+const STATUSES = [['none', 'Not contacted'], ['contacted', 'Contacted'], ['booked', 'Booked'], ['seeing', 'Seeing them']];
+
+function pathStage(n) {
+  db.path ??= {};
+  db.path[n] ??= { therapist: '', link: '', status: 'none', notes: [] };
+  return db.path[n];
+}
+
+function path() {
+  const cur = stage();
+  const stats = id => {
+    const rows = db.exercise_log.filter(r => r.exercise_name === id && r.completed && r.before != null && r.after != null);
+    if (!rows.length) return '';
+    const drop = rows.reduce((a, r) => a + (r.before - r.after), 0) / rows.length;
+    return ` <span class="muted small">(${rows.length} done, upset level ${drop >= 0 ? 'down' : 'up'} ${Math.abs(drop).toFixed(1)} on average)</span>`;
+  };
+  main().innerHTML = `
+    <section class="card">
+      <h2>My therapy path</h2>
+      <p class="muted">Your friend's plan: EMDR first, then gestalt, then DBT if you still want help building new ways of coping. Each stage is therapy with a trained therapist. The app gives you the practice to do between sessions, and the exercises in your check-in follow the stage you are on.</p>
+      <p class="muted small">You decide when to move on. Talk it over with your therapist first.</p>
+    </section>
+    ${[1, 2, 3].map(n => {
+      const i = STAGE_INFO[n];
+      const ps = pathStage(n);
+      return `<section class="card stage${n === cur ? ' current' : ''}">
+        <div class="row between"><h3>${n}. ${i.name}</h3>${n === cur ? '<span class="pill">Current stage</span>' : `<button class="btn small ghost" data-stage="${n}">Make this my stage</button>`}</div>
+        <p>${esc(i.what)}</p>
+        <p class="muted small">${esc(i.app)}</p>
+        <p class="label">Practise now</p>
+        <div class="stack">${i.exercises.map(id => `<a class="btn" href="#practice-${id}">${esc(EXERCISES[id].title)}</a>${stats(id)}`).join('')}</div>
+        <p class="label">Therapist</p>
+        <input data-f="therapist" data-n="${n}" value="${esc(ps.therapist)}" placeholder="Name">
+        <input data-f="link" data-n="${n}" value="${esc(ps.link)}" placeholder="Website or phone">
+        ${/^https:\/\//.test(ps.link) ? `<a class="btn small ghost" href="${esc(ps.link)}" target="_blank" rel="noopener">Open their page</a>` : ''}
+        ${chips(`status-${n}`, STATUSES, ps.status, 'pair')}
+        <p class="label">Before you book</p>
+        <ul class="rules">${i.check.map(c => `<li>${esc(c)}</li>`).join('')}</ul>
+        <p class="label">Notes to take to sessions</p>
+        <ul class="list">${ps.notes.map((t, k) => `<li><span>${esc(t)}</span><button class="btn small ghost" data-del="${n}:${k}">Remove</button></li>`).join('')}</ul>
+        <form class="row" data-note="${n}"><input placeholder="Something to bring up"><button class="btn small" type="submit">Add</button></form>
+      </section>`;
+    }).join('')}`;
+  const m = main();
+  m.querySelectorAll('[data-stage]').forEach(b => b.addEventListener('click', () => {
+    db.settings.stage = Number(b.dataset.stage);
+    store.save();
+    render();
+  }));
+  m.querySelectorAll('input[data-f]').forEach(inp => inp.addEventListener('change', () => {
+    pathStage(Number(inp.dataset.n))[inp.dataset.f] = inp.value.trim();
+    store.save();
+    render();
+  }));
+  bindChips(m, (name, v) => { pathStage(Number(name.split('-')[1])).status = v; store.save(); });
+  m.querySelectorAll('form[data-note]').forEach(f => f.addEventListener('submit', e => {
+    e.preventDefault();
+    const v = f.querySelector('input').value.trim();
+    if (v) { pathStage(Number(f.dataset.note)).notes.push(v); store.save(); }
+    render();
+  }));
+  m.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => {
+    const [n, k] = b.dataset.del.split(':').map(Number);
+    pathStage(n).notes.splice(k, 1);
+    store.save();
+    render();
+  }));
+}
+
 // ---------- How this works ----------
 
 function how() {
   main().innerHTML = `<section class="card how">
     <h2>How this works</h2>
     <h3>What it's based on</h3>
-    <p>Steady uses CBT (cognitive behavioural therapy). CBT is what the NHS recommends for low mood and anxiety. It doesn't use gestalt therapy.</p>
-    <p>It uses three parts of CBT:</p>
+    <p>Steady follows your friend's therapy plan, in this order:</p>
+    <ol>
+      <li><strong>EMDR</strong> to take the sting out of difficult feelings and memories you avoid, and loosen negative beliefs.</li>
+      <li><strong>Gestalt</strong> to understand how your past connects to how you are now.</li>
+      <li><strong>DBT</strong> if you still want help building new ways of coping.</li>
+    </ol>
+    <p>Each of these is therapy with a trained therapist. The app does the part you can do on your own: short calming and coping exercises between sessions, and notes to take to them. The exercises change with the stage you are on. See <a href="#path">My path</a>.</p>
+    <p>Two things from CBT stay in the app every day, because they work alongside any therapy:</p>
     <ul>
-      <li><strong>Behavioural activation.</strong> When you're low, you wait to feel motivated before doing things, and the motivation doesn't come. So you do less, and feel worse. Behavioural activation turns that round: do one small thing first, and the feeling follows later. This is the main part of the app.</li>
-      <li><strong>Checking thoughts against facts.</strong> Thoughts like "I'm not good enough" feel true, but they are guesses. The evidence log keeps real facts to check them against.</li>
-      <li><strong>ACT</strong> (acceptance and commitment therapy, a newer type of CBT). Instead of arguing with worries, you learn to notice them as thoughts and step back from them, then do something that matters to you anyway.</li>
+      <li><strong>One small action.</strong> When you're low, you wait to feel motivated, and the motivation doesn't come. Doing one small thing first is how the feeling starts to follow.</li>
+      <li><strong>The evidence log.</strong> Thoughts like "I'm not good enough" feel true, but they are guesses. The log keeps real facts to check them against.</li>
     </ul>
     <h3>What to do each day</h3>
     <ol>
@@ -706,7 +805,7 @@ function how() {
       <li><strong>Steady:</strong> ${STATE_HELP.steady}</li>
     </ul>
     <h3>What it isn't</h3>
-    <p>It isn't therapy and can't replace a person. If you'd like CBT with a therapist, NHS Talking Therapies is free and you can refer yourself, without going through your GP. Search "NHS Talking Therapies Derbyshire", or ask your GP.</p>
+    <p>It isn't therapy and can't replace a person. The EMDR memory work and the deeper gestalt work happen with your therapist, never in the app. If cost is a problem, NHS Talking Therapies is free, you can refer yourself, and some services offer EMDR. Search "NHS Talking Therapies Derbyshire", or ask your GP.</p>
     <a class="btn primary" href="#home">Back to today</a>
   </section>`;
 }
