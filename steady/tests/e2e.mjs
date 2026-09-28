@@ -90,16 +90,41 @@ await chip('after', 5);
 await tap('#save');
 console.log('ok worry route with stage 1 container');
 
-// Therapy path page: three stages, therapist from the profile, stage switch changes the exercise.
+// Path page: three stages; the belief exercise runs end to end and shows on the page.
 await page.goto(URL + '#path');
 await page.waitForSelector('.stage.current');
 assert.equal(await page.locator('.stage').count(), 3);
-assert.ok((await page.inputValue('input[data-f="therapist"][data-n="2"]')).includes('Katy Wakelin'));
+assert.ok(!(await page.textContent('main')).toLowerCase().includes('book'), 'no booking prompts');
 await snap('11-path');
+await page.goto(URL + '#practice-belief');
+await chip('before', 6);
+await tap('#go');
+await chip('neg', "I'm not good enough");
+await chip('voc', 2);
+await snap('12-belief-pick');
+await tap('#next');
+assert.ok((await page.textContent('#step')).includes('quality insights pack'), 'belief uses the evidence log');
+await tap('#set'); await tap('#set');
+await snap('13-belief-tap');
+await tap('#fin');
+await chip('voc2', 4);
+await tap('#next');
+await chip('after', 4);
+await tap('#save');
+await page.waitForSelector('.stage.current');
+assert.ok((await page.textContent('main')).includes('Your beliefs'));
+await page.goto(URL + '#practice-two-voices');
+await chip('before', 5);
+await tap('#go');
+await page.fill('#w0', 'You are selfish');
+await tap('#done');
+await chip('after', 4);
+await tap('#save');
+await page.waitForSelector('.stage.current');
 await tap('[data-stage="3"]');
-assert.equal(await page.locator('.stage.current h3').textContent(), '3. DBT');
+assert.equal(await page.locator('.stage.current h3').textContent(), '3. DBT skills');
 await tap('[data-stage="1"]');
-console.log('ok therapy path');
+console.log('ok path: belief and two voices exercises');
 
 // 5. Charts: limits after 15 points, and rule breaks flagged.
 await fresh();

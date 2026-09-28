@@ -1,5 +1,5 @@
 // Offline: cache the app shell, serve it cache-first. Bump VERSION on each release.
-const VERSION = 'steady-v4';
+const VERSION = 'steady-v5';
 const SHELL = ['./', './index.html', './style.css', './app.js', './logic.js', './store.js', './exercises.js', './manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', e => {

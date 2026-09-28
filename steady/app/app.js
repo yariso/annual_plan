@@ -4,7 +4,7 @@ import {
   localDate, dailySeries, pickEvidence, BASELINE_POINTS, RULES,
 } from './logic.js';
 import * as store from './store.js';
-import { EXERCISES, STAGE_INFO } from './exercises.js';
+import { EXERCISES, STAGE_INFO, NEGATIVE_BELIEFS } from './exercises.js';
 
 const db = store.load();
 const $ = sel => document.querySelector(sel);
@@ -15,9 +15,9 @@ const thresholds = () => ({ ...DEFAULT_THRESHOLDS, ...(db.settings.thresholds ??
 const STATE_LABEL = { flat: 'Low', spiral: 'Worried', push: 'Overdoing', steady: 'Steady' };
 const STATE_HELP = {
   flat: 'Low energy today. The only aim is to start one small thing. You don\'t need to feel like it first: with low mood, doing comes before feeling.',
-  spiral: 'Worry or "I\'m not good enough" thoughts are running. A short calming or coping exercise from your therapy stage, then one small action.',
+  spiral: 'Worry or "I\'m not good enough" thoughts are running. One exercise from your stage on My path, then one small action.',
   push: 'High energy and deep into something. This is the point where you tend to work for hours and then crash, so these steps put an end on today.',
-  steady: 'An ordinary day. One activity to keep things moving, and an optional exercise from your therapy stage.',
+  steady: 'An ordinary day. One activity to keep things moving, and an optional exercise from your stage on My path.',
 };
 const why = text => `<p class="why"><strong>Why:</strong> ${text}</p>`;
 const METRICS = [
@@ -321,33 +321,35 @@ function stepExercise(el, step, t) {
   runExercise(el, step.id, { worries: t.extras?.worries ?? [], optional: step.optional, module: t.state, onDone: nextStep });
 }
 
-// Guided exercise: rate how upset you are, follow the script with a timer, rate again.
+const SCALE10 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+// Every exercise: rate how upset you are, do it, rate again, save.
 function runExercise(el, id, { worries = [], optional = false, module = 'practice', onDone }) {
   const ex = EXERCISES[id];
   const info = STAGE_INFO[ex.stage];
-  const scale = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  let before = null, after = null;
   const start = Date.now();
+  const rec = { before: null, after: null, answers: null, note: '' };
 
   const intro = () => {
     el.innerHTML = `<section class="card one">
-      <p class="kicker">${optional ? 'Optional, ' : ''}${esc(info.name)} skill</p>
+      <p class="kicker">${optional ? 'Optional, ' : ''}${esc(info.name)}</p>
       <h2>${esc(ex.title)}</h2>
+      ${ex.intro ? `<p>${esc(ex.intro)}</p>` : ''}
       <p class="label">How upset or wound up do you feel right now? (0 = calm, 10 = the worst)</p>
-      ${chips('before', scale, before, 'eleven')}
+      ${chips('before', SCALE10, null, 'eleven')}
       <button class="btn primary" id="go" disabled>Start</button>
       ${optional ? '<button class="btn ghost" id="skip">Skip</button>' : ''}
       ${why(esc(ex.why))}
     </section>`;
-    bindChips(el, (_n, v) => { before = Number(v); $('#go').disabled = false; });
-    $('#go').addEventListener('click', run);
+    bindChips(el, (_n, v) => { rec.before = Number(v); $('#go').disabled = false; });
+    $('#go').addEventListener('click', { guided, write, belief, checklist }[ex.type]);
     $('#skip')?.addEventListener('click', () => {
       store.insert('exercise_log', { exercise_name: id, module, duration_seconds: 0, completed: false });
       onDone();
     });
   };
 
-  const run = () => {
+  const guided = () => {
     const word = id === 'calm-place' && db.settings.calm_word ? `<p class="muted">Your word: <strong>${esc(db.settings.calm_word)}</strong></p>` : '';
     el.innerHTML = `<section class="card one">
       <p class="kicker">${esc(ex.title)}</p>
@@ -356,35 +358,147 @@ function runExercise(el, id, { worries = [], optional = false, module = 'practic
       <p class="muted small">Go slowly. Take each line in turn.</p>
       <div class="clock" id="clock"></div>
       <button class="btn primary" id="done">Finished</button>
+      <button class="btn ghost" id="stopx">Stop here</button>
     </section>`;
     countdown($('#clock'), ex.seconds, () => { $('#clock').textContent = 'Time'; });
     $('#done').addEventListener('click', () => { clearTimer(); rate(); });
+    $('#stopx').addEventListener('click', () => { clearTimer(); rate(); });
+  };
+
+  const write = () => {
+    el.innerHTML = `<section class="card one">
+      <p class="kicker">${esc(ex.title)}</p>
+      <p class="muted small">Write as much or as little as you like. You can stop at any point.</p>
+      ${ex.prompts.map((q, i) => `<p class="label">${esc(q)}</p><textarea id="w${i}" rows="3"></textarea>`).join('')}
+      <button class="btn primary" id="done">Done</button>
+    </section>`;
+    $('#done').addEventListener('click', () => {
+      rec.answers = ex.prompts.map((q, i) => ({ q, a: $(`#w${i}`).value.trim() })).filter(x => x.a);
+      rate();
+    });
+  };
+
+  const checklist = () => {
+    el.innerHTML = `<section class="card one">
+      <p class="kicker">${esc(ex.title)}</p>
+      <div class="checks">${ex.items.map((it, i) => `<label><input type="checkbox" id="c${i}"> ${esc(it)}</label>`).join('')}</div>
+      <p class="label">Which one unticked thing could you do something about today?</p>
+      <input id="fix" maxlength="140">
+      <button class="btn primary" id="done">Done</button>
+    </section>`;
+    $('#done').addEventListener('click', () => {
+      rec.answers = ex.items.map((it, i) => ({ q: it, a: $(`#c${i}`).checked ? 'yes' : 'no' }));
+      rec.note = $('#fix').value.trim();
+      rate();
+    });
+  };
+
+  // EMDR resourcing: a positive belief, a real memory of it being true, slow tapping.
+  const belief = () => {
+    let neg = null;
+    const pos = { text: '' };
+    const trueScale = [1, 2, 3, 4, 5, 6, 7];
+    let vocBefore = null, vocAfter = null, sets = 0;
+    const known = [...new Set([...Object.keys(NEGATIVE_BELIEFS), ...db.beliefs.map(b => b.negative)])];
+
+    const pick = () => {
+      el.innerHTML = `<section class="card one">
+        <p class="kicker">${esc(ex.title)}</p>
+        <p class="label">Which negative belief is loudest today?</p>
+        ${chips('neg', known, neg)}
+        <input id="negx" placeholder="Or write your own">
+        <p class="label">What would you rather believe about yourself?</p>
+        <input id="pos" placeholder="Pick a belief above first">
+        <p class="label">How true does that better belief feel right now? (1 = not at all, 7 = completely)</p>
+        ${chips('voc', trueScale, null)}
+        <button class="btn primary" id="next" disabled>Next</button>
+      </section>`;
+      const ready = () => { $('#next').disabled = !(neg && $('#pos').value.trim() && vocBefore); };
+      bindChips(el, (n, v) => {
+        if (n === 'neg') {
+          neg = v;
+          $('#pos').value = db.beliefs.find(b => b.negative === v)?.positive ?? NEGATIVE_BELIEFS[v] ?? '';
+        } else vocBefore = Number(v);
+        ready();
+      });
+      $('#negx').addEventListener('input', e => {
+        if (e.target.value.trim()) { neg = e.target.value.trim(); el.querySelectorAll('.chips[data-name="neg"] .chip').forEach(c => c.classList.remove('on')); }
+        ready();
+      });
+      $('#pos').addEventListener('input', ready);
+      $('#next').addEventListener('click', () => { pos.text = $('#pos').value.trim(); memory(); });
+    };
+
+    const memory = () => {
+      const ev = pickEvidence(db.evidence, 1, 1)[0];
+      el.innerHTML = `<section class="card one">
+        <p class="kicker">${esc(ex.title)}</p>
+        <p class="label">Bring to mind a time "${esc(pos.text)}" was true.</p>
+        ${ev ? `<article class="ev"><p>${esc(ev.what_happened)}</p><p class="muted small">From your evidence log: ${esc(ev.source)}, ${esc(ev.date)}</p></article>
+          <p class="muted small">Use this one, or any other real time it was true. Only a good memory.</p>` : ''}
+        <ol class="script">
+          <li>Picture it clearly. Where were you? Who was there? What did it feel like?</li>
+          <li>Hold the memory and say the words to yourself: "${esc(pos.text)}".</li>
+          <li>${esc(BUTTERFLY_TEXT)} 6 to 8 slow taps, then stop and breathe.</li>
+          <li>If it feels good or stronger, do another set. If anything painful comes up, stop and go to your calm place.</li>
+        </ol>
+        <p class="muted" id="sets">Sets done: 0</p>
+        <button class="btn" id="set">I did a set</button>
+        <button class="btn primary" id="fin">Finished</button>
+      </section>`;
+      $('#set').addEventListener('click', () => { sets += 1; $('#sets').textContent = `Sets done: ${sets}`; });
+      $('#fin').addEventListener('click', rerate);
+    };
+
+    const rerate = () => {
+      el.innerHTML = `<section class="card one">
+        <p class="kicker">${esc(ex.title)}</p>
+        <p class="label">"${esc(pos.text)}". How true does it feel now? (1 = not at all, 7 = completely)</p>
+        ${chips('voc2', trueScale, null)}
+        <button class="btn primary" id="next" disabled>Next</button>
+      </section>`;
+      bindChips(el, (_n, v) => { vocAfter = Number(v); $('#next').disabled = false; });
+      $('#next').addEventListener('click', () => {
+        let b = db.beliefs.find(x => x.negative === neg);
+        if (!b) { b = { negative: neg, positive: pos.text, ratings: [] }; db.beliefs.push(b); }
+        b.positive = pos.text;
+        b.ratings.push({ date: localDate(), before: vocBefore, after: vocAfter });
+        rec.answers = [{ q: 'Negative belief', a: neg }, { q: 'Better belief', a: pos.text },
+          { q: 'How true, before and after (1 to 7)', a: `${vocBefore} then ${vocAfter}` }, { q: 'Tapping sets', a: String(sets) }];
+        rate();
+      });
+    };
+    pick();
   };
 
   const rate = () => {
     el.innerHTML = `<section class="card one">
       <p class="kicker">${esc(ex.title)}</p>
-      <p class="label">And now? (0 = calm, 10 = the worst)</p>
-      ${chips('after', scale, after, 'eleven')}
+      <p class="label">How upset or wound up do you feel now? (0 = calm, 10 = the worst)</p>
+      ${chips('after', SCALE10, null, 'eleven')}
       ${ex.ask ? `<input id="ask" maxlength="200" placeholder="${esc(ex.ask)}">` : ''}
       <button class="btn primary" id="save" disabled>Save</button>
     </section>`;
-    bindChips(el, (_n, v) => { after = Number(v); $('#save').disabled = false; });
+    bindChips(el, (_n, v) => { rec.after = Number(v); $('#save').disabled = false; });
     $('#save').addEventListener('click', () => {
-      const note = $('#ask')?.value.trim() ?? '';
-      if (id === 'calm-place' && note) db.settings.calm_word = note;
-      if (id === 'awareness' && note) pathStage(2).notes.push(note);
+      const ask = $('#ask')?.value.trim() ?? '';
+      if (id === 'calm-place' && ask) db.settings.calm_word = ask;
+      if (ask && id !== 'calm-place') rec.note = ask;
+      if (rec.answers?.length || rec.note) {
+        pathStage(ex.stage).notes.push({ date: localDate(), title: ex.title, answers: rec.answers ?? [], note: rec.note });
+      }
       store.insert('exercise_log', { exercise_name: id, module, duration_seconds: Math.round((Date.now() - start) / 1000),
-        completed: true, before, after, note });
+        completed: true, before: rec.before, after: rec.after, answers: rec.answers, note: rec.note });
       onDone();
     });
   };
   intro();
 }
 
+const BUTTERFLY_TEXT = 'Cross your arms over your chest, fingertips just below your collarbones, and tap left, right, left, right, slowly.';
+
 function practice(id) {
-  const m = main();
-  m.innerHTML = '<div id="step"></div>';
+  main().innerHTML = '<div id="step"></div>';
   runExercise($('#step'), id, { onDone: () => { location.hash = 'path'; } });
 }
 
@@ -702,14 +816,20 @@ function more() {
     download(`steady-${b.dataset.csv}-${localDate()}.csv`, store.exportCSV(b.dataset.csv), 'text/csv')));
 }
 
-// ---------- Therapy path ----------
-
-const STATUSES = [['none', 'Not contacted'], ['contacted', 'Contacted'], ['booked', 'Booked'], ['seeing', 'Seeing them']];
+// ---------- The path ----------
 
 function pathStage(n) {
   db.path ??= {};
-  db.path[n] ??= { therapist: '', link: '', status: 'none', notes: [] };
+  db.path[n] ??= {};
+  db.path[n].notes ??= [];
   return db.path[n];
+}
+
+function noteHtml(n) {
+  if (typeof n === 'string') return `<p>${esc(n)}</p>`;
+  return `<p class="muted small">${esc(n.date)} · ${esc(n.title)}</p>
+    ${n.answers.map(x => `<p class="small"><strong>${esc(x.q)}</strong><br>${esc(x.a)}</p>`).join('')}
+    ${n.note ? `<p class="small">${esc(n.note)}</p>` : ''}`;
 }
 
 function path() {
@@ -718,51 +838,38 @@ function path() {
     const rows = db.exercise_log.filter(r => r.exercise_name === id && r.completed && r.before != null && r.after != null);
     if (!rows.length) return '';
     const drop = rows.reduce((a, r) => a + (r.before - r.after), 0) / rows.length;
-    return ` <span class="muted small">(${rows.length} done, upset level ${drop >= 0 ? 'down' : 'up'} ${Math.abs(drop).toFixed(1)} on average)</span>`;
+    return `<span class="muted small">Done ${rows.length} time${rows.length === 1 ? '' : 's'}. Upset level ${drop >= 0 ? 'down' : 'up'} ${Math.abs(drop).toFixed(1)} on average.</span>`;
   };
+  const beliefs = db.beliefs.length ? `<section class="card">
+      <h3>Your beliefs</h3>
+      <p class="muted small">How true the better belief felt after tapping, 1 to 7, each time you did it.</p>
+      ${db.beliefs.map(b => `<div class="belief"><p><s class="muted">${esc(b.negative)}</s><br><strong>${esc(b.positive)}</strong></p>
+        <p class="small">${b.ratings.map(r => r.after).join(' → ')}</p></div>`).join('')}
+    </section>` : '';
   main().innerHTML = `
     <section class="card">
-      <h2>My therapy path</h2>
-      <p class="muted">Your friend's plan: EMDR first, then gestalt, then DBT if you still want help building new ways of coping. Each stage is therapy with a trained therapist. The app gives you the practice to do between sessions, and the exercises in your check-in follow the stage you are on.</p>
-      <p class="muted small">You decide when to move on. Talk it over with your therapist first.</p>
+      <h2>My path</h2>
+      <p class="muted">Your friend's plan, in order: EMDR skills first, then gestalt, then DBT if you still want new ways of coping. The exercise in your daily check-in comes from the stage you are on. You can practise any of them at any time below.</p>
+      <p class="muted small">Move on when a stage feels familiar, or whenever you want. There is no test.</p>
     </section>
+    ${beliefs}
     ${[1, 2, 3].map(n => {
       const i = STAGE_INFO[n];
       const ps = pathStage(n);
       return `<section class="card stage${n === cur ? ' current' : ''}">
-        <div class="row between"><h3>${n}. ${i.name}</h3>${n === cur ? '<span class="pill">Current stage</span>' : `<button class="btn small ghost" data-stage="${n}">Make this my stage</button>`}</div>
+        <div class="row between"><h3>${n}. ${i.name}</h3>${n === cur ? '<span class="pill">Your stage</span>' : `<button class="btn small ghost" data-stage="${n}">Make this my stage</button>`}</div>
         <p>${esc(i.what)}</p>
-        <p class="muted small">${esc(i.app)}</p>
-        <p class="label">Practise now</p>
-        <div class="stack">${i.exercises.map(id => `<a class="btn" href="#practice-${id}">${esc(EXERCISES[id].title)}</a>${stats(id)}`).join('')}</div>
-        <p class="label">Therapist</p>
-        <input data-f="therapist" data-n="${n}" value="${esc(ps.therapist)}" placeholder="Name">
-        <input data-f="link" data-n="${n}" value="${esc(ps.link)}" placeholder="Website or phone">
-        ${/^https:\/\//.test(ps.link) ? `<a class="btn small ghost" href="${esc(ps.link)}" target="_blank" rel="noopener">Open their page</a>` : ''}
-        ${chips(`status-${n}`, STATUSES, ps.status, 'pair')}
-        <p class="label">Before you book</p>
-        <ul class="rules">${i.check.map(c => `<li>${esc(c)}</li>`).join('')}</ul>
-        <p class="label">Notes to take to sessions</p>
-        <ul class="list">${ps.notes.map((t, k) => `<li><span>${esc(t)}</span><button class="btn small ghost" data-del="${n}:${k}">Remove</button></li>`).join('')}</ul>
-        <form class="row" data-note="${n}"><input placeholder="Something to bring up"><button class="btn small" type="submit">Add</button></form>
+        <p class="muted small">${esc(i.note)}</p>
+        <div class="stack">${i.exercises.map(id => `<div><a class="btn" href="#practice-${id}">${esc(EXERCISES[id].title)}</a>${stats(id)}</div>`).join('')}</div>
+        ${ps.notes.length ? `<details><summary class="label">My notes (${ps.notes.length})</summary>
+          ${[...ps.notes].reverse().map((t, k) => `<div class="ev">${noteHtml(t)}<button class="btn small ghost" data-del="${n}:${ps.notes.length - 1 - k}">Remove</button></div>`).join('')}
+        </details>` : ''}
       </section>`;
     }).join('')}`;
   const m = main();
   m.querySelectorAll('[data-stage]').forEach(b => b.addEventListener('click', () => {
     db.settings.stage = Number(b.dataset.stage);
     store.save();
-    render();
-  }));
-  m.querySelectorAll('input[data-f]').forEach(inp => inp.addEventListener('change', () => {
-    pathStage(Number(inp.dataset.n))[inp.dataset.f] = inp.value.trim();
-    store.save();
-    render();
-  }));
-  bindChips(m, (name, v) => { pathStage(Number(name.split('-')[1])).status = v; store.save(); });
-  m.querySelectorAll('form[data-note]').forEach(f => f.addEventListener('submit', e => {
-    e.preventDefault();
-    const v = f.querySelector('input').value.trim();
-    if (v) { pathStage(Number(f.dataset.note)).notes.push(v); store.save(); }
     render();
   }));
   m.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => {
@@ -779,17 +886,18 @@ function how() {
   main().innerHTML = `<section class="card how">
     <h2>How this works</h2>
     <h3>What it's based on</h3>
-    <p>Steady follows your friend's therapy plan, in this order:</p>
+    <p>Steady follows your friend's plan, in this order:</p>
     <ol>
-      <li><strong>EMDR</strong> to take the sting out of difficult feelings and memories you avoid, and loosen negative beliefs.</li>
-      <li><strong>Gestalt</strong> to understand how your past connects to how you are now.</li>
-      <li><strong>DBT</strong> if you still want help building new ways of coping.</li>
+      <li><strong>EMDR skills</strong> to calm difficult feelings and strengthen better beliefs about yourself, in place of ones like "I'm not good enough".</li>
+      <li><strong>Gestalt skills</strong> to notice what is happening in you right now, own your feelings, and let the arguing parts of you talk.</li>
+      <li><strong>DBT skills</strong> for coping when feelings get overwhelming, and for saying no.</li>
     </ol>
-    <p>Each of these is therapy with a trained therapist. The app does the part you can do on your own: short calming and coping exercises between sessions, and notes to take to them. The exercises change with the stage you are on. See <a href="#path">My path</a>.</p>
-    <p>Two things from CBT stay in the app every day, because they work alongside any therapy:</p>
+    <p>The exercise in your daily check-in comes from the stage you are on. You can do any exercise at any time from <a href="#path">My path</a>. Each one asks how upset you feel before and after, so you can see what actually helps you.</p>
+    <p>One thing is left out on purpose: the part of EMDR where you go back into painful memories. Done alone, it can open up more than you can close again.</p>
+    <p>Two more things run every day alongside the path:</p>
     <ul>
       <li><strong>One small action.</strong> When you're low, you wait to feel motivated, and the motivation doesn't come. Doing one small thing first is how the feeling starts to follow.</li>
-      <li><strong>The evidence log.</strong> Thoughts like "I'm not good enough" feel true, but they are guesses. The log keeps real facts to check them against.</li>
+      <li><strong>The evidence log.</strong> Real things that happened, to check "I'm not good enough" against. The EMDR belief exercise uses these memories too.</li>
     </ul>
     <h3>What to do each day</h3>
     <ol>
@@ -805,7 +913,7 @@ function how() {
       <li><strong>Steady:</strong> ${STATE_HELP.steady}</li>
     </ul>
     <h3>What it isn't</h3>
-    <p>It isn't therapy and can't replace a person. The EMDR memory work and the deeper gestalt work happen with your therapist, never in the app. If cost is a problem, NHS Talking Therapies is free, you can refer yourself, and some services offer EMDR. Search "NHS Talking Therapies Derbyshire", or ask your GP.</p>
+    <p>It isn't therapy and doesn't diagnose anything. If things get very bad, the safety card in More has numbers to call.</p>
     <a class="btn primary" href="#home">Back to today</a>
   </section>`;
 }

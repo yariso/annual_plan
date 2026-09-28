@@ -23,23 +23,11 @@ export function routeState(c, now = new Date(), t = DEFAULT_THRESHOLDS) {
   return 'steady';
 }
 
-// The therapy path, in the order a friend suggested: EMDR, then gestalt, then DBT.
-// The app only carries the between-session practice for each stage; the therapy
-// itself happens with a therapist.
+// The path, in the order a friend suggested: EMDR skills, then gestalt, then DBT.
+// Which exercise each state gets lives with the exercises.
+import { pickExercise } from './exercises.js';
 export const STAGES = [1, 2, 3];
-
-// Which guided exercise a state gets at each stage.
-export function stageExercise(stage, state, c = {}) {
-  if (stage === 3) {
-    if (state === 'spiral') return c.anxiety >= 8 ? 'tipp' : 'stop';
-    if (state === 'push') return 'stop';
-    return 'wise-mind';
-  }
-  if (stage === 2) return 'awareness';
-  // Stage 1: calm place settles the body; the container parks named worries.
-  if (state === 'spiral' && c.worry) return 'container';
-  return 'calm-place';
-}
+export const stageExercise = pickExercise;
 
 // The ordered steps for a state. The home screen shows only the current step.
 export function routePlan(state, c, t = DEFAULT_THRESHOLDS, stage = 1) {

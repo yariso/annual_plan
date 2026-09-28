@@ -109,3 +109,6 @@ td.down { color: var(--concern); }
 .stage .row.between { align-items: flex-start; gap: 12px; }
 nav a { font-size: 14px; }
 .chips.pair { grid-template-columns: repeat(2, 1fr); margin-top: 10px; }
+.belief { border-top: 1px solid var(--line); padding: 8px 0; }
+.belief p { margin: 4px 0; }
+details summary.label { cursor: pointer; }

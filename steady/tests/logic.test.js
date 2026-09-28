@@ -52,7 +52,27 @@ test('Spiral plan: imposter gets three evidence entries, a stage exercise, then 
   const p = routePlan('spiral', { ...base, imposter: true });
   assert.deepEqual(p.steps.map(s => s.kind), ['evidence', 'exercise', 'activity']);
   assert.equal(p.steps[0].count, 3);
-  assert.equal(p.steps[1].id, 'calm-place');
+  assert.equal(p.steps[1].id, 'belief');
+});
+
+test('imposter thoughts get the belief work of each stage', () => {
+  const c = { ...base, imposter: true };
+  assert.equal(routePlan('spiral', c, undefined, 2).steps[1].id, 'two-voices');
+  assert.equal(routePlan('spiral', c, undefined, 3).steps[1].id, 'check-facts');
+});
+
+test('every exercise a route can pick exists, and none digs into past memories', async () => {
+  const { EXERCISES, STAGE_INFO } = await import('../app/exercises.js');
+  for (const st of [1, 2, 3]) {
+    for (const state of ['spiral', 'push', 'steady']) {
+      for (const c of [base, { ...base, worry: true }, { ...base, imposter: true }, { ...base, anxiety: 9 }]) {
+        for (const step of routePlan(state, c, undefined, st).steps) {
+          if (step.kind === 'exercise') assert.ok(EXERCISES[step.id], `${step.id} exists`);
+        }
+      }
+    }
+    for (const id of STAGE_INFO[st].exercises) assert.equal(EXERCISES[id].stage, st, id);
+  }
 });
 
 test('Spiral plan: worry gets naming, then the container in stage 1', () => {
