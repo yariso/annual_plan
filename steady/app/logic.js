@@ -403,3 +403,19 @@ export function readingLeft(readingLog, cap, now = new Date()) {
 export function lowerCap(current, requested) {
   return Math.min(current, Math.max(1, Math.round(requested)));
 }
+
+// ---------- Thought records ----------
+
+export const normaliseThought = t => t.toLowerCase().replace(/[^a-z0-9' ]+/g, ' ').replace(/\s+/g, ' ').trim();
+
+// How strongly each recurring thought is believed, before and after, over time.
+export function thoughtTrajectories(records) {
+  const groups = new Map();
+  for (const r of [...records].sort((a, b) => (a.created_at < b.created_at ? -1 : 1))) {
+    const key = normaliseThought(r.thought);
+    if (!key) continue;
+    if (!groups.has(key)) groups.set(key, { thought: r.thought, points: [] });
+    groups.get(key).points.push({ date: localDate(new Date(r.created_at)), before: r.belief_before, after: r.belief_after });
+  }
+  return [...groups.values()].sort((a, b) => b.points.length - a.points.length);
+}

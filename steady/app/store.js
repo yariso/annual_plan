@@ -22,7 +22,7 @@ export const SEED_ACTIVITIES = [
   ['Cook', 'craft', 'Choose one meal and check you have the ingredients'],
 ];
 
-export const TABLES = ['checkins', 'activities', 'activity_log', 'evidence', 'exercise_log', 'signals', 'plan_log', 'events', 'reviews', 'reading_log'];
+export const TABLES = ['checkins', 'activities', 'activity_log', 'evidence', 'exercise_log', 'signals', 'plan_log', 'events', 'reviews', 'reading_log', 'thought_records'];
 
 function empty() {
   const db = {

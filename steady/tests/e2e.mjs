@@ -164,6 +164,37 @@ await tap('#done'); await chip('after', 5); await tap('#save');
 await page.waitForSelector('.stage.current');
 console.log('ok compassion letter');
 
+// Thought record: blocked on low days, saves and shows the belief trajectory otherwise.
+await fresh();
+await doCheckin({ energy: 3 });
+await page.goto(URL + '#thought');
+assert.ok((await page.textContent('main')).includes('Not today'));
+await fresh();
+await doCheckin({ energy: 6, anxiety: 8, imposter: 1, started: 1 });
+await page.goto(URL + '#thought');
+await page.fill('#thoughtx', "They'll find out I'm a fraud");
+await chip('belief_before', 80);
+await page.locator('[data-ev]').first().check();
+await chip('claim_slide', 'leadership');
+await chip('belief_after', 50);
+await snap('16-thought');
+await tap('#save');
+await page.waitForSelector('text=How much you believed each thought');
+assert.ok((await page.textContent('main')).includes('80 to 50'));
+console.log('ok thought record');
+
+// An old saved plan with a step type that no longer exists does not break Today.
+await page.evaluate(() => {
+  const db = JSON.parse(localStorage.getItem('steady.v1'));
+  db.today.plan.steps = [{ kind: 'defusion', seconds: 90 }, { kind: 'activity' }];
+  db.today.step = 0;
+  localStorage.setItem('steady.v1', JSON.stringify(db));
+});
+await page.goto(URL + '#home');
+await page.reload();
+await page.waitForSelector('#go');
+console.log('ok old plans skip unknown steps');
+
 // 5. Charts: limits after 15 points, and rule breaks flagged.
 await fresh();
 await page.evaluate(() => {

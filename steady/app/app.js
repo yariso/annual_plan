@@ -2,7 +2,7 @@ import {
   DEFAULT_THRESHOLDS, STATES, routeState, routePlan, baselineFrom, xmrLimits, detectSignals,
   latestSignals, protocolForSignal, suggestActivity, activityStats, hasRiskLanguage, lowMoodRun,
   localDate, dailySeries, pickEvidence, BASELINE_POINTS, RULES, weeklySummary, reviewDue, suggestThresholds,
-  exerciseStatus, resolveExercise, eventFollowUps, readingLeft, lowerCap,
+  exerciseStatus, resolveExercise, eventFollowUps, readingLeft, lowerCap, thoughtTrajectories,
 } from './logic.js';
 import * as store from './store.js';
 import { EXERCISES, STAGE_INFO, NEGATIVE_BELIEFS, READING, READING_NOTE } from './exercises.js';
@@ -36,7 +36,7 @@ function today() {
 
 // ---------- Router ----------
 
-const routes = { home, checkin, evidence, charts, more, safety, how, path, review, work, reading };
+const routes = { home, checkin, evidence, charts, more, safety, how, path, review, work, reading, thought };
 const stage = () => db.settings.stage ?? 1;
 
 function render() {
@@ -205,6 +205,7 @@ function renderStep(el) {
   const step = t.plan.steps[t.step];
   if (!step) {
     const extra = [];
+    if (t.plan.thoughtRecord) extra.push('<a class="btn" href="#thought">Work through the thought (optional, 10 minutes)</a>');
     if (eventFollowUps(db.events).length) extra.push('<a class="btn" href="#work">How does the new thing at work feel now?</a>');
     if (reviewDue(db.reviews, db.checkins)) extra.push('<a class="btn" href="#review">Weekly look back (5 minutes)</a>');
     el.innerHTML = `<section class="card one"><p class="kicker">Done</p><h2>That's today's one thing.</h2>
@@ -215,6 +216,8 @@ function renderStep(el) {
   }
   const fn = { activity: stepActivity, evidence: stepEvidence, 'name-worries': stepWorries, exercise: stepExercise,
     'stop-time': stepStopTime, 'first-task': stepFirstTask, 'warning-check': stepWarnings }[step.kind];
+  // A plan saved by an older version can name a step that no longer exists: skip it.
+  if (!fn) { nextStep(); return; }
   fn(el, step, t);
 }
 
@@ -640,6 +643,8 @@ function evidence() {
     <h2>Evidence log</h2>
     <p class="muted">When the "I'm not good enough" voice starts, it is a guess, not a fact. This is where you keep the facts: real things that happened, like good feedback or a job done well. Write what happened, not how you felt about it. The app shows you some of these on hard days.</p>
     ${readLinks('evidence')}
+    <a class="btn" href="#thought">Work through a thought</a>
+    ${trajectoryHtml()}
     <details><summary class="btn">Add an entry</summary>
       <form id="ef">
         <input name="date" type="date" value="${localDate()}">
@@ -1187,6 +1192,79 @@ function work() {
   listForm('#pf2', s.return_plan);
   m.querySelectorAll('[data-rdel]').forEach(b => b.addEventListener('click', () => { s.work_rules.splice(Number(b.dataset.rdel), 1); store.save(); render(); }));
   m.querySelectorAll('[data-pdel]').forEach(b => b.addEventListener('click', () => { s.return_plan.splice(Number(b.dataset.pdel), 1); store.save(); render(); }));
+}
+
+// ---------- Thought record, imposter edition ----------
+
+function trajectoryHtml() {
+  const tr = thoughtTrajectories(db.thought_records);
+  if (!tr.length) return '';
+  return `<p class="label">How much you believed each thought (0 to 100)</p>
+    ${tr.map(g => `<div class="belief"><p><strong>${esc(g.thought)}</strong></p>
+      <p class="small">${g.points.map(p => `${p.before} to ${p.after}`).join(', then ')}</p></div>`).join('')}`;
+}
+
+function thought() {
+  if (today()?.state === 'flat') {
+    main().innerHTML = `<section class="card one"><h2>Not today</h2>
+      <p>On low days, working through thoughts tends to turn into going round in circles. The small activity is the thing today.</p>
+      <a class="btn primary" href="#home">Back to today</a></section>`;
+    return;
+  }
+  const pct = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+  const past = thoughtTrajectories(db.thought_records).map(g => g.thought);
+  const r = { belief_before: null, belief_after: null, emotion: null, intensity: null, claim_slide: null };
+  main().innerHTML = `<form class="card" id="tr">
+    <h2>Work through a thought</h2>
+    <p class="muted small">Write short answers. Facts over feelings. Stop whenever you like.</p>
+    <p class="label">What was happening? Where, when, who.</p>
+    <textarea id="situation" rows="2"></textarea>
+    <p class="label">The thought, word for word</p>
+    ${past.length ? chips('past', past.slice(0, 5), null) : ''}
+    <input id="thoughtx" placeholder="e.g. They'll find out I'm a fraud">
+    <p class="label">How much do you believe it right now? (0 to 100)</p>
+    ${chips('belief_before', pct, null, 'eleven')}
+    <p class="label">What did you feel?</p>
+    ${chips('emotion', ['anxious', 'low', 'ashamed', 'guilty', 'angry', 'overwhelmed'], null)}
+    <p class="label">How strongly? (0 to 10)</p>
+    ${chips('intensity', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], null, 'eleven')}
+    <p class="label">What makes it feel true? Facts only, what a camera would see.</p>
+    <textarea id="for" rows="2"></textarea>
+    <p class="label">What goes against it? Tick any from your evidence log, and add others.</p>
+    <div class="checks">${db.evidence.map(e => `<label><input type="checkbox" data-ev="${e.id}"> ${esc(e.what_happened.slice(0, 110))}${e.what_happened.length > 110 ? '...' : ''}</label>`).join('')}</div>
+    <textarea id="against" rows="2" placeholder="Anything else that goes against it"></textarea>
+    <p class="label">Has the claim changed since you started?</p>
+    <p class="muted small">Imposter thoughts often slide. First it's the quality of your work. When that has good evidence, it moves to leadership, then to something else. If it slid, the thought isn't following the facts.</p>
+    ${chips('claim_slide', [['no', 'No'], ['leadership', 'Yes, to leadership'], ['other', 'Yes, to something else']], null)}
+    <p class="label">What does your mind say to dismiss the evidence against? (the "yes, but")</p>
+    <input id="yesbut" placeholder="e.g. they were just being polite">
+    <p class="label">Putting it all together, what is a fairer way to say it?</p>
+    <textarea id="balanced" rows="2"></textarea>
+    <p class="label">How much do you believe the original thought now? (0 to 100)</p>
+    ${chips('belief_after', pct, null, 'eleven')}
+    <button class="btn primary" id="save" type="submit" disabled>Save</button>
+    ${why('This is a CBT thought record, adapted for imposter feelings. It does not argue you out of the thought. It lays the thought next to the facts, so you can see how much of it is fact and how much is fear. Tracking how much you believe it, before and after, shows the change over weeks.')}
+  </form>`;
+  const f = $('#tr');
+  const ready = () => { $('#save').disabled = !($('#thoughtx').value.trim() && r.belief_before != null && r.belief_after != null); };
+  bindChips(f, (n, v) => {
+    if (n === 'past') $('#thoughtx').value = v;
+    else r[n] = ['belief_before', 'belief_after', 'intensity'].includes(n) ? Number(v) : v;
+    ready();
+  });
+  $('#thoughtx').addEventListener('input', ready);
+  f.addEventListener('submit', e => {
+    e.preventDefault();
+    const ticked = [...f.querySelectorAll('[data-ev]:checked')].map(c => db.evidence.find(x => x.id === Number(c.dataset.ev)));
+    ticked.forEach(ev => store.update('evidence', ev.id, { read_count: (ev.read_count ?? 0) + 1 }));
+    const against = [...ticked.map(ev => ev.what_happened), $('#against').value.trim()].filter(Boolean).join('\n');
+    store.insert('thought_records', {
+      situation: $('#situation').value.trim(), thought: $('#thoughtx').value.trim(), ...r,
+      evidence_for: $('#for').value.trim(), evidence_against: against, evidence_ids: ticked.map(x => x.id),
+      yes_but: $('#yesbut').value.trim(), balanced_thought: $('#balanced').value.trim(),
+    });
+    location.hash = 'evidence';
+  });
 }
 
 // ---------- How this works ----------

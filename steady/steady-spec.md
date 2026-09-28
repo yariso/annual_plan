@@ -196,4 +196,6 @@ A friend's plan, adopted by the user as self-help, without booking therapists: E
 
 Built: everything in Phase 1; the path (section 11) in place of the Phase 2 defusion set; the compassion set; the reading library with the 10-minute cap (never on low days, cap only goes down); the cycle model as a "something new landed" log with 24 and 72 hour follow-ups and a crash plan; the weekly look back with the three-line summary and questions for the named person, notes for the GP, early warning check, and the four-weekly "what to drop" questions; the return-to-work section (work days, rules shown on work days, phased plan); adaptation (exercises shortened after two skips, rested for a month after three; thresholds suggested from your own quartiles after 21 days).
 
-Not built: the imposter-edition thought record (two voices and check the facts cover similar ground); notifications (a claude.ai page cannot send them); the AI coach (optional, and it would send private text off the device).
+Also built: the imposter-edition thought record (offered in Worried mode at energy 5 or above and from the Evidence page, never on low days), with the evidence log to tick against, the claim-slide check, and belief before and after tracked per recurring thought.
+
+Not built: notifications (a claude.ai page cannot send them); the AI coach (optional, and it would send private text off the device).

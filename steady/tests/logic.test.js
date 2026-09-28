@@ -348,3 +348,22 @@ test('reading is capped per day and the cap only goes down', () => {
   assert.equal(lowerCap(10, 15), 10);
   assert.equal(lowerCap(10, 6), 6);
 });
+
+import { thoughtTrajectories } from '../app/logic.js';
+
+test('thought records group recurring thoughts and keep the belief trajectory', () => {
+  const t = thoughtTrajectories([
+    { created_at: '2026-09-29T10:00:00', thought: "I'm a fraud.", belief_before: 90, belief_after: 60 },
+    { created_at: '2026-10-02T10:00:00', thought: "i'm a  fraud", belief_before: 70, belief_after: 40 },
+    { created_at: '2026-10-01T10:00:00', thought: 'They will find out', belief_before: 80, belief_after: 70 },
+  ]);
+  assert.equal(t.length, 2);
+  assert.equal(t[0].points.length, 2);
+  assert.deepEqual(t[0].points.map(p => p.after), [60, 40]);
+});
+
+test('thought record is offered in Worried mode only at energy 5 or above, never on Low days', () => {
+  assert.equal(routePlan('spiral', { ...base, imposter: true, energy: 5 }).thoughtRecord, true);
+  assert.equal(routePlan('spiral', { ...base, imposter: true, energy: 4 }).thoughtRecord, false);
+  assert.equal(routePlan('flat', { ...base, energy: 2 }).thoughtRecord, false);
+});
