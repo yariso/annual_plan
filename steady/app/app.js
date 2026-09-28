@@ -1,10 +1,11 @@
 import {
   DEFAULT_THRESHOLDS, STATES, routeState, routePlan, baselineFrom, xmrLimits, detectSignals,
   latestSignals, protocolForSignal, suggestActivity, activityStats, hasRiskLanguage, lowMoodRun,
-  localDate, dailySeries, pickEvidence, BASELINE_POINTS, RULES,
+  localDate, dailySeries, pickEvidence, BASELINE_POINTS, RULES, weeklySummary, reviewDue, suggestThresholds,
+  exerciseStatus, resolveExercise, eventFollowUps, readingLeft, lowerCap,
 } from './logic.js';
 import * as store from './store.js';
-import { EXERCISES, STAGE_INFO, NEGATIVE_BELIEFS } from './exercises.js';
+import { EXERCISES, STAGE_INFO, NEGATIVE_BELIEFS, READING, READING_NOTE } from './exercises.js';
 
 const db = store.load();
 const $ = sel => document.querySelector(sel);
@@ -35,13 +36,14 @@ function today() {
 
 // ---------- Router ----------
 
-const routes = { home, checkin, evidence, charts, more, safety, how, path };
+const routes = { home, checkin, evidence, charts, more, safety, how, path, review, work, reading };
 const stage = () => db.settings.stage ?? 1;
 
 function render() {
   clearTimer();
   const name = (location.hash.slice(1) || 'home').split('?')[0];
   if (name.startsWith('practice-') && EXERCISES[name.slice(9)]) practice(name.slice(9));
+  else if (name.startsWith('read-') && READING.some(r => r.id === name.slice(5))) readItem(name.slice(5));
   else (routes[name] ?? home)();
   document.querySelectorAll('nav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === `#${name}`));
   window.scrollTo(0, 0);
@@ -126,6 +128,7 @@ function home() {
       ${STATES.map(s => `<button class="state ${s}${t.state === s ? ' on' : ''}" data-state="${s}">${STATE_LABEL[s]}</button>`).join('')}
     </div>
     <p class="muted small">${STATE_HELP[t.state]}</p>
+    ${workRulesToday()}
     ${signalBanner()}
     <div id="step"></div>`;
   m.querySelectorAll('.state').forEach(b => b.addEventListener('click', () => setState(b.dataset.state, true)));
@@ -152,19 +155,21 @@ function planInput(c) {
   };
 }
 
+function signalText(s) {
+  const m = METRICS.find(x => x[0] === s.metric)?.[1] ?? s.metric;
+  const dir = s.side === 'low' ? 'lower' : 'higher';
+  return {
+    outsideLimits: `${m} today is ${dir} than your usual range.`,
+    shift: `${m} has been ${dir} than your average for 7 days in a row.`,
+    trend: `${m} has gone ${s.side === 'low' ? 'down' : 'up'} 6 days in a row.`,
+    nearLimit: `${m} has been close to the edge of your usual range.`,
+  }[s.rule] ?? m;
+}
+
 function signalBanner() {
   const open = db.signals.filter(s => !s.acknowledged);
   if (!open.length) return '';
-  const label = s => {
-    const m = METRICS.find(x => x[0] === s.metric)?.[1] ?? s.metric;
-    const dir = s.side === 'low' ? 'lower' : 'higher';
-    return {
-      outsideLimits: `${m} today is ${dir} than your usual range.`,
-      shift: `${m} has been ${dir} than your average for 7 days in a row.`,
-      trend: `${m} has gone ${s.side === 'low' ? 'down' : 'up'} 6 days in a row.`,
-      nearLimit: `${m} has been close to the edge of your usual range.`,
-    }[s.rule] ?? m;
-  };
+  const label = signalText;
   return `<section class="flag">${open.map(s => `
     <div class="flag-row ${s.kind}">
       <div><strong>${s.kind === 'concern' ? 'Worth noticing:' : 'Change:'}</strong> ${esc(label(s))} This is more than normal day-to-day up and down.</div>
@@ -199,8 +204,12 @@ function renderStep(el) {
   const t = today();
   const step = t.plan.steps[t.step];
   if (!step) {
+    const extra = [];
+    if (eventFollowUps(db.events).length) extra.push('<a class="btn" href="#work">How does the new thing at work feel now?</a>');
+    if (reviewDue(db.reviews, db.checkins)) extra.push('<a class="btn" href="#review">Weekly look back (5 minutes)</a>');
     el.innerHTML = `<section class="card one"><p class="kicker">Done</p><h2>That's today's one thing.</h2>
       <p class="muted">Put the phone down. Check in again whenever you like.</p>
+      ${extra.length ? `<p class="label">When you're ready</p>${extra.join('')}` : ''}
       <a class="btn ghost" href="#checkin">Check in again</a></section>`;
     return;
   }
@@ -229,6 +238,7 @@ function stepActivity(el, step, t) {
       ${chips('predicted', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], predicted, 'eleven')}
       <button class="btn primary" id="go" ${predicted == null ? 'disabled' : ''}>Start two minutes</button>
       <button class="btn ghost" id="other">Something else</button>
+      ${readLinks('activity')}
       ${why('This is behavioural activation, a main part of CBT for low mood. Low mood tells you nothing will be enjoyable, so you wait to feel motivated, and the feeling never comes. Starting small breaks that loop. You guess the enjoyment first and rate it after, because low mood makes the guess too gloomy. Over time the app shows you the difference.')}
     </section>`;
     bindChips(el, (_n, v) => { predicted = Number(v); $('#go').disabled = false; });
@@ -318,14 +328,20 @@ function stepWorries(el, _step, t) {
 }
 
 function stepExercise(el, step, t) {
-  runExercise(el, step.id, { worries: t.extras?.worries ?? [], optional: step.optional, module: t.state, onDone: nextStep });
+  // Skipped three times: retired for a month, so a sibling from the same stage stands in.
+  const id = resolveExercise(step.id, STAGE_INFO[EXERCISES[step.id].stage].exercises, db.exercise_log);
+  if (!id) { nextStep(); return; }
+  runExercise(el, id, { worries: t.extras?.worries ?? [], optional: step.optional, module: t.state, onDone: nextStep,
+    short: exerciseStatus(db.exercise_log, id) === 'short' });
 }
 
 const SCALE10 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 // Every exercise: rate how upset you are, do it, rate again, save.
-function runExercise(el, id, { worries = [], optional = false, module = 'practice', onDone }) {
-  const ex = EXERCISES[id];
+function runExercise(el, id, { worries = [], optional = false, module = 'practice', onDone, short = false }) {
+  const base = EXERCISES[id];
+  // Skipped twice: a shorter version.
+  const ex = short ? { ...base, seconds: Math.round((base.seconds ?? 0) * 0.6), prompts: base.prompts?.slice(0, 2) } : base;
   const info = STAGE_INFO[ex.stage];
   const start = Date.now();
   const rec = { before: null, after: null, answers: null, note: '' };
@@ -338,12 +354,14 @@ function runExercise(el, id, { worries = [], optional = false, module = 'practic
       <p class="label">How upset or wound up do you feel right now? (0 = calm, 10 = the worst)</p>
       ${chips('before', SCALE10, null, 'eleven')}
       <button class="btn primary" id="go" disabled>Start</button>
-      ${optional ? '<button class="btn ghost" id="skip">Skip</button>' : ''}
+      <button class="btn ghost" id="skip">${optional ? 'Skip' : 'Not now'}</button>
+      ${short ? '<p class="muted small">A shorter version today.</p>' : ''}
+      ${readLinks(ex.stage ? `stage${ex.stage}` : 'compassion')}
       ${why(esc(ex.why))}
     </section>`;
     bindChips(el, (_n, v) => { rec.before = Number(v); $('#go').disabled = false; });
     $('#go').addEventListener('click', { guided, write, belief, checklist }[ex.type]);
-    $('#skip')?.addEventListener('click', () => {
+    $('#skip').addEventListener('click', () => {
       store.insert('exercise_log', { exercise_name: id, module, duration_seconds: 0, completed: false });
       onDone();
     });
@@ -621,6 +639,7 @@ function evidence() {
   main().innerHTML = `<section class="card">
     <h2>Evidence log</h2>
     <p class="muted">When the "I'm not good enough" voice starts, it is a guess, not a fact. This is where you keep the facts: real things that happened, like good feedback or a job done well. Write what happened, not how you felt about it. The app shows you some of these on hard days.</p>
+    ${readLinks('evidence')}
     <details><summary class="btn">Add an entry</summary>
       <form id="ef">
         <input name="date" type="date" value="${localDate()}">
@@ -727,6 +746,9 @@ function more() {
     </section>` : ''}
     <section class="card">
       <h2>More</h2>
+      <a class="btn" href="#review">Weekly look back</a>
+      <a class="btn" href="#work">Work: new things, crash plan, going back</a>
+      <a class="btn" href="#reading">Reading list</a>
       <a class="btn" href="#how">How this works</a>
       <a class="btn" href="#safety">If things get very bad</a>
     </section>
@@ -758,13 +780,11 @@ function more() {
       ${s.friend_questions.length ? `<ul class="rules">${s.friend_questions.map(q => `<li>${esc(q)}</li>`).join('')}</ul>` : ''}
     </section>
     <section class="card">
-      <h3>Tip protocol</h3>
-      <p class="muted small">Write it now, while things are calm. Shown when three or more early warnings are ticked.</p>
-      <textarea id="tipp" placeholder="e.g. tell my wife, drop one commitment, no new work for 48 hours, book two recovery activities">${esc(s.tip_protocol)}</textarea>
-    </section>
-    <section class="card">
       <h3>Settings</h3>
       <label class="check"><input type="checkbox" id="drinks" ${s.show_drinks ? 'checked' : ''}> Ask about drinks in the check-in</label>
+      <p class="label">Reading limit per day</p>
+      ${chips('cap', [2, 5, 10].filter(v => v <= (s.reading_cap ?? 10)).map(v => [v, `${v} min`]), s.reading_cap ?? 10)}
+      <p class="muted small">The limit can only go down.</p>
       <p class="muted small">Flat: energy ${th.flatEnergy} or below, or nothing started by ${th.flatHour}:00. Spiral: anxiety ${th.spiralAnxiety} or above, an imposter thought, or worry. Push: energy ${th.pushEnergy} or above and into something. Retune after three weeks of data.</p>
     </section>
     <section class="card">
@@ -809,7 +829,10 @@ function more() {
     render();
   }));
   $('#friend').addEventListener('change', e => { s.friend_name = e.target.value.trim(); store.save(); });
-  $('#tipp').addEventListener('change', e => { s.tip_protocol = e.target.value.trim(); store.save(); });
+  main().querySelector('.chips[data-name="cap"]')?.addEventListener('click', e => {
+    const v = e.target.closest('.chip')?.dataset.val;
+    if (v) { s.reading_cap = lowerCap(s.reading_cap ?? 10, Number(v)); store.save(); render(); }
+  });
   $('#drinks').addEventListener('change', e => { s.show_drinks = e.target.checked; store.save(); });
   $('#xj').addEventListener('click', () => download(`steady-${localDate()}.json`, store.exportJSON(), 'application/json'));
   main().querySelectorAll('[data-csv]').forEach(b => b.addEventListener('click', () =>
@@ -860,12 +883,23 @@ function path() {
         <div class="row between"><h3>${n}. ${i.name}</h3>${n === cur ? '<span class="pill">Your stage</span>' : `<button class="btn small ghost" data-stage="${n}">Make this my stage</button>`}</div>
         <p>${esc(i.what)}</p>
         <p class="muted small">${esc(i.note)}</p>
+        ${readLinks(`stage${n}`)}
         <div class="stack">${i.exercises.map(id => `<div><a class="btn" href="#practice-${id}">${esc(EXERCISES[id].title)}</a>${stats(id)}</div>`).join('')}</div>
         ${ps.notes.length ? `<details><summary class="label">My notes (${ps.notes.length})</summary>
           ${[...ps.notes].reverse().map((t, k) => `<div class="ev">${noteHtml(t)}<button class="btn small ghost" data-del="${n}:${ps.notes.length - 1 - k}">Remove</button></div>`).join('')}
         </details>` : ''}
       </section>`;
-    }).join('')}`;
+    }).join('')}
+    <section class="card stage">
+      <h3>${STAGE_INFO[0].name}</h3>
+      <p>${esc(STAGE_INFO[0].what)}</p>
+      <p class="muted small">${esc(STAGE_INFO[0].note)}</p>
+      ${readLinks('compassion')}
+      <div class="stack">${STAGE_INFO[0].exercises.map(id => `<div><a class="btn" href="#practice-${id}">${esc(EXERCISES[id].title)}</a>${stats(id)}</div>`).join('')}</div>
+      ${pathStage(0).notes.length ? `<details><summary class="label">My notes (${pathStage(0).notes.length})</summary>
+        ${[...pathStage(0).notes].reverse().map((t, k) => `<div class="ev">${noteHtml(t)}<button class="btn small ghost" data-del="0:${pathStage(0).notes.length - 1 - k}">Remove</button></div>`).join('')}
+      </details>` : ''}
+    </section>`;
   const m = main();
   m.querySelectorAll('[data-stage]').forEach(b => b.addEventListener('click', () => {
     db.settings.stage = Number(b.dataset.stage);
@@ -878,6 +912,281 @@ function path() {
     store.save();
     render();
   }));
+}
+
+// ---------- Reading ----------
+
+// Reading is attached to exercises, never shown on low days, and capped per day.
+function readLinks(module) {
+  if (today()?.state === 'flat') return '';
+  const items = READING.filter(r => r.module === module);
+  if (!items.length) return '';
+  return `<div class="reads">${items.map(r => `<a class="btn small ghost" href="#read-${r.id}">Read: ${esc(r.title)}</a>`).join('')}</div>`;
+}
+
+function readItem(id) {
+  const r = READING.find(x => x.id === id);
+  const cap = db.settings.reading_cap ?? 10;
+  const left = readingLeft(db.reading_log, cap);
+  const back = '<button class="btn primary" id="back">Back to what you were doing</button>';
+  let body;
+  if (today()?.state === 'flat') body = '<p>Reading is off on low days. The small activity is the thing today.</p>';
+  else if (left <= 0) body = `<p>That's today's ${cap} minutes of reading.</p>`;
+  else body = `<div class="clock" id="clock">${left}:00</div>
+    <button class="btn primary" id="go">Start reading (${left} min left today)</button>`;
+  main().innerHTML = `<section class="card one">
+    <p class="kicker">Reading</p>
+    <h2>${esc(r.title)}</h2>
+    <p class="muted">${esc(r.author)}</p>
+    <p><strong>Just this part:</strong> ${esc(r.chapter)}</p>
+    ${r.url ? `<a class="btn small ghost" href="${esc(r.url)}" target="_blank" rel="noopener">Open it (free)</a>`
+      : `<p class="muted small">${esc(READING_NOTE)} Or buy it from amazon.co.uk or Waterstones.</p>`}
+    ${body}
+    <div id="after"></div>
+    ${left <= 0 || today()?.state === 'flat' ? back : ''}
+  </section>`;
+  $('#back')?.addEventListener('click', () => history.back());
+  $('#go')?.addEventListener('click', () => {
+    const start = Date.now();
+    const finish = () => {
+      clearTimer();
+      store.insert('reading_log', { reading_item_id: id, minutes: Math.min(left, Math.max(1, Math.round((Date.now() - start) / 60000))) });
+      $('#after').innerHTML = `<p>Time to put it down.</p>${back}`;
+      $('#go').remove();
+      $('#back').addEventListener('click', () => history.back());
+    };
+    $('#go').textContent = 'Stop';
+    $('#go').onclick = finish;
+    countdown($('#clock'), left * 60, finish);
+  }, { once: true });
+}
+
+function reading() {
+  const groups = [['activity', 'Getting active'], ['evidence', 'Imposter feelings'], ['stage1', 'EMDR skills'],
+    ['stage2', 'Gestalt and noticing'], ['stage3', 'DBT skills'], ['compassion', 'Compassion'], ['work', 'Work and burnout']];
+  main().innerHTML = `<section class="card">
+    <h2>Reading list</h2>
+    <p class="muted small">One chapter at a time, up to ${db.settings.reading_cap ?? 10} minutes a day. ${esc(READING_NOTE)}</p>
+    ${groups.map(([m, label]) => {
+      const items = READING.filter(r => r.module === m);
+      return items.length ? `<p class="label">${label}</p>${items.map(r => `<a class="btn" href="#read-${r.id}">${esc(r.title)}<br><span class="muted small">${esc(r.author)}</span></a>`).join('')}` : '';
+    }).join('')}
+  </section>`;
+}
+
+// ---------- Weekly look back ----------
+
+async function copyText(text, el) {
+  try { await navigator.clipboard.writeText(text); el.textContent = 'Copied'; }
+  catch { el.textContent = 'Select the text above and copy it'; }
+}
+
+function review() {
+  const draft = { focus: '', markers: {}, warnings: [], helping: '', notHelping: '', drop: '' };
+  const fourth = (db.reviews.length + 1) % 4 === 0;
+  const suggest = suggestThresholds(db.checkins, thresholds());
+  const th = thresholds();
+  const changed = suggest && ['flatEnergy', 'spiralAnxiety', 'pushEnergy'].some(k => suggest[k] !== th[k]);
+  const s0 = weeklySummary(db, new Date());
+  const weekAgo = localDate(new Date(Date.now() - 7 * 86400000));
+  const sigs = db.signals.filter(x => x.date_flagged > weekAgo);
+  const markers = db.steady_markers.length ? db.steady_markers : ['Looked after myself', 'Cooked or cleaned', 'Did something with people I love'];
+  const warnings = db.early_warnings.length ? db.early_warnings
+    : ['Working for hours on one thing', 'Sleeping a lot', 'Drinking more', 'Pulling away from people', 'Feeling overwhelmed'];
+  const name = db.settings.friend_name || 'your person';
+  const summaryText = () => {
+    const lines = weeklySummary(db, new Date(), draft.focus).lines;
+    const qs = db.settings.friend_questions;
+    return `${lines.join('\n')}${qs.length ? `\n\nQuestions to ask me:\n${qs.map(q => `- ${q}`).join('\n')}` : ''}`;
+  };
+
+  main().innerHTML = `
+    <section class="card">
+      <h2>Weekly look back</h2>
+      <p class="muted small">Five minutes. What the week actually looked like, from your own check-ins.</p>
+    </section>
+    <section class="card">
+      <h3>The week in numbers</h3>
+      <ul class="rules">${s0.lines.slice(0, 2).map(l => `<li>${esc(l)}</li>`).join('')}
+        <li>Exercises done: ${s0.exercisesDone}${s0.avgDrop != null ? `, upset level down ${s0.avgDrop} on average` : ''}.</li></ul>
+      ${sigs.length ? `<p class="label">What the charts noticed</p><ul class="rules">${sigs.map(x => `<li>${esc(signalText(x))}</li>`).join('')}</ul>` : ''}
+      ${s0.surprises.length ? `<p class="label">Went better than you guessed</p><ul class="rules">${s0.surprises.slice(0, 3).map(x => `<li>${esc(x.name)}: guessed ${x.predicted}, felt ${x.actual}</li>`).join('')}</ul>` : ''}
+      ${s0.skipped.length ? `<p class="label">Skipped</p><p class="small">${s0.skipped.map(id => esc(EXERCISES[id]?.title ?? id)).join(', ')}</p>` : ''}
+    </section>
+    <section class="card">
+      <h3>Your markers of steady</h3>
+      <p class="muted small">How many days this week?</p>
+      ${markers.map((m, i) => `<p class="label">${esc(m)}</p>${chips(`m${i}`, [0, 1, 2, 3, 4, 5, 6, 7], null)}`).join('')}
+    </section>
+    <section class="card">
+      <h3>Early warning signs this week</h3>
+      <div class="checks">${warnings.map((w, i) => `<label><input type="checkbox" data-w="${i}"> ${esc(w)}</label>`).join('')}</div>
+      <div id="tip"></div>
+    </section>
+    ${fourth ? `<section class="card">
+      <h3>Every four weeks</h3>
+      <p class="label">What is helping?</p><textarea id="helping"></textarea>
+      <p class="label">What isn't?</p><textarea id="nothelping"></textarea>
+      <p class="label">What should the app drop?</p><textarea id="drop"></textarea>
+    </section>` : ''}
+    ${changed ? `<section class="card">
+      <h3>Adjust to your own numbers</h3>
+      <p class="muted small">After three weeks of check-ins, the app can set its trigger points from your data instead of the starting guesses.</p>
+      <ul class="rules">
+        <li>Low mode when energy is ${suggest.flatEnergy} or below (now ${th.flatEnergy})</li>
+        <li>Worried mode when anxiety is ${suggest.spiralAnxiety} or above (now ${th.spiralAnxiety})</li>
+        <li>Overdoing mode when energy is ${suggest.pushEnergy} or above (now ${th.pushEnergy})</li>
+      </ul>
+      <button class="btn" id="apply">Use these</button>
+    </section>` : ''}
+    <section class="card">
+      <h3>To send to ${esc(name)}</h3>
+      <p class="label">One thing for next week</p>
+      <input id="focus" maxlength="120" placeholder="e.g. say yes to one walk">
+      <p class="label">Three lines to send</p>
+      <textarea id="sum" rows="7" readonly>${esc(summaryText())}</textarea>
+      <button class="btn primary" id="copy">Copy to send</button>
+    </section>
+    <section class="card">
+      <h3>Notes for your GP</h3>
+      ${db.gp_notes.length ? `<ul class="rules">${db.gp_notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul>
+        <button class="btn small" id="copygp">Copy</button>` : '<p class="muted small">None yet. Add them in More.</p>'}
+    </section>
+    <section class="card">
+      <button class="btn primary" id="save">Save this look back</button>
+      ${db.reviews.length ? `<details><summary class="label">Past look backs (${db.reviews.length})</summary>
+        ${[...db.reviews].reverse().map(r => `<div class="ev"><p class="muted small">${esc(localDate(new Date(r.created_at)))}</p><p class="small pre">${esc(r.summary)}</p></div>`).join('')}
+      </details>` : ''}
+    </section>`;
+
+  const m = main();
+  bindChips(m, (n, v) => { draft.markers[markers[Number(n.slice(1))]] = Number(v); });
+  m.querySelectorAll('[data-w]').forEach(c => c.addEventListener('change', () => {
+    draft.warnings = [...m.querySelectorAll('[data-w]:checked')].map(x => warnings[x.dataset.w]);
+    $('#tip').innerHTML = draft.warnings.length >= 3 ? `<div class="flag-row concern"><strong>Three or more.</strong> ${db.settings.tip_protocol
+      ? `Your crash plan: ${esc(db.settings.tip_protocol)}` : 'This is when your crash plan is for. Write one on the Work page, while you can.'}</div>` : '';
+  }));
+  $('#focus').addEventListener('input', e => { draft.focus = e.target.value.trim(); $('#sum').value = summaryText(); });
+  $('#copy').addEventListener('click', e => copyText($('#sum').value, e.target));
+  $('#copygp')?.addEventListener('click', e => copyText(db.gp_notes.map(n => `- ${n}`).join('\n'), e.target));
+  $('#apply')?.addEventListener('click', () => {
+    db.settings.thresholds = { ...suggest };
+    store.save();
+    $('#apply').textContent = 'Done. The new points apply from your next check-in.';
+    $('#apply').disabled = true;
+  });
+  $('#save').addEventListener('click', () => {
+    store.insert('reviews', {
+      summary: $('#sum').value, focus: draft.focus, markers: draft.markers, warnings: draft.warnings,
+      helping: $('#helping')?.value.trim() ?? '', not_helping: $('#nothelping')?.value.trim() ?? '', drop: $('#drop')?.value.trim() ?? '',
+    });
+    location.hash = 'home';
+  });
+}
+
+// ---------- Work ----------
+
+const RESPONSES = [['took-back', 'Did it myself'], ['delegated', 'Delegated'], ['parked', 'Parked it'], ['asked', 'Asked for help'], ['said-no', 'Said no']];
+const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+function workRulesToday() {
+  const s = db.settings;
+  if (!s.back_at_work || !(s.work_days ?? [1, 2, 3, 4, 5]).includes(new Date().getDay()) || !s.work_rules.length) return '';
+  return `<details class="card rules-card"><summary class="label">Today's work rules</summary>
+    <ul class="rules">${s.work_rules.map(r => `<li>${esc(r)}</li>`).join('')}</ul></details>`;
+}
+
+function work() {
+  const s = db.settings;
+  s.work_days ??= [1, 2, 3, 4, 5];
+  s.return_plan ??= [];
+  const fus = eventFollowUps(db.events);
+  const ev = { response: null, now: null };
+  const resp = id => RESPONSES.find(r => r[0] === id)?.[1] ?? id;
+  main().innerHTML = `
+    ${fus.map(f => {
+      const e = db.events.find(x => x.id === f.id);
+      return `<section class="card one">
+        <p class="kicker">${f.which === 'feeling_24h' ? 'A day on' : 'Three days on'}</p>
+        <h3>${esc(e.description)}</h3>
+        <p class="muted small">You ${esc(resp(e.response).toLowerCase())}. How do you feel about it now? (0 = fine, 10 = awful)</p>
+        ${chips(`fu-${f.id}-${f.which}`, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], null, 'eleven')}
+      </section>`;
+    }).join('')}
+    <section class="card">
+      <h2>Something new landed</h2>
+      <p class="muted small">You told me the cycle often starts here: something new lands, you take it on yourself, then you crash. Log it when it happens. The app asks how it feels a day and three days later, so you can see which response costs you least.</p>
+      <textarea id="what" rows="2" placeholder="What landed?"></textarea>
+      <p class="label">What did you do with it?</p>
+      ${chips('resp', RESPONSES, null, 'pair')}
+      <p class="label">How do you feel about it right now? (0 = fine, 10 = awful)</p>
+      ${chips('now', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], null, 'eleven')}
+      <button class="btn primary" id="log" disabled>Log it</button>
+      <a class="btn ghost" href="#practice-dear-man">Plan how to say no (DEAR MAN)</a>
+      ${db.events.length ? `<details><summary class="label">Past ones (${db.events.length})</summary>
+        ${[...db.events].reverse().map(e => `<div class="ev"><p>${esc(e.description)}</p>
+          <p class="muted small">${esc(localDate(new Date(e.created_at)))} · ${esc(resp(e.response))} · felt ${e.feeling_now ?? '?'} then, ${e.feeling_24h ?? '?'} a day on, ${e.feeling_72h ?? '?'} three days on</p></div>`).join('')}
+      </details>` : ''}
+    </section>
+    <section class="card">
+      <h3>My crash plan</h3>
+      <p class="muted small">Write it now, while things are calm. It shows when three or more of your early warning signs are ticked.</p>
+      ${db.early_warnings.length ? `<p class="label">Your early warning signs</p><ul class="rules">${db.early_warnings.map(w => `<li>${esc(w)}</li>`).join('')}</ul>` : ''}
+      <textarea id="tipp" placeholder="e.g. tell my wife, drop one commitment, no new work for 48 hours, book two things I enjoy">${esc(s.tip_protocol)}</textarea>
+    </section>
+    <section class="card">
+      <h3>Going back to work</h3>
+      <label class="check"><input type="checkbox" id="back" ${s.back_at_work ? 'checked' : ''}> I'm back at work</label>
+      <p class="muted small">When ticked, your rules show on the Today screen on work days.</p>
+      <p class="label">Work days</p>
+      <div class="chips days">${DAYS.map((d, i) => `<button type="button" class="chip${s.work_days.includes(i) ? ' on' : ''}" data-day="${i}">${d}</button>`).join('')}</div>
+      <p class="label">My rules</p>
+      <ul class="list">${s.work_rules.map((r, i) => `<li><span>${esc(r)}</span><button class="btn small ghost" data-rdel="${i}">Remove</button></li>`).join('')}</ul>
+      <form id="rf" class="row"><input placeholder="Add a rule"><button class="btn small" type="submit">Add</button></form>
+      <p class="label">Phased return plan</p>
+      <p class="muted small">Agree it with your manager and occupational health. One line per week, for example "Week 1: 3 days, mornings only".</p>
+      <ul class="list">${s.return_plan.map((r, i) => `<li><span>${esc(r)}</span><button class="btn small ghost" data-pdel="${i}">Remove</button></li>`).join('')}</ul>
+      <form id="pf2" class="row"><input placeholder="Week ${s.return_plan.length + 1}: ..."><button class="btn small" type="submit">Add</button></form>
+    </section>
+    ${readLinks('work')}`;
+
+  const m = main();
+  const ready = () => { $('#log').disabled = !($('#what').value.trim() && ev.response && ev.now != null); };
+  bindChips(m, (n, v) => {
+    if (n === 'resp') ev.response = v;
+    else if (n === 'now') ev.now = Number(v);
+    else if (n.startsWith('fu-')) {
+      const [, id, which] = n.split('-');
+      store.update('events', Number(id), { [which]: Number(v) });
+      render();
+      return;
+    }
+    ready();
+  });
+  $('#what').addEventListener('input', ready);
+  $('#log').addEventListener('click', () => {
+    store.insert('events', { kind: 'new_thing', description: $('#what').value.trim(), response: ev.response,
+      feeling_now: ev.now, feeling_24h: null, feeling_72h: null });
+    render();
+  });
+  $('#tipp').addEventListener('change', e => { s.tip_protocol = e.target.value.trim(); store.save(); });
+  $('#back').addEventListener('change', e => { s.back_at_work = e.target.checked; store.save(); });
+  m.querySelectorAll('[data-day]').forEach(b => b.addEventListener('click', () => {
+    const d = Number(b.dataset.day);
+    s.work_days = s.work_days.includes(d) ? s.work_days.filter(x => x !== d) : [...s.work_days, d];
+    b.classList.toggle('on');
+    store.save();
+  }));
+  const listForm = (sel, arr) => $(sel).addEventListener('submit', e => {
+    e.preventDefault();
+    const v = e.target.querySelector('input').value.trim();
+    if (v) { arr.push(v); store.save(); }
+    render();
+  });
+  listForm('#rf', s.work_rules);
+  listForm('#pf2', s.return_plan);
+  m.querySelectorAll('[data-rdel]').forEach(b => b.addEventListener('click', () => { s.work_rules.splice(Number(b.dataset.rdel), 1); store.save(); render(); }));
+  m.querySelectorAll('[data-pdel]').forEach(b => b.addEventListener('click', () => { s.return_plan.splice(Number(b.dataset.pdel), 1); store.save(); render(); }));
 }
 
 // ---------- How this works ----------
@@ -905,6 +1214,14 @@ function how() {
       <li>The app picks a mode for today from your answers, and shows one small thing to do.</li>
       <li>Do it for two minutes. Rate it afterwards. That's it for the day.</li>
     </ol>
+    <h3>Once a week</h3>
+    <p>A five-minute look back: what the charts noticed, what went better than you guessed, your early warning signs, and three lines to send ${esc(db.settings.friend_name || 'your person')}. Every fourth week it also asks what is helping and what to drop. After three weeks it offers to set the Low, Worried and Overdoing trigger points from your own numbers.</p>
+    <h3>Also in More</h3>
+    <ul>
+      <li><strong>Work:</strong> log when something new lands and what you did with it, keep your crash plan, and set your rules for going back.</li>
+      <li><strong>Reading list:</strong> one chapter at a time, up to 10 minutes a day, and never on low days.</li>
+    </ul>
+    <p class="muted small">The app adapts: an exercise you skip twice gets shorter, and one you skip three times is rested for a month.</p>
     <h3>The four modes</h3>
     <ul>
       <li><strong>Low:</strong> ${STATE_HELP.flat}</li>

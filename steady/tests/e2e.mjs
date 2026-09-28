@@ -93,8 +93,8 @@ console.log('ok worry route with stage 1 container');
 // Path page: three stages; the belief exercise runs end to end and shows on the page.
 await page.goto(URL + '#path');
 await page.waitForSelector('.stage.current');
-assert.equal(await page.locator('.stage').count(), 3);
-assert.ok(!(await page.textContent('main')).toLowerCase().includes('book'), 'no booking prompts');
+assert.equal(await page.locator('.stage').count(), 4, 'three stages plus compassion');
+assert.ok(!/\bbook(ing)?\b|therapist/i.test(await page.textContent('main')), 'no booking prompts');
 await snap('11-path');
 await page.goto(URL + '#practice-belief');
 await chip('before', 6);
@@ -125,6 +125,44 @@ await tap('[data-stage="3"]');
 assert.equal(await page.locator('.stage.current h3').textContent(), '3. DBT skills');
 await tap('[data-stage="1"]');
 console.log('ok path: belief and two voices exercises');
+
+// Low days hide reading; other days show it, capped.
+await fresh();
+await doCheckin({ energy: 3 });
+assert.equal(await page.locator('#step a[href^="#read-"]').count(), 0, 'no reading on low days');
+await fresh();
+await doCheckin({ energy: 6, started: 1 });
+assert.ok(await page.locator('#step a[href^="#read-"]').count() >= 1, 'reading offered on steady days');
+await page.goto(URL + '#read-burnout');
+await page.waitForSelector('#go');
+assert.ok((await page.textContent('#go')).includes('10 min'));
+console.log('ok reading: off on low days, capped');
+
+// Work: log a new thing; weekly look back builds the three lines.
+await page.goto(URL + '#work');
+await page.fill('#what', 'New national report asked for by Friday');
+await chip('resp', 'took-back'); await chip('now', 7);
+await tap('#log');
+assert.ok((await page.textContent('main')).includes('Past ones (1)'));
+await snap('14-work');
+await page.goto(URL + '#review');
+await page.fill('#focus', 'say yes to one walk');
+const sum = await page.inputValue('#sum');
+assert.ok(sum.includes('Next week: say yes to one walk'), sum);
+assert.ok(sum.includes('Questions to ask me'), 'wife questions included');
+assert.ok(!/missed|streak|well done/i.test(sum));
+await snap('15-review');
+await tap('#save');
+await page.waitForSelector('#main .card');
+console.log('ok work log and weekly look back');
+
+// Compassion exercise from My path.
+await page.goto(URL + '#practice-compassionate-letter');
+await chip('before', 6); await tap('#go');
+await page.fill('#w0', 'You earned that feedback.');
+await tap('#done'); await chip('after', 5); await tap('#save');
+await page.waitForSelector('.stage.current');
+console.log('ok compassion letter');
 
 // 5. Charts: limits after 15 points, and rule breaks flagged.
 await fresh();

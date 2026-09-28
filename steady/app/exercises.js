@@ -10,6 +10,12 @@
 //   checklist: tick what applies
 
 export const STAGE_INFO = {
+  0: {
+    name: 'Compassion skills',
+    what: 'For any stage, any day that is not a low one. The critic in your head is loud. These exercises build a second voice: warm, honest and on your side.',
+    note: 'This is not about pretending things are fine. It is about speaking to yourself the way you would speak to someone you care about.',
+    exercises: ['soothing-breath', 'compassionate-letter', 'kind-voice'],
+  },
   1: {
     name: 'EMDR skills',
     what: 'EMDR works on difficult feelings and the negative beliefs that come with them, like "I\'m not good enough". These skills calm you when feelings get big, and strengthen the beliefs you would rather have, using slow left-right tapping (the butterfly hug).',
@@ -41,6 +47,39 @@ export const NEGATIVE_BELIEFS = {
 };
 
 export const EXERCISES = {
+  // ---------- Any stage: compassion skills ----------
+  'soothing-breath': {
+    stage: 0, type: 'guided', title: 'Soothing breath', seconds: 120,
+    lines: () => [
+      'Sit comfortably, feet on the floor. Let your shoulders drop.',
+      'Let your breathing slow a little: in for about 4, out for about 5. A steady, even rhythm.',
+      'Let your face soften. Try a very slight smile, as if greeting someone you like.',
+      'Notice the out-breath, like a wave going out. Each one a little slower.',
+      'If your mind wanders, that is fine. Come back to the rhythm.',
+    ],
+    why: 'From compassion-focused therapy. Slow breathing switches on the body\'s calming system, the one that settles you when you feel safe. It is the base for the other compassion exercises.',
+  },
+  'compassionate-letter': {
+    stage: 0, type: 'write', title: 'Compassionate letter',
+    intro: 'Imagine your deputy has just had fantastic feedback from a room full of senior people, and still feels like a fraud.',
+    prompts: [
+      'Write them a short letter. What would you want them to know? Be warm and honest.',
+      'Now read it again, slowly, as if it had been written to you.',
+      'What do you notice when it is addressed to you?',
+    ],
+    why: 'From compassion-focused therapy. Most people are far kinder to others than to themselves. Writing to someone else first lets you find the words, and then you can hear them.',
+  },
+  'kind-voice': {
+    stage: 0, type: 'write', title: 'Critic and kind voice',
+    intro: 'Let the critic speak, then answer it with a different voice.',
+    prompts: [
+      'What is the critic saying today? Write it in its own words.',
+      'Now reply as the kindest, wisest person you know would. Not fake cheerful. Warm and honest.',
+      'If a friend felt like this, which voice would you want them to hear?',
+    ],
+    why: 'From compassion-focused therapy. The critic often thinks it is keeping you safe. A kind voice can do that job better, without the attacks.',
+  },
+
   // ---------- Stage 1: EMDR skills ----------
   'calm-place': {
     stage: 1, type: 'guided', title: 'Calm place', seconds: 150,
@@ -221,3 +260,28 @@ export function pickExercise(stage, state, c = {}) {
   if (state === 'spiral') return c.worry ? 'container' : c.imposter ? 'belief' : c.anxiety >= 8 ? 'butterfly' : 'calm-place';
   return 'belief';
 }
+
+// Reading, attached to exercises. A chapter, not a book. Capped at 10 minutes a day.
+export const READING = [
+  { id: 'nhs-low-mood', module: 'activity', title: 'Depression and Low Mood: an NHS self-help guide',
+    author: 'Cumbria, Northumberland, Tyne and Wear NHS Foundation Trust', chapter: 'The section on getting active again (behavioural activation). Short and free.',
+    url: 'https://selfhelp.cntw.nhs.uk/' },
+  { id: 'addis-martell', module: 'activity', title: 'Overcoming Depression One Step at a Time',
+    author: 'Michael Addis and Christopher Martell', chapter: 'The chapters on activity scheduling.' },
+  { id: 'imposter-cure', module: 'evidence', title: 'The Imposter Cure', author: 'Dr Jessamy Hibberd',
+    chapter: 'The early chapters on where imposter feelings come from and how they keep going.' },
+  { id: 'shapiro', module: 'stage1', title: 'Getting Past Your Past', author: 'Francine Shapiro',
+    chapter: 'The chapters on the calm place and self-soothing techniques. Skip the parts on processing memories.' },
+  { id: 'happiness-trap', module: 'stage2', title: 'The Happiness Trap', author: 'Russ Harris',
+    chapter: 'The chapters on noticing thoughts and being present.' },
+  { id: 'dbt-workbook', module: 'stage3', title: 'The Dialectical Behavior Therapy Skills Workbook',
+    author: 'Matthew McKay, Jeffrey Wood and Jeffrey Brantley', chapter: 'Start with the distress tolerance chapter.' },
+  { id: 'compassionate-mind', module: 'compassion', title: 'The Compassionate Mind Workbook',
+    author: 'Chris Irons and Elaine Beaumont', chapter: 'The chapters on soothing rhythm breathing and the compassionate self.' },
+  { id: 'burnout', module: 'work', title: 'Burnout', author: 'Emily Nagoski and Amelia Nagoski',
+    chapter: 'Chapter 1, on completing the stress cycle.' },
+  { id: 'reinventing', module: 'work', title: 'Reinventing Your Life', author: 'Jeffrey Young and Janet Klosko',
+    chapter: 'Do the questionnaire at the start, then read only the chapters for the patterns that score highest.' },
+];
+
+export const READING_NOTE = 'Several of these are on the Reading Well "Books on Prescription" list, so Derby libraries lend them free.';

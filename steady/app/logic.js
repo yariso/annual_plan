@@ -280,3 +280,126 @@ export function pickEvidence(entries, claim, n = 3, rand = Math.random) {
   const others = shuffle(entries.filter(e => e.claim !== claim));
   return [...tagged, ...others].slice(0, n);
 }
+
+// ---------- Weekly review ----------
+
+const DAY = 86400000;
+const round1 = n => Math.round(n * 10) / 10;
+export const mean = xs => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null);
+
+export function inWindow(iso, start, end) {
+  const t = new Date(iso).getTime();
+  return t > start.getTime() && t <= end.getTime();
+}
+
+export function reviewDue(reviews, checkins, now = new Date()) {
+  const last = reviews.length ? new Date(reviews.at(-1).created_at) : null;
+  if (last) return now - last >= 7 * DAY;
+  const first = checkins.length ? new Date([...checkins].map(c => c.created_at).sort()[0]) : null;
+  return !!first && now - first >= 7 * DAY;
+}
+
+// Facts about the last seven days. No praise, no counting what did not happen.
+export function weeklySummary({ checkins, activity_log, activities, exercise_log }, end = new Date(), focus = '') {
+  const start = new Date(end.getTime() - 7 * DAY);
+  const prevStart = new Date(end.getTime() - 14 * DAY);
+  const week = checkins.filter(c => inWindow(c.created_at, start, end));
+  const prev = checkins.filter(c => inWindow(c.created_at, prevStart, start));
+  const m = (rows, k) => { const v = mean(rows.map(r => r[k]).filter(x => x != null)); return v == null ? null : round1(v); };
+  const s = {
+    mood: m(week, 'mood'), energy: m(week, 'energy'), anxiety: m(week, 'anxiety'), prevMood: m(prev, 'mood'),
+  };
+  const acts = activity_log.filter(r => inWindow(r.created_at, start, end));
+  s.activitiesDone = acts.filter(r => r.outcome !== 'not').length;
+  const rated = acts.filter(r => r.actual != null && r.predicted != null && r.actual > r.predicted)
+    .sort((a, b) => (b.actual - b.predicted) - (a.actual - a.predicted));
+  s.surprises = rated.map(r => ({ name: activities.find(a => a.id === r.activity_id)?.name ?? 'Something',
+    predicted: r.predicted, actual: r.actual }));
+  const ex = exercise_log.filter(r => inWindow(r.created_at, start, end));
+  const done = ex.filter(r => r.completed);
+  s.exercisesDone = done.length;
+  const drops = done.filter(r => r.before != null && r.after != null).map(r => r.before - r.after);
+  s.avgDrop = drops.length ? round1(mean(drops)) : null;
+  s.skipped = [...new Set(ex.filter(r => !r.completed).map(r => r.exercise_name))];
+
+  const lines = [];
+  lines.push(s.mood == null ? 'No check-ins this week.'
+    : `Mood averaged ${s.mood} out of 10${s.prevMood != null ? ` (${s.prevMood} the week before)` : ''}. Energy ${s.energy}, anxiety ${s.anxiety}.`);
+  const best = s.surprises[0];
+  lines.push(s.activitiesDone
+    ? `Started ${s.activitiesDone} small thing${s.activitiesDone === 1 ? '' : 's'}.${best ? ` ${best.name} went better than expected: guessed ${best.predicted}, felt ${best.actual}.` : ''}`
+    : 'No small activities logged this week.');
+  lines.push(focus ? `Next week: ${focus}` : `Did ${s.exercisesDone} exercise${s.exercisesDone === 1 ? '' : 's'}${s.avgDrop != null ? `, upset level down ${s.avgDrop} on average` : ''}.`);
+  return { ...s, lines };
+}
+
+// ---------- Adaptation ----------
+
+export function quantile(values, q) {
+  const v = [...values].sort((a, b) => a - b);
+  if (!v.length) return null;
+  const pos = (v.length - 1) * q;
+  const lo = Math.floor(pos), hi = Math.ceil(pos);
+  return v[lo] + (v[hi] - v[lo]) * (pos - lo);
+}
+
+const clamp = (x, lo, hi) => Math.min(hi, Math.max(lo, x));
+
+// After three weeks of check-ins, suggest thresholds from your own data.
+export function suggestThresholds(checkins, current = DEFAULT_THRESHOLDS, minDays = 21) {
+  const days = new Set(checkins.map(c => localDate(new Date(c.created_at))));
+  if (days.size < minDays) return null;
+  const energy = checkins.map(c => c.energy).filter(x => x != null);
+  const anxiety = checkins.map(c => c.anxiety).filter(x => x != null);
+  return {
+    ...current,
+    flatEnergy: clamp(Math.floor(quantile(energy, 0.25)), 2, 6),
+    spiralAnxiety: clamp(Math.ceil(quantile(anxiety, 0.75)), 5, 9),
+    pushEnergy: clamp(Math.ceil(quantile(energy, 0.75)), 6, 9),
+  };
+}
+
+// Consecutive skips, most recent first.
+export function skipStreak(log, id) {
+  const rows = log.filter(r => r.exercise_name === id).sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
+  let n = 0;
+  for (const r of rows) { if (r.completed) break; n++; }
+  return { n, last: rows[0]?.created_at ?? null };
+}
+
+// Skipped twice: shortened. Three times: retired for a month.
+export function exerciseStatus(log, id, now = new Date()) {
+  const { n, last } = skipStreak(log, id);
+  if (n >= 3) return now - new Date(last) < 30 * DAY ? 'retired' : 'normal';
+  return n === 2 ? 'short' : 'normal';
+}
+
+export function resolveExercise(id, alternatives, log, now = new Date()) {
+  if (exerciseStatus(log, id, now) !== 'retired') return id;
+  return alternatives.find(a => a !== id && exerciseStatus(log, a, now) !== 'retired') ?? null;
+}
+
+// ---------- New thing landed ----------
+
+export function eventFollowUps(events, now = new Date()) {
+  const out = [];
+  for (const e of events) {
+    const age = now - new Date(e.created_at);
+    if (e.feeling_24h == null && age >= DAY && age < 3 * DAY) out.push({ id: e.id, which: 'feeling_24h' });
+    else if (e.feeling_72h == null && age >= 3 * DAY && age < 10 * DAY) out.push({ id: e.id, which: 'feeling_72h' });
+  }
+  return out;
+}
+
+// ---------- Reading ----------
+
+export function readingLeft(readingLog, cap, now = new Date()) {
+  const today = localDate(now);
+  const used = readingLog.filter(r => localDate(new Date(r.created_at)) === today).reduce((a, r) => a + r.minutes, 0);
+  return Math.max(0, cap - used);
+}
+
+// The cap only ever goes down.
+export function lowerCap(current, requested) {
+  return Math.min(current, Math.max(1, Math.round(requested)));
+}

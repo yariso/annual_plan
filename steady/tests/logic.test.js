@@ -263,3 +263,88 @@ test('evidence picks entries tagged to the claim first', () => {
   assert.equal(got.length, 3);
   assert.deepEqual(got.slice(0, 2).map(e => e.id).sort(), [1, 3]);
 });
+
+// ---------- Weekly review, adaptation, events, reading ----------
+
+import {
+  weeklySummary, reviewDue, quantile, suggestThresholds, exerciseStatus, resolveExercise,
+  eventFollowUps, readingLeft, lowerCap,
+} from '../app/logic.js';
+
+const now = new Date('2026-10-05T12:00:00');
+const daysAgo = (d, h = 10) => { const x = new Date(now); x.setDate(x.getDate() - d); x.setHours(h); return x.toISOString(); };
+
+test('weekly summary: three factual lines, compares mood with the week before', () => {
+  const s = weeklySummary({
+    checkins: [
+      { created_at: daysAgo(1), mood: 4, energy: 3, anxiety: 6 },
+      { created_at: daysAgo(3), mood: 6, energy: 5, anxiety: 4 },
+      { created_at: daysAgo(9), mood: 3, energy: 3, anxiety: 7 },
+    ],
+    activities: [{ id: 1, name: 'Walk' }],
+    activity_log: [
+      { created_at: daysAgo(2), activity_id: 1, predicted: 2, actual: 6, outcome: 'done' },
+      { created_at: daysAgo(2), activity_id: 1, predicted: 5, actual: 5, outcome: 'not' },
+    ],
+    exercise_log: [
+      { created_at: daysAgo(2), exercise_name: 'stop', completed: true, before: 7, after: 4 },
+      { created_at: daysAgo(1), exercise_name: 'tipp', completed: false },
+    ],
+  }, now);
+  assert.equal(s.lines.length, 3);
+  assert.equal(s.mood, 5);
+  assert.equal(s.prevMood, 3);
+  assert.match(s.lines[0], /Mood averaged 5 out of 10 \(3 the week before\)/);
+  assert.match(s.lines[1], /Started 1 small thing\. Walk went better than expected: guessed 2, felt 6\./);
+  assert.match(s.lines[2], /upset level down 3/);
+  assert.deepEqual(s.skipped, ['tipp']);
+  const f = weeklySummary({ checkins: [], activities: [], activity_log: [], exercise_log: [] }, now, 'say yes to one walk');
+  assert.equal(f.lines[2], 'Next week: say yes to one walk');
+  for (const l of [...s.lines, ...f.lines]) assert.ok(!/missed|great job|well done|streak/i.test(l), l);
+});
+
+test('weekly review is due a week after the first check-in, then weekly', () => {
+  assert.equal(reviewDue([], [{ created_at: daysAgo(3) }], now), false);
+  assert.equal(reviewDue([], [{ created_at: daysAgo(7, 9) }], now), true);
+  assert.equal(reviewDue([{ created_at: daysAgo(2) }], [{ created_at: daysAgo(30) }], now), false);
+  assert.equal(reviewDue([{ created_at: daysAgo(8) }], [], now), true);
+});
+
+test('thresholds retune only after 21 days, within safe bounds', () => {
+  const mk = n => Array.from({ length: n }, (_, i) => ({ created_at: daysAgo(i), energy: 2 + (i % 5), anxiety: 4 + (i % 5) }));
+  assert.equal(suggestThresholds(mk(20)), null);
+  const t = suggestThresholds(mk(25));
+  assert.equal(t.flatEnergy, Math.max(2, Math.floor(quantile(mk(25).map(c => c.energy), 0.25))));
+  assert.ok(t.flatEnergy >= 2 && t.flatEnergy <= 6);
+  assert.ok(t.spiralAnxiety >= 5 && t.spiralAnxiety <= 9);
+  assert.ok(t.pushEnergy >= 6 && t.pushEnergy <= 9);
+});
+
+test('exercise skipped twice is shortened, three times retired for a month', () => {
+  const skip = d => ({ exercise_name: 'tipp', completed: false, created_at: daysAgo(d) });
+  assert.equal(exerciseStatus([skip(1)], 'tipp', now), 'normal');
+  assert.equal(exerciseStatus([skip(1), skip(2)], 'tipp', now), 'short');
+  assert.equal(exerciseStatus([skip(1), skip(2), skip(3)], 'tipp', now), 'retired');
+  assert.equal(exerciseStatus([skip(31), skip(32), skip(33)], 'tipp', now), 'normal');
+  const done = { exercise_name: 'tipp', completed: true, created_at: daysAgo(0, 9) };
+  assert.equal(exerciseStatus([skip(1), skip(2), skip(3), done], 'tipp', now), 'normal');
+  const log = [skip(1), skip(2), skip(3)];
+  assert.equal(resolveExercise('tipp', ['stop', 'tipp'], log, now), 'stop');
+  assert.equal(resolveExercise('stop', ['stop', 'tipp'], log, now), 'stop');
+});
+
+test('new thing landed asks how it feels at 24 and 72 hours', () => {
+  const e = (d, extra = {}) => ({ id: d, created_at: daysAgo(d, 12), feeling_24h: null, feeling_72h: null, ...extra });
+  assert.deepEqual(eventFollowUps([e(0)], now), []);
+  assert.deepEqual(eventFollowUps([e(1)], now), [{ id: 1, which: 'feeling_24h' }]);
+  assert.deepEqual(eventFollowUps([e(3, { feeling_24h: 5 })], now), [{ id: 3, which: 'feeling_72h' }]);
+  assert.deepEqual(eventFollowUps([e(4, { feeling_24h: 5, feeling_72h: 3 })], now), []);
+});
+
+test('reading is capped per day and the cap only goes down', () => {
+  const log = [{ created_at: now.toISOString(), minutes: 7 }, { created_at: daysAgo(1), minutes: 10 }];
+  assert.equal(readingLeft(log, 10, now), 3);
+  assert.equal(readingLeft([{ created_at: now.toISOString(), minutes: 12 }], 10, now), 0);
+  assert.equal(lowerCap(10, 15), 10);
+  assert.equal(lowerCap(10, 6), 6);
+});

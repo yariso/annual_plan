@@ -112,3 +112,9 @@ nav a { font-size: 14px; }
 .belief { border-top: 1px solid var(--line); padding: 8px 0; }
 .belief p { margin: 4px 0; }
 details summary.label { cursor: pointer; }
+.reads { display: flex; flex-wrap: wrap; gap: 0; margin-top: 6px; }
+.chips.days { grid-template-columns: repeat(7, 1fr); }
+.chips.days .chip { padding: 0; font-size: 14px; }
+.pre { white-space: pre-wrap; }
+.rules-card { padding: 8px 16px; }
+textarea[readonly] { font-size: 15px; }
